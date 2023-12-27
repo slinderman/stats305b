@@ -1,7 +1,8 @@
 
 # Introduction
 
-Test 
+Testing...
+
 $\KL{q}{p}$
 
 \begin{align*}
