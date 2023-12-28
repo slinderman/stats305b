@@ -1,36 +1,30 @@
 # Overview
+
+Welcome to **STATS 305B**! Officially, this course is called _Applied Statistics II_. Unofficially, I'm calling it **_Models and Algorithms for Discrete Data_**, because that's what it's really about. We will cover models ranging from generalized linear models to sequential latent variable models, autoregressive models, and transformers. On the algorithm side, we will cover a few techniques for convex optimization, as well as approximate Bayesian inference algorithms like MCMC and variational inference. I think the best way to learn these concepts is to implement them from scratch, so coding will be a big focus of this course. By the end of the course, you'll have a strong grasp of classical techniques as well as modern methods for modeling discrete data.
+
+## Logistics
 Instructor: Scott Linderman <br>
 TAs: Xavier Gonzalez and Leda Liang<br>
 Term: Winter 2023-24 <br>
-Stanford University
+Time: Monday and Wednesday, 1:30-2:50pm <br>
+Location: Room [380-380D](https://campus-map.stanford.edu/?srch=380-380D), Stanford University
 
----
-
-## Course Description
-Models and algorithms for discrete data. We will cover models ranging from generalized linear models to sequential latent variable models, autoregressive models, and transformers. On the algorithm side, we will cover a few techniques for convex optimization, as well as approximate Bayesian inference algorithms like MCMC and variational inference.
 
 ## Prerequisites
-Students should be comfortable with probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency is required. 
+Students should be comfortable with probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)
 
-## Logistics
-- Time: Monday and Wednesday, 1:30-2:50pm
-- Level: advanced undergrad and up
-- Grading basis: credit or letter grade
-- Office hours: TBD
 
 ## Books
-We will primarily use
-- Murphy. Probabilistic Machine Learning: Advanced Topics. MIT Press, 2023. [link](https://probml.github.io/pml-book/book2.html)
+We will draw from a couple of sources that are freely available online:
+- Agresti, Alan. Categorical data analysis, 3rd edition. John Wiley & Sons, 2013. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
 
-You may also find these texts helpful
-- Bishop. Pattern recognition and machine learning. New York: Springer, 2006. [link](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf)
-- Gelman et al. Bayesian Data Analysis. Chapman and Hall, 2005. [link](http://www.stat.columbia.edu/~gelman/book/)
-`
+(We will add to this list as the course progresses.)
+
 ## Tentative Schedule
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
-| Jan  8, 2024 | Introduction                           |         |
+| Jan  8, 2024 | Discrete Distributions and the Basics of Statistical Inference | {cite:p}`agresti2012categorical` Ch 1.        |
 | Jan 10, 2024 | Logistic Regression                    |         |
 | Jan 15, 2024 | _MLK Day. No class_                    |         | 
 | Jan 17, 2024 | Logistic Regression II                 |         | 

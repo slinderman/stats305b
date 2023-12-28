@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Overview &#8212; Applied Statistics II</title>
+    <title>Overview &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
   
   
@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction" href="lectures/01_intro.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="assignments/hw0/hw0.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -148,7 +148,7 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
-    <p class="title logo__title">Applied Statistics II</p>
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -161,11 +161,7 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="lectures/01_intro.html">Introduction</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
 </ul>
@@ -320,9 +316,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-description">Course Description</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistics">Logistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#books">Books</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tentative-schedule">Tentative Schedule</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignments">Assignments</a></li>
@@ -340,40 +335,26 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h1>
+<p>Welcome to <strong>STATS 305B</strong>! Officially, this course is called <em>Applied Statistics II</em>. Unofficially, I’m calling it <strong><em>Models and Algorithms for Discrete Data</em></strong>, because that’s what it’s really about. We will cover models ranging from generalized linear models to sequential latent variable models, autoregressive models, and transformers. On the algorithm side, we will cover a few techniques for convex optimization, as well as approximate Bayesian inference algorithms like MCMC and variational inference. I think the best way to learn these concepts is to implement them from scratch, so coding will be a big focus of this course. By the end of the course, you’ll have a strong grasp of classical techniques as well as modern methods for modeling discrete data.</p>
+<section id="logistics">
+<h2>Logistics<a class="headerlink" href="#logistics" title="Permalink to this heading">#</a></h2>
 <p>Instructor: Scott Linderman <br>
 TAs: Xavier Gonzalez and Leda Liang<br>
 Term: Winter 2023-24 <br>
-Stanford University</p>
-<hr class="docutils" />
-<section id="course-description">
-<h2>Course Description<a class="headerlink" href="#course-description" title="Permalink to this heading">#</a></h2>
-<p>Models and algorithms for discrete data. We will cover models ranging from generalized linear models to sequential latent variable models, autoregressive models, and transformers. On the algorithm side, we will cover a few techniques for convex optimization, as well as approximate Bayesian inference algorithms like MCMC and variational inference.</p>
+Time: Monday and Wednesday, 1:30-2:50pm <br>
+Location: Room <a class="reference external" href="https://campus-map.stanford.edu/?srch=380-380D">380-380D</a>, Stanford University</p>
 </section>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
-<p>Students should be comfortable with probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency is required.</p>
-</section>
-<section id="logistics">
-<h2>Logistics<a class="headerlink" href="#logistics" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Time: Monday and Wednesday, 1:30-2:50pm</p></li>
-<li><p>Level: advanced undergrad and up</p></li>
-<li><p>Grading basis: credit or letter grade</p></li>
-<li><p>Office hours: TBD</p></li>
-</ul>
+<p>Students should be comfortable with probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)</p>
 </section>
 <section id="books">
 <h2>Books<a class="headerlink" href="#books" title="Permalink to this heading">#</a></h2>
-<p>We will primarily use</p>
+<p>We will draw from a couple of sources that are freely available online:</p>
 <ul class="simple">
-<li><p>Murphy. Probabilistic Machine Learning: Advanced Topics. MIT Press, 2023. <a class="reference external" href="https://probml.github.io/pml-book/book2.html">link</a></p></li>
+<li><p>Agresti, Alan. Categorical data analysis, 3rd edition. John Wiley &amp; Sons, 2013. <a class="reference external" href="https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688">link</a></p></li>
 </ul>
-<p>You may also find these texts helpful</p>
-<ul class="simple">
-<li><p>Bishop. Pattern recognition and machine learning. New York: Springer, 2006. <a class="reference external" href="https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf">link</a></p></li>
-<li><p>Gelman et al. Bayesian Data Analysis. Chapman and Hall, 2005. <a class="reference external" href="http://www.stat.columbia.edu/~gelman/book/">link</a>
-`</p></li>
-</ul>
+<p>(We will add to this list as the course progresses.)</p>
 </section>
 <section id="tentative-schedule">
 <h2>Tentative Schedule<a class="headerlink" href="#tentative-schedule" title="Permalink to this heading">#</a></h2>
@@ -386,8 +367,8 @@ Stanford University</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Jan  8, 2024</p></td>
-<td><p>Introduction</p></td>
-<td><p></p></td>
+<td><p>Discrete Distributions and the Basics of Statistical Inference</p></td>
+<td><p><span id="id1">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2012. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr12</a>]</span> Ch 1.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Jan 10, 2024</p></td>
 <td><p>Logistic Regression</p></td>
@@ -498,8 +479,6 @@ Stanford University</p>
 </div>
 <div class="toctree-wrapper compound">
 </div>
-<div class="toctree-wrapper compound">
-</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -533,11 +512,11 @@ Stanford University</p>
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="lectures/01_intro.html"
+       href="assignments/hw0/hw0.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Introduction</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -556,9 +535,8 @@ Stanford University</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-description">Course Description</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistics">Logistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#books">Books</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tentative-schedule">Tentative Schedule</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignments">Assignments</a></li>
