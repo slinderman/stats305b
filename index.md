@@ -24,7 +24,7 @@ We will draw from a couple of sources that are freely available online:
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
-| Jan  8, 2024 | Discrete Distributions and the Basics of Statistical Inference | {cite:p}`agresti2012categorical` Ch 1.        |
+| Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.md) | {cite:p}`agresti2012categorical` Ch 1.        |
 | Jan 10, 2024 | Logistic Regression                    |         |
 | Jan 15, 2024 | _MLK Day. No class_                    |         | 
 | Jan 17, 2024 | Logistic Regression II                 |         | 
