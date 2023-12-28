@@ -1,5 +1,5 @@
 # In _config.yml
-title: Applied Statistics II
+title: "STATS 305B: Models and Algorithms for Discrete Data"
 author: Scott Linderman
 copyright: "2024"
 execute:
@@ -19,7 +19,7 @@ bibtex_bibfiles:
 # In _config.yml
 sphinx:
   config:
-    bibtex_reference_style: author_year
+    bibtex_reference_style: label
     mathjax_path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
     mathjax3_config:
       tex:
@@ -141,6 +141,7 @@ sphinx:
           "mbmu": "\\boldsymbol{\\mu}"
           "mbnu": "\\boldsymbol{\\nu}"
           "mbomega": "\\boldsymbol{\\omega}"
+          "mbtheta": "\\boldsymbol{\\theta}"
           "mbphi": "\\boldsymbol{\\phi}"
           "mbpi": "\\boldsymbol{\\pi}"
           "mbpsi": "\\boldsymbol{\\psi}"
@@ -178,6 +179,7 @@ sphinx:
           "Tr": "\\textrm{Tr}"
           "E": "\\mathbb{E}"
           "Var": "\\textrm{Var}"
+          "Cov": "\\textrm{Cov}"
           "reals": "\\mathbb{R}"
           "naturals": "\\mathbb{N}"
           "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]
