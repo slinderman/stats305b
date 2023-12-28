@@ -16,7 +16,7 @@ Students should be comfortable with probability and statistics as well as multiv
 
 ## Books
 We will draw from a couple of sources that are freely available online:
-- Agresti, Alan. Categorical data analysis, 3rd edition. John Wiley & Sons, 2013. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
+- Alan Agresti. Categorical data analysis. John Wiley & Sons, 3 edition, 2013. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
 
 (We will add to this list as the course progresses.)
 
