@@ -202,7 +202,7 @@ We can define conditional odds ratios, etc., accordingly. For example,
 \log \theta_{XY|k} = \log \frac{\pi_{11|k} \pi_{00|k}}{\pi_{10|k} \pi_{01|k}}.
 \end{align*}
 
-We say that $X$ and $Y$ are _conditionally independent given $Z$_, or $X \perp Y \mid Z$, if
+We say that $X$ and $Y$ are _conditionally independent given $Z$_ (more concisely, $X \perp Y \mid Z$) if
 \begin{align*}
 \Pr(X=i, Y=j \mid Z=k) &= \Pr(X=i \mid Z=k) \Pr(Y=j \mid Z=k) \; \forall i,j,k.
 \end{align*}
@@ -212,7 +212,68 @@ We say that $X$ and $Y$ are _conditionally independent given $Z$_, or $X \perp Y
 Conditional independence does not imply marginal independence. Indeed, measures of marginal association and conditional association can even differ in sign. This is called _Simpson's paradox_.
 
 ## Confidence Intervals for Log Odds Ratio 
-- Delta method
+
+Given a sample of counts $\mbX=\mbx$ from a contingency table, the MLE estimate of the probabilities is
+\begin{align*}
+\hat{\pi_{ij}} &= \frac{x_{ij}}{x_{\bullet \bullet}}
+\end{align*}
+For a 2x2 table, the sample estimate of log odds ratio is,
+\begin{align*}
+\log \hat{\theta} &= \log \frac{\hat{\pi}_{11} \hat{\pi}_{00}}{\hat{\pi}_{10} \hat{\pi}_{01}} 
+= \log \frac{x_{11} x_{00}}{x_{10} x_{01}}.
+\end{align*}
+
+We can estimate 95% Wald confidence intervals usign the asymptotic normality of the estimator,
+\begin{align*}
+\log \hat{\theta} \pm 1.96 \, \hat{\sigma}(\log \hat{\theta})
+\end{align*}
+where
+\begin{align*}
+\hat{\sigma}(\log \hat{\theta})
+&= \left(\frac{1}{x_{11}} + \frac{1}{x_{00}} + \frac{1}{x_{10}} + \frac{1}{x_{01}} \right)^{\frac{1}{2}}
+\end{align*}
+is an estimate of the standard error using the _delta method_.
+
+### Delta method
+The sample log odds ratio is a nonlinear function of our maximum likelihood estimates of $\hat{\pi}_{ij}$,
+\begin{align*}
+\hat{\pi}_{ij} &= \frac{x_{ij}}{n}.
+\end{align*}
+where $n = x_{\bullet \bullet} = \sum_{ij} x_{ij}$.
+
+Let $\hat{\mbpi} = \mathrm{vec}(\hat{\mbPi}) = (\hat{\pi}_{11}, \hat{\pi}_{10}, \hat{\pi}_{01}, \hat{\pi}_{00})$ denote the vector of probability estimates. 
+
+The MLE is asymptotically normal with variance given by the inverse Fisher information,
+\begin{align*}
+\sqrt{n}(\hat{\mbpi} - \mbpi) \to \mathrm{N}(0, \cI(\hat{\mbpi})^{-1}) 
+\end{align*}
+where
+\begin{align*}
+\cI(\hat{\mbpi})^{-1} 
+&= 
+\begin{bmatrix}
+\pi_{11}(1-\pi_{11}) & -\pi_{11} \pi_{10} & - \pi_{11} \pi_{01} & -\pi_{11} \pi_{00} \\
+-\pi_{10} \pi_{11} & \pi_{10} (1 - \pi_{10}) & - \pi_{10} \pi_{01} & -\pi_{10} \pi_{00} \\
+-\pi_{01} \pi_{11} & -\pi_{01} \pi_{10} & \pi_{01} (1 - \pi_{01}) & -\pi_{01} \pi_{00} \\
+-\pi_{00} \pi_{11} & -\pi_{00} \pi_{10} & -\pi_{00} \pi_{01} & \pi_{00} (1 - \pi_{00})
+\end{bmatrix}
+\end{align*}
+The (multivariate) delta method is a way of estimating the variance of a scalar function of the estimator, $g(\hat{\mbpi})$. Using a first order Taylor approximation around the true probabilities,
+\begin{align*}
+g(\hat{\mbpi}) &\approx g(\mbpi) + \nabla g(\mbpi)^\top (\hat{\mbpi} - \mbpi)
+\end{align*}
+we can derive the approximate variance as,
+\begin{align*}
+\Var[g(\hat{\mbpi})] 
+&\approx 
+\Var[\nabla g(\mbpi)^\top \hat{\mbpi}] 
+= \nabla g(\mbpi)^\top \Cov[\hat{\mbpi}] \nabla g(\mbpi).
+\end{align*}
+Then, the estimate of $g(\mbpi)$ is asymptotically normal as well, and its variance depends on the gradient of $g$,
+\begin{align*}
+\sqrt{n}(g(\hat{\mbpi}) - g(\mbpi)) \to \mathrm{N}(0, \nabla g(\mbpi)^\top \cI(\hat{\mbpi})^{-1} \nabla g(\mbpi)) 
+\end{align*}
+
 
 ## Independence Testing in Two-Way Tables
 - Likelihood ratio test
