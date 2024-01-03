@@ -16,7 +16,7 @@ Students should be comfortable with probability and statistics as well as multiv
 
 ## Books
 We will draw from a couple of sources that are freely available online:
-- Agresti, Alan. Categorical data analysis, 3rd edition. John Wiley & Sons, 2013. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
+- {cite:p}`agresti2012categorical` Agresti, Alan. Categorical data analysis, 2nd edition. John Wiley & Sons, 2002. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
 
 (We will add to this list as the course progresses.)
 
@@ -24,10 +24,10 @@ We will draw from a couple of sources that are freely available online:
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
-| Jan  8, 2024 | Discrete Distributions and the Basics of Statistical Inference | {cite:p}`agresti2012categorical` Ch 1.        |
-| Jan 10, 2024 | Logistic Regression                    |         |
+| Jan  8, 2024 | Discrete Distributions and the Basics of Statistical Inference | {cite:p}`agresti2012categorical` Ch. 1        |
+| Jan 10, 2024 | Contingency Tables                     | {cite:p}`agresti2012categorical` Ch. 2-3        |
 | Jan 15, 2024 | _MLK Day. No class_                    |         | 
-| Jan 17, 2024 | Logistic Regression II                 |         | 
+| Jan 17, 2024 | Logistic Regression                    |         | 
 | Jan 22, 2024 | Exponential Family GLMs                |         |
 | Jan 24, 2024 | Model Selection and Diagnostics        |         | 
 | Jan 29, 2024 | L1-regularized GLMs                    |         |

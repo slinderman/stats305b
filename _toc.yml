@@ -2,9 +2,10 @@ format: jb-book
 root: index
 
 parts:
-  # - caption: Notes
-  #   chapters:
-  #   - file: lectures/01_distributions.md
+  - caption: Notes
+    chapters:
+    - file: lectures/01_distributions.md
+    - file: lectures/02_contingency_tables.md
 
   - caption: Assignments
     chapters:
