@@ -245,11 +245,11 @@ Let $\hat{\mbpi} = \mathrm{vec}(\hat{\mbPi}) = (\hat{\pi}_{11}, \hat{\pi}_{10}, 
 
 The MLE is asymptotically normal with variance given by the inverse Fisher information,
 \begin{align*}
-\sqrt{n}(\hat{\mbpi} - \mbpi) \to \mathrm{N}(0, \cI(\hat{\mbpi})^{-1}) 
+\sqrt{n}(\hat{\mbpi} - \mbpi) \to \mathrm{N}(0, \cI(\mbpi)^{-1}) 
 \end{align*}
 where
 \begin{align*}
-\cI(\hat{\mbpi})^{-1} 
+\cI(\mbpi)^{-1} 
 &= 
 \begin{bmatrix}
 \pi_{11}(1-\pi_{11}) & -\pi_{11} \pi_{10} & - \pi_{11} \pi_{01} & -\pi_{11} \pi_{00} \\
@@ -271,13 +271,67 @@ we can derive the approximate variance as,
 \end{align*}
 Then, the estimate of $g(\mbpi)$ is asymptotically normal as well, and its variance depends on the gradient of $g$,
 \begin{align*}
-\sqrt{n}(g(\hat{\mbpi}) - g(\mbpi)) \to \mathrm{N}(0, \nabla g(\mbpi)^\top \cI(\hat{\mbpi})^{-1} \nabla g(\mbpi)) 
+\sqrt{n}(g(\hat{\mbpi}) - g(\mbpi)) \to \mathrm{N}(0, \nabla g(\mbpi)^\top \cI(\mbpi)^{-1} \nabla g(\mbpi)) 
 \end{align*}
 
+For the log odds ratio, $g(\mbpi) = \log \pi_{11} + \log \pi_{00} - \log \pi_{10} - \log \pi_{01}$ and 
+\begin{align*}
+\nabla g(\mbpi) &= \begin{pmatrix}
+1 / \pi_{11} \\ -1 / \pi_{10} \\ -1 / \pi_{01} \\ 1 / \pi_{00} 
+\end{pmatrix}.
+\end{align*} 
+Substituting this into the expression for the asymptotic variance yields,
+\begin{align*}
+\nabla g(\mbpi)^\top \cI(\mbpi)^{-1} \nabla g(\mbpi)
+&= \sum_{ij} [\cI(\mbpi)^{-1}]_{ij} \cdot [\nabla g(\mbpi)]_i \cdot [\nabla g(\mbpi)]_j \\
+&= \frac{1}{\pi_{11}} + \frac{1}{\pi_{00}} + \frac{1}{\pi_{10}} + \frac{1}{\pi_{01}}.
+\end{align*}
+Of course, we don't know $\mbpi$. Plugging in the estimates $\hat{\pi}_{ij} = x_{ij} / n$ yields the Wald standard error,
+\begin{align*}
+\hat{\sigma}(\log \hat{\theta}) 
+&= \left(\frac{\nabla g(\hat{\mbpi})^\top \cI(\hat{\mbpi})^{-1} \nabla g(\hat{\mbpi})}{n} \right)^{\frac{1}{2}} \\
+&= \left(\frac{1}{x_{11}} + \frac{1}{x_{00}} + \frac{1}{x_{10}} + \frac{1}{x_{01}} \right)^{\frac{1}{2}},
+\end{align*}
+as shown above.
 
 ## Independence Testing in Two-Way Tables
-- Likelihood ratio test
+Last time, we derived Wald confidence intervals from the acceptance region of a Wald hypothesis test. We could do the reverse here to to test independence in $2 \times 2$ tables using the Wald confidence. Instead, we will derive an independence test that works more generally for $I \times J$ tables. Instead of a Wald test, we'll use a likelihood ratio test.
+
+Let $\cH_0: \pi_{ij} = \pi_{i \bullet} \pi_{\bullet j}$ for all $i,j$ be our null hypothesis of independence. The null hypothesis imposes a constraint on the set of probabilities $\mbPi$. Rather than taking on any value $\mbPi \in \Delta_{IJ - 1}$, they are constrained to the $\Delta_{I-1} \times \Delta_{J-1}$ subset of probabilities that factor into an outer product of marginal probabilities. 
+
+The likelihood ratio test compares the maximum likelihood under the constrained set to the maximum likelihood under the larger space of all probabilities,
+\begin{align*}
+\lambda &= 
+-2 \log \frac
+{
+    \sup_{\mbpi_{i \bullet}, \mbpi_{\bullet j} \in \Delta_{I-1} \times \Delta_{J-1}} p(\mbx; \mbpi_{i \bullet} \mbpi_{\bullet j}^\top)
+}
+{
+    \sup_{\mbPi \in \Delta_{IJ-1}} p(\mbx; \mbPi)
+}
+\end{align*}
+The maximum likelihoods estimates of the constrained model are $\hat{\pi}_{i \bullet} = x_{i \bullet} / x_{\bullet \bullet}$ and $\hat{\pi}_{\bullet j} = x_{\bullet j} / x_{\bullet \bullet}$; under the unconstrained model they are $\hat{\pi}_{ij} = x_{ij} / x_{\bullet \bullet}$. Plugging these estimates in yields,
+\begin{align*}
+\lambda &= 
+-2 \log \frac
+{
+    \prod_{ij} \left( \frac{x_{i \bullet} x_{\bullet j}}{x_{\bullet \bullet}^2} \right)^{x_{ij}}
+}
+{
+    \prod_{ij} \left( \frac{x_{i j}}{x_{\bullet \bullet}} \right)^{x_{ij}}
+} \\
+&= -2 \sum_{ij} x_{ij} \log \frac{\hat{\mu}_{ij}}{x_{ij}}
+\end{align*}
+where $\hat{\mu}_{ij} = x_{\bullet \bullet} \hat{\pi}_{i \bullet} \hat{\pi}_{\bullet j} = x_{i \bullet} x_{\bullet j} / x_{\bullet \bullet}$ is the expected value of $X_{ij}$ under the null hypothesis of independence.
+
+Under the null hypothesis, $\lambda$ is asymptotically distributed as chi-squared with $(IJ -1) - (I-1) - (J-1) = (I-1)(J-1)$ degrees of freedom,
+\begin{align*}
+\lambda \sim \chi^2_{(I-1)(J-1)},
+\end{align*}
+allowing us to construct p-values.
 
 ## Fisher's Exact Test for Two-Way Tables
+
+
 
 ## Bayesian Inference for Two-Way Tables
