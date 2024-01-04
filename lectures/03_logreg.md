@@ -4,12 +4,16 @@
 
 ## Setup
 
-Let $Y \in \{0,1\}$ denote a binary response and let $\mbX \in \reals^p$ denote associated covariates. For example, $Y$ could denote whether or not your favorite football team wins their match, and $X$ could represent features of the match like whether its a home or away game, who their opponent is, etc. We will model the conditional probability of success as a function of the covariates,
+Let $Y \in \{0,1\}$ denote a binary response and let $\mbX \in \reals^p$ denote associated covariates. For example, $Y$ could denote whether or not your favorite football team wins their match, and $X$ could represent features of the match like whether its a home or away game, who their opponent is, etc. We will model the conditional distribution of $Y$ given the covariates,
 \begin{align*}
-\Pr(Y = 1 \mid \mbX=\mbx) &= \E[Y \mid \mbX=\mbx] \triangleq \pi(\mbx).
+Y \mid \mbX = \mbx &\sim \mathrm{Bern}(\pi(\mbx))
+\end{align*}
+where
+\begin{align*}
+\pi(\mbx) &= \Pr(Y = 1 \mid \mbX=\mbx) = \E[Y \mid \mbX=\mbx].
 \end{align*}
 
-This is a standard regression setup. The modeling problem boils down to choosibng the functional form of $\pi(\mbx)$. 
+This is a standard regression setup. The modeling problem boils down to choosing the functional form of $\pi(\mbx)$. 
 
 ## Linear Regression
 If you took STATS 305A, you know pretty much everything there is to know about linear regression with continuous response variables, $Y \in \reals$. Why don't we just apply that same model to binary responses? Specifically, let,
@@ -69,3 +73,77 @@ Under this model, $\beta$ specifies the log odds,
 = \log \theta.
 \end{align*}
 In other words, the coefficients of the logistic regression model correspond to the log odds in a contingency table.
+
+## Maximum Likelihood Estimation
+
+Unfortunately, unlike in standard linear regression (equivalently, when $f(a) = a$ is the identity function), there isn't a simple closed form estimator for $\hat{\mbbeta}$. However, we can use standard optimization techniques to do maximum likelihood estimation.
+
+First, write the log likelihood of the parameters given a collection of covariates and responses, $\{\mbx_i, y_i\}_{i=1}^n$,
+\begin{align*}
+\cL(\mbbeta) 
+&= \sum_{i=1}^n \log \mathrm{Bern}(y_i; \pi(\mbx_i)) \\
+&= \sum_{i=1}^n y_i \log \pi(\mbx_i) + (1 - y_i) \log (1 - \pi(\mbx_i)) \\
+&= \sum_{i=1}^n y_i \log \frac{\pi(\mbx_i)}{1 - \pi(\mbx_i)} + \log (1 - \pi(\mbx_i)).
+\end{align*}
+Now let's plug in the definition of $\pi(\mbx)$. The first term is just the log odds, which we already showed is equal to the linear component of the model. The second term simplifies too.
+\begin{align*}
+\cL(\mbbeta) 
+&= \sum_{i=1}^n y_i \mbbeta^\top \mbx_i + \log \left(1 - \frac{e^{\mbbeta^\top \mbx_i}}{1 + e^{\mbbeta^\top \mbx_i}} \right) \\
+&= \sum_{i=1}^n y_i \mbbeta^\top \mbx_i - \log \left(1 + e^{\mbbeta^\top \mbx_i} \right).
+\end{align*}
+
+### Computing the Gradient
+We want to maximize the log likelihood, so let's take the gradient,
+\begin{align*}
+\nabla \cL(\mbbeta) 
+&= \sum_{i=1}^n y_i \mbx_i - \frac{e^{\mbbeta^\top \mbx_i}}{1 + e^{\mbbeta^\top \mbx_i}} \mbx_i \\
+&= \sum_{i=1}^n \left(y_i - \sigma(\mbbeta^\top \mbx_i) \right) \mbx_i \\
+&= \sum_{i=1}^n \left(y_i - \pi(\mbx_i) \right) \mbx_i \\
+&= \sum_{i=1}^n \left(y_i - \E(Y \mid \mbX = \mbx_i) \right) \mbx_i.
+\end{align*}
+The gradient is a weighted sum of the covariates, and the weights are the residuals $y_i - \pi(\mbx_i)$, i.e., the difference between the observed and expected response. 
+
+This is pretty intuitive! Remember that the gradient points in the direction of steepest ascent. This tells us that to increase the log likelihood the most, we should move the coefficient in the direction of covariates where the residual is positive (we are underestimating the mean), and we should move opposite the direction of covariates where the residual is negative (where we are overestimating the mean). 
+
+Now that we have a closed-form expression for the gradient, we can implement a simple gradient ascent algorithm to maximize the log likelihood,
+\begin{align*}
+\mbbeta^{(i+1)} &\leftarrow \mbbeta^{(i)} + \alpha_i \nabla \cL(\mbbeta^{(i)}),
+\end{align*}
+where $\alpha_i \in \reals_+$ is the step-size at iteration $i$ of the algorithm. If the step sizes are chosen appropriately, the alorithm is guaranteed to converge to at least a local optimum of the log likelihood. 
+
+### Computing the Hessian
+
+Can we say more about the optima found by gradient ascent? When the log likelihood is strictly concave, there is a unique global optimum, and gradient ascent (with appropriately chosen step sizes) must find it. To check the concavity of the log likelihood, we need to compute its Hessian,
+\begin{align*}
+\nabla^2 \cL(\mbbeta) 
+&= -\sum_{i=1}^n \sigma'(\mbbeta^\top \mbx_i) \mbx_i \mbx_i^\top
+\end{align*}
+where $\sigma'(a)$ is the derivative of the logistic function. That is,
+\begin{align*}
+\sigma'(a) 
+&= \frac{\dif}{\dif a}  \sigma(a)\\
+&= \frac{e^a}{(1+e^a)^2} \\
+&= \sigma(a) (1 - \sigma(a)).
+\end{align*}
+Plugging this in,
+\begin{align*}
+\nabla^2 \cL(\mbbeta) 
+&= - \sum_{i=1}^n \sigma(\mbbeta^\top \mbx_i)(1 - \sigma(\mbbeta^\top \mbx_i)) \mbx_i \mbx_i^\top \\
+&= - \sum_{i=1}^n \pi(\mbx_i)(1 - \pi(\mbx_i)) \mbx_i \mbx_i^\top \\
+&= - \sum_{i=1}^n \Var[Y \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top.
+\end{align*}
+In other words, the negative Hessian is a weighted sum of outer products of covariates where the weights are equal to the conditional variance.
+
+### Putting it All Together
+Since variances are non-negative, so are the weights. Altogether, this derivation shows that the Hessian is **negative definite**, which means:
+- the log likelihood is strictly concave,
+- the maximum likelihood estimate $\hat{\mbbeta}_{\mathsf{MLE}}$ is unique, and
+- gradient ascent with appropriately chosen step sizes will find the MLE.
+
+:::{admonition} Technicalities
+:class: warning
+- Technically, $\pi(\mbx)$ cannot be exactly zero unless $\mbbeta^\top \mbx = - \infty$, so the weights in this sum will be strictly positive if $\mbx_i$ and $\mbbeta$ are finite.
+- In order for the Hessian to be negative definite, the covariates must also span $\reals^p$. 
+- In order for gradient ascent to converge to the global maximum of a strictly concave function, the step sizes must either decay according to Robbins-Munro conditions, be smaller than the minimum eigenvalue of the negative Hessian, or be chosen according to a backtracking line search.
+:::
+
