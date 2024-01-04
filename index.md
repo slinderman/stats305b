@@ -27,8 +27,8 @@ We will draw from a couple of sources that are freely available online:
 | Jan  8, 2024 | Discrete Distributions and the Basics of Statistical Inference | {cite:p}`agresti2002categorical` Ch. 1        |
 | Jan 10, 2024 | Contingency Tables                     |  {cite:p}`agresti2002categorical` Ch. 2-3       |
 | Jan 15, 2024 | _MLK Day. No class_                    |         | 
-| Jan 17, 2024 | Logistic Regression                    |         | 
-| Jan 22, 2024 | Exponential Family GLMs                |         |
+| Jan 17, 2024 | [Logistic Regression](lectures/03_logreg.md) | {cite:p}`agresti2002categorical` Ch. 4-5 | 
+| Jan 22, 2024 | Exponential Family GLMs                | {cite:p}`agresti2002categorical` Ch. 4-5 |
 | Jan 24, 2024 | Model Selection and Diagnostics        |         | 
 | Jan 29, 2024 | L1-regularized GLMs                    |         |
 | Jan 31, 2024 | Bayesian Probit Regression             |         |
