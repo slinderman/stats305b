@@ -379,6 +379,30 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4-2">Problem 4.2</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging">5. Debugging</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-sleuthing-with-type-shape-and-dir">Problem 5.1: sleuthing with <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">shape</span></code>, and <code class="docutils literal notranslate"><span class="pre">dir</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-1">Problem 5.1.1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-2">Problem 5.1.2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-3">Problem 5.1.3</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-2-pdb">Problem 5.2: <code class="docutils literal notranslate"><span class="pre">pdb</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-2-1-debug">Problem 5.2.1: <code class="docutils literal notranslate"><span class="pre">%debug</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-2-2-breakpoint">Problem 5.2.2: <code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-debugging-linear-regression">Problem 5.3: Debugging Linear Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-1-assert-and-torch-allclose">Problem 5.3.1: <code class="docutils literal notranslate"><span class="pre">assert</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.allclose</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-2-f-strings">Problem 5.3.2: f-strings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-3-plotting">Problem 5.3.3: plotting</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-4-progress-bars">Problem 5.3.4: progress bars</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-5-timing">Problem 5.3.5: timing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-resources">6. More resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">7. Submission Instructions</a></li>
 </ul>
             </nav>
         </div>
@@ -392,6 +416,12 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="hw0-pytorch-primer">
 <h1>HW0: PyTorch Primer<a class="headerlink" href="#hw0-pytorch-primer" title="Permalink to this heading">#</a></h1>
+<p>STATS305B, Stanford University, Winter 2024</p>
+<p><strong>Your name:</strong></p>
+<p><strong>Collaborators:</strong></p>
+<p><strong>Hours spent:</strong></p>
+<p>Please let us know how many hours in total you spent on this assignment so we can calibrate for future assignments. Your feedback is always welcome!</p>
+<hr class="docutils" />
 <p>We’ll use Python and <a class="reference external" href="https://pytorch.org/">PyTorch</a> for the assignments in this course. This lab is to help you get up to speed. It will introduce:</p>
 <ul class="simple">
 <li><p><strong>Tensors</strong>: PyTorch’s equivalent of NumPy arrays, but with more bells and whistles for running on GPUs and supporting automatic differentiation.</p></li>
@@ -730,6 +760,191 @@ p(x) &amp;= \frac{1}{2} \mathrm{Pois}(10.0) + \frac{1}{2} \mathrm{Pois}(2.0)
 </div>
 </section>
 </section>
+<section id="debugging">
+<h2>5. Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading">#</a></h2>
+<p>“If debugging is the process of removing bugs, then programming must be the process of putting them in.” -Edsger Dijkstra</p>
+<p><img alt="&quot;How I got better at debugging&quot; by Julia Evans" src="https://wizardzines.com/images/uploads/better-at-debugging.png" /></p>
+<p>Debugging is an important skill in applied statistics that we will hone in this class. The following exercises will introduce you to useful python debugging tools and techniques.</p>
+<p><img alt="&quot;If you understand a bug, you can fix it&quot; by Julia Evans" src="https://wizardzines.com/images/uploads/understand-can-fix.png" /></p>
+<p>In particular, we will focus on giving you some tools that let you more directly interrogate what is happening in a code snippet. Hopefully, learning how to understand what is going on in a given code snippet will replace feelingness of powerlessness when encountering an inscrutable bug with confidence, mastery, and knowledge.</p>
+<section id="problem-5-1-sleuthing-with-type-shape-and-dir">
+<h3>Problem 5.1: sleuthing with <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">shape</span></code>, and <code class="docutils literal notranslate"><span class="pre">dir</span></code><a class="headerlink" href="#problem-5-1-sleuthing-with-type-shape-and-dir" title="Permalink to this heading">#</a></h3>
+<p>Many python bugs effectively arise from errors in grammar—trying to apply functions to objects in ways that don’t make sense based on the type or shape of the object.</p>
+<p>For example, in English, you can’t say: “I enjoy to beautiful the park,” because you have put an adjective (“beautiful”) where a verb belongs. In a similar way, you can’t evalaute the python expression <code class="docutils literal notranslate"><span class="pre">&quot;number:&quot;</span> <span class="pre">+</span> <span class="pre">7</span></code>, because the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator has different actions for strings and for ints.</p>
+<p>So, when you encounter an unfamiliar object in the course of writing python code, instead of throwing spaghetti at the wall and seeing what sticks, it can be helpful to get to know the object better, in particular by asking what its <code class="docutils literal notranslate"><span class="pre">type</span></code> and, if applicable, <code class="docutils literal notranslate"><span class="pre">shape</span></code> is, as well as what attributes it has. This approach is similar how you might get to know a new friend, by asking the name, where the person is from, what the person does—you would not start by randomly guessing different names for a new person!</p>
+<section id="problem-5-1-1">
+<h4>Problem 5.1.1<a class="headerlink" href="#problem-5-1-1" title="Permalink to this heading">#</a></h4>
+<p>What is the type of <code class="docutils literal notranslate"><span class="pre">&quot;number:&quot;</span></code>? What is the type of <code class="docutils literal notranslate"><span class="pre">7</span></code>? What is the type of <code class="docutils literal notranslate"><span class="pre">A</span></code> from Problem 2.4?</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">type</span></code> function explicitly to answer this question.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: your code and answers here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-5-1-2">
+<h4>Problem 5.1.2<a class="headerlink" href="#problem-5-1-2" title="Permalink to this heading">#</a></h4>
+<p>What are the shapes of <code class="docutils literal notranslate"><span class="pre">&quot;number:&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">7</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>? Can you give an intuitive reason why some types have shapes and other don’t?</p>
+<p>Call <code class="docutils literal notranslate"><span class="pre">.shape</span></code> on the above objects explicitly to answer this question</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: your code and answers here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-5-1-3">
+<h4>Problem 5.1.3<a class="headerlink" href="#problem-5-1-3" title="Permalink to this heading">#</a></h4>
+<p>Call <code class="docutils literal notranslate"><span class="pre">dir</span></code> on the three objects</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;number:</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">7</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">A</span></code></p></li>
+</ul>
+<p>Describe what you notice. For each of the three objects, try out one of the methods that you get from calling <code class="docutils literal notranslate"><span class="pre">dir</span></code>. Does it have the behavior you would expect from the name? Describe why or why not.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: your code and answers here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="problem-5-2-pdb">
+<h3>Problem 5.2: <code class="docutils literal notranslate"><span class="pre">pdb</span></code><a class="headerlink" href="#problem-5-2-pdb" title="Permalink to this heading">#</a></h3>
+<section id="problem-5-2-1-debug">
+<h4>Problem 5.2.1: <code class="docutils literal notranslate"><span class="pre">%debug</span></code><a class="headerlink" href="#problem-5-2-1-debug" title="Permalink to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">%</span></code> denotes a magic command, which opens up commands that are not in standard python, but are added by <a class="reference external" href="https://ipython.org/">IPython</a>, which is short for “Interactive Python” and is the backbone of JuPyter notebooks and colabs.</p>
+<p>If you run a cell that returns an Error, in the very next cell you can just type <code class="docutils literal notranslate"><span class="pre">%debug</span></code> and then run the cell (Shft + Enter), and you open up a python debugger at the very point where the error was raised. Then, you can interactively investigate the values (as well as types and shapes) of the variables that were in and before the line that led to the crash. You can navigate through the debugger with these <a class="reference external" href="https://web.stanford.edu/class/physics91si/2013/handouts/Pdb_Commands.pdf">commands</a></p>
+<p>Try running the following code (which has a bug). When it errors out, run <code class="docutils literal notranslate"><span class="pre">%debug</span></code> in the next cell. In the <code class="docutils literal notranslate"><span class="pre">ipd&gt;</span></code> console, find the shapes of both <code class="docutils literal notranslate"><span class="pre">tensor_a</span></code> and <code class="docutils literal notranslate"><span class="pre">tensor_b</span></code> by asking for their shape, and explain why the code does’t work. Exit the debugger with <code class="docutils literal notranslate"><span class="pre">quit()</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># BUGGY CODE</span>
+<span class="n">tensor_a</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">tensor_b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">tensor_a</span> <span class="o">@</span> <span class="n">tensor_b</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-5-2-2-breakpoint">
+<h4>Problem 5.2.2: <code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code><a class="headerlink" href="#problem-5-2-2-breakpoint" title="Permalink to this heading">#</a></h4>
+<p>Sometimes the bug can be more subtle, either not causing any error messages or having the bug be introduced many lines before the error is raised. In these situations, it can be helpful to add a <code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code> to your code.</p>
+<p><strong>Add a <code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code> anywhere to the code snippet in Problem 5.2.1, and confirm that you can still print types, shapes, and values, and navigate using <code class="docutils literal notranslate"><span class="pre">pdb</span></code> commands.</strong></p>
+</section>
+</section>
+<section id="problem-5-3-debugging-linear-regression">
+<h3>Problem 5.3: Debugging Linear Regression<a class="headerlink" href="#problem-5-3-debugging-linear-regression" title="Permalink to this heading">#</a></h3>
+<p>Below is some buggy code for fitting linear regression on synthetic data that we will use to practice other debugging techniques</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#BUGGY CODE</span>
+<span class="c1"># generate synthetic data</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">305</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100_000</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)])</span>
+<span class="n">beta_true</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># set up logistic regression</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="n">beta_hat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Gradient Descent</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+    <span class="c1"># Forward pass</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">beta_hat</span>
+
+    <span class="c1"># Compute and print loss</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+    <span class="c1"># Zero the gradients before running the backward pass</span>
+    <span class="n">beta_hat</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Backward pass</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+    <span class="c1"># Update weights using gradient descent</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">beta_hat</span> <span class="o">+=</span> <span class="p">(</span><span class="n">learning_rate</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">beta_hat</span><span class="o">.</span><span class="n">grad</span>
+
+<span class="c1"># The final parameters after training</span>
+<span class="n">beta_final</span> <span class="o">=</span> <span class="n">beta_hat</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="problem-5-3-1-assert-and-torch-allclose">
+<h4>Problem 5.3.1: <code class="docutils literal notranslate"><span class="pre">assert</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.allclose</span></code><a class="headerlink" href="#problem-5-3-1-assert-and-torch-allclose" title="Permalink to this heading">#</a></h4>
+<p>In the above code snippet, we would like to recover the true value <code class="docutils literal notranslate"><span class="pre">beta_true</span></code> of the linear regression coefficients in our final value <code class="docutils literal notranslate"><span class="pre">beta_final</span></code>. One way to check if two vectors are close each other is to use <code class="docutils literal notranslate"><span class="pre">torch.allclose</span></code>, which will return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the two vectors have each corresponding element within <code class="docutils literal notranslate"><span class="pre">atol</span></code> of each other. One way to do this programatically is with an <code class="docutils literal notranslate"><span class="pre">assert</span></code>, which raises an error if the condition following it not true.</p>
+<p><strong>Edit the above code snippet by adding an assert which checks if <code class="docutils literal notranslate"><span class="pre">beta_true</span></code> and <code class="docutils literal notranslate"><span class="pre">beta_final</span></code> are within a margin of <code class="docutils literal notranslate"><span class="pre">1e-2</span></code> elementwise.</strong></p>
+</section>
+<section id="problem-5-3-2-f-strings">
+<h4>Problem 5.3.2: f-strings<a class="headerlink" href="#problem-5-3-2-f-strings" title="Permalink to this heading">#</a></h4>
+<p>It can be useful for debugging to print output, which can be done very cleanly using <a class="reference external" href="https://docs.python.org/3/tutorial/inputoutput.html">f-strings</a> (the “f” stands for “formatted”). In particular, the second argument to an assert (after the boolean expression) can be a string that is printed if the boolean is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p><strong>Modify your assert so that if <code class="docutils literal notranslate"><span class="pre">beta_true</span></code> and <code class="docutils literal notranslate"><span class="pre">beta_final</span></code> are not true, their values are printed with a descrption of what they are, using f-strings for easy comparison.</strong></p>
+</section>
+<section id="problem-5-3-3-plotting">
+<h4>Problem 5.3.3: plotting<a class="headerlink" href="#problem-5-3-3-plotting" title="Permalink to this heading">#</a></h4>
+<p>Use <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code>, which was imported in the very first cell as <code class="docutils literal notranslate"><span class="pre">plt</span></code>, to plot the lossess in the above code snippet. What do you notice about the losses? Does this clue you into the location of the bug? Fix the bug in the code snippet above.</p>
+</section>
+<section id="problem-5-3-4-progress-bars">
+<h4>Problem 5.3.4: progress bars<a class="headerlink" href="#problem-5-3-4-progress-bars" title="Permalink to this heading">#</a></h4>
+<p>It’s extremely nice to know how long code is going to take to run. One easy way to add this is to wrap for loops (like in the above code snippet) with progress bars. Probably the easiest way to do this is with the <code class="docutils literal notranslate"><span class="pre">tqdm</span></code> package, which can be as as easy as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Add a progress bar to the above code snippet.</strong></p>
+</section>
+<section id="problem-5-3-5-timing">
+<h4>Problem 5.3.5: timing<a class="headerlink" href="#problem-5-3-5-timing" title="Permalink to this heading">#</a></h4>
+<p>Often want your code to run quickly when you are prototyping. How might you modify the above code snippet to run faster when you are just prototyping? Confirm that your approach is fater by using <code class="docutils literal notranslate"><span class="pre">%%time</span></code>. Report your findings.</p>
+<p>TODO: your summary of your timing experiments</p>
+</section>
+</section>
+</section>
+<section id="more-resources">
+<h2>6. More resources<a class="headerlink" href="#more-resources" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://web.stanford.edu/class/cme193/">CME 193: Introduction to Scientific Python</a></p></li>
+</ol>
+<p>An excellent 1-unit introduction to Python. Meets Wednesdays 11:30-12:30 in winter quarter. Strongly recommend concurrent enrollment if you are new to python.</p>
+<ol class="arabic simple" start="2">
+<li><p><a class="reference external" href="https://missing.csail.mit.edu/">MIT’s missing semester</a></p></li>
+</ol>
+<p>An excellent introduction to software tools. While not directly related to Stats 305B, the tools reviewed in this series will make you a more confident programmer.</p>
+</section>
+<section id="submission-instructions">
+<h2>7. Submission Instructions<a class="headerlink" href="#submission-instructions" title="Permalink to this heading">#</a></h2>
+<p><strong>Formatting:</strong> check that your code does not exceed 80 characters in line width. You can set <em>Tools → Settings → Editor → Vertical ruler column</em> to 80 to see when you’ve exceeded the limit.</p>
+<p>Download your notebook in .ipynb format and use the following commands to convert it to PDF.  Then run the following command to convert to a PDF:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">nbconvert</span> <span class="o">--</span><span class="n">to</span> <span class="n">pdf</span> <span class="o">&lt;</span><span class="n">yourlastname</span><span class="o">&gt;</span><span class="n">_hw1</span><span class="o">.</span><span class="n">ipynb</span>
+</pre></div>
+</div>
+<p>(Note that for the above code to work, you need to rename your file <code class="docutils literal notranslate"><span class="pre">&lt;yourlastname&gt;_hw1.ipynb</span></code>)</p>
+<p>Getting this HW into PDF form isn’t meant to be a burden. One quick and easy approach is to open it as a Jupyter notebook, print, save to pdf. Just make sure your plots and code aren’t cut off so we can grade them.</p>
+<p>Please post on Ed or come to OH if there are any other problems submitting the HW.</p>
+<p><strong>Installing nbconvert:</strong></p>
+<p>If you’re using Anaconda for package management,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">anaconda</span> <span class="n">nbconvert</span>
+</pre></div>
+</div>
+<p><strong>Upload</strong> your .pdf file to Gradescope. Please tag your questions correctly! I.E., for each question, all of and only the relevant sections are tagged.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -824,6 +1039,30 @@ p(x) &amp;= \frac{1}{2} \mathrm{Pois}(10.0) + \frac{1}{2} \mathrm{Pois}(2.0)
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4-2">Problem 4.2</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging">5. Debugging</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-sleuthing-with-type-shape-and-dir">Problem 5.1: sleuthing with <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">shape</span></code>, and <code class="docutils literal notranslate"><span class="pre">dir</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-1">Problem 5.1.1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-2">Problem 5.1.2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-1-3">Problem 5.1.3</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-2-pdb">Problem 5.2: <code class="docutils literal notranslate"><span class="pre">pdb</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-2-1-debug">Problem 5.2.1: <code class="docutils literal notranslate"><span class="pre">%debug</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-2-2-breakpoint">Problem 5.2.2: <code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-debugging-linear-regression">Problem 5.3: Debugging Linear Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-1-assert-and-torch-allclose">Problem 5.3.1: <code class="docutils literal notranslate"><span class="pre">assert</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.allclose</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-2-f-strings">Problem 5.3.2: f-strings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-3-plotting">Problem 5.3.3: plotting</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-4-progress-bars">Problem 5.3.4: progress bars</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5-3-5-timing">Problem 5.3.5: timing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-resources">6. More resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">7. Submission Instructions</a></li>
 </ul>
   </nav></div>
 
