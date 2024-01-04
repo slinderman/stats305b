@@ -4,12 +4,12 @@ Last time we introduced basic distributions for discrete random variables &mdash
 
 ## Definitions
 
-Let $X \in \{1,\ldots, I\}$ and $Y \in \{1,\ldots, J\}$ be categorical random variables with $I$ and $J$ categories, respectively. We represent the **joint probability distribution** as an $I \times J$ table,
+Let $X \in \{1,\ldots, I\}$ and $Y \in \{1,\ldots, J\}$ be categorical random variables. We represent the **joint probability distribution** as an $I \times J$ table,
 \begin{align*}
 \mbPi = \begin{bmatrix}
 \pi_{11} & \ldots & \pi_{1J} \\
 \vdots & & \vdots \\
-\pi_{K1} & \ldots & \pi_{KJ}
+\pi_{I1} & \ldots & \pi_{IJ}
 \end{bmatrix}
 \end{align*}
 where
@@ -52,7 +52,7 @@ Under a Poisson sampling model,
 \begin{align*}
 X_{ij} &\sim \mathrm{Po}(\lambda_{ij})
 \end{align*}
-where $\lambda_{ij} / \lambda_{\bullet \bullet} = \pi_{ij}$. Here, the number of total counts is a random variable,
+where $\lambda_{ij} / \lambda_{\bullet \bullet} = \pi_{ij}$. The scale, $\lambda_{\bullet \bullet}$, is a free parameter. Here, the total count is a random variable,
 \begin{align*}
 X_{\bullet \bullet} &\sim \mathrm{Po}(\lambda_{\bullet \bullet}).
 \end{align*}
@@ -60,7 +60,7 @@ The sampling models below correspond to special cases of Poisson sampling when w
 
 ### Multinomial Sampling
 
-If we condition on the total number of counts, we obtain a multinomial sampling model,
+If we condition on the total count, we obtain a multinomial sampling model,
 \begin{align*}
 \mathrm{vec}(\mbX) \mid X_{\bullet \bullet}= x_{\bullet \bullet} &\sim \mathrm{Mult}(x_{\bullet \bullet}, \mathrm{vec}(\mbPi)),
 \end{align*}
@@ -95,6 +95,9 @@ with pmf
 &= 
 \frac{{x_{1 \bullet} \choose x_{11}} {x_{\bullet \bullet} - x_{1 \bullet} \choose x_{\bullet 1} - x_{11}}}{{x_{\bullet \bullet} \choose x_{\bullet 1}}}
 \end{align*}
+
+:::{admonition} Deriving the hypergeometric distribution by Bayes' rule
+:class: dropdown
 
 We can arrive at this conditional distribution using Bayes' rule. The following is adapted from {cite:t}`blitzstein2019introduction` (Ch 3.9). We will abbreviate some of the probability notation so that it's not so cumbersome. Also, we'll index our rows and columns starting with 0, to be consistent with our notation below. Under the independent Poisson sampling model,
 \begin{align*}
@@ -138,6 +141,7 @@ Substituting in the binomial pmf yields,
 &= \mathrm{HyperGeom}(x_{11}; x_{\bullet \bullet}, x_{1 \bullet}, x_{\bullet 1}).
 \end{align*}
 Interestingly, the probability $p$ cancels out in the hypergeometric pmf so that it only depends on the marginal counts. 
+:::
 
 ## Comparing Two Proportions
 
@@ -153,17 +157,13 @@ For a 2x2 table, each row defines a Bernoulli conditional,
 \begin{align*}
 Y \mid X=i &\sim \mathrm{Bern}(\pi_{1|i}) & \text{for } i &\in \{0,1\},
 \end{align*}
-where 
+where, recall, 
 \begin{align*}
-\pi_{1|i} =
- \frac{\pi_{i1}}{\pi_{i0} + \pi_{i1}}
- = \frac{\pi_{i1}}{\pi_{i \bullet}} 
-\triangleq \pi_i.
+\pi_{1|i} = \frac{\pi_{i1}}{\pi_{i0} + \pi_{i1}}.
 \end{align*}
-where we have introduced the shorthand notation $\pi_i$. The odds for row $i$ are,
+The odds for row $i$ are,
 \begin{align*}
 \Omega_i = \frac{\pi_i}{1 - \pi_i} 
-= \frac{\pi_{i1}}{1 - \pi_{i1}} 
 = \frac{\pi_{i1}}{\pi_{i0}}.
 \end{align*}
 
@@ -197,15 +197,16 @@ In this setting, controlling for $Z$ amounts to considering conditional probabil
 \end{align*}
 for each level $k$, instead of the marginal probabilities, $\pi_{ij \bullet}$.
 
-We can define conditional odds ratios, etc., accordingly. For example, 
-\begin{align*}
-\log \theta_{XY|k} = \log \frac{\pi_{11|k} \pi_{00|k}}{\pi_{10|k} \pi_{01|k}}.
-\end{align*}
-
 We say that $X$ and $Y$ are _conditionally independent given $Z$_ (more concisely, $X \perp Y \mid Z$) if
 \begin{align*}
 \Pr(X=i, Y=j \mid Z=k) &= \Pr(X=i \mid Z=k) \Pr(Y=j \mid Z=k) \; \forall i,j,k.
 \end{align*}
+
+For 2x2xK tables, we define the conditional log odds ratios as,
+\begin{align*}
+\log \theta_{k} = \log \frac{\pi_{11|k} \pi_{00|k}}{\pi_{10|k} \pi_{01|k}}.
+\end{align*}
+Conditional independence corresponds to $\log \theta_k = 0 \; \forall k$.
 
 ### Simpsons paradox
 
@@ -215,7 +216,7 @@ Conditional independence does not imply marginal independence. Indeed, measures 
 
 Given a sample of counts $\mbX=\mbx$ from a contingency table, the MLE estimate of the probabilities is
 \begin{align*}
-\hat{\pi_{ij}} &= \frac{x_{ij}}{x_{\bullet \bullet}}
+\hat{\pi}_{ij} &= \frac{x_{ij}}{x_{\bullet \bullet}}
 \end{align*}
 For a 2x2 table, the sample estimate of log odds ratio is,
 \begin{align*}
@@ -235,7 +236,7 @@ where
 is an estimate of the standard error using the _delta method_.
 
 ### Delta method
-The sample log odds ratio is a nonlinear function of our maximum likelihood estimates of $\hat{\pi}_{ij}$,
+The sample log odds ratio is a nonlinear function of the maximum likelihood estimates of $\hat{\pi}_{ij}$,
 \begin{align*}
 \hat{\pi}_{ij} &= \frac{x_{ij}}{n}.
 \end{align*}
@@ -332,6 +333,50 @@ allowing us to construct p-values.
 
 ## Fisher's Exact Test for Two-Way Tables
 
+The p-value for the likelihood ratio test is based on an asymptotic chi-squared distribution, which only holds as $n = x_{\bullet \bullet} \to \infty$. For two-way tables with small $n$, we can do exact inference using the hypergeometric sampling distribution for $x_{11}$ given the row- and column-marginals under the null hypothesis of independence. This is called _Fisher's exact test_.
 
+Consider testing the null hypothesis $\cH_0: \log \theta = 0$ against the one-sided alternative,  $\cH_0 \log \theta > 0$ (i.e., a positive association between the two variables). The sample log odds ratio, $\log \hat{\theta} = \frac{x_{11} x_{00}}{x_{10} x_{01}}$, is monotonically increasing in $x_{11}$. That is, increasing $x_{11}$ leads to increasing $\log \hat{\theta}$. Fisher's exact test corresponds to the probability of seeing a value at least as large as $x_{11}$ under the null hypothesis,
+\begin{align*}
+\Pr(X_{11} \geq x_{11} \mid x_{1 \bullet}, x_{\bullet 1}, x_{\bullet \bullet}, \cH_0)
+&= \sum_{k=x_{11}}^{\min\{x_{\bullet 1}, x_{1 \bullet} \}} \mathrm{HyperGeom}(k; x_{\bullet \bullet}, x_{1 \bullet}, x_{\bullet 1}).
+\end{align*}
 
 ## Bayesian Inference for Two-Way Tables
+
+Finally, let's conclude with some approaches for Bayesian inference. Again, this involves placing a prior on the parameters of interest. For example, in a two-way table, we could use independent, conjugate beta priors,
+\begin{align*}
+\pi_{1|i} &\iid\sim \mathrm{Beta}(\alpha, \beta) & \text{for } i &\in \{0, 1\}.
+\end{align*}
+When $\alpha = \beta = 1$, this reduces to $\pi_{1|i} \iid\sim \mathrm{Unif}([0,1])$. 
+
+Under an independent beta prior, the posterior distribution on parameters factors into a product of betas as well,
+\begin{align*}
+p(\mbPi \mid \mbX=\mbx) 
+&= \mathrm{Beta}(\pi_{1|1} \mid \alpha + x_{11}, \beta + x_{10}) \, 
+\mathrm{Beta}(\pi_{1|0} \mid \alpha + x_{01}, \beta + x_{00})
+\end{align*}
+
+Under this prior, the rows are _almost surely dependent_, since $p(\pi_{1|1} = \pi_{1|0}) = 0$. Nevertheless, we can use this model to draw posterior inferences about association measures like the log odds ratio, $\log \theta$. For example, we can use Monte Carlo to estimate tail probabilities,
+\begin{align*}
+\Pr(\log \theta \geq t \mid \mbX = \mbx) 
+&= \int \bbI\left[\log \frac{\pi_{1|1} / (1 - \pi_{1|1})}{\pi_{1|0} / (1 - \pi_{1|0})} \geq t \right] \; p(\mbPi \mid \mbX = \mbx) \dif \mbPi \\
+&\approx \sum_{m=1}^M \bbI\left[\log \frac{\pi_{1|1}^{(m)} / (1 - \pi_{1|1}^{(m)})}{\pi_{1|0}^{(m)} / (1 - \pi_{1|0}^{(m)})} \geq t \right]
+\end{align*}
+where 
+\begin{align*}
+\pi_{1|1}^{(m)} &\iid\sim \mathrm{Beta}(\alpha + x_{11}, \beta + x_{10}), \\
+\pi_{1|0}^{(m)} &\iid\sim \mathrm{Beta}(\alpha + x_{01}, \beta + x_{00}), \\
+\end{align*}
+Likewise, we can use the same approach to compute posterior credible intervals for $\log \theta$. 
+
+:::{admonition} Question
+:class: tip
+
+How could you construct a more appropriate prior distribution for capturing correlations (or exact equality) between the conditional probabilities?
+
+:::
+
+
+## Conclusion
+
+Contingency tables are fundamental tools for studying the relationship between two categorical random variables. We discussed models sampling contingency tables, conditioning on various marginals, as well as various measures of association between the random variables. Then we presented methods for inferring associations and testing hypotheses of independence. However, these methods were ultimately limited to just two (often binary) variables. Next, we'll consider models for capturing relationships between a response and several covariates.
