@@ -46,6 +46,7 @@ We will draw from a couple of sources that are freely available online:
 | Mar 13, 2024 | Everything Else                        |         |
 
 ## Assignments
+There will be 5 assignments due roughly every other Friday. They will not be equally weighted. The first one is just a primer to get you up to speed; the last one will be a bit more substantial than the rest.
 - **Homework 0: Python Primer**
   - Released Mon, Jan 8, 2024
   - Due Fri, Jan 12, 2024 at 11:59pm
@@ -56,3 +57,14 @@ We will draw from a couple of sources that are freely available online:
 
 - **Final Exam**: Wed, March 20, 2024 from 3:30-6:30pm (location TBD)
   - You may bring a cheat sheet covering _both sides_ of an 8.5x11" piece of paper
+
+
+## Grading
+
+Tentatively:
+- HW0: 5%
+- HW1-HW3: 15%
+- HW4: 20%
+- Midterm: 10%
+- Final: 15%
+- Participation 5%
