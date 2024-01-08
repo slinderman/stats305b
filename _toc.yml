@@ -4,7 +4,7 @@ root: index
 parts:
   - caption: Notes
     chapters:
-    - file: lectures/01_distributions.md
+    - file: lectures/01_distributions.ipynb
 
   - caption: Assignments
     chapters:

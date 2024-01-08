@@ -24,7 +24,7 @@ We will draw from a couple of sources that are freely available online:
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
-| Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.md) | {cite:p}`agresti2002categorical` Ch. 1        |
+| Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.ipynb) | {cite:p}`agresti2002categorical` Ch. 1        |
 | Jan 10, 2024 | Contingency Tables                     |  {cite:p}`agresti2002categorical` Ch. 2-3       |
 | Jan 15, 2024 | _MLK Day. No class_                    |         | 
 | Jan 17, 2024 | Logistic Regression                    |         | 
