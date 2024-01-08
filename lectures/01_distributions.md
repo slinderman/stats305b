@@ -68,7 +68,7 @@ Its pmf is,
 \end{align*}
 
 Its mean and variance are both $\lambda$. The fact that the mean equals the variance is a defining property of the Poisson distribution, but it's not always an appropriate modeling assumption. We'll discuss more general models shortly. 
-
+<!-- 
 ## Geometric Distribution
 Let's go back to our biased coin with probability $p$ of coming up heads. Imagine flipping it repeatedly. How many tails come up before we see our first heads? Let $X \in \{0,1,\ldots\}$ denote this random variable. It follows a geometric distribution,
 \begin{align*}
@@ -146,7 +146,7 @@ where $\beta = p / (1-p)$. Simplifying this expression yields,
 \begin{align*}
 \Var[X] &= \frac{r (1-p)}{p^2},
 \end{align*}
-which matches the variance of the negative binomial distribution.
+which matches the variance of the negative binomial distribution. -->
 
 ## Categorical Distribution
 So far, we've talked about distributions for scalar random variables. Here, we'll extend these ideas to vectors of counts.
