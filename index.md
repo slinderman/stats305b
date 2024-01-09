@@ -16,7 +16,7 @@ Students should be comfortable with probability and statistics as well as multiv
 
 ## Books
 We will draw from a couple of sources that are freely available online:
-- {cite:p}`agresti2012categorical` Agresti, Alan. Categorical data analysis, 2nd edition. John Wiley & Sons, 2002. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
+- Agresti, Alan. Categorical Data Analysis, 2nd edition. John Wiley & Sons, 2002. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
 
 (We will add to this list as the course progresses.)
 
@@ -24,29 +24,30 @@ We will draw from a couple of sources that are freely available online:
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
-| Jan  8, 2024 | Discrete Distributions and the Basics of Statistical Inference | {cite:p}`agresti2012categorical` Ch. 1        |
-| Jan 10, 2024 | Contingency Tables                     | {cite:p}`agresti2012categorical` Ch. 2-3        |
+| Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.ipynb) | {cite:p}`agresti2002categorical` Ch. 1 |
+| Jan 10, 2024 | [Contingency Tables](lectures/02_contingency_tables.md) | {cite:p}`agresti2002categorical` Ch. 2-3 |
 | Jan 15, 2024 | _MLK Day. No class_                    |         | 
 | Jan 17, 2024 | Logistic Regression                    |         | 
 | Jan 22, 2024 | Exponential Family GLMs                |         |
 | Jan 24, 2024 | Model Selection and Diagnostics        |         | 
 | Jan 29, 2024 | L1-regularized GLMs                    |         |
-| Jan 31, 2024 | Bayesian probit regression             |         |
-| Feb  5, 2024 | Generalized linear mixed models        |         |
+| Jan 31, 2024 | Bayesian Probit Regression             |         |
+| Feb  5, 2024 | Generalized Linear Mixed Models        |         |
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
-| Feb 12, 2024 | Discrete latent variable models        |         |
-| Feb 14, 2024 | Hidden Markov models                   |         | 
+| Feb 12, 2024 | Discrete Latent Variable Models        |         |
+| Feb 14, 2024 | Hidden Markov Models                   |         | 
 | Feb 19, 2024 | _Presidents' Day. No class_            |         |
-| Feb 21, 2024 | Mean field variational inference       |         |
-| Feb 26, 2024 | Recurrent neural networks              |         |
+| Feb 21, 2024 | Mean-Field Variational Inference       |         |
+| Feb 26, 2024 | Recurrent Neural Networks              |         |
 | Feb 28, 2024 | Attention and Tranformers              |         |
-| Mar  4, 2024 | State space layers (S4, S5, Mamba)     |         |
-| Mar  6, 2024 | Models for graph-structured data       |         |
-| Mar 11, 2024 | (Discrete) denoising diffusion models  |         | 
-| Mar 13, 2024 | Everything else                        |         |
+| Mar  4, 2024 | State Space Layers (S4, S5, Mamba)     |         |
+| Mar  6, 2024 | Models for Graph-Structured Data       |         |
+| Mar 11, 2024 | (Discrete) Denoising Diffusion Models  |         | 
+| Mar 13, 2024 | Everything Else                        |         |
 
 ## Assignments
-- **Homework 0: Python Primer**
+There will be 5 assignments due roughly every other Friday. They will not be equally weighted. The first one is just a primer to get you up to speed; the last one will be a bit more substantial than the rest.
+- [**Homework 0: Python Primer**](assignments/hw0/hw0.ipynb)
   - Released Mon, Jan 8, 2024
   - Due Fri, Jan 12, 2024 at 11:59pm
 
@@ -56,3 +57,16 @@ We will draw from a couple of sources that are freely available online:
 
 - **Final Exam**: Wed, March 20, 2024 from 3:30-6:30pm (location TBD)
   - You may bring a cheat sheet covering _both sides_ of an 8.5x11" piece of paper
+
+
+## Grading
+
+Tentatively:
+| Assignment   | Percentage |
+| ------------ | ---------- | 
+| HW 0         | 5%         |
+| HW 1-3       | 15% each   |
+| HW 4         | 20%        |
+| Midterm      | 10%        |
+| Final        | 15%        |
+| Participation | 5%        |
