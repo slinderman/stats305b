@@ -1,0 +1,1725 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Discrete Distributions and the Basics of Statistical Inference &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/01_distributions';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Overview" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <header>
+  
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
+  
+  </header>
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Discrete Distributions and the Basics of Statistical Inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2024/lectures/01_distributions.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/01_distributions.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Discrete Distributions and the Basics of Statistical Inference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bernoulli-distribution">Bernoulli Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binomial-distribution">Binomial Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-distribution">Poisson Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-distribution">Categorical Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multinomial-distribution">Multinomial Distribution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-multinomial-connection">Poisson / Multinomial Connection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-normality-of-the-mle">Asymptotic Normality of the MLE</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fisher-information-matrix">Fisher Information Matrix</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing">Hypothesis Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wald-test">Wald test</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-intervals">Confidence Intervals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference">Bayesian Inference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demo-college-football-national-championship">Demo: College Football National Championship</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poll-results">Poll Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-to-actual-scores">Compare to Actual Scores</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multinomial-model-of-individual-drives">Multinomial Model of Individual Drives</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulations">Simulations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-full-circle">Coming Full Circle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postgame-analysis">Postgame Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="discrete-distributions-and-the-basics-of-statistical-inference">
+<h1>Discrete Distributions and the Basics of Statistical Inference<a class="headerlink" href="#discrete-distributions-and-the-basics-of-statistical-inference" title="Permalink to this heading">#</a></h1>
+<p>This lecture introduces the basic building blocks that we’ll use throughout the course. We start with common distributions for discrete random variables. Then we discuss some basics of statistical inference: maximum likelihood estimation, asymptotic normality, hypothesis tests, confidence intervals, and Bayesian inference.</p>
+<section id="bernoulli-distribution">
+<h2>Bernoulli Distribution<a class="headerlink" href="#bernoulli-distribution" title="Permalink to this heading">#</a></h2>
+<p>Toss a (biased) coin where the probability of heads is <span class="math notranslate nohighlight">\(p \in [0,1]\)</span>. Let <span class="math notranslate nohighlight">\(X=1\)</span> denote the event that a coin flip comes up heads and <span class="math notranslate nohighlight">\(X=0\)</span> it comes up tails. The random variable <span class="math notranslate nohighlight">\(X\)</span> follows a Bernoulli distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X \sim \mathrm{Bern}(p)
+\end{align*}\]</div>
+<p>We denote its <strong>probability mass function (pmf)</strong> by,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Bern}(x; p) 
+=
+\begin{cases}
+p &amp; \text{if } x = 1 \\
+1 - p &amp;\text{if } x = 0
+\end{cases}
+\end{align*}\]</div>
+<p>or more succinctly</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Bern}(x; p) = p^x (1-p)^{1-x}.
+\end{align*}\]</div>
+<p>(We will use this mildly overloaded nomenclature to represent both the <em>distribution</em> <span class="math notranslate nohighlight">\(\mathrm{Bern}(p)\)</span> and its <em>pmf</em> <span class="math notranslate nohighlight">\(\mathrm{Bern}(x; p)\)</span>. The difference will be clear from context.)</p>
+<p>The Bernoulli distribution’s mean is <span class="math notranslate nohighlight">\(\E[X] = p\)</span> and its variance is <span class="math notranslate nohighlight">\(\Var[X] = p(1-p)\)</span>.</p>
+</section>
+<section id="binomial-distribution">
+<h2>Binomial Distribution<a class="headerlink" href="#binomial-distribution" title="Permalink to this heading">#</a></h2>
+<p>Now toss the same biased coin <span class="math notranslate nohighlight">\(n\)</span> times independently and let</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_i &amp;\iid\sim \mathrm{Bern}(p) &amp; \text{for } i&amp;=1,\ldots, n
+\end{align*}\]</div>
+<p>denote the outcomes of each trial.</p>
+<p>The number of heads, <span class="math notranslate nohighlight">\(X = \sum_{i=1}^n X_i\)</span>, is a random variable taking values <span class="math notranslate nohighlight">\(X \in \{0,\ldots,n\}\)</span>. It follows a binomial distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X \sim \mathrm{Bin}(n, p)
+\end{align*}\]</div>
+<p>with pmf</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Bin}(x; n, p) = {n \choose x} p^x (1-p)^{n-x}.
+\end{align*}\]</div>
+<p>Its mean and variance are <span class="math notranslate nohighlight">\(\E[X] = np\)</span> and <span class="math notranslate nohighlight">\(\Var[X] = np(1-p)\)</span>, respectively.</p>
+</section>
+<section id="poisson-distribution">
+<h2>Poisson Distribution<a class="headerlink" href="#poisson-distribution" title="Permalink to this heading">#</a></h2>
+<p>Now let <span class="math notranslate nohighlight">\(n \to \infty\)</span> and <span class="math notranslate nohighlight">\(p \to 0\)</span> while the product <span class="math notranslate nohighlight">\(np = \lambda\)</span> stays constant. For example, instead of coin flips, suppose we’re modeling spikes fired by a neuron in a 1 second interval of time. For simplicity, assume we divide the 1 second interval into <span class="math notranslate nohighlight">\(n\)</span> equally sized bins, each of width <span class="math notranslate nohighlight">\(1/n\)</span> seconds. Suppose probability of seeing at least one spike in a bin is proportional to the bin width, <span class="math notranslate nohighlight">\(p=\lambda / n\)</span>, where <span class="math notranslate nohighlight">\(\lambda \in \reals_+\)</span> is the <em>rate</em>. (For now, assume <span class="math notranslate nohighlight">\(\lambda &lt; n\)</span> so that <span class="math notranslate nohighlight">\(p &lt; 1\)</span>.) Moreover, suppose each bin is independent. Then the number of bins with at least one spike is binomially distributed,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X \sim \mathrm{Bin}(n, \lambda / n).
+\end{align*}\]</div>
+<p>Intuitively, the number of bins shouldn’t really matter — it just determines our resolution for detecting spikes. We really care about is the number of spikes, which is separate from the binning process.
+As <span class="math notranslate nohighlight">\(n \to \infty\)</span>, the number of spikes in the unit interval converges to a Poisson random variable,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X \sim \mathrm{Po}(\lambda).
+\end{align*}\]</div>
+<p>Its pmf is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Po}(x; \lambda) &amp;= \frac{1}{x!} e^{-\lambda} \lambda^x.
+\end{align*}\]</div>
+<p>Its mean and variance are both <span class="math notranslate nohighlight">\(\lambda\)</span>. The fact that the mean equals the variance is a defining property of the Poisson distribution, but it’s not always an appropriate modeling assumption. We’ll discuss more general models shortly.</p>
+<!-- 
+## Geometric Distribution
+Let's go back to our biased coin with probability $p$ of coming up heads. Imagine flipping it repeatedly. How many tails come up before we see our first heads? Let $X \in \{0,1,\ldots\}$ denote this random variable. It follows a geometric distribution,
+\begin{align*}
+X \sim \mathrm{Geom}(p)
+\end{align*}
+with pmf
+\begin{align*}
+\mathrm{Geom}(x; p) &= (1-p)^x p.
+\end{align*}
+Its mean is $\E[X] = \frac{1-p}{p}$ and its variance is $\frac{1-p}{p^2}$.
+
+## Negative Binomial Distribution
+How many tails will we get before we see $r \in \naturals$ heads? That's equivalent to the sum of independent geometric random variables. Let 
+\begin{align*}
+X_i &\iid\sim \mathrm{Geom}(p) & \text{for } i&=1,\ldots, r
+\end{align*}
+denote the number of tails between the $(i-1)$ and $i$-th heads. 
+
+Then, the total number of tails before seeing $r$ heads, $X = \sum_{i=1}^r X_i$, is a random variable taking values $X \in \{0,1,\ldots\}$. It follows a negative binomial distribution,
+\begin{align*}
+X \sim \mathrm{NB}(r, p)
+\end{align*}
+with pmf
+\begin{align*}
+\mathrm{NB}(x; r, p) &= {x + r - 1 \choose x} \, (1-p)^x \, p^r.
+\end{align*}
+We can extend this definition to non-integer $r \in \reals_+$. The coin flipping story doesn't make as much sense, but the pmf generalizes to,
+\begin{align*}
+\mathrm{NB}(x; r, p) &= \frac{\Gamma(x + r)}{x! \Gamma(r)} \, (1-p)^x \, p^r.
+\end{align*}
+
+The negative binomial mean and variance are $\E[X] = \frac{r(1-p)}{p}$ and $\Var[X] = \frac{r (1-p)}{p^2}$, respectively. 
+
+Now let's reparameterize the negative binomial in terms of its mean. Let $\lambda = \frac{r(1-p)}{p}$. Rearranging terms, we have $p=\frac{r}{r + \lambda}$. Now, we can express the variance as $\Var[X] = \lambda ( 1 + \frac{\lambda}{r})$. Their ratio is,
+\begin{align*}
+\frac{\Var[X]}{\E[X]} &= 1 + \frac{\lambda}{r} \geq 1.
+\end{align*}
+Thus, the negative binomial distribution is **overdispersed** &mdash; its variance is greater than or equal to its mean. The parameter $r$ determines the dispersion, with larger $r$ being less dispersed. Intuitively, we recover the Poisson distribution in the limit,
+\begin{align*}
+\lim_{r \to \infty} \mathrm{NB}\left(r, \frac{r}{r + \lambda}\right)
+&= \mathrm{Po}(\lambda).
+\end{align*}
+
+### Alternative Motivation
+Another way to obtain an overdispersed count model is to model the data as _conditionally_ Poisson, but assume the rate is a random variable. For example, suppose 
+\begin{align*}
+X \mid \lambda &\sim \mathrm{Po}(\lambda) \\
+\lambda &\sim \mathrm{Ga}\left(r, \frac{p}{1-p}\right).
+\end{align*}
+where $\mathrm{Ga}(\alpha, \beta)$ denotes the gamma distribution with shape $\alpha$ and rate $\beta$. The gamma is a distribution on non-negative reals with mean $\alpha / \beta$ and variance $\alpha / \beta^2$.
+
+It turns out that the marginal distribution of $X$, integrating over possible rates $\lambda$, is a negative binomial,
+\begin{align*}
+\Pr(X = x) 
+&= \int_0^\infty \mathrm{Po}(x; \lambda) \, \mathrm{Ga}\left(\lambda; r, \frac{p}{1-p} \right) \dif \lambda \\
+&= \mathrm{NB}(x; r, p).
+\end{align*}
+In other words, we can view the negative binomial distribution as a _gamma-mixed Poisson distribution_. 
+
+There are a few ways to prove the identity above. One is by brute force calculation of the integral; another is by a cool application of the Poisson superposition principle (see [Wikipedia](https://en.wikipedia.org/wiki/Negative_binomial_distribution#Gamma%E2%80%93Poisson_mixture)). For now, let's just check that it passes some basic sanity checks. Namely, let's check that the first two moments match.
+
+Applying the tower property of expectations to the gamma-mixed Poisson model,
+\begin{align*}
+\E[X] = \E[\E[X \mid \lambda]] = \E[\lambda] = \frac{r}{\frac{p}{1-p}} = \frac{r (1-p)}{p}.
+\end{align*}
+So far so good &mdash; this is the same as the mean of the negative binomial distribution.
+
+Now apply the "EVVE" rule to compute the marginal variance of the gamma-mixed Poisson model,
+\begin{align*}
+\Var[X] &= \E[\Var[X \mid \lambda]] + \Var[\E[X \mid \lambda]] \\
+&= \E[\lambda] + \Var[\lambda] \\
+&= \frac{r}{\beta} \left(1 + \frac{1}{\beta} \right)
+\end{align*}
+where $\beta = p / (1-p)$. Simplifying this expression yields,
+\begin{align*}
+\Var[X] &= \frac{r (1-p)}{p^2},
+\end{align*}
+which matches the variance of the negative binomial distribution. -->
+</section>
+<section id="categorical-distribution">
+<h2>Categorical Distribution<a class="headerlink" href="#categorical-distribution" title="Permalink to this heading">#</a></h2>
+<p>So far, we’ve talked about distributions for scalar random variables. Here, we’ll extend these ideas to vectors of counts.</p>
+<p>Instead of a biased coin, consider a biased <em>die</em> with <span class="math notranslate nohighlight">\(K\)</span> faces and corresponding probabilites <span class="math notranslate nohighlight">\(\mbpi = (\pi_1, \ldots, \pi_K) \in \Delta_{K-1}\)</span>, where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Delta_{K-1} &amp;= \left\{\mbpi \in \reals_+^K: \sum_k \pi_k = 1 \right\}
+\end{align*}\]</div>
+<p>denotes the <span class="math notranslate nohighlight">\((K-1)\)</span>-dimensional simplex embedded in <span class="math notranslate nohighlight">\(\reals^K\)</span>.</p>
+<p>Roll the die and let the random variable <span class="math notranslate nohighlight">\(X \in \{1,\ldots,K\}\)</span> denote the outcome. It follows a categorical distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X &amp;\sim \mathrm{Cat}(\mbpi)
+\end{align*}\]</div>
+<p>with pmf</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Cat}(x; \mbpi) &amp;= \prod_{k=1}^K \pi_k^{\bbI[x=k]}
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\bbI[y]\)</span> is an indicator function that returns 1 if <span class="math notranslate nohighlight">\(y\)</span> is true and 0 otherwise. This is a natural generalization of the Bernoulli distribution to random variables that can fall into more than two categories.</p>
+<p>Alternatively, we can represent <span class="math notranslate nohighlight">\(X\)</span> as a <strong>one-hot vector</strong>, in which case <span class="math notranslate nohighlight">\(X \in \{\mbe_1, \ldots, \mbe_K\}\)</span> where <span class="math notranslate nohighlight">\(\mbe_k = (0, \ldots, 1, \ldots, 0)^\top\)</span> is a one-hot vector with a 1 in the <span class="math notranslate nohighlight">\(k\)</span>-th position. Then, the pmf is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Cat}(\mbx; \mbpi) &amp;= \prod_{k=1}^K \pi_k^{x_k}
+\end{align*}\]</div>
+</section>
+<section id="multinomial-distribution">
+<h2>Multinomial Distribution<a class="headerlink" href="#multinomial-distribution" title="Permalink to this heading">#</a></h2>
+<p>From this representation, it is straightforward to generalize to <span class="math notranslate nohighlight">\(n\)</span> independent rolls of the die, just like in the binomial distribution.  Let <span class="math notranslate nohighlight">\(Z_i \iid\sim \mathrm{Cat}(\mbpi)\)</span> for <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span> denote the outcomes of each roll, and let <span class="math notranslate nohighlight">\(X = \sum_{i=1}^n Z_i\)</span> denote the total number of times the die came up on each of the <span class="math notranslate nohighlight">\(K\)</span> faces. Note that <span class="math notranslate nohighlight">\(X \in \naturals^K\)</span> is a <em>vector-valued random variable</em>. Then, <span class="math notranslate nohighlight">\(X\)</span> follows a multinomial distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X \sim \mathrm{Mult}(n, \mbpi),
+\end{align*}\]</div>
+<p>with pmf,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Mult}(\mbx; n, \mbpi) &amp;= \bbI[\mbx \in \cX_n] \cdot {n \choose x_1, \ldots
+, x_K} \prod_{k=1}^K \pi_k^{x_k} 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\cX_n = \left\{\mbx \in \naturals^K : \sum_{k=1}^K x_k = n \right\}\)</span> and</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+{n \choose x_1, \ldots, x_K} &amp;= \frac{n!}{x_1! \cdots x_K!}
+\end{align*}\]</div>
+<p>denotes the multinomial function.</p>
+<p>The expected value of a multinomial random variable is <span class="math notranslate nohighlight">\(\E[X] = n \mbpi\)</span> and the <span class="math notranslate nohighlight">\(K \times K\)</span> covariance matrix is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Cov(X) &amp;= n 
+\begin{bmatrix}
+\pi_1(1-\pi_1) &amp; -\pi_1 \pi_2 &amp; \ldots &amp; -\pi_1 \pi_K \\
+-\pi_2 \pi_1 &amp; \pi_2 (1-\pi_2) &amp; \ldots &amp; -\pi_2 \pi_K \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+-\pi_K \pi_1 &amp; -\pi_K \pi_2 &amp; \ldots &amp; \pi_K (1- \pi_K)
+\end{bmatrix}
+\end{align*}\]</div>
+<p>with entries</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+[\Cov[X]]_{ij} &amp;= 
+\begin{cases}
+n \pi_i (1-\pi_i) &amp; \text{if } i = j \\
+-n \pi_i \pi_j &amp; \text{if } i \neq j \\
+\end{cases}
+\end{align*}\]</div>
+<section id="poisson-multinomial-connection">
+<h3>Poisson / Multinomial Connection<a class="headerlink" href="#poisson-multinomial-connection" title="Permalink to this heading">#</a></h3>
+<p>Suppose we have a collection of independent (but not identically distributed) Poisson random variables,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_i &amp;\sim \mathrm{Po}(\lambda_i) &amp; \text{for } i&amp;=1,\ldots,K.
+\end{align*}\]</div>
+<p>Due to their independence, the sum <span class="math notranslate nohighlight">\(X_\bullet = \sum_{i=1}^K X_i\)</span> is Poisson distributed as well,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_\bullet &amp;\sim \mathrm{Po}\left( \sum_{i=1}^K \lambda_k \right)
+\end{align*}\]</div>
+<p>(We’ll use this <span class="math notranslate nohighlight">\(X_\bullet\)</span> notation more next time.)</p>
+<p>Conditioning on the sum renders the counts <em>dependent</em>. (They have to sum to a fixed value, so they can’t be independent!) Specifically, given the sum, the counts follow a multinomial distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+(X_1, \ldots, X_K) \mid X_\bullet = n &amp;\sim \mathrm{Mult}(n, \mbpi)
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbpi &amp;= \left(\frac{\lambda_1}{\lambda_\bullet}, \ldots, \frac{\lambda_K}{\lambda_\bullet} \right)
+\end{align*}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\lambda_{\bullet} = \sum_{i=1}^K \lambda_i\)</span>. In words, given the sum, the vector of counts is multinomially distributed with probabilities given by the normalized rates.</p>
+</section>
+</section>
+<section id="maximum-likelihood-estimation">
+<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this heading">#</a></h2>
+<p>The distributions above are simple probability models with one or two parameters. How can we estimate those parameters from data? We’ll focus on maximum likelihood estimation.</p>
+<p>The log likelihood is the probability of the data viewed as a function of the model parameters <span class="math notranslate nohighlight">\(\mbtheta\)</span>. Given i.i.d. observations <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^n\)</span>, the log likelihood reduces to a sum,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbtheta) &amp;= \sum_{i=1}^n \log p(x_i; \theta).
+\end{align*}\]</div>
+<p>The maximum likelihood estimate (MLE) is a maximum of the log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\mbtheta}_{\mathsf{MLE}} &amp;= \arg\; \max \cL(\mbtheta)
+\end{align*}\]</div>
+<p>(Assume for now that there is a single global maximum.)</p>
+<div class="tip admonition">
+<p class="admonition-title">Example: MLE for the Bernoulli distribution</p>
+<p>Consider a Bernoulli distribution unknown parameter <span class="math notranslate nohighlight">\(\theta \in [0,1]\)</span> for the probability of heads. Suppose we observe <span class="math notranslate nohighlight">\(n\)</span> independent coin flips</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_i &amp;\iid\sim \mathrm{Bern}(\theta) &amp; \text{for } i&amp;=1,\ldots, n.
+\end{align*}\]</div>
+<p>Observing <span class="math notranslate nohighlight">\(X_i=x_i\)</span> for all <span class="math notranslate nohighlight">\(i\)</span>, the log likelihood is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\theta) 
+&amp;= \sum_{i=1}^n x_i \log \theta + (1 - x_i) \log (1 - \theta) \\
+&amp;= x \log \theta + (n - x) \log (1 - \theta)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = \sum_{i=1}^n x_i\)</span> is the number of flips that came up heads.</p>
+<p>Taking the derivative with respect to <span class="math notranslate nohighlight">\(p\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\dif}{\dif \theta} \cL(\theta) 
+&amp;= \frac{x}{\theta} - \frac{n - x}{1 - \theta} \\
+&amp;= \frac{x - n\theta}{\theta (1 - \theta)}.
+\end{align*}\]</div>
+<p>Setting this to zero and solving for <span class="math notranslate nohighlight">\(\theta\)</span> yields the MLE,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\theta}_{\mathsf{MLE}} = \frac{x}{n}.
+\end{align*}\]</div>
+<p>Intuitively, the maximum likelihood estimate is the fraction of coin flips that came up heads. Note that we could have equivalently expressed this model as a single observation of <span class="math notranslate nohighlight">\(X \sim \mathrm{Bin}(n, \theta)\)</span> and obtained the same result.</p>
+</div>
+</section>
+<section id="asymptotic-normality-of-the-mle">
+<h2>Asymptotic Normality of the MLE<a class="headerlink" href="#asymptotic-normality-of-the-mle" title="Permalink to this heading">#</a></h2>
+<p>If the data were truly generated by i.i.d. draws from a model with parameter <span class="math notranslate nohighlight">\(\mbtheta^\star\)</span>, then under certain conditions the MLE is asymptotically normal and achieves the Cramer-Rao lower bound,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sqrt{n} (\hat{\mbtheta}_{\mathsf{MLE}} - \mbtheta^\star) \to \cN(0, \cI(\mbtheta^\star)^{-1})
+\end{align*}\]</div>
+<p>in distribution, where <span class="math notranslate nohighlight">\(\cI(\mbtheta)\)</span> is the <strong>Fisher information matrix</strong>. We obtain standard error estimates by taking the square root of the diagonal elements of the inverse Fisher information matrix and dividing by <span class="math notranslate nohighlight">\(\sqrt{n}\)</span>.</p>
+<section id="fisher-information-matrix">
+<h3>Fisher Information Matrix<a class="headerlink" href="#fisher-information-matrix" title="Permalink to this heading">#</a></h3>
+<p>The Fisher information matrix is the covariance of the <strong>score function</strong>, the partial derivative of the log likelihood with respect to the parameters. It’s easy to confuse yourself with poor notation, so let’s try to derive it precisely.</p>
+<p>The log probability is a function that maps two arguments (a data point and a parameter vector) to a scalar, <span class="math notranslate nohighlight">\(\log p: \cX \times \Theta \mapsto \reals\)</span>.  The score function is the partial derivative with respect to the parameter vector,  which is itself a function, <span class="math notranslate nohighlight">\(\nabla_\theta \log p: \cX \times \Theta \mapsto \Theta\)</span>.</p>
+<p>Now consider <span class="math notranslate nohighlight">\(\mbtheta\)</span> fixed and treat <span class="math notranslate nohighlight">\(X \sim p(\cdot; \mbtheta)\)</span> as a random variable. The expected value of the score is zero,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E_{X \sim p(\cdot; \mbtheta)}[\nabla_\theta \log p(X; \mbtheta)] 
+&amp;= \int_{\cX} p(x; \mbtheta) \nabla_\theta \log p (x; \mbtheta) \dif x \\
+&amp;= \int_{\cX} p(x; \mbtheta) \frac{\nabla_\theta p(x; \mbtheta)}{p(x; \mbtheta)} \dif x \\
+&amp;= \nabla_\theta \int_{\cX}  p(x; \mbtheta) \dif x \\
+&amp;= \nabla_\theta 1 \\
+&amp;= \mbzero.
+\end{align*}\]</div>
+<p>The Fisher information matrix is the <strong>covariance of the score function</strong>, again treating <span class="math notranslate nohighlight">\(\mbtheta\)</span> as fixed,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cI(\mbtheta) 
+&amp;= \Cov_{X \sim p(\cdot; \mbtheta)}[\nabla_\theta \log p(X; \mbtheta)]  \\
+&amp;= \E_{X \sim p(\cdot; \mbtheta)}[\nabla_\theta \log p(X; \mbtheta) \nabla_\theta \log p(X; \mbtheta)^\top] 
+- \underbrace{\E_{X \sim p(\cdot; \mbtheta)}[\nabla_\theta \log p(X; \mbtheta)]}_{\mbzero} \, 
+\underbrace{\E_{X \sim p(\cdot; \mbtheta)}[\nabla_\theta \log p(X; \mbtheta)]^\top}_{\mbzero^\top} \\
+&amp;= \E_{X \sim p(\cdot; \mbtheta)}[\nabla_\theta \log p(X; \mbtheta) \nabla_\theta \log p(X; \mbtheta)^\top].
+\end{align*}\]</div>
+<p>If <span class="math notranslate nohighlight">\(\log p\)</span> is twice differentiable (in <span class="math notranslate nohighlight">\(\mbtheta\)</span>) the under certain regularity conditions, the Fisher information matrix is equivalent to the expected value of the <em>negative</em> Hessian of the log probability,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cI(\mbtheta) &amp;= - \E_{X \sim p(\cdot; \mbtheta)}\left[ \nabla_\mbtheta^2 \log p (X; \mbtheta) \right]
+\end{align*}\]</div>
+<div class="tip admonition">
+<p class="admonition-title">Example: Fisher Information for the Bernoulli Distribution</p>
+<p>For a Bernoulli distribution, the log probability and its score were evaluated above,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\log p(x; \theta) &amp;= x \log \theta + (1 - x) \log (1 - \theta) \\
+\nabla_\theta \log p(x; \theta) &amp;= \frac{x - \theta}{\theta (1 - \theta)}
+\end{align*}\]</div>
+<p>The negative Hessian with respect to <span class="math notranslate nohighlight">\(\theta\)</span> is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+- \nabla^2_\theta \log p(x; \theta) 
+&amp;= \frac{x}{\theta^2} + \frac{1 - x}{(1 - \theta)^2}.
+\end{align*}\]</div>
+<p>Taking the expectation w.r.t. <span class="math notranslate nohighlight">\(X \sim p(\cdot; \theta)\)</span> yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cI(\theta) 
+&amp;= -\E\left[\nabla^2_\theta \log p(x; \theta) \right] \\
+&amp;= \frac{\theta}{\theta^2} + \frac{1- \theta}{(1-\theta)^2} \\
+&amp;= \frac{1}{\theta (1 - \theta)}.
+\end{align*}\]</div>
+<p>Interestingly, the inverse Fisher information is the <span class="math notranslate nohighlight">\(\Var[X; \theta]\)</span>. We’ll revisit this point later in the course.</p>
+</div>
+</section>
+</section>
+<section id="hypothesis-testing">
+<h2>Hypothesis Testing<a class="headerlink" href="#hypothesis-testing" title="Permalink to this heading">#</a></h2>
+<p>Suppose we want to test a null hypothesis <span class="math notranslate nohighlight">\(\cH_0: \theta = \theta_0\)</span> for a scalar parameter <span class="math notranslate nohighlight">\(\theta \in \reals\)</span>. Exploiting the asymptotic normality of the MLE, the test statistic,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+z &amp;= \frac{\hat{\theta} - \theta_0}{\sqrt{\cI(\hat{\theta})^{-1} / n}}
+\end{align*}\]</div>
+<p>approximately follows a standard normal distribution under the null hypothesis. From this we can derive one- or two-sided p-values. (We dropped the <span class="math notranslate nohighlight">\(\mathsf{MLE}\)</span> subscript on <span class="math notranslate nohighlight">\(\hat{\theta}\)</span> to simplify notation.)</p>
+<section id="wald-test">
+<h3>Wald test<a class="headerlink" href="#wald-test" title="Permalink to this heading">#</a></h3>
+<p>Equivalently,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+z^2 &amp;= \frac{(\hat{\theta} - \theta_0)^2}{\cI(\hat{\theta})^{-1} / n}
+\end{align*}\]</div>
+<p>has a chi-squared null distribution with 1 degree of freedom. When the non-null standard error derived from the Fisher information at <span class="math notranslate nohighlight">\(\hat{\theta}\)</span> is used to compute the test statistic, it is called a <strong>Wald statistic</strong>.</p>
+<p>For multivariate settings, <span class="math notranslate nohighlight">\(\cH_0: \mbtheta = \mbtheta_0\)</span> with <span class="math notranslate nohighlight">\(\mbtheta \in \reals^D\)</span>, the Wald statistic generalizes to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+z^2 
+&amp;= (\hat{\mbtheta} - \mbtheta_0)^\top [\cI(\hat{\mbtheta})^{-1} / n]^{-1} (\hat{\mbtheta} - \mbtheta_0) \\
+&amp;= n (\hat{\mbtheta} - \mbtheta_0)^\top \cI(\hat{\mbtheta}) (\hat{\mbtheta} - \mbtheta_0),
+\end{align*}\]</div>
+<p>which has a chi-squared null distribution with <span class="math notranslate nohighlight">\(D\)</span> degrees of freedom. The p-value is then the probability of seeing a value at least as large as <span class="math notranslate nohighlight">\(z^2\)</span> under the chi-squared distribution.</p>
+<p>Wald tests are one of the three canonical large-sample tests. The other two are the likelihood ratio test and the score test (a.k.a., the Lagrange multiplier test). Asymptotically, they are equivalent, but in finite samples they differ. See <span id="id1">Agresti [<a class="reference internal" href="99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> (Sec 1.3.3) for more details.</p>
+</section>
+</section>
+<section id="confidence-intervals">
+<h2>Confidence Intervals<a class="headerlink" href="#confidence-intervals" title="Permalink to this heading">#</a></h2>
+<p>In practice, we often care more about estimating confidence intervals for parameters than testing specific hypotheses about their values. Given a hypothesis test with level <span class="math notranslate nohighlight">\(\alpha\)</span>, like the Wald test above, we can construct a confidence interval with level <span class="math notranslate nohighlight">\(1-\alpha\)</span> by taking all <span class="math notranslate nohighlight">\(\theta\)</span> for which <span class="math notranslate nohighlight">\(\cH_0\)</span> has a p-value exceeding <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+<p>For example, a 95% Wald confidence interval for a scalar parameter is the set,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\left\{\theta_0: \frac{|\hat{\theta} - \theta_0|}{\sqrt{\cI(\hat{\theta})^{-1} / n}} &lt; 1.96 \right\} 
+&amp;= \hat{\theta} \pm 1.96 \sqrt{\cI(\hat{\theta})^{-1} / n}
+\end{align*}\]</div>
+<p>Equivalent confidence intervals can be derived from the tails of the chi-squared distribution. Note that the confidence interval is a function of the observed data from which the MLE is computed.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example: Confidence Intervals for a Bernoulli Parameter</p>
+<p>Continuing our running example, we found that the MLE of a Bernoulli parameter is <span class="math notranslate nohighlight">\(\hat{\theta} = x/n\)</span> and the inverse Fisher information is <span class="math notranslate nohighlight">\(\cI(\theta)^{-1} = \theta (1 - \theta)\)</span>. Together, these yield a 95% Wald confidence interval of,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\theta} \pm 1.96 \sqrt{\frac{\hat{\theta} ( 1 - \hat{\theta})}{n}}.
+\end{align*}\]</div>
+<p>Again, this should be intuitive. If we were estimating the mean of a Gaussian distribution, the variance of the estimator would scale be roughly <span class="math notranslate nohighlight">\(1/n\)</span> times the variance of an individual observation. Since <span class="math notranslate nohighlight">\(\hat{\theta} ( 1 - \hat{\theta})\)</span> is the variance of a Bernoulli distribution with parameter <span class="math notranslate nohighlight">\(\hat{\theta}\)</span>, we see similar behavior here.</p>
+</div>
+</section>
+<section id="bayesian-inference">
+<h2>Bayesian Inference<a class="headerlink" href="#bayesian-inference" title="Permalink to this heading">#</a></h2>
+<p>It is tempting to interpret the confidence interval as saying that <span class="math notranslate nohighlight">\(\theta\)</span> is in the interval with probability <span class="math notranslate nohighlight">\(1-\alpha\)</span> given the observed data, but <strong>that is not justified!</strong> In the setting above, the parameter <span class="math notranslate nohighlight">\(\theta\)</span> is <strong>not</strong> a random variable. This fallacy is a classic misinterpretation of frequentist confidence intervals.</p>
+<p>To make such a claim, we need to adopt a Bayesian perspective and reason about the <em>posterior</em> distribution of the parameters, <span class="math notranslate nohighlight">\(\theta\)</span>, given the data, <span class="math notranslate nohighlight">\(x\)</span>. To obtain a posterior, we first need to specify a <em>prior</em> distribution on parameters, <span class="math notranslate nohighlight">\(p(\theta)\)</span>. Given a prior and likelihood, the posterior follows from Bayes’ rule,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\theta \mid X) &amp;= \frac{p(X \mid \theta) \, p(\theta)}{p(X)},
+\end{align*}\]</div>
+<p>where the denominator is the <em>marginal likelihood</em> <span class="math notranslate nohighlight">\(p(x) = \int p(x \mid \theta) \, p(\theta) \dif \theta\)</span>.
+To obtain an analogue of frequentist confidence intervals, we may summarize the posterior in terms of a <strong>Bayesian credible interval</strong>: a set of parameters that captures <span class="math notranslate nohighlight">\(1-\alpha\)</span> probability under the posterior. There are infinitely many such sets, but a common choice for scalar parameters is the interval ranging from the <span class="math notranslate nohighlight">\(\alpha/2\)</span> to the <span class="math notranslate nohighlight">\(1-\alpha/2\)</span> quantiles of the posterior distribution.</p>
+<p>Note, however, that the posterior credible interval depends on the choice of prior. Indeed, the subjective choice of prior distributions is the source of much of the criticism of Bayesian approaches. In cases where we truly know nothing about the parameter <em>a priori</em>, we can often specify “weak” or “uninformative” prior distributions. Under such assumptions, we’ll find that Bayesian and frequentist approaches can yield similar estimates, with the advantage that the Bayesian credible interval admits the intuitive interpretation as a set where <span class="math notranslate nohighlight">\(\theta\)</span> is most probable.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example: Bayesian Credible Intervals for a Bernoulli Parameter</p>
+<p>For a Bernoulli model, we often choose a <strong>conjugate prior</strong> distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\theta &amp;\sim \mathrm{Beta}(\alpha, \beta)
+\end{align*}\]</div>
+<p>with support on <span class="math notranslate nohighlight">\(\theta \in [0,1]\)</span>. Its probability density function (pdf) is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\theta; \alpha, \beta) &amp;= \frac{1}{\mathrm{B}(\alpha, \beta)} \theta^{\alpha - 1} (1 - \theta)^{\beta - 1},
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{B}(\alpha, \beta)\)</span> is the beta function and the hyperparameters <span class="math notranslate nohighlight">\(\alpha, \beta \in \reals_+\)</span> determine the shape of the prior. When <span class="math notranslate nohighlight">\(\alpha = \beta = 1\)</span>, the prior reduces to a uniform distribution on <span class="math notranslate nohighlight">\([0,1]\)</span>.</p>
+<p>Under the beta prior, the posterior distribution over <span class="math notranslate nohighlight">\(\theta\)</span> is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\theta \mid \{x_i\}_{i=1}^n) 
+&amp;\propto \mathrm{Beta}(\theta; \alpha, \beta) \prod_{i=1}^n p(x_i \mid \theta) \\
+&amp;\propto \theta^{\alpha - 1} (1 - \theta)^{\beta - 1} \prod_{i=1}^n \theta^{x_i} (1 - \theta)^{1 - x_i} \\
+&amp;= \theta^{x + \alpha - 1} (1- \theta)^{n - x + \beta - 1} \\
+&amp;\propto \mathrm{Beta}(\theta; x + \alpha, n - x + \beta)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = \sum_{i=1}^n x_i\)</span> is the number of coins that came up heads.</p>
+<p>The posterior mode — i.e., the <strong><em>maximum a posteriori</em> (MAP)</strong> estimate — is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\theta}_{\mathsf{MAP}} 
+&amp;= \frac{x + \alpha - 1}{n + \alpha + \beta - 2},
+\end{align*}\]</div>
+<p>and under an uninformative prior with <span class="math notranslate nohighlight">\(\alpha = \beta = 1\)</span>, it is equivalent to the MLE, <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathsf{MLE}} = x / n\)</span>.</p>
+<p>For small samples, Bayesian credible intervals can be derived using the cumulative distribution function (cdf) of the beta distribution, which is given by the incomplete beta function.</p>
+<p>In the large sample limit, the beta posterior is approximately Gaussian.
+The variance of the posterior beta distribution is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Var[\theta \mid X] 
+&amp;= \frac{(x + \alpha)(n - x + \beta)}{(n + \alpha + \beta)^2 (n + \alpha + \beta + 1)}
+\end{align*}\]</div>
+<p>In this limit, <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> are much smaller than <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(x\)</span>. Thus, the posterior variance is approximately</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Var[\theta \mid X] \approx \frac{x(n - x)}{n^3} 
+= \frac{\hat{\theta}_{\mathsf{MLE}} (1 - \hat{\theta}_{\mathsf{MLE}})}{n}
+= \cI(\hat{\theta}_{\mathsf{MLE}})^{-1} / n,
+\end{align*}\]</div>
+<p>and the Bayesian credible intervals match the Wald confidence interval.</p>
+</div>
+</section>
+<section id="demo-college-football-national-championship">
+<h2>Demo: College Football National Championship<a class="headerlink" href="#demo-college-football-national-championship" title="Permalink to this heading">#</a></h2>
+<p>Finally, let’s end with a little demo. The College Football National Championship game is tonight between the Michigan Wolverines and the Washington Huskies! In class, I asked you to guess the final score for each team, mod 10. That’s a discrete random variable! Let’s look at some data from this season and see if we can make an informed prediction.</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setup</span>
+<span class="kn">import</span> <span class="nn">torch</span> 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scott/anaconda3/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="poll-results">
+<h3>Poll Results<a class="headerlink" href="#poll-results" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">responses</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://docs.google.com/spreadsheets/d/1lul-n2MiIh7acE47zagJ_4WsPbgRHy9e04ZUJmeVf40/export?format=csv&quot;</span><span class="p">)</span>
+<span class="n">responses</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Timestamp</th>
+      <th>Name</th>
+      <th>Net ID</th>
+      <th>Are you comfortable programming in Python?</th>
+      <th>Have you used PyTorch before?</th>
+      <th>Please select up to three time slots when would you like us to hold office hours. (Assignments will be due roughly every other Friday at midnight.) [Monday]</th>
+      <th>Please select up to three time slots when would you like us to hold office hours. (Assignments will be due roughly every other Friday at midnight.) [Tuesday]</th>
+      <th>Please select up to three time slots when would you like us to hold office hours. (Assignments will be due roughly every other Friday at midnight.) [Wednesday]</th>
+      <th>Please select up to three time slots when would you like us to hold office hours. (Assignments will be due roughly every other Friday at midnight.) [Thursday]</th>
+      <th>Please select up to three time slots when would you like us to hold office hours. (Assignments will be due roughly every other Friday at midnight.) [Friday]</th>
+      <th>How many points (mod 10) do you think the Michigan Wolverines will score in the College Football Championship tonight?</th>
+      <th>How many points (mod 10) do you think the Washington Huskies will score in the College Football Championship tonight?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1/7/2024 19:03:20</td>
+      <td>Scott Linderman</td>
+      <td>swl1</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predicted_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">responses</span><span class="p">[</span><span class="n">responses</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">predicted_hist</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">predicted_scores</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the histogram</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">predicted_hist</span><span class="o">.</span><span class="n">hist</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Predicted Washington Score (mod 10)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Predicted Michigan Score (mod 10)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Poll Results (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">predicted_scores</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/8eee9bfa1afa06d280ca98c5d58984ad296ac6ff4367ab015b4c74d21a6b512b.png" src="../_images/8eee9bfa1afa06d280ca98c5d58984ad296ac6ff4367ab015b4c74d21a6b512b.png" />
+</div>
+</div>
+</section>
+<section id="compare-to-actual-scores">
+<h3>Compare to Actual Scores<a class="headerlink" href="#compare-to-actual-scores" title="Permalink to this heading">#</a></h3>
+<p>Now let’s compare to actual scores from this season. This data is from <a class="reference external" href="https://collegefootballdata.com/">https://collegefootballdata.com/</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">allgames</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/data/01_allgames.csv&quot;</span><span class="p">)</span>
+<span class="n">allgames</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Id</th>
+      <th>Season</th>
+      <th>Week</th>
+      <th>Season Type</th>
+      <th>Start Date</th>
+      <th>Start Time Tbd</th>
+      <th>Completed</th>
+      <th>Neutral Site</th>
+      <th>Conference Game</th>
+      <th>Attendance</th>
+      <th>...</th>
+      <th>Away Conference</th>
+      <th>Away Division</th>
+      <th>Away Points</th>
+      <th>Away Line Scores</th>
+      <th>Away Post Win Prob</th>
+      <th>Away Pregame Elo</th>
+      <th>Away Postgame Elo</th>
+      <th>Excitement Index</th>
+      <th>Highlights</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>401550883</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T17:00:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>401525434</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T18:30:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>49000.0</td>
+      <td>...</td>
+      <td>American Athletic</td>
+      <td>fbs</td>
+      <td>3.0</td>
+      <td>NaN</td>
+      <td>0.001042</td>
+      <td>1471.0</td>
+      <td>1385.0</td>
+      <td>1.346908</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>401540199</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T19:30:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>UAC</td>
+      <td>fcs</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>0.025849</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.896909</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>401520145</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T21:30:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>17982.0</td>
+      <td>...</td>
+      <td>Conference USA</td>
+      <td>fbs</td>
+      <td>14.0</td>
+      <td>NaN</td>
+      <td>0.591999</td>
+      <td>1369.0</td>
+      <td>1370.0</td>
+      <td>6.821333</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>401525450</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T23:00:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>15356.0</td>
+      <td>...</td>
+      <td>FBS Independents</td>
+      <td>fbs</td>
+      <td>41.0</td>
+      <td>NaN</td>
+      <td>0.760751</td>
+      <td>1074.0</td>
+      <td>1122.0</td>
+      <td>5.311493</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>401532392</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T23:00:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>23867.0</td>
+      <td>...</td>
+      <td>Mid-American</td>
+      <td>fbs</td>
+      <td>13.0</td>
+      <td>NaN</td>
+      <td>0.045531</td>
+      <td>1482.0</td>
+      <td>1473.0</td>
+      <td>6.547378</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>401540628</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T23:00:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>Patriot</td>
+      <td>fcs</td>
+      <td>13.0</td>
+      <td>NaN</td>
+      <td>0.077483</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5.608758</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>401520147</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T23:30:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>21407.0</td>
+      <td>...</td>
+      <td>Mountain West</td>
+      <td>fbs</td>
+      <td>28.0</td>
+      <td>NaN</td>
+      <td>0.819154</td>
+      <td>1246.0</td>
+      <td>1241.0</td>
+      <td>5.282033</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>401539999</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-26T23:30:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>MEAC</td>
+      <td>fcs</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>0.001097</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3.122344</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>401523986</td>
+      <td>2023</td>
+      <td>1</td>
+      <td>regular</td>
+      <td>2023-08-27T00:00:00.000Z</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>63411.0</td>
+      <td>...</td>
+      <td>Mountain West</td>
+      <td>fbs</td>
+      <td>28.0</td>
+      <td>NaN</td>
+      <td>0.001769</td>
+      <td>1462.0</td>
+      <td>1412.0</td>
+      <td>1.698730</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 33 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">past_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">allgames</span><span class="p">[[</span><span class="s2">&quot;Home Points&quot;</span><span class="p">,</span> <span class="s2">&quot;Away Points&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">past_hist</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">past_scores</span> <span class="o">%</span> <span class="mi">10</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the histogram</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">past_hist</span><span class="o">.</span><span class="n">hist</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Away Score (mod 10)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Home Score (mod 10)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All College Football Games from 2023 (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">past_scores</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/f94b32765fb65942bab0b2b2f9806aae63048c6b2ecd5c7ec4361b0c7c3928b0.png" src="../_images/f94b32765fb65942bab0b2b2f9806aae63048c6b2ecd5c7ec4361b0c7c3928b0.png" />
+</div>
+</div>
+</section>
+<section id="multinomial-model-of-individual-drives">
+<h3>Multinomial Model of Individual Drives<a class="headerlink" href="#multinomial-model-of-individual-drives" title="Permalink to this heading">#</a></h3>
+<p>Could we predict a distribution like this based on the outcomes of individual drives?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">umdrives</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/data/01_umdrives.csv&quot;</span><span class="p">)</span>
+<span class="n">uwdrives</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/data/01_uwdrives.csv&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">compute_drive_probs</span><span class="p">(</span><span class="n">drives</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns probabilities for number of points scored on each drive.</span>
+<span class="sd">    Even though the number of points can only be 0, 3, or 7 with the granularity </span>
+<span class="sd">    of this dataset, we encode the result as probabilities of integers [0, ..., 10).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">drives</span><span class="p">[</span><span class="s2">&quot;Drive Result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">TD</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">FG</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+                            <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">probs</span><span class="o">.</span><span class="n">hist</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+<span class="c1"># Compute probabilities of points scored/allowed on offense/defense by each team</span>
+<span class="n">um_off_probs</span><span class="p">,</span> <span class="n">um_off_n</span> <span class="o">=</span> <span class="n">compute_drive_probs</span><span class="p">(</span><span class="n">umdrives</span><span class="p">[</span><span class="n">umdrives</span><span class="p">[</span><span class="s2">&quot;Offense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Michigan&quot;</span><span class="p">])</span>
+<span class="n">um_def_probs</span><span class="p">,</span> <span class="n">um_def_n</span> <span class="o">=</span> <span class="n">compute_drive_probs</span><span class="p">(</span><span class="n">umdrives</span><span class="p">[</span><span class="n">umdrives</span><span class="p">[</span><span class="s2">&quot;Defense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Michigan&quot;</span><span class="p">])</span>
+<span class="n">uw_off_probs</span><span class="p">,</span> <span class="n">uw_off_n</span> <span class="o">=</span> <span class="n">compute_drive_probs</span><span class="p">(</span><span class="n">uwdrives</span><span class="p">[</span><span class="n">uwdrives</span><span class="p">[</span><span class="s2">&quot;Offense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Washington&quot;</span><span class="p">])</span>
+<span class="n">uw_def_probs</span><span class="p">,</span> <span class="n">uw_def_n</span> <span class="o">=</span> <span class="n">compute_drive_probs</span><span class="p">(</span><span class="n">uwdrives</span><span class="p">[</span><span class="n">uwdrives</span><span class="p">[</span><span class="s2">&quot;Defense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Washington&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the results</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">-</span><span class="mf">.4</span><span class="p">,</span> <span class="n">um_off_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Michigan&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">uw_off_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Washington&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Offense (n=</span><span class="si">{</span><span class="n">um_off_n</span><span class="p">,</span><span class="w"> </span><span class="n">uw_off_n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">-</span><span class="mf">.4</span><span class="p">,</span> <span class="n">um_def_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Michigan&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">uw_def_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Washington&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Defense (n=</span><span class="si">{</span><span class="n">um_def_n</span><span class="p">,</span><span class="w"> </span><span class="n">uw_def_n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Points Scored&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Points Allowed&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Probability&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/a34a1b893441e23a97d17760bd0d23ed23730332b5418279fd97cb849648a34d.png" src="../_images/a34a1b893441e23a97d17760bd0d23ed23730332b5418279fd97cb849648a34d.png" />
+</div>
+</div>
+<p>If you’ve followed college football this season, then you won’t be surprised to see Michigan’s defense giving up so few points per drive. It is rather surprising to me that Washington’s high-flying offense isn’t scoring that many more points than Michigan — the Washington offense looks amazing!</p>
+</section>
+<section id="simulations">
+<h3>Simulations<a class="headerlink" href="#simulations" title="Permalink to this heading">#</a></h3>
+<p>Anyway, suppose that the offense and defense meet in the middle. Suppose there are 11 drives per team per game — what would the distribution of scores was drawn from these distributions?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">Multinomial</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">305</span><span class="p">)</span>
+
+<span class="c1"># Compute average of UM offense points scored and UW defense points allowed, and vice-versa.</span>
+<span class="n">um_avg_probs</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">um_off_probs</span> <span class="o">+</span> <span class="n">uw_def_probs</span><span class="p">)</span>
+<span class="n">uw_avg_probs</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">uw_off_probs</span> <span class="o">+</span> <span class="n">um_def_probs</span><span class="p">)</span>
+
+<span class="c1"># Add a small probability of a missed PAT and a 2pt conversion</span>
+<span class="n">um_avg_probs</span> <span class="o">=</span> <span class="mf">0.98</span> <span class="o">*</span> <span class="n">um_avg_probs</span> <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">uw_avg_probs</span> <span class="o">=</span> <span class="mf">0.98</span> <span class="o">*</span> <span class="n">uw_avg_probs</span> <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># Simulate a bunch of games with these probs</span>
+<span class="n">num_games</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">num_drives</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">point_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">um_points</span> <span class="o">=</span> <span class="n">Multinomial</span><span class="p">(</span><span class="n">num_drives</span><span class="p">,</span> <span class="n">um_avg_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_games</span><span class="p">,))</span> <span class="o">@</span> <span class="n">point_vals</span>
+<span class="n">uw_points</span> <span class="o">=</span> <span class="n">Multinomial</span><span class="p">(</span><span class="n">num_drives</span><span class="p">,</span> <span class="n">uw_avg_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_games</span><span class="p">,))</span> <span class="o">@</span> <span class="n">point_vals</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scatter plot the scores</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">um_points</span><span class="p">,</span> <span class="n">uw_points</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">um_points</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">uw_points</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s1">&#39;r+&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Michigan Score&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Washington Score&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results of </span><span class="si">{</span><span class="n">num_games</span><span class="si">}</span><span class="s2"> Simulations&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/7aa760000a8643280bc344d5d3710e6bbe9a717c2e1afcef6e06f81655790f0c.png" src="../_images/7aa760000a8643280bc344d5d3710e6bbe9a717c2e1afcef6e06f81655790f0c.png" />
+</div>
+</div>
+<p>According to our simulations, it looks like Michigan has the upper hand. Hail to the Victors! What is the simulated probability of Michigan winning?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pr(Michigan wins): </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">um_points</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">uw_points</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">num_games</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pr(Michigan wins):  0.66
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s look at the simulated <em>spread</em>: the margin of victory.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;E[spread] = </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">um_points</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">uw_points</span><span class="p">)</span><span class="w"> </span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">um_points</span> <span class="o">-</span> <span class="n">uw_points</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Spread: Michigan Score - Washington Score&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated Spread&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">um_points</span> <span class="o">-</span> <span class="n">uw_points</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>E[spread] =  5.25
+</pre></div>
+</div>
+<img alt="../_images/fabb33217ba21d8f9a791e01d426c72a37b84d75ad7398dfa7e16b8f5c58a91f.png" src="../_images/fabb33217ba21d8f9a791e01d426c72a37b84d75ad7398dfa7e16b8f5c58a91f.png" />
+</div>
+</div>
+<p>We can also look at the simulated <em>total score</em> (this is the over/under bet).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;E[total score] = </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">um_points</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">uw_points</span><span class="p">)</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">um_points</span> <span class="o">+</span> <span class="n">uw_points</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Total Score&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated Total Score&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">um_points</span> <span class="o">+</span> <span class="n">uw_points</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>E[total score] =  52.82
+</pre></div>
+</div>
+<img alt="../_images/d7a61c78fb1b50f7317e5c49c2b5d7f00c64d7bbd26909c54957fbc1b9a8c16f.png" src="../_images/d7a61c78fb1b50f7317e5c49c2b5d7f00c64d7bbd26909c54957fbc1b9a8c16f.png" />
+</div>
+</div>
+<p>As of this writing, the pros have Michigan favored to win by 4.5 points with an over/under of 56.5 points. Our simulations show Michigan as 5.25 point favorites with an over/under of 52.8. We aren’t too far off!</p>
+</section>
+<section id="coming-full-circle">
+<h3>Coming Full Circle<a class="headerlink" href="#coming-full-circle" title="Permalink to this heading">#</a></h3>
+<p>Finally, let’s look at the simulated distribution of scores mod 10 and see if it’s anything like the distribution from actual games this season.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the histogram</span>
+<span class="n">sim_hist</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">um_points</span><span class="p">,</span> <span class="n">uw_points</span><span class="p">])</span> <span class="o">%</span> <span class="mi">10</span><span class="p">,</span> 
+                             <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sim_hist</span><span class="o">.</span><span class="n">hist</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Washington Score (mod 10)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Michigan Score (mod 10)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Histogram of Simulated Scores&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/a98ba01a4bcce9201b63bb13057c14ab96ace31bb9356ff64306ac5feb4b947c.png" src="../_images/a98ba01a4bcce9201b63bb13057c14ab96ace31bb9356ff64306ac5feb4b947c.png" />
+</div>
+</div>
+<p>Not too bad! It clearly picks up on 0, 1, 4, 7, and 8 as the most likely last digits. That trend was also apparent in the real scores.</p>
+</section>
+<section id="postgame-analysis">
+<h3>Postgame Analysis<a class="headerlink" href="#postgame-analysis" title="Permalink to this heading">#</a></h3>
+<p>Our predictions held up and Michigan won 34-13! (The game was much closer than the final score suggests.) So Michigan beat the spread, but the game fell short of the over/under.</p>
+<p>Alas, none of us guessed a 4-3 (mod 10) score, so no one gets my life-sized Jim Harbaugh bobblehead prize :(</p>
+<p>Let’s look at how the teams fared on a per-drive basis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/data/01_finals.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compute probabilities of points scored/allowed on offense/defense by each team</span>
+<span class="n">um_finals_probs</span><span class="p">,</span> <span class="n">um_finals_n</span> <span class="o">=</span> <span class="n">compute_drive_probs</span><span class="p">(</span><span class="n">finals</span><span class="p">[(</span><span class="n">finals</span><span class="p">[</span><span class="s2">&quot;Offense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Michigan&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">finals</span><span class="p">[</span><span class="s2">&quot;Defense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Washington&quot;</span><span class="p">)])</span>
+<span class="n">uw_finals_probs</span><span class="p">,</span> <span class="n">uw_finals_n</span> <span class="o">=</span> <span class="n">compute_drive_probs</span><span class="p">(</span><span class="n">finals</span><span class="p">[(</span><span class="n">finals</span><span class="p">[</span><span class="s2">&quot;Offense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Washington&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">finals</span><span class="p">[</span><span class="s2">&quot;Defense&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Michigan&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the results</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span> <span class="n">um_off_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;UM O (Season Avg)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">-</span><span class="mf">.25</span><span class="p">,</span> <span class="n">uw_def_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;UW D (Season Avg)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">um_off_probs</span> <span class="o">+</span> <span class="n">uw_def_probs</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;0.5 * (UM O + UW D)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">+</span><span class="mf">.25</span><span class="p">,</span> <span class="n">um_finals_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;UM O vs UW D (Finals)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Michigan&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span> <span class="n">uw_off_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;UW O (Season Avg)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">-</span><span class="mf">.25</span><span class="p">,</span> <span class="n">um_def_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;UM D (Season Avg)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">uw_off_probs</span> <span class="o">+</span> <span class="n">um_def_probs</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;0.5 * (UW O + UM D)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">+</span><span class="mf">.25</span><span class="p">,</span> <span class="n">uw_finals_probs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;UW O vs UM D (Finals)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Washington&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Points Scored&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Points Allowed&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Probability&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/a5ae08244a93a7df00dd637e95b3ea5af17caa773c7c3094762d5e830d268929.png" src="../_images/a5ae08244a93a7df00dd637e95b3ea5af17caa773c7c3094762d5e830d268929.png" />
+</div>
+</div>
+<p>So while the news media interview the Michigan offensive playeres, it looks like they played about as expected. The real stars are the Michigan defense, who held Washington to a single touchdown, far outperforming what we expected by averaging the season-long performances. It was a fun game to watch, and I hope you’ve had some fun predicting the outcome too!</p>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h2>
+<p>That’s it! We’ve had our first taste of models and algorithms for discrete data.
+Though it may seem like a stretch to call a these basic distributions “models,” that’s exactly what they are. Likewise, the procedures we derived for computing the MLE of a Bernoulli distribution, constructing Wald confidence intervals, and Bayesian credible intervals are our first “algorithms.” These will be our building blocks as we construct more sophisticated models and algorithms for more complex data.</p>
+<p>Next up: we’ll look at <em>contingency tables</em>, which model joint distributions over pairs of categorical random variables, just like the tables we plotted above!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Overview</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bernoulli-distribution">Bernoulli Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binomial-distribution">Binomial Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-distribution">Poisson Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-distribution">Categorical Distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multinomial-distribution">Multinomial Distribution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-multinomial-connection">Poisson / Multinomial Connection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-normality-of-the-mle">Asymptotic Normality of the MLE</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fisher-information-matrix">Fisher Information Matrix</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing">Hypothesis Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wald-test">Wald test</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-intervals">Confidence Intervals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference">Bayesian Inference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demo-college-football-national-championship">Demo: College Football National Championship</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poll-results">Poll Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-to-actual-scores">Compare to Actual Scores</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multinomial-model-of-individual-drives">Multinomial Model of Individual Drives</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulations">Simulations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-full-circle">Coming Full Circle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postgame-analysis">Postgame Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
