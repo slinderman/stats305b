@@ -17,7 +17,7 @@ We can summarize that result in a 2 $\times$ 2 table:
 | **Total**       | 89      |  63 | 152       |
 
 :::{admonition} Questions
-With this data, can we say that playing football (at all levels, compared to other contact sports) is associated with CTE? If so, how strong is the association? Can we say whether this association is causal? What are some caveats to consider when interpreting this data?
+With this data, can we say that playing football is associated with CTE? If so, how strong is the association? Can we say whether this association is causal? What are some caveats to consider when interpreting this data?
 :::
 
 ## Contingency Tables
@@ -194,7 +194,7 @@ The _odds ratio_ $\theta$ is exactly what it sounds like,
 = \frac{\pi_{11} \pi_{00}}{\pi_{10} \pi_{01}}
 \end{align*}
 
-The odds ratio is non-negative, $\theta \in \reals_+$. When $X$ and $Y$ are independent, $\pi_{11} = \pi_{01}$ and $\pi_{00} = \pi_{10}$ so that $\theta = 1$. 
+The odds ratio is non-negative, $\theta \in \reals_+$. When $X$ and $Y$ are independent, the homogeneity of conditionals implies that $\pi_{1|1} = \pi_{1|0}$ and $\pi_{0|1} = \pi_{0|0}$. In turn, $\Omega_1 = \Omega_0$ so that the odds ratio, $\theta$, is one.
 
 For inference it is often more convenient to work with the _log odds ratio_,
 \begin{align*}
