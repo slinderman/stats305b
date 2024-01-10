@@ -29,8 +29,8 @@ We will draw from a couple of sources that are freely available online:
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
-| Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.ipynb) | {cite:p}`agresti2002categorical` Ch. 1        |
-| Jan 10, 2024 | Contingency Tables                     |  {cite:p}`agresti2002categorical` Ch. 2-3       |
+| Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.ipynb) | {cite:p}`agresti2002categorical` Ch. 1 |
+| Jan 10, 2024 | [Contingency Tables](lectures/02_contingency_tables.md) | {cite:p}`agresti2002categorical` Ch. 2-3 |
 | Jan 15, 2024 | _MLK Day. No class_                    |         | 
 | Jan 17, 2024 | Logistic Regression                    |         | 
 | Jan 22, 2024 | Exponential Family GLMs                |         |
@@ -52,7 +52,7 @@ We will draw from a couple of sources that are freely available online:
 
 ## Assignments
 There will be 5 assignments due roughly every other Friday. They will not be equally weighted. The first one is just a primer to get you up to speed; the last one will be a bit more substantial than the rest.
-- **Homework 0: Python Primer**
+- [**Homework 0: Python Primer**](assignments/hw0/hw0.ipynb)
   - Released Mon, Jan 8, 2024
   - Due Fri, Jan 12, 2024 at 11:59pm
 
@@ -67,9 +67,11 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
 ## Grading
 
 Tentatively:
-- HW0: 5%
-- HW1-HW3: 15%
-- HW4: 20%
-- Midterm: 10%
-- Final: 15%
-- Participation 5%
+| Assignment   | Percentage |
+| ------------ | ---------- | 
+| HW 0         | 5%         |
+| HW 1-3       | 15% each   |
+| HW 4         | 20%        |
+| Midterm      | 10%        |
+| Final        | 15%        |
+| Participation | 5%        |
