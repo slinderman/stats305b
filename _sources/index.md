@@ -9,6 +9,11 @@ Term: Winter 2023-24 <br>
 Time: Monday and Wednesday, 1:30-2:50pm <br>
 Location: Room [380-380D](https://campus-map.stanford.edu/?srch=380-380D), Stanford University
 
+**Office Hours**
+- Scott: Wednesday 9-10am in the Wu Tsai Neurosciences Institute, second floor lounge
+- Leda: Thursday 5-7pm in the Bowker, Room 207, Sequoia Hall
+- Xavier: Friday 3-5pm in Building 360, Room 361A
+
 
 ## Prerequisites
 Students should be comfortable with probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)
