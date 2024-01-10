@@ -1,10 +1,30 @@
 # Contingency Tables 
 
-Last time we introduced basic distributions for discrete random variables &mdash; our first _models_! But a model of a single discrete random variable isn't all that interesting... What would be really cool is if we could model the joint distribution of _two_ categorical random variables. That's exactly what contingency tables do. 
+Last time we introduced basic distributions for discrete random variables &mdash; our first _models_! But a model of a single discrete random variable isn't all that interesting... Contingency tables allow us to model and reason about the joint distribution of _two_ categorical random variables. Two might not sound like a lot &mdash; we'll get to more complex models soon enough! &mdash; but it turns out plenty of important questions boil down to understanding the relationship between two variables.
 
-## Definitions
+## Motivating Example
 
-Let $X \in \{1,\ldots, I\}$ and $Y \in \{1,\ldots, J\}$ be categorical random variables. We represent the **joint probability distribution** as an $I \times J$ table,
+We used the College Football National Championship to motivate our analyses in the last lecture, but I have to admit, I have a love-hate relationship with football. While it's fun to watch, it's increasingly clear that repetitive head injuries sustained in football can have devastating consequences, including an increased risk of chronic traumatic encephalopathy (CTE). A recent study from {cite:t}`mckee2023neuropathologic` in _JAMA Neurology_ showed that CTE can be found even in amateur high school and college athletes, and the New York Times highlighted their research in a very sad [article](https://www.nytimes.com/interactive/2023/11/16/us/cte-youth-football.html) last fall.
+
+The only way to definitely diagnose CTE is via autopsy. {cite:t}`mckee2023neuropathologic` studied the brains of 152 people who had played contact sports and died under the age of 30 from various causes including injury, overdose, suicide, and others (but not from neurodegenerative disease). Of those 152 people, 92 had played football and the rest had played other sports like soccer, hockey, wrestling, rugby, etc. Of the 152 people, 63 were found to have CTE upon neuropathologic evaluation. Of the 92 football players, 48 had CTE.
+
+We can summarize that result in a 2 $\times$ 2 table:
+
+|                 | No CTE  | CTE | **Total** |
+| --------------- | ------- | --- | --------- |
+| **No Football** | 45      |  15 | 60        |
+| **Football**    | 44      |  48 | 92        |
+| **Total**       | 89      |  63 | 152       |
+
+:::{admonition} Questions
+With this data, can we say that playing football (at all levels, compared to other contact sports) is associated with CTE? If so, how strong is the association? Can we say whether this association is causal? What are some caveats to consider when interpreting this data?
+:::
+
+## Contingency Tables
+
+The table above is an example of a **contingency table**. It represents a sample from a **joint distribution** of two random variables, $X \in \{0,1\}$ indicating whether the person played football, and $Y \in \{0,1\}$ indicating whether they had CTE. 
+
+More generally, let $X \in \{1,\ldots, I\}$ and $Y \in \{1,\ldots, J\}$ be categorical random variables. We represent the joint distribution as an $I \times J$ table,
 \begin{align*}
 \mbPi = \begin{bmatrix}
 \pi_{11} & \ldots & \pi_{1J} \\
@@ -44,7 +64,7 @@ X \perp Y \iff \pi_{j|i} = \frac{\pi_{ij}}{\pi_{i \bullet}} = \frac{\pi_{i \bull
 
 ## Sampling
 
-Typically, we don't observe the probabilities $\mbPi$ directly, and we want to draw inferences about them given noisy observations. Let $\mbX \in \naturals^{I \times J}$ denote a matrix of counts $X_{ij}$ for each cell of the table. We need a model of how $\mbX$ is sampled. 
+We don't usually observe the probabilities $\mbPi$ directly. Instead, we have to draw inferences about them given noisy observations. Let $\mbX \in \naturals^{I \times J}$ denote a matrix of counts $X_{ij}$ for each cell of the table. We need a model of how $\mbX$ is sampled. 
 
 ### Poisson Sampling
 
