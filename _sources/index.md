@@ -11,7 +11,7 @@ Location: Room [380-380D](https://campus-map.stanford.edu/?srch=380-380D), Stanf
 
 **Office Hours**
 - Scott: Wednesday 9-10am in the 2nd floor lounge of the Wu Tsai Neurosciences Institute
-- Leda: Thursday 5-7pm in  Sequoia HallBowker, Room 207 (Bowker)
+- Leda: Thursday 5-7pm in  Sequoia Hall, Room 207 (Bowker)
 - Xavier: Friday 3-5pm in Building 360, Room 361A
 
 
@@ -36,7 +36,7 @@ Then we will switch to following research papers and chapters from other textboo
 | Jan 22, 2024 | Exponential Family GLMs                | {cite:p}`agresti2002categorical` Ch. 4-5 |
 | Jan 24, 2024 | Model Selection and Diagnostics        | {cite:p}`agresti2002categorical` Ch. 6 | 
 | Jan 29, 2024 | L1-regularized GLMs                    | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
-| Jan 31, 2024 | Bayesian Probit Regression             | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
+| Jan 31, 2024 | Bayesian Probit and Logistic Regression | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
 | Feb  5, 2024 | Generalized Linear Mixed Models        | {cite:p}`agresti2002categorical` Ch. 12 |
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
 | Feb 12, 2024 | Discrete Latent Variable Models        |         |
