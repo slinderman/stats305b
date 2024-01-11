@@ -10,20 +10,20 @@ Time: Monday and Wednesday, 1:30-2:50pm <br>
 Location: Room [380-380D](https://campus-map.stanford.edu/?srch=380-380D), Stanford University
 
 **Office Hours**
-- Scott: Wednesday 9-10am in the Wu Tsai Neurosciences Institute, second floor lounge
-- Leda: Thursday 5-7pm in the Bowker, Room 207, Sequoia Hall
+- Scott: Wednesday 9-10am in the 2nd floor lounge of the Wu Tsai Neurosciences Institute
+- Leda: Thursday 5-7pm in  Sequoia HallBowker, Room 207 (Bowker)
 - Xavier: Friday 3-5pm in Building 360, Room 361A
 
 
 ## Prerequisites
-Students should be comfortable with probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)
+Students should be comfortable with undergraduate probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)
 
 
 ## Books
-We will draw from a couple of sources that are freely available online:
+The first part of the course will draw from:
 - Agresti, Alan. Categorical Data Analysis, 2nd edition. John Wiley & Sons, 2002. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
 
-(We will add to this list as the course progresses.)
+Then we will switch to following research papers and chapters from other textbooks.
 
 ## Tentative Schedule
 
@@ -31,13 +31,13 @@ We will draw from a couple of sources that are freely available online:
 | ------------ | -------------------------------------- | ------- |
 | Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.ipynb) | {cite:p}`agresti2002categorical` Ch. 1 |
 | Jan 10, 2024 | [Contingency Tables](lectures/02_contingency_tables.md) | {cite:p}`agresti2002categorical` Ch. 2-3 |
-| Jan 15, 2024 | _MLK Day. No class_                    |         | 
-| Jan 17, 2024 | Logistic Regression                    |         | 
-| Jan 22, 2024 | Exponential Family GLMs                |         |
-| Jan 24, 2024 | Model Selection and Diagnostics        |         | 
-| Jan 29, 2024 | L1-regularized GLMs                    |         |
-| Jan 31, 2024 | Bayesian Probit Regression             |         |
-| Feb  5, 2024 | Generalized Linear Mixed Models        |         |
+| Jan 15, 2024 | _MLK Day. No class_                    |  | 
+| Jan 17, 2024 | Logistic Regression                    | {cite:p}`agresti2002categorical` Ch. 4-5 | 
+| Jan 22, 2024 | Exponential Family GLMs                | {cite:p}`agresti2002categorical` Ch. 4-5 |
+| Jan 24, 2024 | Model Selection and Diagnostics        | {cite:p}`agresti2002categorical` Ch. 6 | 
+| Jan 29, 2024 | L1-regularized GLMs                    | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
+| Jan 31, 2024 | Bayesian Probit Regression             | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
+| Feb  5, 2024 | Generalized Linear Mixed Models        | {cite:p}`agresti2002categorical` Ch. 12 |
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
 | Feb 12, 2024 | Discrete Latent Variable Models        |         |
 | Feb 14, 2024 | Hidden Markov Models                   |         | 
