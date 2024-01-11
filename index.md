@@ -11,7 +11,7 @@ Location: Room [380-380D](https://campus-map.stanford.edu/?srch=380-380D), Stanf
 
 **Office Hours**
 - Scott: Wednesday 9-10am in the 2nd floor lounge of the Wu Tsai Neurosciences Institute
-- Leda: Thursday 5-7pm in  Sequoia HallBowker, Room 207 (Bowker)
+- Leda: Thursday 5-7pm in  Sequoia Hall, Room 207 (Bowker)
 - Xavier: Friday 3-5pm in Building 360, Room 361A
 
 
