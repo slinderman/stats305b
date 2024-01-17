@@ -792,7 +792,7 @@ p(\mbPi \mid \mbX=\mbx)
 \[\begin{align*}
 \Pr(\log \theta \geq t \mid \mbX = \mbx) 
 &amp;= \int \bbI\left[\log \frac{\pi_{1|1} / (1 - \pi_{1|1})}{\pi_{1|0} / (1 - \pi_{1|0})} \geq t \right] \; p(\mbPi \mid \mbX = \mbx) \dif \mbPi \\
-&amp;\approx \sum_{m=1}^M \bbI\left[\log \frac{\pi_{1|1}^{(m)} / (1 - \pi_{1|1}^{(m)})}{\pi_{1|0}^{(m)} / (1 - \pi_{1|0}^{(m)})} \geq t \right]
+&amp;\approx \frac{1}{M} \sum_{m=1}^M \bbI\left[\log \frac{\pi_{1|1}^{(m)} / (1 - \pi_{1|1}^{(m)})}{\pi_{1|0}^{(m)} / (1 - \pi_{1|0}^{(m)})} \geq t \right]
 \end{align*}\]</div>
 <p>where</p>
 <div class="amsmath math notranslate nohighlight">
