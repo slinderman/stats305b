@@ -9,30 +9,35 @@ Term: Winter 2023-24 <br>
 Time: Monday and Wednesday, 1:30-2:50pm <br>
 Location: Room [380-380D](https://campus-map.stanford.edu/?srch=380-380D), Stanford University
 
+**Office Hours**
+- Scott: Wednesday 9-10am in the 2nd floor lounge of the Wu Tsai Neurosciences Institute
+- Leda: Thursday 5-7pm in  Sequoia Hall, Room 207 (Bowker)
+- Xavier: Friday 3-5pm in Building 360, Room 361A
+
 
 ## Prerequisites
-Students should be comfortable with probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)
+Students should be comfortable with undergraduate probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)
 
 
 ## Books
-We will draw from a couple of sources that are freely available online:
+The first part of the course will draw from:
 - Agresti, Alan. Categorical Data Analysis, 2nd edition. John Wiley & Sons, 2002. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
 
-(We will add to this list as the course progresses.)
+Then we will switch to following research papers and chapters from other textbooks.
 
 ## Tentative Schedule
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
-| Jan  8, 2024 | Discrete Distributions and the Basics of Statistical Inference | {cite:p}`agresti2002categorical` Ch. 1        |
-| Jan 10, 2024 | Contingency Tables                     |  {cite:p}`agresti2002categorical` Ch. 2-3       |
-| Jan 15, 2024 | _MLK Day. No class_                    |         | 
+| Jan  8, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.ipynb) | {cite:p}`agresti2002categorical` Ch. 1 |
+| Jan 10, 2024 | [Contingency Tables](lectures/02_contingency_tables.md) | {cite:p}`agresti2002categorical` Ch. 2-3 |
+| Jan 15, 2024 | _MLK Day. No class_                    |  | 
 | Jan 17, 2024 | [Logistic Regression](lectures/03_logreg.md) | {cite:p}`agresti2002categorical` Ch. 4-5 | 
 | Jan 22, 2024 | Exponential Family GLMs                | {cite:p}`agresti2002categorical` Ch. 4-5 |
-| Jan 24, 2024 | Model Selection and Diagnostics        |         | 
-| Jan 29, 2024 | L1-regularized GLMs                    |         |
-| Jan 31, 2024 | Bayesian Probit Regression             |         |
-| Feb  5, 2024 | Generalized Linear Mixed Models        |         |
+| Jan 24, 2024 | Model Selection and Diagnostics        | {cite:p}`agresti2002categorical` Ch. 6 | 
+| Jan 29, 2024 | L1-regularized GLMs                    | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
+| Jan 31, 2024 | Bayesian Probit and Logistic Regression | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
+| Feb  5, 2024 | Generalized Linear Mixed Models        | {cite:p}`agresti2002categorical` Ch. 12 |
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
 | Feb 12, 2024 | Discrete Latent Variable Models        |         |
 | Feb 14, 2024 | Hidden Markov Models                   |         | 
@@ -46,7 +51,8 @@ We will draw from a couple of sources that are freely available online:
 | Mar 13, 2024 | Everything Else                        |         |
 
 ## Assignments
-- **Homework 0: Python Primer**
+There will be 5 assignments due roughly every other Friday. They will not be equally weighted. The first one is just a primer to get you up to speed; the last one will be a bit more substantial than the rest.
+- [**Homework 0: Python Primer**](assignments/hw0/hw0.ipynb)
   - Released Mon, Jan 8, 2024
   - Due Fri, Jan 12, 2024 at 11:59pm
 
@@ -56,3 +62,16 @@ We will draw from a couple of sources that are freely available online:
 
 - **Final Exam**: Wed, March 20, 2024 from 3:30-6:30pm (location TBD)
   - You may bring a cheat sheet covering _both sides_ of an 8.5x11" piece of paper
+
+
+## Grading
+
+Tentatively:
+| Assignment   | Percentage |
+| ------------ | ---------- | 
+| HW 0         | 5%         |
+| HW 1-3       | 15% each   |
+| HW 4         | 20%        |
+| Midterm      | 10%        |
+| Final        | 15%        |
+| Participation | 5%        |

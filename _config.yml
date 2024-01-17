@@ -6,6 +6,7 @@ execute:
   execute_notebooks: force
   exclude_patterns:
     - 'hw0.ipynb'
+    - '01_distributions.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
     - 'hw3.ipynb'
