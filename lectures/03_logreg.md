@@ -162,7 +162,7 @@ If we run gradient descent with a constant step size of $\alpha = 1/L$, then the
 \end{align*}
 where $\mbbeta_0$ is the initial setting of the parameters and $\mbbeta^\star$ is the global optimum. 
 
-Put differently, if we want a gap of at most epsilon, we need to run $t = O(1/\epsilon)$ iterations of gradient descent. Put differently, if we want to reduce $\epsilon$ by a factor of 100, we need to run around 100 times as many iterations. This is called a **sub-linear convergence** rate.
+Put differently, if we want a gap of at most epsilon, we need to run $t \sim (1/\epsilon$ iterations of gradient descent. Put differently, if we want to reduce $\epsilon$ by a factor of 100, we need to run around 100 times as many iterations. This is called a **sub-linear convergence** rate.
 
 ## Pathologies in the Separable Regime
 
@@ -227,7 +227,7 @@ Applying this bound recursively yields that,
 \begin{align*}
 \cL(\mbbeta_t) - \cL(\mbbeta^\star) &\leq \left(1 - \frac{\mu}{L} \right)^t (\cL(\mbbeta_0) - \cL(\mbbeta^\star)).
 \end{align*}
-Put differently, if we want a gap of at most epsilon, we need to run $t \leq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} = \cO(\log \frac{1}{\epsilon})$ iterations of gradient descent. If we want to reduce $\epsilon$ by a factor of 100, we only need to run around $\log 100$ times as many iterations. This is called **linear convergence**.
+Put differently, if we want a gap of at most epsilon, we need to run $t \leq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}$ iterations of gradient descent. If we want to reduce $\epsilon$ by a factor of 100, we only need to run around $\log 100$ times as many iterations. This is called **linear convergence**.
 
 ## Newton's Method
 Gradient descent leverages the gradient at $\mbbeta$ to determine the update. Newton's method uses the Hessian to inform the update as well, and in doing so it can achieve considerably faster convergence.
@@ -265,7 +265,7 @@ Applying this bound recursively yields that,
 \|\mbbeta_t - \mbbeta^\star\|_2 &\leq \left(\tfrac{1}{\sqrt{2}} \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2t}.
 \end{align*}
 
-Put differently, assume we start with $\|\mbbeta_0 - \mbbeta^\star\| < \sqrt{2}$. Then we need $t = \cO(\log \frac{1}{\sqrt{\epsilon}})$ iterations to obtain an error of $\epsilon$. If we want to reduce $\epsilon$ by a factor of 100, we only need to run around $\log 10$ times as many iterations. 
+Put differently, assume we start with $\|\mbbeta_0 - \mbbeta^\star\| < \sqrt{2}$. Then we need $t \sim \log \frac{1}{\sqrt{\epsilon}}$ iterations to obtain an error of $\epsilon$. If we want to reduce $\epsilon$ by a factor of 100, we only need to run around $\log 10$ times as many iterations. 
 
 <!-- 
 eps \leq c^{2t};  c < 1
@@ -279,7 +279,7 @@ t = O(\log (1 / \sqrt{eps}))
 :class: warning
 Note that here the convergence is in terms of distance to the optimum, rather than in the value of the objective function. We can recast the convergence of gradient descent in similar terms. 
 :::
-
+<!-- 
 ## Iteratively Reweighted Least Squares
 
 Newton's method solves for the minimum of a quadratic approximation to the loss function at each iteration. What else involves minimizing a quadratic loss function? Least squares. It turns out that Newton's method can be viewed as iteratively solving a weighted least squares problem. To see this, Let's first write the gradient and Hessian in matrix form,
@@ -314,7 +314,6 @@ How can we interpret the working responses? We can view them as the real respons
 &= \mbx_i^\top \mbbeta_t + \frac{(y_i - \hat{y}_{t,i})}{w_{t,i}} \\
 &\triangleq z_{t,i}.
 \end{align*}
-<!-- &= \mbx_i^\top \mbbeta_t + \frac{(y_i - \hat{y}_i)}{\sigma(\mbx_i^\top \mbbeta_t)(1 - \sigma(\mbx_i^\top \mbbeta_t))}  \\ -->
 
 
 ## Asymptotic Covariance of MLE
@@ -398,7 +397,9 @@ Evaluating at the MAP estimate,
 &\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
 &\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
 \end{align*}
-The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week.
+The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week. 
+
+-->
 
 ## Conclusion
 
