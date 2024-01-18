@@ -638,7 +638,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 </div>
 <section id="converge-rate-of-newton-s-method">
 <h3>Converge Rate of Newton’s Method<a class="headerlink" href="#converge-rate-of-newton-s-method" title="Permalink to this heading">#</a></h3>
-<p>Newton’s method achieves <strong>second order convergence</strong>, meaning</p>
+<p>Under certain conditions — if the objective is strongly convex, the Hessian is Lipschitz continuous, and we start near enough to the global optimum — Newton’s method achieves <strong>second order convergence</strong>, meaning</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 \|\mbbeta_{t+1} - \mbbeta^\star\|_2 \leq \frac{1}{2} \|\mbbeta_t - \mbbeta^\star\|_2^2
@@ -647,20 +647,14 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 Applying this bound recursively yields that,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\|\mbbeta_t - \mbbeta^\star\|_2 &amp;\leq \left(\tfrac{1}{\sqrt{2}} \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2t}.
+\|\mbbeta_t - \mbbeta^\star\|_2 &amp;\leq \left(\tfrac{1}{\sqrt{2}} \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2^t}.
 \end{align*}\]</div>
-<p>Put differently, assume we start with <span class="math notranslate nohighlight">\(\|\mbbeta_0 - \mbbeta^\star\| &lt; \sqrt{2}\)</span>. Then we need <span class="math notranslate nohighlight">\(t \sim \log \frac{1}{\sqrt{\epsilon}}\)</span> iterations to obtain an error of <span class="math notranslate nohighlight">\(\epsilon\)</span>. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 10\)</span> times as many iterations.</p>
+<p>Put differently, assume we start with <span class="math notranslate nohighlight">\(\|\mbbeta_0 - \mbbeta^\star\| &lt; \sqrt{2}\)</span>. Then we need <span class="math notranslate nohighlight">\(t \sim \log \log \epsilon\)</span> iterations to obtain an error of <span class="math notranslate nohighlight">\(\epsilon\)</span>. Since the double log grows incredibly slowly, this statement effectively says that we need a constant number of iterations for Newton’s method to converge in this regime.</p>
 <!-- 
-eps \leq c^{2t};  c < 1
-log eps \leq 2t * log c;  log c < 0
-log eps / c' \leq -2t;  c' = (-log c) > 0
--1/2 log eps \geq t
-t = O(\log (1 / \sqrt{eps}))
--->
-<div class="warning admonition">
-<p class="admonition-title">Note</p>
-<p>Note that here the convergence is in terms of distance to the optimum, rather than in the value of the objective function. We can recast the convergence of gradient descent in similar terms.</p>
-</div>
+:::{admonition} Note
+:class: warning
+Note that here the convergence is in terms of distance to the optimum, rather than in the value of the objective function. We can recast the convergence of gradient descent in similar terms. 
+::: -->
 <!-- 
 ## Iteratively Reweighted Least Squares
 

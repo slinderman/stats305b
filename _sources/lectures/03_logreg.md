@@ -255,30 +255,24 @@ Compare the Newton update to that of gradient descent. How do they differ?
 
 ### Converge Rate of Newton's Method
 
-Newton's method achieves **second order convergence**, meaning
+Under certain conditions &mdash; if the objective is strongly convex, the Hessian is Lipschitz continuous, and we start near enough to the global optimum &mdash; Newton's method achieves **second order convergence**, meaning
 \begin{align*}
 \|\mbbeta_{t+1} - \mbbeta^\star\|_2 \leq \frac{1}{2} \|\mbbeta_t - \mbbeta^\star\|_2^2
 \end{align*}
 provided we start with $\mbbeta_0$ close enough to $\mbbeta^\star$. 
 Applying this bound recursively yields that,
 \begin{align*}
-\|\mbbeta_t - \mbbeta^\star\|_2 &\leq \left(\tfrac{1}{\sqrt{2}} \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2t}.
+\|\mbbeta_t - \mbbeta^\star\|_2 &\leq \left(\tfrac{1}{\sqrt{2}} \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2^t}.
 \end{align*}
 
-Put differently, assume we start with $\|\mbbeta_0 - \mbbeta^\star\| < \sqrt{2}$. Then we need $t \sim \log \frac{1}{\sqrt{\epsilon}}$ iterations to obtain an error of $\epsilon$. If we want to reduce $\epsilon$ by a factor of 100, we only need to run around $\log 10$ times as many iterations. 
+Put differently, assume we start with $\|\mbbeta_0 - \mbbeta^\star\| < \sqrt{2}$. Then we need $t \sim \log \log \epsilon$ iterations to obtain an error of $\epsilon$. Since the double log grows incredibly slowly, this statement effectively says that we need a constant number of iterations for Newton's method to converge in this regime.
 
 <!-- 
-eps \leq c^{2t};  c < 1
-log eps \leq 2t * log c;  log c < 0
-log eps / c' \leq -2t;  c' = (-log c) > 0
--1/2 log eps \geq t
-t = O(\log (1 / \sqrt{eps}))
--->
-
 :::{admonition} Note
 :class: warning
 Note that here the convergence is in terms of distance to the optimum, rather than in the value of the objective function. We can recast the convergence of gradient descent in similar terms. 
-:::
+::: -->
+
 <!-- 
 ## Iteratively Reweighted Least Squares
 
