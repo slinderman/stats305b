@@ -10,6 +10,7 @@ parts:
   - caption: Assignments
     chapters:
     - file: assignments/hw0/hw0.ipynb
+    - file: assignments/hw1/hw1.ipynb
 
 
   - caption: References
