@@ -380,7 +380,7 @@ Under this prior, the rows are _almost surely dependent_, since $p(\pi_{1|1} = \
 \begin{align*}
 \Pr(\log \theta \geq t \mid \mbX = \mbx) 
 &= \int \bbI\left[\log \frac{\pi_{1|1} / (1 - \pi_{1|1})}{\pi_{1|0} / (1 - \pi_{1|0})} \geq t \right] \; p(\mbPi \mid \mbX = \mbx) \dif \mbPi \\
-&\approx \sum_{m=1}^M \bbI\left[\log \frac{\pi_{1|1}^{(m)} / (1 - \pi_{1|1}^{(m)})}{\pi_{1|0}^{(m)} / (1 - \pi_{1|0}^{(m)})} \geq t \right]
+&\approx \frac{1}{M} \sum_{m=1}^M \bbI\left[\log \frac{\pi_{1|1}^{(m)} / (1 - \pi_{1|1}^{(m)})}{\pi_{1|0}^{(m)} / (1 - \pi_{1|0}^{(m)})} \geq t \right]
 \end{align*}
 where 
 \begin{align*}
