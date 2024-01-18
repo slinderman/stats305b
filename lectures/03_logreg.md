@@ -66,9 +66,9 @@ for $x \in \{0,1\}$.
 We explicitly separated the intercept term above, but in general we can assume that the covariates include a constant term, $\mbx = (1, x_1, \ldots, x_p)^\top \in \reals^{p+1}$. Then the first coefficient in $\mbbeta = (\beta_0, \beta_1, \ldots, \beta_p)^\top \in \reals^{p+1}$ corresponds to the intercept.
 :::
 
-Under this model, $\beta$ specifies the log odds,
+Under this model, $\beta_1$ specifies the log odds,
 \begin{align*}
-\beta = \sigma^{-1}(\pi(1)) - \sigma^{-1}(\pi(0)) 
+\beta_1 = \sigma^{-1}(\pi(1)) - \sigma^{-1}(\pi(0)) 
 = \log \frac{\pi(1) / (1 - \pi(1))}{\pi(0) / (1 - \pi(0))} 
 = \log \theta.
 \end{align*}
@@ -88,7 +88,7 @@ Maximizing the likelihood is equivalent to minimizing the (average) negative log
 Now let's plug in the definition of $\pi(\mbx)$. The first term is just the log odds, which we already showed is equal to the linear component of the model. The second term simplifies too.
 \begin{align*}
 \cL(\mbbeta) 
-&= - \frac{1}{n} \sum_{i=1}^n \left[y_i \mbbeta^\top \mbx_i - \log \left(1 - \frac{e^{\mbbeta^\top \mbx_i}}{1 + e^{\mbbeta^\top \mbx_i}} \right) \right] \\
+&= - \frac{1}{n} \sum_{i=1}^n \left[y_i \mbbeta^\top \mbx_i + \log \left(1 - \frac{e^{\mbbeta^\top \mbx_i}}{1 + e^{\mbbeta^\top \mbx_i}} \right) \right] \\
 &= - \frac{1}{n} \sum_{i=1}^n \left[y_i \mbbeta^\top \mbx_i - \log \left(1 + e^{\mbbeta^\top \mbx_i} \right) \right].
 \end{align*}
 
@@ -97,11 +97,9 @@ We want to maximize the log likelihood, which is of course equivalent to minimiz
 \begin{align*}
 \nabla \cL(\mbbeta) 
 &= -\frac{1}{n} \sum_{i=1}^n \left(y_i \mbx_i - \frac{e^{\mbbeta^\top \mbx_i}}{1 + e^{\mbbeta^\top \mbx_i}} \mbx_i \right) \\
-&= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \sigma(\mbbeta^\top \mbx_i) \right) \mbx_i \\
-&= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \pi(\mbx_i) \right) \mbx_i \\
-&= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \E(Y \mid \mbX = \mbx_i) \right) \mbx_i.
+&= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \sigma(\mbbeta^\top \mbx_i) \right) \mbx_i.
 \end{align*}
-The gradient is a weighted sum of the covariates, and the weights are the residuals $y_i - \pi(\mbx_i)$, i.e., the difference between the observed and expected response. 
+Thus, the gradient is a weighted sum of the covariates, and the weights are the residuals $y_i - \sigma(\mbx_i^\top \mbbeta)$, i.e., the difference between the observed and expected response. 
 
 This is pretty intuitive! Remember that the gradient points in the direction of steepest descent. This tells us that to increase the log likelihood the most (equivalently, decrease $\cL$ the most), we should move the coefficient in the direction of covariates where the residual is positive (we are underestimating the mean), and we should move opposite the direction of covariates where the residual is negative (where we are overestimating the mean). 
 
@@ -129,8 +127,9 @@ Plugging this in,
 \begin{align*}
 \nabla^2 \cL(\mbbeta) 
 &= \frac{1}{n} \sum_{i=1}^n \sigma(\mbbeta^\top \mbx_i)(1 - \sigma(\mbbeta^\top \mbx_i)) \mbx_i \mbx_i^\top \\
-&= \frac{1}{n} \sum_{i=1}^n \Var[Y \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top.
+&= \frac{1}{n} \sum_{i=1}^n w_i \mbx_i \mbx_i^\top,
 \end{align*}
+where the weights are, $w_i = \sigma(\mbbeta^\top \mbx_i)(1 - \sigma(\mbbeta^\top \mbx_i)) = \Var[Y \mid \mbX = \mbx_i]$. 
 In other words, the Hessian is a weighted sum of outer products of covariates where the weights are equal to the conditional variance. 
 Since variances are non-negative, so are the weights, which implies that the Hessian is **positive semi-definite**, which implies that the negative log likelihood is convex.
 
@@ -151,10 +150,10 @@ If the covariates have bounded norm, $\|\mbx_i\|_2 \leq B$, then we can bound th
 \begin{align*}
 \lambda_{\mathsf{max}} 
 &= \max_{\mbu \in \bbS_{p-1}} \mbu^\top \nabla^2 \cL(\mbbeta) \mbu \\
-&= \max_{\mbu \in \bbS_{p-1}} \frac{1}{n} \sum_{i=1}^n \Var[Y \mid \mbX = \mbx_i] \mbu^\top \mbx_i \mbx_i^\top \mbu \\
+&= \max_{\mbu \in \bbS_{p-1}} \frac{1}{n} \sum_{i=1}^n w_i \mbu^\top \mbx_i \mbx_i^\top \mbu \\
 &\leq \frac{B^2}{4}
 \end{align*}
-since the variance of a Bernoulli random variable is at most $\tfrac{1}{4}$ and since $\mbu^\top \mbx_i \leq B$ for all unit vectors $\mbu \in \bbS_{p-1}$ (the unit sphere embedded in $\reals^p$). This isn't meant to be a tight upper bound.
+since the weights are the conditional variances of Bernoulli random variables, which are at most $\tfrac{1}{4}$, and since $\mbu^\top \mbx_i \leq B$ for all unit vectors $\mbu \in \bbS_{p-1}$ (the unit sphere embedded in $\reals^p$). This isn't meant to be a tight upper bound.
 :::
 
 If we run gradient descent with a constant step size of $\alpha = 1/L$, then the algorithm converges at a rate of $1/t$, which means that after $t$ iterations
@@ -195,13 +194,13 @@ The regularizer penalizes larger values of the weights, $\mbbeta$, and the **hyp
 Now, the gradient and Hessian are,
 \begin{align*}
 \nabla \cL(\mbbeta) 
-&= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \E(Y \mid \mbX = \mbx_i) \right) \mbx_i \textcolor{red}{+ \gamma \mbbeta} \\
+&= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \sigma(\mbx_i^\top \mbbeta) \right) \mbx_i \textcolor{red}{+ \gamma \mbbeta} \\
 \nabla^2 \cL(\mbbeta) 
-&= \frac{1}{n} \sum_{i=1}^n \Var[Y \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top \textcolor{red}{+ \gamma \mbI}. 
+&= \frac{1}{n} \sum_{i=1}^n w_i \mbx_i \mbx_i^\top \textcolor{red}{+ \gamma \mbI}. 
 \end{align*}
 
 ### Choosing the Hyperparameter
-It remains to select a value of $\gamma$. There are many ways to do so. One approach is to _not_ choose a single value and instead return the **regularization path**; i.e., the solution $\hat{\mbbeta}(\gamma)$ for a range of $\gamma \in [0, \infty)$.  Another is to hold out a fraction of data and use cross-validation to select the hyperparameter setting that yields the best performance on the held-out data.  
+It remains to select a value of $\gamma$. There are many ways to do so. One approach is to _not_ choose a single value and instead try to compute the **regularization path**; i.e., the solution $\hat{\mbbeta}(\gamma)$ for a range of $\gamma \in [0, \infty)$.  Another is to hold out a fraction of data and use cross-validation to select the hyperparameter setting that yields the best performance on the held-out data.  
 
 ### Bayesian Perspective
 From a Bayesian perspective, we can think of the regularizer as a **prior log probability**. In the case above, the regularizer corresponds to a spherical Gaussian prior,
