@@ -257,15 +257,17 @@ Compare the Newton update to that of gradient descent. How do they differ?
 
 Under certain conditions &mdash; if the objective is strongly convex, the Hessian is Lipschitz continuous, and we start near enough to the global optimum &mdash; Newton's method achieves **second order convergence**, meaning
 \begin{align*}
-\|\mbbeta_{t+1} - \mbbeta^\star\|_2 \leq \frac{1}{2} \|\mbbeta_t - \mbbeta^\star\|_2^2
+\|\mbbeta_{t+1} - \mbbeta^\star\|_2 \leq \left(c \|\mbbeta_t - \mbbeta^\star\|_2\right)^2
 \end{align*}
-provided we start with $\mbbeta_0$ close enough to $\mbbeta^\star$. 
+for some positive constant $c$, provided we start with $\mbbeta_0$ close enough to $\mbbeta^\star$. 
 Applying this bound recursively yields that,
 \begin{align*}
-\|\mbbeta_t - \mbbeta^\star\|_2 &\leq \left(\tfrac{1}{\sqrt{2}} \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2^t}.
+\|\mbbeta_t - \mbbeta^\star\|_2 &\leq \left(c \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2^t}.
 \end{align*}
 
-Put differently, assume we start with $\|\mbbeta_0 - \mbbeta^\star\| < \sqrt{2}$. Then we need $t \sim \log \log \epsilon$ iterations to obtain an error of $\epsilon$. Since the double log grows incredibly slowly, this statement effectively says that we need a constant number of iterations for Newton's method to converge in this regime.
+Put differently, if we start with $\|\mbbeta_0 - \mbbeta^\star\| < c^{-1}$, then we need $t \sim \log \log \epsilon$ iterations to obtain an error of $\epsilon$. Since the double log grows incredibly slowly, this statement says that we effectively need a constant number of iterations for Newton's method to converge in this regime.
+
+For more information on convergence rates of gradient descent and Newton's method, see {cite:t}`boyd2004convex`, ch. 9.
 
 <!-- 
 :::{admonition} Note
