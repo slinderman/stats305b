@@ -638,22 +638,21 @@ We obtain the Fisher information of the mean parameter $\mu$ by left and right m
 \begin{align*}
 \cI(\mu)^{-1} = \tfrac{1}{n} \Cov_{\eta(\mu)}[t(Y)].
 \end{align*} -->
-<p>Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, <span class="math notranslate nohighlight">\(\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]\)</span>. More formally,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+<!-- Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, $\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]$. More formally,
+\begin{align*}
 \sqrt{n} \left( \hat{\mu}_{\mathsf{MLE}} - \mu^\star \right) 
-&amp;\to \mathrm{N}(0, \Cov_{\eta(\mu)}[t(Y)])
-\end{align*}\]</div>
-<p>As usual, to derive confidence intervals we plug in the MLE to evaluate the asymptotic covariance.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Compare this result to the asymptotic covariances we computed in Lecture 1 for the Bernoulli distribution. Recall that for <span class="math notranslate nohighlight">\(X_i \iid\sim \mathrm{Bern}(\theta)\)</span>, where <span class="math notranslate nohighlight">\(\theta \in [0,1]\)</span> is the mean parameter, we found,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+&\to \mathrm{N}(0, \Cov_{\eta(\mu)}[t(Y)])
+\end{align*}
+As usual, to derive confidence intervals we plug in the MLE to evaluate the asymptotic covariance.
+
+:::{note}
+Compare this result to the asymptotic covariances we computed in Lecture 1 for the Bernoulli distribution. Recall that for $X_i \iid\sim \mathrm{Bern}(\theta)$, where $\theta \in [0,1]$ is the mean parameter, we found, 
+\begin{align*}
 \sqrt{n} (\hat{\theta}_{\mathsf{MLE}} - \theta^\star) \to \mathrm{N}\left(0, \Var_\theta[X] \right).
-\end{align*}\]</div>
-<p>Now we see that this is a general property of exponential family distributions. –&gt;</p>
-</div>
+\end{align*}
+Now we see that this is a general property of exponential family distributions. 
+::: 
+-->
 <!-- 
 ## Conjugate duality
 

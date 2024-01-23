@@ -261,7 +261,8 @@ We obtain the Fisher information of the mean parameter $\mu$ by left and right m
 \begin{align*}
 \cI(\mu)^{-1} = \tfrac{1}{n} \Cov_{\eta(\mu)}[t(Y)].
 \end{align*} -->
-Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, $\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]$. More formally,
+
+<!-- Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, $\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]$. More formally,
 \begin{align*}
 \sqrt{n} \left( \hat{\mu}_{\mathsf{MLE}} - \mu^\star \right) 
 &\to \mathrm{N}(0, \Cov_{\eta(\mu)}[t(Y)])
@@ -273,9 +274,10 @@ Compare this result to the asymptotic covariances we computed in Lecture 1 for t
 \begin{align*}
 \sqrt{n} (\hat{\theta}_{\mathsf{MLE}} - \theta^\star) \to \mathrm{N}\left(0, \Var_\theta[X] \right).
 \end{align*}
-Now we see that this is a general property of exponential family distributions. -->
+Now we see that this is a general property of exponential family distributions. 
+::: 
+-->
 
-:::
 <!-- 
 ## Conjugate duality
 
