@@ -1,0 +1,921 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Exponential Families &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/04_expfam';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Logistic Regression" href="03_logreg.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Exponential Families</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/04_expfam.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Exponential Families</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">Definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-with-known-variance">Gaussian with known variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bernoulli-distribution">Bernoulli distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-distribution">Poisson distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-distribution">Categorical distribution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-log-normalizer">The Log Normalizer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-of-the-log-normalizer">Gradient of the log normalizer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hessian-of-the-log-normalizer">Hessian of the log normalizer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-exponential-families">Minimal exponential families</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-parameterization">Mean parameterization</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="exponential-families">
+<h1>Exponential Families<a class="headerlink" href="#exponential-families" title="Permalink to this heading">#</a></h1>
+<p>Many familiar distributions like the ones we covered in lecture 1 are <em>exponential family distributions</em>. As Brad Efron likes to say, exponential family distributions bridge the gap between the Gaussian family and general distributions. For Gaussian distributions, we have exact small-sample distributional results (<span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(F\)</span>, and <span class="math notranslate nohighlight">\(\chi^2\)</span> tests); in the exponential family setting we have approximate distributional results (deviance tests); in the general setting, we have to appeal to asymptotics.</p>
+<section id="definition">
+<h2>Definition<a class="headerlink" href="#definition" title="Permalink to this heading">#</a></h2>
+<p>Exponential family distributions have densities of the form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(y \mid \eta) &amp;= h(y) \exp \left \{\langle t(y), \eta \rangle - A(\eta) \right\},
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(h(y): \cY \to \reals_+\)</span> is the <strong>base measure</strong>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(t(y) \in \reals^T\)</span> are the <strong>sufficient statistics</strong>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta \in \reals^T\)</span> are the <strong>natural parameters</strong>, and</p></li>
+<li><p><span class="math notranslate nohighlight">\(A(\eta): \reals^T \to \reals\)</span> is the <strong>log normalizing</strong> function (aka the <strong>partition function</strong>).</p></li>
+</ul>
+<p>The log normalizer ensures that the density is properly normalized,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    A(\eta) &amp;= \log \int h(y) \exp \left \{\langle t(y), \eta \rangle \right\} \dif y
+\end{align*}\]</div>
+<p>The domain of the exponential family is the set of valid natural parameters, <span class="math notranslate nohighlight">\(\Omega = \{\eta: A(\eta) &lt; \infty\}\)</span>. An exponential family is a family of distributions defined by base measure <span class="math notranslate nohighlight">\(h\)</span> and sufficient statistics <span class="math notranslate nohighlight">\(t\)</span>, and it is indexed by natural paremeters <span class="math notranslate nohighlight">\(\eta \in \Omega\)</span>.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
+<section id="gaussian-with-known-variance">
+<h3>Gaussian with known variance<a class="headerlink" href="#gaussian-with-known-variance" title="Permalink to this heading">#</a></h3>
+<p>Consider the scalar Gaussian distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{N}(y; \mu, \sigma^2) 
+&amp;= \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{1}{2\sigma^2} ( y- \mu)^2} \\
+&amp;= \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{1}{2\sigma^2} ( y^2 - 2 y \mu + \mu^2)}
+\end{align*}\]</div>
+<p>We can write this as an exponential family distribution where,
+where</p>
+<ul class="simple">
+<li><p>the base measure is <span class="math notranslate nohighlight">\(h(y) = \frac{e^{-\frac{y^2}{2 \sigma^2}}}{\sqrt{2 \pi \sigma^2}}\)</span></p></li>
+<li><p>the sufficient statistics are <span class="math notranslate nohighlight">\(t(y) = \frac{y}{\sigma}\)</span></p></li>
+<li><p>the natural parameter is <span class="math notranslate nohighlight">\(\eta = \frac{\mu}{\sigma}\)</span></p></li>
+<li><p>the log normalizer is <span class="math notranslate nohighlight">\(A(\eta) = \frac{\eta^2}{2}\)</span></p></li>
+<li><p>the domain is <span class="math notranslate nohighlight">\(\Omega = \reals\)</span></p></li>
+</ul>
+</section>
+<section id="bernoulli-distribution">
+<h3>Bernoulli distribution<a class="headerlink" href="#bernoulli-distribution" title="Permalink to this heading">#</a></h3>
+<p>The Bernoulli distribution can be written in exponential family form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mathrm{Bern}(y; p) &amp;= p^{y} \, (1-p)^{1 - y} \\
+    &amp;= \exp \left\{ y \log p + (1-y) \log (1- p) \right \} \\
+    &amp;= \exp \left\{ y \log \frac{p}{1 - p} + \log (1 - p) \right \}  \\
+    &amp;= h(y) \exp \left\{ y \eta - A(\eta) \right \} 
+\end{align*}\]</div>
+<p>where</p>
+<ul>
+<li><p>the base measure is <span class="math notranslate nohighlight">\(h(y) = 1\)</span></p></li>
+<li><p>the sufficient statistics are <span class="math notranslate nohighlight">\(t(y) = y\)</span></p></li>
+<li><p>the natural parameter is <span class="math notranslate nohighlight">\(\eta = \log \frac{p}{1- p}\)</span></p></li>
+<li><p>the log normalizer is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    A(\eta) &amp;= -\log ( 1 - p) \\
+    &amp;= - \log \left(1 - \frac{e^{\eta}}{1 + e^{\eta}} \right) \\
+    &amp;= - \log \frac{1}{1 + e^{\eta}}  \\
+    &amp;= \log \left(1 + e^{\eta} \right).
+    \end{align*}\]</div>
+</li>
+<li><p>the domain is <span class="math notranslate nohighlight">\(\Omega = \reals\)</span></p></li>
+</ul>
+</section>
+<section id="poisson-distribution">
+<h3>Poisson distribution<a class="headerlink" href="#poisson-distribution" title="Permalink to this heading">#</a></h3>
+<p>Likewise, take the Poisson pmf,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mathrm{Po}(y; \lambda) 
+    &amp;= \frac{1}{y!} \lambda^{y} e^{-\lambda} \\
+    &amp;= \frac{1}{y!} \exp \left\{ y \log \lambda - \lambda \right \} \\
+    &amp;= h(y) \exp \left\{ y \eta - A(\eta) \right \} 
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p>the base measure is <span class="math notranslate nohighlight">\(h(y) = \frac{1}{y!}\)</span></p></li>
+<li><p>the sufficient statistics are <span class="math notranslate nohighlight">\(t(y) = y\)</span></p></li>
+<li><p>the natural parameter is <span class="math notranslate nohighlight">\(\eta = \log \lambda\)</span></p></li>
+<li><p>the log normalizer <span class="math notranslate nohighlight">\(A(\eta) = \lambda = e^\eta\)</span></p></li>
+<li><p>the domain is <span class="math notranslate nohighlight">\(\Omega = \reals\)</span></p></li>
+</ul>
+</section>
+<section id="categorical-distribution">
+<h3>Categorical distribution<a class="headerlink" href="#categorical-distribution" title="Permalink to this heading">#</a></h3>
+<p>Finally, take the categorical pmf for $Y \in {1, \ldots, K},</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mathrm{Cat}(y; \mbpi) 
+    &amp;= \prod_{k=1}^K \pi_k^{\bbI[y = k]} \\
+    &amp;= \exp \left\{ \sum_{k=1}^K \bbI[y=k], \log \pi_k \right \} \\
+    &amp;= \exp \left\{ \langle \mbe_y, \log \mbpi \rangle \right \} \\
+    &amp;= h(y) \exp \left\{ \langle t(y), \mbeta \rangle - A(\mbeta) \right \} 
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p>the base measure is <span class="math notranslate nohighlight">\(h(y) = \bbI[y \in \{1,\ldots,K\}]\)</span></p></li>
+<li><p>the sufficient statistics are <span class="math notranslate nohighlight">\(t(y) = \mbe_y\)</span>, the one-hot vector representation of <span class="math notranslate nohighlight">\(y\)</span></p></li>
+<li><p>the natural parameter is <span class="math notranslate nohighlight">\(\mbeta = \log \mbpi = (\log \pi_1, \ldots, \log \pi_K)^\top \in \reals^K\)</span></p></li>
+<li><p>the log normalizer <span class="math notranslate nohighlight">\(A(\mbeta) = 0\)</span></p></li>
+<li><p>the domain is <span class="math notranslate nohighlight">\(\Omega = \reals^K\)</span></p></li>
+</ul>
+</section>
+</section>
+<section id="the-log-normalizer">
+<h2>The Log Normalizer<a class="headerlink" href="#the-log-normalizer" title="Permalink to this heading">#</a></h2>
+<p>The <strong>cumulant generating function</strong> — i.e., the log of the moment generative function — is a difference of log normalizers,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\log \E_\eta[e^{\langle t(Y), \theta \rangle}] 
+&amp;= \log \int h(y) \exp \left\{ \langle t(y), \eta + \theta \rangle - A(\eta) \right\} \dif y \\
+&amp;= \log e^{A(\eta + \theta) - A(\eta)} \\
+&amp;= A(\eta + \theta) - A(\eta) \\
+&amp;\triangleq K_\eta(\theta)
+\end{align*}\]</div>
+<p>Its derivatives (with respect to <span class="math notranslate nohighlight">\(\theta\)</span> and evaluated at zero) yield the cumulants. In particular,</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\nabla K_\eta(0) = \nabla A(\eta)\)</span> yields the first cumulant of <span class="math notranslate nohighlight">\(t(Y)\)</span>, its mean</p></li>
+<li><p><span class="math notranslate nohighlight">\(\nabla^2 K_\eta(0) = \nabla^2 A(\eta)\)</span> yields the second cumulant, its covariance</p></li>
+</ul>
+<p>Higher order cumulants can be used to compute skewness, kurtosis, etc.</p>
+<section id="gradient-of-the-log-normalizer">
+<h3>Gradient of the log normalizer<a class="headerlink" href="#gradient-of-the-log-normalizer" title="Permalink to this heading">#</a></h3>
+<p>We can also obtain this result more directly.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \nabla A(\eta) 
+    &amp;= \nabla \log \int h(y) \exp \left \{\langle t(y), \eta \rangle \right\} \dif y \\
+    &amp;= \frac{\int h(y) \exp \left \{\langle t(y), \eta \rangle \right\} t(y) \dif y}{\int h(y) \exp \left \{\langle t(y), \eta \rangle \right\} \dif y} \\
+    &amp;= \int p(y \mid \eta) \, t(y) \dif y \\
+    &amp;= \E_\eta[t(Y)]
+\end{align*}\]</div>
+<p>Again, the gradient of the log normalizer yields the <strong>expected sufficient statistics</strong>,</p>
+</section>
+<section id="hessian-of-the-log-normalizer">
+<h3>Hessian of the log normalizer<a class="headerlink" href="#hessian-of-the-log-normalizer" title="Permalink to this heading">#</a></h3>
+<p>The Hessian of the log normalizer yields the <strong>covariance of the sufficient statistics</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \nabla^2 A(\eta) 
+    &amp;= \nabla \int p(y \mid \eta) \, t(y) \dif y \\
+    &amp;= \int p(y \mid \eta) \, t(y) \, (t(y) - \nabla A(\eta))^\top \dif y \\
+    &amp;= \E[t(Y) t(Y)^\top ] - \E[t(Y)] \, \E[t(Y)]^\top \\
+    &amp;= \mathrm{Cov}[t(Y)]
+\end{align*}\]</div>
+</section>
+</section>
+<section id="minimal-exponential-families">
+<h2>Minimal exponential families<a class="headerlink" href="#minimal-exponential-families" title="Permalink to this heading">#</a></h2>
+<p>The Hessian of the log normalizer gives the covariance of the sufficient statistic. Since covariance matrices are positive semi-definite, the <em>log normalizer is a convex function</em> on <span class="math notranslate nohighlight">\(\Omega\)</span>.</p>
+<p>If the covariance is strictly positidive definite — i.e., if the minimum eigenvalue of <span class="math notranslate nohighlight">\(\nabla^2 A(\eta)\)</span> is strictly greater than zero for all <span class="math notranslate nohighlight">\(\eta \in \Omega\)</span> — then the log normalizer is <em>strictly</em> convex. In that case, we say that the exponential family is <strong>minimal</strong></p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Is the exponential family representation of the categorical distribution above a minimal representation? If not, how could you encode it in minimal form?</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Answer</p>
+<p>The categorical representation above is <em>not</em> minimal because the log normalizer is identically zero, and hence it is not strictly convex. The problem stems from the fact that the natural parameters <span class="math notranslate nohighlight">\(\mbeta \in \reals^K\)</span> include log probabilities for each of the <span class="math notranslate nohighlight">\(K\)</span> classes, whereas the probabilities <span class="math notranslate nohighlight">\(\mbpi \in \Delta_{K-1}\)</span> must sum to one, and thus really lie in a <span class="math notranslate nohighlight">\(K-1\)</span> dimensional simplex.</p>
+<p>Instead, we could parameterize the categorical distribution in terms of the log probabilities for only the first <span class="math notranslate nohighlight">\(K-1\)</span> classes,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mathrm{Cat}(y; \mbpi) 
+    &amp;= \left[\prod_{k=1}^{K-1} \pi_k^{\bbI[y = k]}\right] \left(1 - \sum_{k=1}^{K-1} \pi_k \right)^{\bbI[y = K]} \\
+    &amp;= \left[\prod_{k=1}^{K-1} \pi_k^{\bbI[y = k]}\right] \left(1 - \sum_{k=1}^{K-1} \pi_k \right)^{1 - \sum_{k=1}^{K-1} \bbI[y = k]} \\
+    &amp;= \exp \left\{ \sum_{k=1}^{K-1} \bbI[y=k] \log \frac{\pi_k}{1 - \sum_{j=1}^{K-1} \pi_j} + \log \left(1 - \sum_{k=1}^{K-1} \pi_k \right) \right \} \\
+    &amp;= h(y) \exp \left\{ \langle \mbt(y), \mbeta \rangle - A(\mbeta) \right \} 
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p>the base measure is <span class="math notranslate nohighlight">\(h(y) = \bbI[y \in \{1,\ldots,K\}]\)</span></p></li>
+<li><p>the sufficient statistics are <span class="math notranslate nohighlight">\(\mbt(y) = (\bbI[y=1], \ldots, \bbI[y=K-1])^\top\)</span></p></li>
+<li><p>the natural parameter is <span class="math notranslate nohighlight">\(\mbeta = (\eta_1, \ldots, \eta_{K-1})^\top \in \reals^{K-1}\)</span> where <span class="math notranslate nohighlight">\(\eta_k = \log \frac{\pi_k}{1 - \sum_{j=1}^{K-1} \pi_j}\)</span> are the logits</p></li>
+<li><p>the log normalizer <span class="math notranslate nohighlight">\(A(\mbeta) = \log \left(1 + \sum_{k=1}^{K-1} e^{\eta_k} \right)\)</span></p></li>
+<li><p>the domain is <span class="math notranslate nohighlight">\(\Omega = \reals^{K-1}\)</span></p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="mean-parameterization">
+<h2>Mean parameterization<a class="headerlink" href="#mean-parameterization" title="Permalink to this heading">#</a></h2>
+<p>When constructing models with exponential family distributions, like the generalized linear models below, it is often more convenient to work with the <strong>mean parameters</strong> instead. for a <span class="math notranslate nohighlight">\(d\)</span>-dimensional sufficient statistic, let,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cM &amp;\triangleq \left\{ \mu \in \reals^d : \exists \, p \text{ s.t. } \E_p[t(Y)] = \mu \right\}
+\end{align*}\]</div>
+<p>denote the set of mean parameters realizable <em>by any distribution</em> <span class="math notranslate nohighlight">\(p\)</span>.</p>
+<p>Two facts:</p>
+<ol class="arabic simple">
+<li><p>The gradient mapping <span class="math notranslate nohighlight">\(\nabla A: \Omega \mapsto \cM\)</span> is <em>injective</em> (one-to-one) if and only if the exponential family is minimal.</p></li>
+<li><p>The gradient is a <em>surjective</em> mapping from mean parameters to the <em>interior</em> of <span class="math notranslate nohighlight">\(\cM\)</span>. All mean parameters in the interior of <span class="math notranslate nohighlight">\(\cM\)</span> (excluding the boundary) can be realized by an exponential family distribution. (Mean parameters on the boundary of <span class="math notranslate nohighlight">\(\cM\)</span> can be realized by a limiting sequence of exponential family distributions.)</p></li>
+</ol>
+<p>Together, these facts imply that the gradient of the log normalizer defines a <em>bijective</em> map from <span class="math notranslate nohighlight">\(\Omega\)</span> to the interior of <span class="math notranslate nohighlight">\(\cM\)</span> for minimal exponential families.</p>
+<p>For minimal families, we can work with the mean parameterization instead,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(y; \mu) 
+&amp;= h(y) \exp \left\{ \langle t(y), [\nabla A]^{-1}(\mu) \rangle - A([\nabla A]^{-1}(\mu)) \right\}.
+\end{align*}\]</div>
+<p>for mean parameters <span class="math notranslate nohighlight">\(\mu\)</span> in the interior of <span class="math notranslate nohighlight">\(\cM\)</span>.</p>
+<!-- 
+## Maximum Likelihood Estimation
+
+We can estimate either the natural or the mean parameters.
+
+### MLE for the natural parameters
+
+Suppose we have $y_i \iid\sim p(y; \eta)$ for a minimal exponential family distribution with natural parameter $\eta$. The log likelihood is,
+\begin{align*}
+\cL(\eta)
+&= \sum_{i=1}^n \log p(y_i; \eta) \\
+&= \left \langle \sum_{i=1}^n t(y_i), \eta \right \rangle - n A(\eta) + c
+\end{align*}
+The gradient is
+\begin{align*}
+\nabla \cL(\eta)
+&= \sum_{i=1}^n t(y_i) - n \nabla A(\eta),
+\end{align*}
+and the Hessian is $\nabla^2 \cL(\eta) = -n \nabla^2 A(\eta)$. Since the log normalizer is strictly convex (for minimal exponential families), the log likelihood is a strictly concave function and the MLE is unique. 
+
+Setting the gradient to zero and solving yields the MLE,
+\begin{align*}
+\hat{\eta}_{\mathsf{MLE}} 
+&= [\nabla A]^{-1} \left( \hat{\mu} \right) \\
+\hat{\mu} &= \frac{1}{n} \sum_{i=1}^n t(y_i),
+\end{align*}
+Thus, maximum likelihood estimation amounts to an mapping from empirical means to corresponding natural parameters by applying the inverse of the gradient mapping.
+
+
+#### Asymptotic normality
+
+Recall that the MLE is asymptotically normal with variance given by the inverse Fisher information,
+\begin{align*}
+\cI(\eta) &= - \E[\nabla^2 \log p(y_i; \eta)] = \nabla^2 A(\eta) = \Cov_\eta[t(Y)].
+\end{align*}
+Thus, the asymptotic covariance of $\hat{\eta}_{\mathsf{MLE}}$ is $\cI(\eta)^{-1} = \tfrac{1}{n} \Cov_\eta[t(Y)]^{-1}$.
+
+### MLE for the mean parameters
+
+Alternatively, consider the maximum likelihood estimate of the mean parameter $\mu \in \cM$. Before doing any math, we might expect the MLE to be the empirical mean. Indeed, that is the case. To simplify notation, let $\eta(\mu) = [\nabla A]^{-1}(\mu)$. The log likelihood,
+\begin{align*}
+\cL(\mu)
+&= \left \langle \sum_{i=1}^n t(y_i), \eta(\mu) \right \rangle - n A(\eta(\mu)) + c
+\end{align*}
+has gradient,
+\begin{align*}
+\nabla \cL(\mu)
+&= \left(\frac{\partial \eta}{\partial \mu}(\mu) \right) \left[\sum_{i=1}^n t(y_i) - n \nabla A(\eta(\mu))\right] \\
+&= \left(\frac{\partial \eta}{\partial \mu}(\mu) \right) \left[\sum_{i=1}^n t(y_i) - n \mu \right],
+\end{align*}
+where $\tfrac{\partial \eta}{\partial \mu}(\mu)$ is the Jacobian of inverse gradient mapping at $\mu$. Assuming the Jacobian is positive definite, we immediately see that,
+\begin{align*}
+\hat{\mu}_{\mathsf{MLE}} &= \frac{1}{n} \sum_{i=1}^n t(y_i).
+\end{align*}
+
+Now back to the Jacobian... applying the [inverse function theorem](https://en.wikipedia.org/wiki/Inverse_function_theorem), shows that it equals the inverse covariance matrix,
+\begin{align*}
+\frac{\partial \eta}{\partial \mu} (\mu) 
+= \frac{\partial [\nabla A]^{-1}}{\partial \mu} (\mu)
+= [\nabla^2 A ([\nabla A]^{-1}(\mu))]^{-1} 
+= \Cov_{\eta(\mu)}[t(Y)]^{-1},
+\end{align*}
+which is indeed positive definite for minimal exponential families.
+
+#### Asymptotic normality
+
+We obtain the Fisher information of the mean parameter $\mu$ by left and right multiplying by the Jacobian,
+\begin{align*}
+\cI(\mu) 
+&= \left( \frac{\partial \eta}{\partial \mu} (\mu) \right)^\top \cI(\eta(\mu)) \left( \frac{\partial \eta}{\partial \mu} (\mu) \right) \\
+&= \Cov_{\eta(\mu)}[t(Y)]^{-1} \Cov_{\eta(\mu)}[t(Y)] \Cov_{\eta(\mu)}[t(Y)]^{-1} \\
+&= \Cov_{\eta(\mu)}[t(Y)]^{-1}.
+\end{align*}
+<!-- Thus, the asymptotic covariance _of the mean parameter estimate_ $\hat{\mu}_{\mathsf{MLE}}$ is 
+\begin{align*}
+\cI(\mu)^{-1} = \tfrac{1}{n} \Cov_{\eta(\mu)}[t(Y)].
+\end{align*} -->
+<p>Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, <span class="math notranslate nohighlight">\(\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]\)</span>. More formally,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sqrt{n} \left( \hat{\mu}_{\mathsf{MLE}} - \mu^\star \right) 
+&amp;\to \mathrm{N}(0, \Cov_{\eta(\mu)}[t(Y)])
+\end{align*}\]</div>
+<p>As usual, to derive confidence intervals we plug in the MLE to evaluate the asymptotic covariance.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compare this result to the asymptotic covariances we computed in Lecture 1 for the Bernoulli distribution. Recall that for <span class="math notranslate nohighlight">\(X_i \iid\sim \mathrm{Bern}(\theta)\)</span>, where <span class="math notranslate nohighlight">\(\theta \in [0,1]\)</span> is the mean parameter, we found,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sqrt{n} (\hat{\theta}_{\mathsf{MLE}} - \theta^\star) \to \mathrm{N}\left(0, \Var_\theta[X] \right).
+\end{align*}\]</div>
+<p>Now we see that this is a general property of exponential family distributions. –&gt;</p>
+</div>
+<!-- 
+## Conjugate duality
+
+The log normalizer is a convex function. Its conjugate dual is,
+\begin{align*}
+A^*(\mu) &= \sup_{\eta \in \Omega} \left\{ \langle \mu, \eta \rangle - A(\eta) \right\}
+\end{align*}
+We recognize this as the maximum likelihood problem mapping expected sufficient statistics $\mu$ to natural parameters $\eta$. For minimal exponential families, the supremum is uniquely obtained at $\eta(\mu) = [\nabla A]^{-1}(\mu)$. The conjugate dual evaluates to the log likelihood obtained at $\eta(\mu)$. 
+
+It turns out the conjugate dual is also related to the entropy; in particular, for any $\mu$ in the interior of $\cM$, 
+\begin{align*}
+A^*(\mu) = - \bbH[p_{\eta(\mu)}],
+\end{align*}
+where $\eta(\mu) = [\nabla A]^{-1}(\mu)$ for minimal exponential families. To see this, note that
+\begin{align*}
+-\bbH[p_{\eta(\mu)}] 
+&= \bbE_{p(\eta(\mu))}[\log p(X; \eta(\mu))] \\
+&= \bbE_{p(\eta(\mu))}[\langle t(X), \eta(\mu) \rangle - A(\eta(\mu))] \\
+&= \langle \mu, \eta(\mu) \rangle - A(\eta(\mu)) \\
+&= A^*(\mu).
+\end{align*}
+
+Moreover, for minimal exponential families, the gradient of $A^*$ provides the inverse map from mean parameters to natural parameters,
+\begin{align*}
+\nabla A^*(\mu) &= \arg \max_{\eta \in \Omega} \left\{ \langle \mu, \eta \rangle - A(\eta) \right\} 
+= [\nabla A]^{-1}(\mu).
+\end{align*}
+
+Finally, the log normalizer has a variataional representation in terms of its conjugate dual,
+\begin{align*}
+A(\eta) &= \sup_{\mu \in \cM} \left\{ \langle \mu, \eta \rangle - A^*(\mu) \right\}.
+\end{align*}
+
+For more on conjugate duality, see {cite:t}`wainwright2008graphical`, ch. 3.6.
+
+## KL Divergence
+
+The **Kullback-Leibler (KL) divergence**, or **relative entropy**, between two distributions is,
+\begin{align*}
+\KL{p}{q} &= \E_{p(x)}\left[\log \frac{p(x)}{q(x)} \right].
+\end{align*} 
+It is non-negative and equal to zero if and only if $p = q$. The KL divergence is _not_ a distance because it is not a symmetric function of $p$ and $q$. (generally, $\KL{p}{q} \neq \KL{q}{p}$.)
+
+When $p$ and $q$ belong to the same exponential family with natural parameters $\eta_p$ and $\eta_q$, respectively, the KL simplifies to,
+\begin{align*}
+\KL{p}{q} 
+&= \E_{p(x)}\left[ \langle t(x), \eta_p \rangle - A(\eta_p) - \langle t(x), \eta_q \rangle + A(\eta_q) \right] \\
+&= \langle \E_{p(x)} [t(x)], \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
+&= \langle \nabla A(\eta_p), \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q).
+\end{align*}
+This form highlights that the KL divergence between exponential family distributions is a special case of a [Bregman divergence](https://en.wikipedia.org/wiki/Bregman_divergence) based on the convex function $A$.
+
+::::{admonition} Gaussian example
+
+Consider the scalar Gaussian distribution with known variance $\sigma^2$. In the example above, we cast it as an exponential family distribution with 
+- sufficient statistics $t(y) = \frac{y}{\sigma}$
+- natural parameter $\eta = \frac{\mu}{\sigma}$
+- log normalizer $A(\eta) = \frac{\eta^2}{2}$
+
+Derive the KL divergence between two Gaussians with equal variance. Denote their natural parameters by $\eta_p = \frac{\mu_p}{\sigma}$ and $\eta_q = \frac{\mu_q}{\sigma}$, respectively.
+
+:::{admonition} Answer
+:class: tip, dropdown
+The KL divergence is,
+\begin{align*}
+\KL{p}{q} 
+&= \langle \eta_p, \eta_p - \eta_q \rangle - \frac{\eta_p^2}{2} + \frac{\eta_q^2}{2} \\
+&=  \frac{\eta_p^2}{2} - \eta_p\eta_q + \frac{\eta_q^2}{2} \\
+&=  \frac{1}{2} (\eta_p - \eta_q)^2 \\
+&=  \frac{1}{2 \sigma^2} (\mu_p - \mu_q)^2.
+\end{align*}
+This actually isn't a great example because here the KL _is_ a symmetric function, whereas in general it is not.
+:::
+
+::::
+
+::::{admonition} KL Divergence in terms of Mean Parameters
+
+**Exercise:** Write the KL divergence in terms of mean parameters and the conjugate dual of the log normalizer.
+
+:::{admonition} Answer
+:class: tip, dropdown
+\begin{align*}
+\KL{p}{q} 
+&= \langle \nabla A(\eta_p), \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
+&= \langle \mu_p, \eta_p - \eta_q \rangle - \langle \mu_p, \eta_p \rangle + A^*(\mu_p) + \langle \mu_q, \eta_q \rangle - A^*(\mu_q) \\
+&= \langle \eta_q, \mu_q - \mu_p \rangle - A^*(\mu_q) + A^*(\mu_p) \\
+&= \langle \nabla A^*(\mu_q), \mu_q - \mu_p \rangle - A^*(\mu_q) + A^*(\mu_p)
+\\
+\end{align*}
+:::
+
+::::
+
+
+## Deviance
+Rearranging terms, we can view the KL divergence as a remainder in a Taylor approximation of the log normalizer,
+\begin{align*}
+A(\eta_q) 
+&= A(\eta_p) + (\eta_q - \eta_p)^\top \nabla A(\eta_p) + \KL{p}{q}.
+\end{align*}
+From this perspective, we see that the KL divergence is related to the Fisher information,
+\begin{align*}
+\KL{p}{q} 
+&\approx \frac{1}{2} (\eta_q - \eta_p)^\top \nabla^2 A(\eta_p) (\eta_q - \eta_p) \\
+&= \frac{1}{2} (\eta_q - \eta_p)^\top \cI(\eta_p) (\eta_q - \eta_p),
+\end{align*}
+up to terms of order $\cO(\|\eta_p - \eta_q\|^3)$.
+
+Thus, while the KL divergence is not a distance metric due to its asymmetry, it is approximately a squared distance under the Fisher information metric,
+\begin{align*}
+2 \KL{p}{q} \approx \|\eta_q - \eta_p\|_{\cI(\eta_p)}^2.
+\end{align*}
+We call this quantity the **deviance**. It is simply twice the KL divergence.
+
+
+
+## Deviance Residuals
+
+In a normal model, the standarized residual is $\frac{\hat{\mu} - \mu}{\sigma}$. We can view this as a function of the deviance between two normals,
+\begin{align*}
+\frac{\hat{\mu} - \mu}{\sigma} 
+&= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\hat{\mu}}{\mu}}
+\end{align*}
+where we have used the shorthand notation $\KL{\hat{\mu}}{\mu} = \KL{\mathrm{N}(\cdot; \hat{\mu}, \sigma^2)}{\mathrm{N}(\cdot; \mu, \sigma^2)}$.
+
+The same form generalizes to other epxonential families as well. One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals, which divide by the variance. For more, see {cite:t}`efron2022exponential`, ch. 1.
+
+For a Gaussian model with equal variance, the deviance is the standardized squared error, $(\tfrac{\mu_p - \mu_q}{\sigma})^2$.  --></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_logreg.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Logistic Regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">Definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-with-known-variance">Gaussian with known variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bernoulli-distribution">Bernoulli distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-distribution">Poisson distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-distribution">Categorical distribution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-log-normalizer">The Log Normalizer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-of-the-log-normalizer">Gradient of the log normalizer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hessian-of-the-log-normalizer">Hessian of the log normalizer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-exponential-families">Minimal exponential families</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-parameterization">Mean parameterization</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

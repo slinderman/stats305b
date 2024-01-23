@@ -67,7 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/03_logreg';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="next" title="Exponential Families" href="04_expfam.html" />
     <link rel="prev" title="Contingency Tables" href="02_contingency_tables.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -171,6 +171,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -347,6 +348,12 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-s-method">Newton’s Method</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-newton-s-method">Converge Rate of Newton’s Method</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iteratively-reweighted-least-squares">Iteratively Reweighted Least Squares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-covariance-of-mle">Asymptotic Covariance of MLE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference-with-the-laplace-approximation">Bayesian Inference with the Laplace Approximation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-the-model-evidence">Approximating the model evidence</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
@@ -643,134 +650,150 @@ Applying this bound recursively yields that,</p>
 \[\begin{align*}
 \|\mbbeta_t - \mbbeta^\star\|_2 &amp;\leq \left(c \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2^t}.
 \end{align*}\]</div>
-<p>Put differently, if we start with <span class="math notranslate nohighlight">\(\|\mbbeta_0 - \mbbeta^\star\| &lt; c^{-1}\)</span>, then we need <span class="math notranslate nohighlight">\(t \sim \log \log \epsilon\)</span> iterations to obtain an error of <span class="math notranslate nohighlight">\(\epsilon\)</span>. Since the double log grows incredibly slowly, this statement says that we effectively need a constant number of iterations for Newton’s method to converge in this regime.</p>
+<p>Put differently, if we start with <span class="math notranslate nohighlight">\(\|\mbbeta_0 - \mbbeta^\star\| &lt; c^{-1}\)</span>, then we need <span class="math notranslate nohighlight">\(t \sim \cO(\log \log \frac{1}{\epsilon})\)</span> iterations to obtain an error of <span class="math notranslate nohighlight">\(\epsilon\)</span>. Since the double log grows incredibly slowly, this statement says that we effectively need a constant number of iterations for Newton’s method to converge in this regime.</p>
 <p>For more information on convergence rates of gradient descent and Newton’s method, see <span id="id2">Boyd and Vandenberghe [<a class="reference internal" href="99_references.html#id9" title="Stephen P Boyd and Lieven Vandenberghe. Convex Optimization. Cambridge university press, 2004.">BV04</a>]</span>, ch. 9.</p>
 <!-- 
 :::{admonition} Note
 :class: warning
 Note that here the convergence is in terms of distance to the optimum, rather than in the value of the objective function. We can recast the convergence of gradient descent in similar terms. 
 ::: -->
-<!-- 
-## Iteratively Reweighted Least Squares
-
-Newton's method solves for the minimum of a quadratic approximation to the loss function at each iteration. What else involves minimizing a quadratic loss function? Least squares. It turns out that Newton's method can be viewed as iteratively solving a weighted least squares problem. To see this, Let's first write the gradient and Hessian in matrix form,
-\begin{align*}
-\nabla \cL(\mbbeta_t) &= -\frac{1}{n} \mbX^\top (\mby - \hat{\mby}_t) \\
-\nabla^2 \cL(\mbbeta_t) &= \frac{1}{n} \mbX^\top \mbW_t \mbX
-\end{align*}
-where 
-- $\mbX \in \reals^{n \times p}$ is the design matrix with rows $\mbx_i^\top$
-- $\mby \in \{0,1\}^n$ is the vector of binary responses
-- $\hat{\mby}_t = \sigma(\mbX \mbbeta_t) \in [0,1]^n$ is the vector of predicted response means
-- $\mbW_t = \diag([w_{t,1}, \ldots, w_{t,n}])$ with $w_{t,i} = \sigma(\mbx_i^\top \mbbeta_t) (1- \sigma(\mbx_i^\top \mbbeta_t))$ is the diagonal weight matrix, where the weights are given by the conditional variances.
-
-Then the (undamped) Newton update is,
-\begin{align*}
+</section>
+</section>
+<section id="iteratively-reweighted-least-squares">
+<h2>Iteratively Reweighted Least Squares<a class="headerlink" href="#iteratively-reweighted-least-squares" title="Permalink to this heading">#</a></h2>
+<p>Newton’s method solves for the minimum of a quadratic approximation to the loss function at each iteration. What else involves minimizing a quadratic loss function? Least squares. It turns out that Newton’s method can be viewed as iteratively solving a weighted least squares problem. To see this, Let’s first write the gradient and Hessian in matrix form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla \cL(\mbbeta_t) &amp;= -\frac{1}{n} \mbX^\top (\mby - \hat{\mby}_t) \\
+\nabla^2 \cL(\mbbeta_t) &amp;= \frac{1}{n} \mbX^\top \mbW_t \mbX
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mbX \in \reals^{n \times p}\)</span> is the design matrix with rows <span class="math notranslate nohighlight">\(\mbx_i^\top\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mby \in \{0,1\}^n\)</span> is the vector of binary responses</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{\mby}_t = \sigma(\mbX \mbbeta_t) \in [0,1]^n\)</span> is the vector of predicted response means</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbW_t = \diag([w_{t,1}, \ldots, w_{t,n}])\)</span> with <span class="math notranslate nohighlight">\(w_{t,i} = \sigma(\mbx_i^\top \mbbeta_t) (1- \sigma(\mbx_i^\top \mbbeta_t))\)</span> is the diagonal weight matrix, where the weights are given by the conditional variances.</p></li>
+</ul>
+<p>Then the (undamped) Newton update is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \mbbeta_{t+1} 
-&= \mbbeta_t - [\nabla^2 \cL(\mbbeta_t)]^{-1} \nabla \cL(\mbbeta_t) \\
-&= \mbbeta_t + [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top (\mby - \hat{\mby}_t) \\
-&= [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top \mbW_t \mbX \mbbeta_t + [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top (\mby - \hat{\mby}_t) \\
-&= [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top \mbW_t \mbz_t
-\end{align*}
-where 
-\begin{align*}
-\mbz_t &= \mbX \mbbeta_t + \mbW_t^{-1} (\mby - \hat{\mby}_t).
-\end{align*}
-We recognize the update the update above as the solution to a **weighted least squares** problem with **weights** $w_{t,i}$ and **adjusted (or working) responses** $z_{t,i}$.
-
-How can we interpret the working responses? We can view them as the real responses mapped through a Taylor approximation of the link (inverse mean) function,
-\begin{align*}
+&amp;= \mbbeta_t - [\nabla^2 \cL(\mbbeta_t)]^{-1} \nabla \cL(\mbbeta_t) \\
+&amp;= \mbbeta_t + [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top (\mby - \hat{\mby}_t) \\
+&amp;= [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top \mbW_t \mbX \mbbeta_t + [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top (\mby - \hat{\mby}_t) \\
+&amp;= [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top \mbW_t \mbz_t
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbz_t &amp;= \mbX \mbbeta_t + \mbW_t^{-1} (\mby - \hat{\mby}_t).
+\end{align*}\]</div>
+<p>We recognize the update the update above as the solution to a <strong>weighted least squares</strong> problem with <strong>weights</strong> <span class="math notranslate nohighlight">\(w_{t,i}\)</span> and <strong>adjusted (or working) responses</strong> <span class="math notranslate nohighlight">\(z_{t,i}\)</span>.</p>
+<p>How can we interpret the working responses? We can view them as the real responses mapped through a Taylor approximation of the link (inverse mean) function,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \sigma^{-1}(y_i) 
-&\approx \sigma^{-1}(\hat{y}_{t,i}) + (y_i - \hat{y}_{t,i}) [\sigma^{-1}]'(\hat{y}_{t,i}) \\
-&= \mbx_i^\top \mbbeta_t + \frac{(y_i - \hat{y}_{t,i})}{w_{t,i}} \\
-&\triangleq z_{t,i}.
-\end{align*}
-
-
-## Asymptotic Covariance of MLE
-
-What other insight can we glean from the Hessian? Recall our discussion of the asymptotic normality of the MLE from [Lecture 1](lectures/01_distributions.ipynb). For iid observations $Y_i \iid{\sim} p(\cdot; \mbtheta)$ for $i=1,\ldots,n$, the asymptotic covariance is $\cI(\mbtheta)^{-1} / n$, where
-\begin{align*}
+&amp;\approx \sigma^{-1}(\hat{y}_{t,i}) + (y_i - \hat{y}_{t,i}) [\sigma^{-1}]'(\hat{y}_{t,i}) \\
+&amp;= \mbx_i^\top \mbbeta_t + \frac{(y_i - \hat{y}_{t,i})}{w_{t,i}} \\
+&amp;\triangleq z_{t,i}.
+\end{align*}\]</div>
+</section>
+<section id="asymptotic-covariance-of-mle">
+<h2>Asymptotic Covariance of MLE<a class="headerlink" href="#asymptotic-covariance-of-mle" title="Permalink to this heading">#</a></h2>
+<p>What other insight can we glean from the Hessian? Recall our discussion of the asymptotic normality of the MLE from <span class="xref myst">Lecture 1</span>. For iid observations <span class="math notranslate nohighlight">\(Y_i \iid{\sim} p(\cdot; \mbtheta)\)</span> for <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>, the asymptotic covariance is <span class="math notranslate nohighlight">\(\cI(\mbtheta)^{-1} / n\)</span>, where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \cI(\mbtheta)= -\E[\nabla_{\mbtheta}^2 \log p(Y; \mbtheta)]
-\end{align*} 
-is the Fisher information matrix. 
-
-For logistic regression, we have $n$ independent but _not_ identically distributed observations. In this case, the asymptotic covariance follows the same form. It is given by the inverse of the Fisher information matrix; i.e., the inverse of the negative expected Hessian of the log likelihood,
-\begin{align*}
+\end{align*}\]</div>
+<p>is the Fisher information matrix.</p>
+<p>For logistic regression, we have <span class="math notranslate nohighlight">\(n\)</span> independent but <em>not</em> identically distributed observations. In this case, the asymptotic covariance follows the same form. It is given by the inverse of the Fisher information matrix; i.e., the inverse of the negative expected Hessian of the log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \cI(\mbbeta) = -\sum_{i=1}^N \E[\nabla_{\mbbeta}^2 \log p(Y_i \mid \mbX_i=\mbx_i; \mbbeta)].
-\end{align*}
-(Note that this includes the iid formula as a special case.)
-
-Substituting the form of the Hessian from above,
-\begin{align*}
+\end{align*}\]</div>
+<p>(Note that this includes the iid formula as a special case.)</p>
+<p>Substituting the form of the Hessian from above,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \cI(\mbbeta)
-&= - \sum_{i=1}^n \E[\Var[Y_i \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top] \\
-&= - \sum_{i=1}^n w_i \mbx_i \mbx_i^\top 
-\end{align*}
-where $w_i = \sigma(\mbbeta^\top \mbx_i) (1 - \sigma(\mbbeta^\top \mbx_i))$. Finally, we evaluate the Fisher information the MLE to obtain the asymptotic covariance estimate,
+&amp;= \sum_{i=1}^n \E[\Var[Y_i \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top] \\
+&amp;= \sum_{i=1}^n w_i \mbx_i \mbx_i^\top 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_i = \sigma(\mbbeta^\top \mbx_i) (1 - \sigma(\mbbeta^\top \mbx_i))\)</span>. Finally, we evaluate the Fisher information the MLE to obtain the asymptotic covariance estimate,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\widehat{\Cov}(\hat{\mbbeta}) &amp;= [\cI(\hat{\mbbeta})]^{-1}.
+\end{align*}\]</div>
+<p>Like before, we can use the asymptotic covariance estimate to derive Wald confidence intervals for the parameters and perform hypothesis tests.</p>
+<div class="warning admonition">
+<p class="admonition-title">Caution</p>
+<p>Remember, Wald confidence intervals are only as good as the asymptotic normality assumption. When the likelihod is not well approximated by a quadratic, the covariance estimate will be poor, and the confidence intervals will be invalid. When might the Gaussian approximation not hold?</p>
+</div>
+<!-- ## Deviance and Goodness of Fit
+
+Instead of Wald tests and interval estimates, we coulda also use likelihood ratio inference, which is based on the difference in log likelihood between the fitted and the saturated model,
 \begin{align*}
-\widehat{\Cov}(\hat{\mbbeta}) &= [\cI(\hat{\mbbeta})]^{-1}.
+\lambda = -2 \log \frac{p(\mby \mid \mbX, \hat{\mbbeta})}{p_{\mathsf{sat}}(\mby)}.
 \end{align*}
-
-Like before, we can use the asymptotic covariance estimate to derive Wald confidence intervals for the parameters and perform hypothesis tests. 
-
-
-:::{admonition} Caution
-:class: warning
-Remember, Wald confidence intervals are only as good as the asymptotic normality assumption. When the likelihod is not well approximated by a quadratic, the covariance estimate will be poor, and the confidence intervals will be invalid. When might the Gaussian approximation not hold?
-:::
-
-
-## Bayesian Inference with the Laplace Approximation
-
-Finally, suppose you wanted to perform Bayesian inference of the weights under a Gaussian prior,
+For logistic regression, the saturated model assigns probability one to the observed data,
 \begin{align*}
-\mbbeta &\sim \mathrm{N}(\mbzero, \gamma^{-1} \mbI).
-\end{align*}
-Unfortunately, the posterior does not have a closed formation solution. Instead, a common form of approximate posterior inference is the **Laplace approximation**,
-\begin{align*}
-p(\mbbeta \mid \mbX, \mby) &\approx \mathrm{N}(\mbbeta_{\mathsf{MAP}}, \widehat{\mbSigma})
-\end{align*}
-where
-\begin{align*}
+p_{\mathsf{sat}}(\mby) &= \prod_{i=1}^n \mathrm{Bern}(y_i; y_i) = 1.
+\end{align*} -->
+</section>
+<section id="bayesian-inference-with-the-laplace-approximation">
+<h2>Bayesian Inference with the Laplace Approximation<a class="headerlink" href="#bayesian-inference-with-the-laplace-approximation" title="Permalink to this heading">#</a></h2>
+<p>Finally, suppose you wanted to perform Bayesian inference of the weights under a Gaussian prior,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta &amp;\sim \mathrm{N}(\mbzero, \gamma^{-1} \mbI).
+\end{align*}\]</div>
+<p>Unfortunately, the posterior does not have a closed formation solution. Instead, a common form of approximate posterior inference is the <strong>Laplace approximation</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbbeta \mid \mbX, \mby) &amp;\approx \mathrm{N}(\mbbeta_{\mathsf{MAP}}, \widehat{\mbSigma})
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \cL(\mbbeta) 
-&= \log p(\mbbeta) + \sum_{i=1}^n \log p(y_i \mid \mbx_i, \mbbeta) \\
-&= \log \mathrm{N}(\mbbeta; \mbzero, \gamma^{-1} \mbI) + \sum_{i=1}^n \log \mathrm{Bern}(y_i \mid \sigma(\mbx_i^\top \mbbeta))
-\end{align*}
-is the log joint probability (_no longer the same as the loss function above!_),
-\begin{align*}
+&amp;= \log p(\mbbeta) + \sum_{i=1}^n \log p(y_i \mid \mbx_i, \mbbeta) \\
+&amp;= \log \mathrm{N}(\mbbeta; \mbzero, \gamma^{-1} \mbI) + \sum_{i=1}^n \log \mathrm{Bern}(y_i \mid \sigma(\mbx_i^\top \mbbeta))
+\end{align*}\]</div>
+<p>is the log joint probability (<em>no longer the same as the loss function above!</em>),</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \mbbeta_{\mathsf{MAP}} 
-&= \arg \max_{\mbbeta} \cL(\mbbeta)
-\end{align*}
-is the _maximum a posteriori (MAP)_ estimate, and,
-\begin{align}
+&amp;= \arg \max_{\mbbeta} \cL(\mbbeta)
+\end{align*}\]</div>
+<p>is the <em>maximum a posteriori (MAP)</em> estimate, and,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-d0899a83-397a-4c9e-898c-2478f846ec79">
+<span class="eqno">(1)<a class="headerlink" href="#equation-d0899a83-397a-4c9e-898c-2478f846ec79" title="Permalink to this equation">#</a></span>\[\begin{align}
 \widehat{\mbSigma}
-&= -[\nabla^2 \cL(\mbbeta_{\mathsf{MAP}})]^{-1} = \cI(\mbbeta_{\mathsf{MAP}})^{-1}
-\end{align}
-is an approximation of the posterior covariance.
-
-:::{admonition} Question
-How do posterior credible intervals under the Laplace approximation compare to Wald confidence intervals of the MLE under L2 regularization? 
-:::
-
-### Approximating the model evidence
-
-We can use the Laplace approximate to estimate the log marginal likelihood &mdash; a.k.a., the **model evidence**. Note that,
-\begin{align*}
+&amp;= -[\nabla^2 \cL(\mbbeta_{\mathsf{MAP}})]^{-1} = \cI(\mbbeta_{\mathsf{MAP}})^{-1}
+\end{align}\]</div>
+<p>is an approximation of the posterior covariance.</p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>How do posterior credible intervals under the Laplace approximation compare to Wald confidence intervals of the MLE under L2 regularization?</p>
+</div>
+<section id="approximating-the-model-evidence">
+<h3>Approximating the model evidence<a class="headerlink" href="#approximating-the-model-evidence" title="Permalink to this heading">#</a></h3>
+<p>We can use the Laplace approximate to estimate the log marginal likelihood — a.k.a., the <strong>model evidence</strong>. Note that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \log p(\mby \mid \mbX) 
-&= \log p(\mby, \mbbeta \mid \mbX) - \log p(\mbbeta \mid \mbX, \mby) \\
-&\approx \cL(\mbbeta) - \log \mathrm{N}(\mbbeta \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}).
-\end{align*}
-The first line is just Bayes' rule, and the right hand side holds for all $\mbbeta$. The second line is our Laplace approximation.
-Evaluating at the MAP estimate,
-\begin{align*}
+&amp;= \log p(\mby, \mbbeta \mid \mbX) - \log p(\mbbeta \mid \mbX, \mby) \\
+&amp;\approx \cL(\mbbeta) - \log \mathrm{N}(\mbbeta \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}).
+\end{align*}\]</div>
+<p>The first line is just Bayes’ rule, and the right hand side holds for all <span class="math notranslate nohighlight">\(\mbbeta\)</span>. The second line is our Laplace approximation.
+Evaluating at the MAP estimate,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \log p(\mby \mid \mbX) 
-&\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
-&\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
-\end{align*}
-The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week. 
-
--->
+&amp;\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
+&amp;\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
+\end{align*}\]</div>
+<p>The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the “width” of the posterior. We’ll revisit this approximation when we talk about model selection next week.</p>
 </section>
 </section>
 <section id="conclusion">
@@ -819,11 +842,11 @@ The marginal likelihood is a natural measure of model complexity, and it is ofte
       </div>
     </a>
     <a class="right-next"
-       href="../assignments/hw0/hw0.html"
+       href="04_expfam.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">HW0: PyTorch Primer</p>
+        <p class="prev-next-title">Exponential Families</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -862,6 +885,12 @@ The marginal likelihood is a natural measure of model complexity, and it is ofte
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-s-method">Newton’s Method</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-newton-s-method">Converge Rate of Newton’s Method</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iteratively-reweighted-least-squares">Iteratively Reweighted Least Squares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-covariance-of-mle">Asymptotic Covariance of MLE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference-with-the-laplace-approximation">Bayesian Inference with the Laplace Approximation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-the-model-evidence">Approximating the model evidence</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
