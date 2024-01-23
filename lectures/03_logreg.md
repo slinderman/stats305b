@@ -265,7 +265,7 @@ Applying this bound recursively yields that,
 \|\mbbeta_t - \mbbeta^\star\|_2 &\leq \left(c \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2^t}.
 \end{align*}
 
-Put differently, if we start with $\|\mbbeta_0 - \mbbeta^\star\| < c^{-1}$, then we need $t \sim \log \log \epsilon$ iterations to obtain an error of $\epsilon$. Since the double log grows incredibly slowly, this statement says that we effectively need a constant number of iterations for Newton's method to converge in this regime.
+Put differently, if we start with $\|\mbbeta_0 - \mbbeta^\star\| < c^{-1}$, then we need $t \sim \cO(\log \log \frac{1}{\epsilon})$ iterations to obtain an error of $\epsilon$. Since the double log grows incredibly slowly, this statement says that we effectively need a constant number of iterations for Newton's method to converge in this regime.
 
 For more information on convergence rates of gradient descent and Newton's method, see {cite:t}`boyd2004convex`, ch. 9.
 
@@ -275,7 +275,6 @@ For more information on convergence rates of gradient descent and Newton's metho
 Note that here the convergence is in terms of distance to the optimum, rather than in the value of the objective function. We can recast the convergence of gradient descent in similar terms. 
 ::: -->
 
-<!-- 
 ## Iteratively Reweighted Least Squares
 
 Newton's method solves for the minimum of a quadratic approximation to the loss function at each iteration. What else involves minimizing a quadratic loss function? Least squares. It turns out that Newton's method can be viewed as iteratively solving a weighted least squares problem. To see this, Let's first write the gradient and Hessian in matrix form,
@@ -329,8 +328,8 @@ For logistic regression, we have $n$ independent but _not_ identically distribut
 Substituting the form of the Hessian from above,
 \begin{align*}
 \cI(\mbbeta)
-&= - \sum_{i=1}^n \E[\Var[Y_i \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top] \\
-&= - \sum_{i=1}^n w_i \mbx_i \mbx_i^\top 
+&= \sum_{i=1}^n \E[\Var[Y_i \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top] \\
+&= \sum_{i=1}^n w_i \mbx_i \mbx_i^\top 
 \end{align*}
 where $w_i = \sigma(\mbbeta^\top \mbx_i) (1 - \sigma(\mbbeta^\top \mbx_i))$. Finally, we evaluate the Fisher information the MLE to obtain the asymptotic covariance estimate,
 \begin{align*}
@@ -344,6 +343,17 @@ Like before, we can use the asymptotic covariance estimate to derive Wald confid
 :class: warning
 Remember, Wald confidence intervals are only as good as the asymptotic normality assumption. When the likelihod is not well approximated by a quadratic, the covariance estimate will be poor, and the confidence intervals will be invalid. When might the Gaussian approximation not hold?
 :::
+
+<!-- ## Deviance and Goodness of Fit
+
+Instead of Wald tests and interval estimates, we coulda also use likelihood ratio inference, which is based on the difference in log likelihood between the fitted and the saturated model,
+\begin{align*}
+\lambda = -2 \log \frac{p(\mby \mid \mbX, \hat{\mbbeta})}{p_{\mathsf{sat}}(\mby)}.
+\end{align*}
+For logistic regression, the saturated model assigns probability one to the observed data,
+\begin{align*}
+p_{\mathsf{sat}}(\mby) &= \prod_{i=1}^n \mathrm{Bern}(y_i; y_i) = 1.
+\end{align*} -->
 
 
 ## Bayesian Inference with the Laplace Approximation
@@ -395,7 +405,6 @@ Evaluating at the MAP estimate,
 \end{align*}
 The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week. 
 
--->
 
 ## Conclusion
 

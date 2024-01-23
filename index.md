@@ -33,11 +33,11 @@ Then we will switch to following research papers and chapters from other textboo
 | Jan 10, 2024 | [Contingency Tables](lectures/02_contingency_tables.md) | {cite:p}`agresti2002categorical` Ch. 2-3 |
 | Jan 15, 2024 | _MLK Day. No class_                    |  | 
 | Jan 17, 2024 | [Logistic Regression](lectures/03_logreg.md) | {cite:p}`agresti2002categorical` Ch. 4-5 | 
-| Jan 22, 2024 | Exponential Family GLMs                | {cite:p}`agresti2002categorical` Ch. 4-5 |
-| Jan 24, 2024 | Model Selection and Diagnostics        | {cite:p}`agresti2002categorical` Ch. 6 | 
-| Jan 29, 2024 | L1-regularized GLMs                    | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
-| Jan 31, 2024 | Bayesian Probit and Logistic Regression | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
-| Feb  5, 2024 | Generalized Linear Mixed Models        | {cite:p}`agresti2002categorical` Ch. 12 |
+| Jan 22, 2024 | [Exponential Families](lectures/04_expfam.md) | {cite:p}`agresti2002categorical` Ch. 4-5 |
+| Jan 24, 2024 | Generalized Linear Models | {cite:p}`agresti2002categorical` Ch. 6 | 
+| Jan 29, 2024 | Bayesian Probit and Logistic Regression | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
+| Jan 31, 2024 | Generalized Linear Mixed Models        | {cite:p}`agresti2002categorical` Ch. 12 |
+| Feb 5, 2024 | L1-regularized GLMs                    | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
 | Feb 12, 2024 | Discrete Latent Variable Models        |         |
 | Feb 14, 2024 | Hidden Markov Models                   |         | 
@@ -55,6 +55,10 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
 - [**Homework 0: Python Primer**](assignments/hw0/hw0.ipynb)
   - Released Mon, Jan 8, 2024
   - Due Fri, Jan 12, 2024 at 11:59pm
+
+- [**Homework 1: Logistic Regression**](assignments/hw1/hw1.ipynb)
+  - Released Wed, Jan 17, 2024
+  - Due Fri, Jan 26, 2024 at 11:59pm
 
 ## Exams
 - **Midterm Exam**: In class on Wed, Feb 7, 2024
