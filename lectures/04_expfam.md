@@ -104,8 +104,8 @@ The **cumulant generating function** &mdash; i.e., the log of the moment generat
 &\triangleq K_\eta(\theta)
 \end{align*}
 Its derivatives (with respect to $\theta$ and evaluated at zero) yield the cumulants. In particular, 
-- $\nabla K_\eta(0) = \nabla A(\eta)$ yields the first cumulant of $t(Y)$, its mean
-- $\nabla^2 K_\eta(0) = \nabla^2 A(\eta)$ yields the second cumulant, its covariance
+- $\nabla_\theta K_\eta(0) = \nabla A(\eta)$ yields the first cumulant of $t(Y)$, its mean
+- $\nabla^2_\theta K_\eta(0) = \nabla^2 A(\eta)$ yields the second cumulant, its covariance
 
 Higher order cumulants can be used to compute skewness, kurtosis, etc.
 
@@ -132,7 +132,40 @@ The Hessian of the log normalizer yields the **covariance of the sufficient stat
     &= \mathrm{Cov}[t(Y)]
 \end{align*}
 
-## Minimal exponential families
+
+## Maximum Likelihood Estimation
+
+Suppose we have $y_i \iid\sim p(y; \eta)$ for a minimal exponential family distribution with natural parameter $\eta$. The log likelihood is,
+\begin{align*}
+\cL(\eta)
+&= \sum_{i=1}^n \log p(y_i; \eta) \\
+&= \left \langle \sum_{i=1}^n t(y_i), \eta \right \rangle - n A(\eta) + c
+\end{align*}
+The gradient is
+\begin{align*}
+\nabla \cL(\eta)
+&= \sum_{i=1}^n t(y_i) - n \nabla A(\eta),
+\end{align*}
+and the Hessian is $\nabla^2 \cL(\eta) = -n \nabla^2 A(\eta)$. 
+
+Since the log normalizer is convex, all local optima are global. If the log normalizer is _strictly_ convex, the MLE will be unique. 
+
+Setting the gradient to zero and solving yields the stationary conditions for the MLE,
+\begin{align*}
+\nabla A[\hat{\eta}_{\mathsf{MLE}}] &= \bbE[t(Y); \hat{\eta}_{\mathsf{MLE}}] 
+= \frac{1}{n} \sum_{i=1}^n t(y_i).
+\end{align*}
+When $\nabla A$ is invertible, the MLE is unique. Regardless, maximum likelihood estimation amounts to matching empirical means of the sufficient statistics to corresponding natural parameters.
+
+### Asymptotic normality
+
+Recall that the MLE is asymptotically normal with variance given by the inverse Fisher information,
+\begin{align*}
+\cI(\eta) &= - \E[\nabla^2 \log p(y_i; \eta)] = \nabla^2 A(\eta) = \Cov_\eta[t(Y)].
+\end{align*}
+Thus, the asymptotic covariance of $\hat{\eta}_{\mathsf{MLE}}$ is $\cI(\eta)^{-1} = \tfrac{1}{n} \Cov_\eta[t(Y)]^{-1}$.
+
+## Minimal Exponential Families
 
 The Hessian of the log normalizer gives the covariance of the sufficient statistic. Since covariance matrices are positive semi-definite, the _log normalizer is a convex function_ on $\Omega$.
 
@@ -164,7 +197,7 @@ where
 ::::
 
 
-## Mean parameterization
+## Mean Parameterization
 
 When constructing models with exponential family distributions, like the generalized linear models below, it is often more convenient to work with the **mean parameters** instead. for a $d$-dimensional sufficient statistic, let,
 \begin{align*}
@@ -184,44 +217,9 @@ p(y; \mu)
 &= h(y) \exp \left\{ \langle t(y), [\nabla A]^{-1}(\mu) \rangle - A([\nabla A]^{-1}(\mu)) \right\}.
 \end{align*}
 for mean parameters $\mu$ in the interior of $\cM$.
-<!-- 
-## Maximum Likelihood Estimation
-
-We can estimate either the natural or the mean parameters.
-
-### MLE for the natural parameters
-
-Suppose we have $y_i \iid\sim p(y; \eta)$ for a minimal exponential family distribution with natural parameter $\eta$. The log likelihood is,
-\begin{align*}
-\cL(\eta)
-&= \sum_{i=1}^n \log p(y_i; \eta) \\
-&= \left \langle \sum_{i=1}^n t(y_i), \eta \right \rangle - n A(\eta) + c
-\end{align*}
-The gradient is
-\begin{align*}
-\nabla \cL(\eta)
-&= \sum_{i=1}^n t(y_i) - n \nabla A(\eta),
-\end{align*}
-and the Hessian is $\nabla^2 \cL(\eta) = -n \nabla^2 A(\eta)$. Since the log normalizer is strictly convex (for minimal exponential families), the log likelihood is a strictly concave function and the MLE is unique. 
-
-Setting the gradient to zero and solving yields the MLE,
-\begin{align*}
-\hat{\eta}_{\mathsf{MLE}} 
-&= [\nabla A]^{-1} \left( \hat{\mu} \right) \\
-\hat{\mu} &= \frac{1}{n} \sum_{i=1}^n t(y_i),
-\end{align*}
-Thus, maximum likelihood estimation amounts to an mapping from empirical means to corresponding natural parameters by applying the inverse of the gradient mapping.
 
 
-#### Asymptotic normality
-
-Recall that the MLE is asymptotically normal with variance given by the inverse Fisher information,
-\begin{align*}
-\cI(\eta) &= - \E[\nabla^2 \log p(y_i; \eta)] = \nabla^2 A(\eta) = \Cov_\eta[t(Y)].
-\end{align*}
-Thus, the asymptotic covariance of $\hat{\eta}_{\mathsf{MLE}}$ is $\cI(\eta)^{-1} = \tfrac{1}{n} \Cov_\eta[t(Y)]^{-1}$.
-
-### MLE for the mean parameters
+## MLE for the Mean Parameters
 
 Alternatively, consider the maximum likelihood estimate of the mean parameter $\mu \in \cM$. Before doing any math, we might expect the MLE to be the empirical mean. Indeed, that is the case. To simplify notation, let $\eta(\mu) = [\nabla A]^{-1}(\mu)$. The log likelihood,
 \begin{align*}
@@ -248,7 +246,7 @@ Now back to the Jacobian... applying the [inverse function theorem](https://en.w
 \end{align*}
 which is indeed positive definite for minimal exponential families.
 
-#### Asymptotic normality
+### Asymptotic normality
 
 We obtain the Fisher information of the mean parameter $\mu$ by left and right multiplying by the Jacobian,
 \begin{align*}
@@ -257,12 +255,13 @@ We obtain the Fisher information of the mean parameter $\mu$ by left and right m
 &= \Cov_{\eta(\mu)}[t(Y)]^{-1} \Cov_{\eta(\mu)}[t(Y)] \Cov_{\eta(\mu)}[t(Y)]^{-1} \\
 &= \Cov_{\eta(\mu)}[t(Y)]^{-1}.
 \end{align*}
+
 <!-- Thus, the asymptotic covariance _of the mean parameter estimate_ $\hat{\mu}_{\mathsf{MLE}}$ is 
 \begin{align*}
 \cI(\mu)^{-1} = \tfrac{1}{n} \Cov_{\eta(\mu)}[t(Y)].
 \end{align*} -->
 
-<!-- Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, $\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]$. More formally,
+Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, $\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]$. More formally,
 \begin{align*}
 \sqrt{n} \left( \hat{\mu}_{\mathsf{MLE}} - \mu^\star \right) 
 &\to \mathrm{N}(0, \Cov_{\eta(\mu)}[t(Y)])
@@ -276,7 +275,7 @@ Compare this result to the asymptotic covariances we computed in Lecture 1 for t
 \end{align*}
 Now we see that this is a general property of exponential family distributions. 
 ::: 
--->
+
 
 <!-- 
 ## Conjugate duality
@@ -312,25 +311,48 @@ A(\eta) &= \sup_{\mu \in \cM} \left\{ \langle \mu, \eta \rangle - A^*(\mu) \righ
 \end{align*}
 
 For more on conjugate duality, see {cite:t}`wainwright2008graphical`, ch. 3.6.
+-->
 
 ## KL Divergence
 
 The **Kullback-Leibler (KL) divergence**, or **relative entropy**, between two distributions is,
 \begin{align*}
-\KL{p}{q} &= \E_{p(x)}\left[\log \frac{p(x)}{q(x)} \right].
+\KL{p}{q} &= \E_{p}\left[\log \frac{p(Y)}{q(Y)} \right].
 \end{align*} 
 It is non-negative and equal to zero if and only if $p = q$. The KL divergence is _not_ a distance because it is not a symmetric function of $p$ and $q$. (generally, $\KL{p}{q} \neq \KL{q}{p}$.)
 
 When $p$ and $q$ belong to the same exponential family with natural parameters $\eta_p$ and $\eta_q$, respectively, the KL simplifies to,
 \begin{align*}
 \KL{p}{q} 
-&= \E_{p(x)}\left[ \langle t(x), \eta_p \rangle - A(\eta_p) - \langle t(x), \eta_q \rangle + A(\eta_q) \right] \\
-&= \langle \E_{p(x)} [t(x)], \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
+&= \E_{p}\left[ \langle t(Y), \eta_p \rangle - A(\eta_p) - \langle t(Y), \eta_q \rangle + A(\eta_q) \right] \\
+&= \langle \E_{p} [t(Y)], \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
 &= \langle \nabla A(\eta_p), \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q).
 \end{align*}
 This form highlights that the KL divergence between exponential family distributions is a special case of a [Bregman divergence](https://en.wikipedia.org/wiki/Bregman_divergence) based on the convex function $A$.
 
-::::{admonition} Gaussian example
+:::: {admonition} Example: Poisson Distribution
+
+Consider the Poisson distribution with known mean $\lambda$. In the example above, we cast it as an exponential family distribution with 
+- sufficient statistics $t(y) = y$
+- natural parameter $\eta = \log \lambda$
+- log normalizer $A(\eta) = e^\eta$
+
+Derive the KL divergence between two Poisson distributions with means $\lambda_p$ and $\lambda_q$, respectively.
+
+:::{admonition} Answer
+:class: tip, dropdown
+The KL divergence is,
+\begin{align*}
+\KL{p}{q} 
+&= \langle e^{\eta_p}, \eta_p - \eta_q \rangle - e^{\eta_p} + e^{\eta_q} \\
+&= \lambda_p \log \frac{\lambda_p}{\lambda_q} - \lambda_p + \lambda_q \\
+\end{align*}
+:::
+
+::::
+
+
+::::{admonition} Example: Gaussian Distribution
 
 Consider the scalar Gaussian distribution with known variance $\sigma^2$. In the example above, we cast it as an exponential family distribution with 
 - sufficient statistics $t(y) = \frac{y}{\sigma}$
@@ -349,12 +371,12 @@ The KL divergence is,
 &=  \frac{1}{2} (\eta_p - \eta_q)^2 \\
 &=  \frac{1}{2 \sigma^2} (\mu_p - \mu_q)^2.
 \end{align*}
-This actually isn't a great example because here the KL _is_ a symmetric function, whereas in general it is not.
+Note that here, the KL _is_ a symmetric function.
 :::
 
 ::::
 
-::::{admonition} KL Divergence in terms of Mean Parameters
+<!-- ::::{admonition} KL Divergence in terms of Mean Parameters
 
 **Exercise:** Write the KL divergence in terms of mean parameters and the conjugate dual of the log normalizer.
 
@@ -370,7 +392,7 @@ This actually isn't a great example because here the KL _is_ a symmetric functio
 \end{align*}
 :::
 
-::::
+:::: -->
 
 
 ## Deviance
@@ -393,8 +415,7 @@ Thus, while the KL divergence is not a distance metric due to its asymmetry, it 
 \end{align*}
 We call this quantity the **deviance**. It is simply twice the KL divergence.
 
-
-
+(expfam:deviance_residuals)=
 ## Deviance Residuals
 
 In a normal model, the standarized residual is $\frac{\hat{\mu} - \mu}{\sigma}$. We can view this as a function of the deviance between two normals,
@@ -402,8 +423,25 @@ In a normal model, the standarized residual is $\frac{\hat{\mu} - \mu}{\sigma}$.
 \frac{\hat{\mu} - \mu}{\sigma} 
 &= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\hat{\mu}}{\mu}}
 \end{align*}
-where we have used the shorthand notation $\KL{\hat{\mu}}{\mu} = \KL{\mathrm{N}(\cdot; \hat{\mu}, \sigma^2)}{\mathrm{N}(\cdot; \mu, \sigma^2)}$.
+where we have used the shorthand notation 
+\begin{align*}
+\KL{\mu}{\hat{\mu}} \triangleq \KL{\mathrm{N}(\mu, \sigma^2)}{\mathrm{N}(\hat{\mu}, \sigma^2)}.
+\end{align*}
 
-The same form generalizes to other epxonential families as well. One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals, which divide by the variance. For more, see {cite:t}`efron2022exponential`, ch. 1.
+The same form generalizes to other exponential families as well, with the **deviance residual** between the true and estimated mean parameters defined as,
+\begin{align*}
+r_{\mathsf{D}}(\mu, \hat{\mu}) &= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\mu}{\hat{\mu}}}.
+\end{align*}
+One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals, 
+\begin{align*}
+r_{\mathsf{P}}(\mu, \hat{\mu}) &= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \hat{\mu}]}}.
+\end{align*}
+For more on deviance residuals, see {cite:t}`efron2022exponential`, ch. 1.
 
-For a Gaussian model with equal variance, the deviance is the standardized squared error, $(\tfrac{\mu_p - \mu_q}{\sigma})^2$.  -->
+## Conclusion
+
+Exponential family distributions have many beautiful properties, and we've only scratched the surface in this chapter. 
+- We'll see other nice properties when we talk about building probabilistic models for joint distributions of random variables using exponential family distributions, and conjugate relationships between exponential families will simplify many aspects of Bayesian inference. 
+- We'll also see that inference in exponential families is closely connected to convex optimization &mdash; we saw that today for the MLE! &mdash; but for more complex models, the optimization problems can still be computationally intractable, even though its convex. That will motivate our discussion of variational inference later in the course.
+
+Armed with exponential family distributions, we can start to build more expressive models for categorical data. First up, generalized linear models!
