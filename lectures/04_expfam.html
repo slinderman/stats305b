@@ -67,7 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/04_expfam';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="next" title="Generalized Linear Models" href="05_glms.html" />
     <link rel="prev" title="Logistic Regression" href="03_logreg.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -172,6 +172,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -342,8 +343,20 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hessian-of-the-log-normalizer">Hessian of the log normalizer</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-exponential-families">Minimal exponential families</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-parameterization">Mean parameterization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-normality">Asymptotic normality</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-exponential-families">Minimal Exponential Families</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-parameterization">Mean Parameterization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-for-the-mean-parameters">MLE for the Mean Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Asymptotic normality</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kl-divergence">KL Divergence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deviance">Deviance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deviance-residuals">Deviance Residuals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
             </nav>
         </div>
@@ -480,8 +493,8 @@ where</p>
 \end{align*}\]</div>
 <p>Its derivatives (with respect to <span class="math notranslate nohighlight">\(\theta\)</span> and evaluated at zero) yield the cumulants. In particular,</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\nabla K_\eta(0) = \nabla A(\eta)\)</span> yields the first cumulant of <span class="math notranslate nohighlight">\(t(Y)\)</span>, its mean</p></li>
-<li><p><span class="math notranslate nohighlight">\(\nabla^2 K_\eta(0) = \nabla^2 A(\eta)\)</span> yields the second cumulant, its covariance</p></li>
+<li><p><span class="math notranslate nohighlight">\(\nabla_\theta K_\eta(0) = \nabla A(\eta)\)</span> yields the first cumulant of <span class="math notranslate nohighlight">\(t(Y)\)</span>, its mean</p></li>
+<li><p><span class="math notranslate nohighlight">\(\nabla^2_\theta K_\eta(0) = \nabla^2 A(\eta)\)</span> yields the second cumulant, its covariance</p></li>
 </ul>
 <p>Higher order cumulants can be used to compute skewness, kurtosis, etc.</p>
 <section id="gradient-of-the-log-normalizer">
@@ -510,8 +523,42 @@ where</p>
 \end{align*}\]</div>
 </section>
 </section>
+<section id="maximum-likelihood-estimation">
+<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this heading">#</a></h2>
+<p>Suppose we have <span class="math notranslate nohighlight">\(y_i \iid\sim p(y; \eta)\)</span> for a minimal exponential family distribution with natural parameter <span class="math notranslate nohighlight">\(\eta\)</span>. The log likelihood is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\eta)
+&amp;= \sum_{i=1}^n \log p(y_i; \eta) \\
+&amp;= \left \langle \sum_{i=1}^n t(y_i), \eta \right \rangle - n A(\eta) + c
+\end{align*}\]</div>
+<p>The gradient is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla \cL(\eta)
+&amp;= \sum_{i=1}^n t(y_i) - n \nabla A(\eta),
+\end{align*}\]</div>
+<p>and the Hessian is <span class="math notranslate nohighlight">\(\nabla^2 \cL(\eta) = -n \nabla^2 A(\eta)\)</span>.</p>
+<p>Since the log normalizer is convex, all local optima are global. If the log normalizer is <em>strictly</em> convex, the MLE will be unique.</p>
+<p>Setting the gradient to zero and solving yields the stationary conditions for the MLE,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla A[\hat{\eta}_{\mathsf{MLE}}] &amp;= \bbE[t(Y); \hat{\eta}_{\mathsf{MLE}}] 
+= \frac{1}{n} \sum_{i=1}^n t(y_i).
+\end{align*}\]</div>
+<p>When <span class="math notranslate nohighlight">\(\nabla A\)</span> is invertible, the MLE is unique. Regardless, maximum likelihood estimation amounts to matching empirical means of the sufficient statistics to corresponding natural parameters.</p>
+<section id="asymptotic-normality">
+<h3>Asymptotic normality<a class="headerlink" href="#asymptotic-normality" title="Permalink to this heading">#</a></h3>
+<p>Recall that the MLE is asymptotically normal with variance given by the inverse Fisher information,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cI(\eta) &amp;= - \E[\nabla^2 \log p(y_i; \eta)] = \nabla^2 A(\eta) = \Cov_\eta[t(Y)].
+\end{align*}\]</div>
+<p>Thus, the asymptotic covariance of <span class="math notranslate nohighlight">\(\hat{\eta}_{\mathsf{MLE}}\)</span> is <span class="math notranslate nohighlight">\(\cI(\eta)^{-1} = \tfrac{1}{n} \Cov_\eta[t(Y)]^{-1}\)</span>.</p>
+</section>
+</section>
 <section id="minimal-exponential-families">
-<h2>Minimal exponential families<a class="headerlink" href="#minimal-exponential-families" title="Permalink to this heading">#</a></h2>
+<h2>Minimal Exponential Families<a class="headerlink" href="#minimal-exponential-families" title="Permalink to this heading">#</a></h2>
 <p>The Hessian of the log normalizer gives the covariance of the sufficient statistic. Since covariance matrices are positive semi-definite, the <em>log normalizer is a convex function</em> on <span class="math notranslate nohighlight">\(\Omega\)</span>.</p>
 <p>If the covariance is strictly positidive definite — i.e., if the minimum eigenvalue of <span class="math notranslate nohighlight">\(\nabla^2 A(\eta)\)</span> is strictly greater than zero for all <span class="math notranslate nohighlight">\(\eta \in \Omega\)</span> — then the log normalizer is <em>strictly</em> convex. In that case, we say that the exponential family is <strong>minimal</strong></p>
 <div class="admonition-question admonition">
@@ -541,7 +588,7 @@ where</p>
 </div>
 </section>
 <section id="mean-parameterization">
-<h2>Mean parameterization<a class="headerlink" href="#mean-parameterization" title="Permalink to this heading">#</a></h2>
+<h2>Mean Parameterization<a class="headerlink" href="#mean-parameterization" title="Permalink to this heading">#</a></h2>
 <p>When constructing models with exponential family distributions, like the generalized linear models below, it is often more convenient to work with the <strong>mean parameters</strong> instead. for a <span class="math notranslate nohighlight">\(d\)</span>-dimensional sufficient statistic, let,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -561,98 +608,66 @@ p(y; \mu)
 &amp;= h(y) \exp \left\{ \langle t(y), [\nabla A]^{-1}(\mu) \rangle - A([\nabla A]^{-1}(\mu)) \right\}.
 \end{align*}\]</div>
 <p>for mean parameters <span class="math notranslate nohighlight">\(\mu\)</span> in the interior of <span class="math notranslate nohighlight">\(\cM\)</span>.</p>
-<!-- 
-## Maximum Likelihood Estimation
-
-We can estimate either the natural or the mean parameters.
-
-### MLE for the natural parameters
-
-Suppose we have $y_i \iid\sim p(y; \eta)$ for a minimal exponential family distribution with natural parameter $\eta$. The log likelihood is,
-\begin{align*}
-\cL(\eta)
-&= \sum_{i=1}^n \log p(y_i; \eta) \\
-&= \left \langle \sum_{i=1}^n t(y_i), \eta \right \rangle - n A(\eta) + c
-\end{align*}
-The gradient is
-\begin{align*}
-\nabla \cL(\eta)
-&= \sum_{i=1}^n t(y_i) - n \nabla A(\eta),
-\end{align*}
-and the Hessian is $\nabla^2 \cL(\eta) = -n \nabla^2 A(\eta)$. Since the log normalizer is strictly convex (for minimal exponential families), the log likelihood is a strictly concave function and the MLE is unique. 
-
-Setting the gradient to zero and solving yields the MLE,
-\begin{align*}
-\hat{\eta}_{\mathsf{MLE}} 
-&= [\nabla A]^{-1} \left( \hat{\mu} \right) \\
-\hat{\mu} &= \frac{1}{n} \sum_{i=1}^n t(y_i),
-\end{align*}
-Thus, maximum likelihood estimation amounts to an mapping from empirical means to corresponding natural parameters by applying the inverse of the gradient mapping.
-
-
-#### Asymptotic normality
-
-Recall that the MLE is asymptotically normal with variance given by the inverse Fisher information,
-\begin{align*}
-\cI(\eta) &= - \E[\nabla^2 \log p(y_i; \eta)] = \nabla^2 A(\eta) = \Cov_\eta[t(Y)].
-\end{align*}
-Thus, the asymptotic covariance of $\hat{\eta}_{\mathsf{MLE}}$ is $\cI(\eta)^{-1} = \tfrac{1}{n} \Cov_\eta[t(Y)]^{-1}$.
-
-### MLE for the mean parameters
-
-Alternatively, consider the maximum likelihood estimate of the mean parameter $\mu \in \cM$. Before doing any math, we might expect the MLE to be the empirical mean. Indeed, that is the case. To simplify notation, let $\eta(\mu) = [\nabla A]^{-1}(\mu)$. The log likelihood,
-\begin{align*}
+</section>
+<section id="mle-for-the-mean-parameters">
+<h2>MLE for the Mean Parameters<a class="headerlink" href="#mle-for-the-mean-parameters" title="Permalink to this heading">#</a></h2>
+<p>Alternatively, consider the maximum likelihood estimate of the mean parameter <span class="math notranslate nohighlight">\(\mu \in \cM\)</span>. Before doing any math, we might expect the MLE to be the empirical mean. Indeed, that is the case. To simplify notation, let <span class="math notranslate nohighlight">\(\eta(\mu) = [\nabla A]^{-1}(\mu)\)</span>. The log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \cL(\mu)
-&= \left \langle \sum_{i=1}^n t(y_i), \eta(\mu) \right \rangle - n A(\eta(\mu)) + c
-\end{align*}
-has gradient,
-\begin{align*}
+&amp;= \left \langle \sum_{i=1}^n t(y_i), \eta(\mu) \right \rangle - n A(\eta(\mu)) + c
+\end{align*}\]</div>
+<p>has gradient,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \nabla \cL(\mu)
-&= \left(\frac{\partial \eta}{\partial \mu}(\mu) \right) \left[\sum_{i=1}^n t(y_i) - n \nabla A(\eta(\mu))\right] \\
-&= \left(\frac{\partial \eta}{\partial \mu}(\mu) \right) \left[\sum_{i=1}^n t(y_i) - n \mu \right],
-\end{align*}
-where $\tfrac{\partial \eta}{\partial \mu}(\mu)$ is the Jacobian of inverse gradient mapping at $\mu$. Assuming the Jacobian is positive definite, we immediately see that,
-\begin{align*}
-\hat{\mu}_{\mathsf{MLE}} &= \frac{1}{n} \sum_{i=1}^n t(y_i).
-\end{align*}
-
-Now back to the Jacobian... applying the [inverse function theorem](https://en.wikipedia.org/wiki/Inverse_function_theorem), shows that it equals the inverse covariance matrix,
-\begin{align*}
+&amp;= \left(\frac{\partial \eta}{\partial \mu}(\mu) \right) \left[\sum_{i=1}^n t(y_i) - n \nabla A(\eta(\mu))\right] \\
+&amp;= \left(\frac{\partial \eta}{\partial \mu}(\mu) \right) \left[\sum_{i=1}^n t(y_i) - n \mu \right],
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tfrac{\partial \eta}{\partial \mu}(\mu)\)</span> is the Jacobian of inverse gradient mapping at <span class="math notranslate nohighlight">\(\mu\)</span>. Assuming the Jacobian is positive definite, we immediately see that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\mu}_{\mathsf{MLE}} &amp;= \frac{1}{n} \sum_{i=1}^n t(y_i).
+\end{align*}\]</div>
+<p>Now back to the Jacobian… applying the <a class="reference external" href="https://en.wikipedia.org/wiki/Inverse_function_theorem">inverse function theorem</a>, shows that it equals the inverse covariance matrix,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \frac{\partial \eta}{\partial \mu} (\mu) 
 = \frac{\partial [\nabla A]^{-1}}{\partial \mu} (\mu)
 = [\nabla^2 A ([\nabla A]^{-1}(\mu))]^{-1} 
 = \Cov_{\eta(\mu)}[t(Y)]^{-1},
-\end{align*}
-which is indeed positive definite for minimal exponential families.
-
-#### Asymptotic normality
-
-We obtain the Fisher information of the mean parameter $\mu$ by left and right multiplying by the Jacobian,
-\begin{align*}
+\end{align*}\]</div>
+<p>which is indeed positive definite for minimal exponential families.</p>
+<section id="id1">
+<h3>Asymptotic normality<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>We obtain the Fisher information of the mean parameter <span class="math notranslate nohighlight">\(\mu\)</span> by left and right multiplying by the Jacobian,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \cI(\mu) 
-&= \left( \frac{\partial \eta}{\partial \mu} (\mu) \right)^\top \cI(\eta(\mu)) \left( \frac{\partial \eta}{\partial \mu} (\mu) \right) \\
-&= \Cov_{\eta(\mu)}[t(Y)]^{-1} \Cov_{\eta(\mu)}[t(Y)] \Cov_{\eta(\mu)}[t(Y)]^{-1} \\
-&= \Cov_{\eta(\mu)}[t(Y)]^{-1}.
-\end{align*}
+&amp;= \left( \frac{\partial \eta}{\partial \mu} (\mu) \right)^\top \cI(\eta(\mu)) \left( \frac{\partial \eta}{\partial \mu} (\mu) \right) \\
+&amp;= \Cov_{\eta(\mu)}[t(Y)]^{-1} \Cov_{\eta(\mu)}[t(Y)] \Cov_{\eta(\mu)}[t(Y)]^{-1} \\
+&amp;= \Cov_{\eta(\mu)}[t(Y)]^{-1}.
+\end{align*}\]</div>
 <!-- Thus, the asymptotic covariance _of the mean parameter estimate_ $\hat{\mu}_{\mathsf{MLE}}$ is 
 \begin{align*}
 \cI(\mu)^{-1} = \tfrac{1}{n} \Cov_{\eta(\mu)}[t(Y)].
 \end{align*} -->
-<!-- Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, $\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]$. More formally,
-\begin{align*}
+<p>Thus, the MLE of the mean parameter is asymptotically normal with covariance determined by the inverse Fisher information, <span class="math notranslate nohighlight">\(\cI(\mu)^{-1} = \Cov_{\eta(\mu)}[t(Y)]\)</span>. More formally,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \sqrt{n} \left( \hat{\mu}_{\mathsf{MLE}} - \mu^\star \right) 
-&\to \mathrm{N}(0, \Cov_{\eta(\mu)}[t(Y)])
-\end{align*}
-As usual, to derive confidence intervals we plug in the MLE to evaluate the asymptotic covariance.
-
-:::{note}
-Compare this result to the asymptotic covariances we computed in Lecture 1 for the Bernoulli distribution. Recall that for $X_i \iid\sim \mathrm{Bern}(\theta)$, where $\theta \in [0,1]$ is the mean parameter, we found, 
-\begin{align*}
+&amp;\to \mathrm{N}(0, \Cov_{\eta(\mu)}[t(Y)])
+\end{align*}\]</div>
+<p>As usual, to derive confidence intervals we plug in the MLE to evaluate the asymptotic covariance.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compare this result to the asymptotic covariances we computed in Lecture 1 for the Bernoulli distribution. Recall that for <span class="math notranslate nohighlight">\(X_i \iid\sim \mathrm{Bern}(\theta)\)</span>, where <span class="math notranslate nohighlight">\(\theta \in [0,1]\)</span> is the mean parameter, we found,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \sqrt{n} (\hat{\theta}_{\mathsf{MLE}} - \theta^\star) \to \mathrm{N}\left(0, \Var_\theta[X] \right).
-\end{align*}
-Now we see that this is a general property of exponential family distributions. 
-::: 
--->
+\end{align*}\]</div>
+<p>Now we see that this is a general property of exponential family distributions.</p>
+</div>
 <!-- 
 ## Conjugate duality
 
@@ -687,49 +702,70 @@ A(\eta) &= \sup_{\mu \in \cM} \left\{ \langle \mu, \eta \rangle - A^*(\mu) \righ
 \end{align*}
 
 For more on conjugate duality, see {cite:t}`wainwright2008graphical`, ch. 3.6.
-
-## KL Divergence
-
-The **Kullback-Leibler (KL) divergence**, or **relative entropy**, between two distributions is,
-\begin{align*}
-\KL{p}{q} &= \E_{p(x)}\left[\log \frac{p(x)}{q(x)} \right].
-\end{align*} 
-It is non-negative and equal to zero if and only if $p = q$. The KL divergence is _not_ a distance because it is not a symmetric function of $p$ and $q$. (generally, $\KL{p}{q} \neq \KL{q}{p}$.)
-
-When $p$ and $q$ belong to the same exponential family with natural parameters $\eta_p$ and $\eta_q$, respectively, the KL simplifies to,
-\begin{align*}
+-->
+</section>
+</section>
+<section id="kl-divergence">
+<h2>KL Divergence<a class="headerlink" href="#kl-divergence" title="Permalink to this heading">#</a></h2>
+<p>The <strong>Kullback-Leibler (KL) divergence</strong>, or <strong>relative entropy</strong>, between two distributions is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\KL{p}{q} &amp;= \E_{p}\left[\log \frac{p(Y)}{q(Y)} \right].
+\end{align*}\]</div>
+<p>It is non-negative and equal to zero if and only if <span class="math notranslate nohighlight">\(p = q\)</span>. The KL divergence is <em>not</em> a distance because it is not a symmetric function of <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(q\)</span>. (generally, <span class="math notranslate nohighlight">\(\KL{p}{q} \neq \KL{q}{p}\)</span>.)</p>
+<p>When <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(q\)</span> belong to the same exponential family with natural parameters <span class="math notranslate nohighlight">\(\eta_p\)</span> and <span class="math notranslate nohighlight">\(\eta_q\)</span>, respectively, the KL simplifies to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \KL{p}{q} 
-&= \E_{p(x)}\left[ \langle t(x), \eta_p \rangle - A(\eta_p) - \langle t(x), \eta_q \rangle + A(\eta_q) \right] \\
-&= \langle \E_{p(x)} [t(x)], \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
-&= \langle \nabla A(\eta_p), \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q).
-\end{align*}
-This form highlights that the KL divergence between exponential family distributions is a special case of a [Bregman divergence](https://en.wikipedia.org/wiki/Bregman_divergence) based on the convex function $A$.
-
-::::{admonition} Gaussian example
-
-Consider the scalar Gaussian distribution with known variance $\sigma^2$. In the example above, we cast it as an exponential family distribution with 
-- sufficient statistics $t(y) = \frac{y}{\sigma}$
-- natural parameter $\eta = \frac{\mu}{\sigma}$
-- log normalizer $A(\eta) = \frac{\eta^2}{2}$
-
-Derive the KL divergence between two Gaussians with equal variance. Denote their natural parameters by $\eta_p = \frac{\mu_p}{\sigma}$ and $\eta_q = \frac{\mu_q}{\sigma}$, respectively.
-
-:::{admonition} Answer
-:class: tip, dropdown
-The KL divergence is,
-\begin{align*}
+&amp;= \E_{p}\left[ \langle t(Y), \eta_p \rangle - A(\eta_p) - \langle t(Y), \eta_q \rangle + A(\eta_q) \right] \\
+&amp;= \langle \E_{p} [t(Y)], \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
+&amp;= \langle \nabla A(\eta_p), \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q).
+\end{align*}\]</div>
+<p>This form highlights that the KL divergence between exponential family distributions is a special case of a <a class="reference external" href="https://en.wikipedia.org/wiki/Bregman_divergence">Bregman divergence</a> based on the convex function <span class="math notranslate nohighlight">\(A\)</span>.</p>
+<div class="admonition-example-poisson-distribution admonition">
+<p class="admonition-title">Example: Poisson Distribution</p>
+<p>Consider the Poisson distribution with known mean <span class="math notranslate nohighlight">\(\lambda\)</span>. In the example above, we cast it as an exponential family distribution with</p>
+<ul class="simple">
+<li><p>sufficient statistics <span class="math notranslate nohighlight">\(t(y) = y\)</span></p></li>
+<li><p>natural parameter <span class="math notranslate nohighlight">\(\eta = \log \lambda\)</span></p></li>
+<li><p>log normalizer <span class="math notranslate nohighlight">\(A(\eta) = e^\eta\)</span></p></li>
+</ul>
+<p>Derive the KL divergence between two Poisson distributions with means <span class="math notranslate nohighlight">\(\lambda_p\)</span> and <span class="math notranslate nohighlight">\(\lambda_q\)</span>, respectively.</p>
+<div class="tip dropdown admonition">
+<p class="admonition-title">Answer</p>
+<p>The KL divergence is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \KL{p}{q} 
-&= \langle \eta_p, \eta_p - \eta_q \rangle - \frac{\eta_p^2}{2} + \frac{\eta_q^2}{2} \\
-&=  \frac{\eta_p^2}{2} - \eta_p\eta_q + \frac{\eta_q^2}{2} \\
-&=  \frac{1}{2} (\eta_p - \eta_q)^2 \\
-&=  \frac{1}{2 \sigma^2} (\mu_p - \mu_q)^2.
-\end{align*}
-This actually isn't a great example because here the KL _is_ a symmetric function, whereas in general it is not.
-:::
-
-::::
-
-::::{admonition} KL Divergence in terms of Mean Parameters
+&amp;= \langle e^{\eta_p}, \eta_p - \eta_q \rangle - e^{\eta_p} + e^{\eta_q} \\
+&amp;= \lambda_p \log \frac{\lambda_p}{\lambda_q} - \lambda_p + \lambda_q \\
+\end{align*}\]</div>
+</div>
+</div>
+<div class="admonition-example-gaussian-distribution admonition">
+<p class="admonition-title">Example: Gaussian Distribution</p>
+<p>Consider the scalar Gaussian distribution with known variance <span class="math notranslate nohighlight">\(\sigma^2\)</span>. In the example above, we cast it as an exponential family distribution with</p>
+<ul class="simple">
+<li><p>sufficient statistics <span class="math notranslate nohighlight">\(t(y) = \frac{y}{\sigma}\)</span></p></li>
+<li><p>natural parameter <span class="math notranslate nohighlight">\(\eta = \frac{\mu}{\sigma}\)</span></p></li>
+<li><p>log normalizer <span class="math notranslate nohighlight">\(A(\eta) = \frac{\eta^2}{2}\)</span></p></li>
+</ul>
+<p>Derive the KL divergence between two Gaussians with equal variance. Denote their natural parameters by <span class="math notranslate nohighlight">\(\eta_p = \frac{\mu_p}{\sigma}\)</span> and <span class="math notranslate nohighlight">\(\eta_q = \frac{\mu_q}{\sigma}\)</span>, respectively.</p>
+<div class="tip dropdown admonition">
+<p class="admonition-title">Answer</p>
+<p>The KL divergence is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\KL{p}{q} 
+&amp;= \langle \eta_p, \eta_p - \eta_q \rangle - \frac{\eta_p^2}{2} + \frac{\eta_q^2}{2} \\
+&amp;=  \frac{\eta_p^2}{2} - \eta_p\eta_q + \frac{\eta_q^2}{2} \\
+&amp;=  \frac{1}{2} (\eta_p - \eta_q)^2 \\
+&amp;=  \frac{1}{2 \sigma^2} (\mu_p - \mu_q)^2.
+\end{align*}\]</div>
+<p>Note that here, the KL <em>is</em> a symmetric function.</p>
+</div>
+</div>
+<!-- ::::{admonition} KL Divergence in terms of Mean Parameters
 
 **Exercise:** Write the KL divergence in terms of mean parameters and the conjugate dual of the log normalizer.
 
@@ -745,43 +781,65 @@ This actually isn't a great example because here the KL _is_ a symmetric functio
 \end{align*}
 :::
 
-::::
-
-
-## Deviance
-Rearranging terms, we can view the KL divergence as a remainder in a Taylor approximation of the log normalizer,
-\begin{align*}
+:::: -->
+</section>
+<section id="deviance">
+<h2>Deviance<a class="headerlink" href="#deviance" title="Permalink to this heading">#</a></h2>
+<p>Rearranging terms, we can view the KL divergence as a remainder in a Taylor approximation of the log normalizer,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 A(\eta_q) 
-&= A(\eta_p) + (\eta_q - \eta_p)^\top \nabla A(\eta_p) + \KL{p}{q}.
-\end{align*}
-From this perspective, we see that the KL divergence is related to the Fisher information,
-\begin{align*}
+&amp;= A(\eta_p) + (\eta_q - \eta_p)^\top \nabla A(\eta_p) + \KL{p}{q}.
+\end{align*}\]</div>
+<p>From this perspective, we see that the KL divergence is related to the Fisher information,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \KL{p}{q} 
-&\approx \frac{1}{2} (\eta_q - \eta_p)^\top \nabla^2 A(\eta_p) (\eta_q - \eta_p) \\
-&= \frac{1}{2} (\eta_q - \eta_p)^\top \cI(\eta_p) (\eta_q - \eta_p),
-\end{align*}
-up to terms of order $\cO(\|\eta_p - \eta_q\|^3)$.
-
-Thus, while the KL divergence is not a distance metric due to its asymmetry, it is approximately a squared distance under the Fisher information metric,
-\begin{align*}
+&amp;\approx \frac{1}{2} (\eta_q - \eta_p)^\top \nabla^2 A(\eta_p) (\eta_q - \eta_p) \\
+&amp;= \frac{1}{2} (\eta_q - \eta_p)^\top \cI(\eta_p) (\eta_q - \eta_p),
+\end{align*}\]</div>
+<p>up to terms of order <span class="math notranslate nohighlight">\(\cO(\|\eta_p - \eta_q\|^3)\)</span>.</p>
+<p>Thus, while the KL divergence is not a distance metric due to its asymmetry, it is approximately a squared distance under the Fisher information metric,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 2 \KL{p}{q} \approx \|\eta_q - \eta_p\|_{\cI(\eta_p)}^2.
-\end{align*}
-We call this quantity the **deviance**. It is simply twice the KL divergence.
-
-
-
-## Deviance Residuals
-
-In a normal model, the standarized residual is $\frac{\hat{\mu} - \mu}{\sigma}$. We can view this as a function of the deviance between two normals,
-\begin{align*}
+\end{align*}\]</div>
+<p>We call this quantity the <strong>deviance</strong>. It is simply twice the KL divergence.</p>
+</section>
+<section id="deviance-residuals">
+<span id="expfam-deviance-residuals"></span><h2>Deviance Residuals<a class="headerlink" href="#deviance-residuals" title="Permalink to this heading">#</a></h2>
+<p>In a normal model, the standarized residual is <span class="math notranslate nohighlight">\(\frac{\hat{\mu} - \mu}{\sigma}\)</span>. We can view this as a function of the deviance between two normals,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
 \frac{\hat{\mu} - \mu}{\sigma} 
-&= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\hat{\mu}}{\mu}}
-\end{align*}
-where we have used the shorthand notation $\KL{\hat{\mu}}{\mu} = \KL{\mathrm{N}(\cdot; \hat{\mu}, \sigma^2)}{\mathrm{N}(\cdot; \mu, \sigma^2)}$.
-
-The same form generalizes to other epxonential families as well. One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals, which divide by the variance. For more, see {cite:t}`efron2022exponential`, ch. 1.
-
-For a Gaussian model with equal variance, the deviance is the standardized squared error, $(\tfrac{\mu_p - \mu_q}{\sigma})^2$.  --></section>
+&amp;= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\hat{\mu}}{\mu}}
+\end{align*}\]</div>
+<p>where we have used the shorthand notation</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\KL{\mu}{\hat{\mu}} \triangleq \KL{\mathrm{N}(\mu, \sigma^2)}{\mathrm{N}(\hat{\mu}, \sigma^2)}.
+\end{align*}\]</div>
+<p>The same form generalizes to other exponential families as well, with the <strong>deviance residual</strong> between the true and estimated mean parameters defined as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+r_{\mathsf{D}}(\mu, \hat{\mu}) &amp;= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\mu}{\hat{\mu}}}.
+\end{align*}\]</div>
+<p>One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+r_{\mathsf{P}}(\mu, \hat{\mu}) &amp;= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \hat{\mu}]}}.
+\end{align*}\]</div>
+<p>For more on deviance residuals, see <span id="id2">Efron [<a class="reference internal" href="99_references.html#id11" title="Bradley Efron. Exponential families in theory and practice. Cambridge University Press, 2022.">Efr22</a>]</span>, ch. 1.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h2>
+<p>Exponential family distributions have many beautiful properties, and we’ve only scratched the surface in this chapter.</p>
+<ul class="simple">
+<li><p>We’ll see other nice properties when we talk about building probabilistic models for joint distributions of random variables using exponential family distributions, and conjugate relationships between exponential families will simplify many aspects of Bayesian inference.</p></li>
+<li><p>We’ll also see that inference in exponential families is closely connected to convex optimization — we saw that today for the MLE! — but for more complex models, the optimization problems can still be computationally intractable, even though its convex. That will motivate our discussion of variational inference later in the course.</p></li>
+</ul>
+<p>Armed with exponential family distributions, we can start to build more expressive models for categorical data. First up, generalized linear models!</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -824,11 +882,11 @@ For a Gaussian model with equal variance, the deviance is the standardized squar
       </div>
     </a>
     <a class="right-next"
-       href="../assignments/hw0/hw0.html"
+       href="05_glms.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">HW0: PyTorch Primer</p>
+        <p class="prev-next-title">Generalized Linear Models</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -861,8 +919,20 @@ For a Gaussian model with equal variance, the deviance is the standardized squar
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hessian-of-the-log-normalizer">Hessian of the log normalizer</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-exponential-families">Minimal exponential families</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-parameterization">Mean parameterization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-normality">Asymptotic normality</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-exponential-families">Minimal Exponential Families</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-parameterization">Mean Parameterization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-for-the-mean-parameters">MLE for the Mean Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Asymptotic normality</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kl-divergence">KL Divergence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deviance">Deviance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deviance-residuals">Deviance Residuals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
   </nav></div>
 
