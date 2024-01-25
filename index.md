@@ -45,7 +45,7 @@ Then we will switch to following research papers and chapters from other textboo
 | Feb 21, 2024 | Mean-Field Variational Inference       |         |
 | Feb 26, 2024 | Recurrent Neural Networks              |         |
 | Feb 28, 2024 | Attention and Tranformers              |         |
-| Mar  4, 2024 | State Space Layers (S4, S5, Mamba)     |         |
+| Mar  4, 2024 | State Space Layers (S4, S5, Mamba) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     |         |
 | Mar  6, 2024 | Models for Graph-Structured Data       |         |
 | Mar 11, 2024 | (Discrete) Denoising Diffusion Models  |         | 
 | Mar 13, 2024 | Everything Else                        |         |
