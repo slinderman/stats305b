@@ -8,6 +8,7 @@ parts:
     - file: lectures/02_contingency_tables.md
     - file: lectures/03_logreg.md
     - file: lectures/04_expfam.md
+    - file: lectures/05_glms.md
     
   - caption: Assignments
     chapters:
