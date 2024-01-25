@@ -104,8 +104,8 @@ The **cumulant generating function** &mdash; i.e., the log of the moment generat
 &\triangleq K_\eta(\theta)
 \end{align*}
 Its derivatives (with respect to $\theta$ and evaluated at zero) yield the cumulants. In particular, 
-- $\nabla K_\eta(0) = \nabla A(\eta)$ yields the first cumulant of $t(Y)$, its mean
-- $\nabla^2 K_\eta(0) = \nabla^2 A(\eta)$ yields the second cumulant, its covariance
+- $\nabla_\theta K_\eta(0) = \nabla A(\eta)$ yields the first cumulant of $t(Y)$, its mean
+- $\nabla^2_\theta K_\eta(0) = \nabla^2 A(\eta)$ yields the second cumulant, its covariance
 
 Higher order cumulants can be used to compute skewness, kurtosis, etc.
 
@@ -317,15 +317,15 @@ For more on conjugate duality, see {cite:t}`wainwright2008graphical`, ch. 3.6.
 
 The **Kullback-Leibler (KL) divergence**, or **relative entropy**, between two distributions is,
 \begin{align*}
-\KL{p}{q} &= \E_{p(x)}\left[\log \frac{p(x)}{q(x)} \right].
+\KL{p}{q} &= \E_{p}\left[\log \frac{p(Y)}{q(Y)} \right].
 \end{align*} 
 It is non-negative and equal to zero if and only if $p = q$. The KL divergence is _not_ a distance because it is not a symmetric function of $p$ and $q$. (generally, $\KL{p}{q} \neq \KL{q}{p}$.)
 
 When $p$ and $q$ belong to the same exponential family with natural parameters $\eta_p$ and $\eta_q$, respectively, the KL simplifies to,
 \begin{align*}
 \KL{p}{q} 
-&= \E_{p(x)}\left[ \langle t(x), \eta_p \rangle - A(\eta_p) - \langle t(x), \eta_q \rangle + A(\eta_q) \right] \\
-&= \langle \E_{p(x)} [t(x)], \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
+&= \E_{p}\left[ \langle t(Y), \eta_p \rangle - A(\eta_p) - \langle t(Y), \eta_q \rangle + A(\eta_q) \right] \\
+&= \langle \E_{p} [t(Y)], \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q) \\
 &= \langle \nabla A(\eta_p), \eta_p - \eta_q \rangle - A(\eta_p) + A(\eta_q).
 \end{align*}
 This form highlights that the KL divergence between exponential family distributions is a special case of a [Bregman divergence](https://en.wikipedia.org/wiki/Bregman_divergence) based on the convex function $A$.
@@ -415,7 +415,7 @@ Thus, while the KL divergence is not a distance metric due to its asymmetry, it 
 \end{align*}
 We call this quantity the **deviance**. It is simply twice the KL divergence.
 
-
+(expfam:deviance_residuals)=
 ## Deviance Residuals
 
 In a normal model, the standarized residual is $\frac{\hat{\mu} - \mu}{\sigma}$. We can view this as a function of the deviance between two normals,
@@ -425,7 +425,7 @@ In a normal model, the standarized residual is $\frac{\hat{\mu} - \mu}{\sigma}$.
 \end{align*}
 where we have used the shorthand notation 
 \begin{align*}
-\KL{\mu}{\hat{\mu}} \triangleq \KL{\mathrm{N}(\cdot; \mu, \sigma^2)}{\mathrm{N}(\cdot; \hat{\mu}, \sigma^2)}.
+\KL{\mu}{\hat{\mu}} \triangleq \KL{\mathrm{N}(\mu, \sigma^2)}{\mathrm{N}(\hat{\mu}, \sigma^2)}.
 \end{align*}
 
 The same form generalizes to other exponential families as well, with the **deviance residual** between the true and estimated mean parameters defined as,
@@ -434,7 +434,14 @@ r_{\mathsf{D}}(\mu, \hat{\mu}) &= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\mu
 \end{align*}
 One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals, 
 \begin{align*}
-r_{\mathsf{P}}(\mu, \hat{\mu}) &= \frac{\hat{\mu} - \mu}{\Var[t(Y) \mid \mu]}.
+r_{\mathsf{P}}(\mu, \hat{\mu}) &= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \hat{\mu}]}}.
 \end{align*}
 For more on deviance residuals, see {cite:t}`efron2022exponential`, ch. 1.
 
+## Conclusion
+
+Exponential family distributions have many beautiful properties, and we've only scratched the surface in this chapter. 
+- We'll see other nice properties when we talk about building probabilistic models for joint distributions of random variables using exponential family distributions, and conjugate relationships between exponential families will simplify many aspects of Bayesian inference. 
+- We'll also see that inference in exponential families is closely connected to convex optimization &mdash; we saw that today for the MLE! &mdash; but for more complex models, the optimization problems can still be computationally intractable, even though its convex. That will motivate our discussion of variational inference later in the course.
+
+Armed with exponential family distributions, we can start to build more expressive models for categorical data. First up, generalized linear models!

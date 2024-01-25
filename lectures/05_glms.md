@@ -1,6 +1,6 @@
 # Generalized Linear Models
     
-Logistic regression was a special case of a more general class of models called _generalized linear models_ (GLMs). In a GLM, the conditional distribution $p(Y \mid X)$ is modeled as an exponential family distribution whose mean parameter is a function of $X$. For example, if $Y \in \naturals$, we could model it with a Poisson GLM; if $Y \in \{1,\ldots,K\}$, we could model it as a categorical GLM. It turns out that many of the nice properties of logistic regression carry over to the more general case.
+Logistic regression was a special case of a more general class of models called _generalized linear models_ (GLMs). In a GLM, the conditional distribution $p(Y \mid X=x)$ is modeled as an exponential family distribution whose mean parameter is a function of $X$. For example, if $Y \in \naturals$, we could model it with a Poisson GLM; if $Y \in \{1,\ldots,K\}$, we could model it as a categorical GLM. It turns out that many of the nice properties of logistic regression carry over to the more general case.
 
 ## Model
 To construct a generalized linear model with exponential family observations, we set 
@@ -45,8 +45,9 @@ The gradient is,
 \begin{align*}
     \nabla \cL(\mbbeta) 
     &= \sum_{i=1}^n \langle t(y_i), \mbx_i \rangle - \langle \nabla A(\mbbeta^\top \mbx_i), \, \mbx_i \rangle\\
-    &= \sum_{i=1}^n \langle t(y_i) - \E[t(Y_i)], \, \mbx_i \rangle
+    &= \sum_{i=1}^n \langle t(y_i) - \E[t(Y); \eta_i], \, \mbx_i \rangle
 \end{align*}
+where $\eta_i = \mbx_i^\top \mbbeta$ for a GLM with canonical link.
 
 In many cases, $t(y_i) = y_i \in \reals$ so
 \begin{align*}
@@ -58,16 +59,16 @@ And in that case the Hessian is
 \begin{align*}
     \nabla^2_{\mbbeta} \cL(\mbbeta) 
     &= - \sum_{i=1}^n \nabla^2 A(\mbbeta^\top \mbx_i) \, \mbx_i \mbx_i^\top \\
-    &= -\sum_{i=1}^n \Var[t(Y_i)] \, \mbx_i \mbx_i^\top
+    &= -\sum_{i=1}^n \Var[t(Y); \eta_i] \, \mbx_i \mbx_i^\top
 \end{align*}
 
 Now recall the Newton's method updates, written here in terms of the change in weights,
 \begin{align*}
     \Delta \mbbeta &= - [\nabla^2 \cL(\mbbeta)]^{-1} \nabla \cL(\mbbeta) \\
-    &= \left[\sum_{i=1}^n \Var[t(y_i)] \, \mbx_i \mbx_i^\top \right]^{-1} \left[\sum_{i=1}^n (y_i - \hat{y}_i) \mbx_i \right]
+    &= \left[\sum_{i=1}^n \Var[t(Y); \eta_i] \, \mbx_i \mbx_i^\top \right]^{-1} \left[\sum_{i=1}^n (y_i - \hat{y}_i) \mbx_i \right]
 \end{align*}
 
-Letting $w_i = \Var[t(Y_i)]$,
+Letting $w_i = \Var[t(Y); \eta_i]$,
 \begin{align*}
     \Delta \mbbeta &=
     \left[\sum_{i=1}^n w_i \, \mbx_i \mbx_i^\top \right]^{-1} \left[ \sum_{i=1}^n (y_i - \hat{y}_i) \mbx_i \right] \\
@@ -107,7 +108,7 @@ and
 
 We can perform maximum likelihood estimation via Newton's method, but do the resulting parameters $\hat{\mbbeta}_{\mathsf{MLE}}$ provide a good fit to the data? One way to answer this question is by comparing the fitted model to two reference points: a **saturated** model and a **baseline** model.
 
-For binomial GLMs (including logistic regression) and Poisson GLMs, the saturated model conditions on the mean equaling the observed response. For example, in a Poisson GLM the saturated model is,
+For binomial GLMs (including logistic regression) and Poisson GLMs, the saturated model conditions on the mean equaling the observed response. For example, in a Poisson GLM the saturated model's log probability is,
 \begin{align*}
 \log p_{\mathsf{sat}}(\mby) 
 &= \sum_{i=1}^n \log \mathrm{Po}(y_i; y_i) \\
@@ -118,20 +119,27 @@ The likelihood ratio statistic in this case is
 -2 \log \frac{p(\mby \mid \mbX; \hat{\mbbeta})}{p_{\mathsf{sat}}(\mby)} 
 &= 2 \sum_{i=1}^n \log \mathrm{Po}(y_i; y_i) - \log \mathrm{Po}(y_i; \hat{\mu}_i)\\
 &= 2 \sum_{i=1}^n y_i \log \frac{y_i}{\hat{\mu}_i} + \hat{\mu}_i - y_i \\
-&= \sum_{i=1}^n r_{\mathsf{D}}(y_i, \hat{\mu}_i)^2 \\
-&\triangleq D(\mby, \hat{\mbmu}),
+&= \sum_{i=1}^n r_{\mathsf{D}}(y_i, \hat{\mu}_i)^2
 \end{align*}
 where $\hat{\mu}_i = f(\mbx_i^\top \hat{\mbbeta})$ is the predicted mean. 
-We recognize the likelihood ratio statistic as the sum of squared deviance residuals! (See the [previous chapter](./04_expfam.md) ) 
-In the GLM literature, the sum of deviance residuals is (somewhat confusingly) just called the **deviance**, $D(\mby, \hat{\mbmu})$. Larger deviance implies a poorer fit. 
+We recognize the likelihood ratio statistic as the sum of squared deviance residuals! (See the [previous chapter](expfam:deviance_residuals) ) 
+
+Moreover, this statistic is just the deviance (twice the KL divergence) between the two models,
+\begin{align*}
+2 \KL{p_{\mathsf{sat}}(\mbY)}{p(\mbY \mid \mbX=\mbx; \hat{\mbbeta})}
+&= 2 \E_{p_{\mathsf{sat}}} \left[\log \frac{p_{\mathsf{sat}}(\mby)}{p(\mby \mid \mbX; \hat{\mbbeta})} \right] \\
+&= 2 \sum_{i=1}^n \KL{\mathrm{Po}(y_i)}{\mathrm{Po}(\hat{\mu}_i)} \\
+&\triangleq D(\mby, \hat{\mbmu}).
+\end{align*}
+We've shown the deviance for the case of a Poisson GLM, but the same idea holds for GLMs with other exponential family distributions. Larger deviance implies a poorer fit. 
 
 The baseline model is typically a GLM with only an intercept term, in which case the MLE is $\mu_i \equiv \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}$. For that baseline model, the deviance is,
 \begin{align*}
 D(\mby, \bar{y} \mbone)
 &= 2 \sum_{i=1}^n y_i \log \frac{y_i}{\bar{y}} + \bar{y} - y_i \\
-&= 2 \sum_{i=1}^n y_i \log \frac{y_i}{\bar{y}} \\
-&= \sum_{i=1}^n r_{\mathsf{D}}(y_i, \bar{y})^2 \\
-&= D(\mby, \bar{y} \mbone),
+&= 2 \sum_{i=1}^n y_i \log \frac{y_i}{\bar{y}} 
+\\
+&= \sum_{i=1}^n r_{\mathsf{D}}(y_i, \bar{y})^2.
 \end{align*}
 
 :::{admonition} Note on intercepts
@@ -169,3 +177,8 @@ For small $n$ (or when using a small number of folds), a bias-correction can be 
 
 Cross-validated predictive log likelihood estimates are similar to the \emph{jackknife} resampling method in the sense that it is estimating an expectation wrt the unknown data-generating distribution $p^\star$ by resampling the given data. 
 
+## Conclusion
+
+Generalized linear models allow us to build flexible regression models that respect the domain of the response variable. Logistic regression is a special case of a Bernoulli GLM with the canonical link function. For categorical data, we could use a categorical distribution with the softmax link function, and for count data, we could use a Poisson GLM with exponential, softplus, or other link functions. Leveraging the deviance and deviance residuals for exponential family distribiutions, we can derive analogs of familiar terms from linear modeling, like the fraction of variance explained and the residual analysis. 
+
+Next, we'll consider techniques for Bayesian analysis in GLMs, which allow for more expressive moodels. That will give us an excuse to _finally_ dig into Bayesian inference methods.
