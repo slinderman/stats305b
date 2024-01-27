@@ -360,7 +360,7 @@ Consider testing the null hypothesis $\cH_0: \log \theta = 0$ against the one-si
 \Pr(X_{11} \geq x_{11} \mid x_{1 \bullet}, x_{\bullet 1}, x_{\bullet \bullet}, \cH_0)
 &= \sum_{k=x_{11}}^{\min\{x_{\bullet 1}, x_{1 \bullet} \}} \mathrm{HyperGeom}(k; x_{\bullet \bullet}, x_{1 \bullet}, x_{\bullet 1}).
 \end{align*}
-
+<!-- 
 ## Bayesian Inference for Two-Way Tables
 
 Finally, let's conclude with some approaches for Bayesian inference. Again, this involves placing a prior on the parameters of interest. For example, in a two-way table, we could use independent, conjugate beta priors,
@@ -394,7 +394,7 @@ Likewise, we can use the same approach to compute posterior credible intervals f
 
 How could you construct a more appropriate prior distribution for capturing correlations (or exact equality) between the conditional probabilities?
 
-:::
+::: -->
 
 
 ## Conclusion

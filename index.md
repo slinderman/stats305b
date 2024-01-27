@@ -35,9 +35,9 @@ Then we will switch to following research papers and chapters from other textboo
 | Jan 17, 2024 | [Logistic Regression](lectures/03_logreg.md) | {cite:p}`agresti2002categorical` Ch. 4-5 | 
 | Jan 22, 2024 | [Exponential Families](lectures/04_expfam.md) | {cite:p}`agresti2002categorical` Ch. 4-5 |
 | Jan 24, 2024 | [Generalized Linear Models](lectures/05_glms.md) | {cite:p}`agresti2002categorical` Ch. 6 | 
-| Jan 29, 2024 | Bayesian Probit and Logistic Regression | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
-| Jan 31, 2024 | Generalized Linear Mixed Models        | {cite:p}`agresti2002categorical` Ch. 12 |
-| Feb 5, 2024 | L1-regularized GLMs                    | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
+| Jan 29, 2024 | [Bayesian Inference](lectures/06_bayes.md) | |
+| Jan 31, 2024 | Bayesian GLMs | {cite:p}`albert1993bayesian`, {cite:p}`polson2013bayesian`, {cite:p}`agresti2002categorical` Ch. 12 |
+| Feb 5, 2024 | L1-regularized GLMs | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
 | Feb 12, 2024 | Discrete Latent Variable Models        |         |
 | Feb 14, 2024 | Hidden Markov Models                   |         | 
