@@ -9,6 +9,7 @@ parts:
     - file: lectures/03_logreg.md
     - file: lectures/04_expfam.md
     - file: lectures/05_glms.md
+    - file: lectures/06_bayes.md
     
   - caption: Assignments
     chapters:

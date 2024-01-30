@@ -344,19 +344,8 @@ Like before, we can use the asymptotic covariance estimate to derive Wald confid
 Remember, Wald confidence intervals are only as good as the asymptotic normality assumption. When the likelihod is not well approximated by a quadratic, the covariance estimate will be poor, and the confidence intervals will be invalid. When might the Gaussian approximation not hold?
 :::
 
-<!-- ## Deviance and Goodness of Fit
 
-Instead of Wald tests and interval estimates, we coulda also use likelihood ratio inference, which is based on the difference in log likelihood between the fitted and the saturated model,
-\begin{align*}
-\lambda = -2 \log \frac{p(\mby \mid \mbX, \hat{\mbbeta})}{p_{\mathsf{sat}}(\mby)}.
-\end{align*}
-For logistic regression, the saturated model assigns probability one to the observed data,
-\begin{align*}
-p_{\mathsf{sat}}(\mby) &= \prod_{i=1}^n \mathrm{Bern}(y_i; y_i) = 1.
-\end{align*} -->
-
-
-## Bayesian Inference with the Laplace Approximation
+<!-- ## Bayesian Inference with the Laplace Approximation
 
 Finally, suppose you wanted to perform Bayesian inference of the weights under a Gaussian prior,
 \begin{align*}
@@ -403,7 +392,7 @@ Evaluating at the MAP estimate,
 &\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
 &\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
 \end{align*}
-The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week. 
+The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week.  -->
 
 
 ## Conclusion
