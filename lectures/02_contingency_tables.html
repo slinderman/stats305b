@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Contingency Tables &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
@@ -29,39 +28,43 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/02_contingency_tables';</script>
@@ -156,7 +159,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -173,6 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -351,7 +366,6 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#independence-testing-in-two-way-tables">Independence Testing in Two-Way Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fisher-s-exact-test-for-two-way-tables">Fisher’s Exact Test for Two-Way Tables</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference-for-two-way-tables">Bayesian Inference for Two-Way Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
             </nav>
@@ -365,10 +379,10 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="contingency-tables">
-<h1>Contingency Tables<a class="headerlink" href="#contingency-tables" title="Permalink to this heading">#</a></h1>
+<h1>Contingency Tables<a class="headerlink" href="#contingency-tables" title="Link to this heading">#</a></h1>
 <p>Last time we introduced basic distributions for discrete random variables — our first <em>models</em>! But a model of a single discrete random variable isn’t all that interesting… Contingency tables allow us to model and reason about the joint distribution of <em>two</em> categorical random variables. Two might not sound like a lot — we’ll get to more complex models soon enough! — but it turns out plenty of important questions boil down to understanding the relationship between two variables.</p>
 <section id="motivating-example">
-<h2>Motivating Example<a class="headerlink" href="#motivating-example" title="Permalink to this heading">#</a></h2>
+<h2>Motivating Example<a class="headerlink" href="#motivating-example" title="Link to this heading">#</a></h2>
 <p>We used the College Football National Championship to motivate our analyses in the last lecture, but I have to admit, I have a love-hate relationship with football. While it’s fun to watch, it’s increasingly clear that repetitive head injuries sustained in football can have devastating consequences, including an increased risk of chronic traumatic encephalopathy (CTE). A recent study from <span id="id1">McKee <em>et al.</em> [<a class="reference internal" href="99_references.html#id4" title="Ann C McKee, Jesse Mez, Bobak Abdolmohammadi, Morgane Butler, Bertrand Russell Huber, Madeline Uretsky, Katharine Babcock, Jonathan D Cherry, Victor E Alvarez, Brett Martin, and others. Neuropathologic and clinical findings in young contact sport athletes exposed to repetitive head impacts. JAMA neurology, 80(10):1037–1050, 2023.">MMA+23</a>]</span> in <em>JAMA Neurology</em> showed that CTE can be found even in amateur high school and college athletes, and the New York Times highlighted their research in a very sad <a class="reference external" href="https://www.nytimes.com/interactive/2023/11/16/us/cte-youth-football.html">article</a> last fall.</p>
 <p>The only way to definitely diagnose CTE is via autopsy. <span id="id2">McKee <em>et al.</em> [<a class="reference internal" href="99_references.html#id4" title="Ann C McKee, Jesse Mez, Bobak Abdolmohammadi, Morgane Butler, Bertrand Russell Huber, Madeline Uretsky, Katharine Babcock, Jonathan D Cherry, Victor E Alvarez, Brett Martin, and others. Neuropathologic and clinical findings in young contact sport athletes exposed to repetitive head impacts. JAMA neurology, 80(10):1037–1050, 2023.">MMA+23</a>]</span> studied the brains of 152 people who had played contact sports and died under the age of 30 from various causes including injury, overdose, suicide, and others (but not from neurodegenerative disease). Of those 152 people, 92 had played football and the rest had played other sports like soccer, hockey, wrestling, rugby, etc. Of the 152 people, 63 were found to have CTE upon neuropathologic evaluation. Of the 92 football players, 48 had CTE.</p>
 <p>We can summarize that result in a 2 <span class="math notranslate nohighlight">\(\times\)</span> 2 table:</p>
@@ -404,7 +418,7 @@ document.write(`
 </div>
 </section>
 <section id="id3">
-<h2>Contingency Tables<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<h2>Contingency Tables<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>The table above is an example of a <strong>contingency table</strong>. It represents a sample from a <strong>joint distribution</strong> of two random variables, <span class="math notranslate nohighlight">\(X \in \{0,1\}\)</span> indicating whether the person played football, and <span class="math notranslate nohighlight">\(Y \in \{0,1\}\)</span> indicating whether they had CTE.</p>
 <p>More generally, let <span class="math notranslate nohighlight">\(X \in \{1,\ldots, I\}\)</span> and <span class="math notranslate nohighlight">\(Y \in \{1,\ldots, J\}\)</span> be categorical random variables. We represent the joint distribution as an <span class="math notranslate nohighlight">\(I \times J\)</span> table,</p>
 <div class="amsmath math notranslate nohighlight">
@@ -438,7 +452,7 @@ document.write(`
 \end{align*}\]</div>
 </section>
 <section id="independence">
-<h2>Independence<a class="headerlink" href="#independence" title="Permalink to this heading">#</a></h2>
+<h2>Independence<a class="headerlink" href="#independence" title="Link to this heading">#</a></h2>
 <p>One of the key questions in the analysis of contingency tables is whether <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are independent. In particular, they are independent if the joint distribution factors into a product of marginals,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -451,10 +465,10 @@ X \perp Y \iff \pi_{j|i} = \frac{\pi_{ij}}{\pi_{i \bullet}} = \frac{\pi_{i \bull
 \end{align*}\]</div>
 </section>
 <section id="sampling">
-<h2>Sampling<a class="headerlink" href="#sampling" title="Permalink to this heading">#</a></h2>
+<h2>Sampling<a class="headerlink" href="#sampling" title="Link to this heading">#</a></h2>
 <p>We don’t usually observe the probabilities <span class="math notranslate nohighlight">\(\mbPi\)</span> directly. Instead, we have to draw inferences about them given noisy observations. Let <span class="math notranslate nohighlight">\(\mbX \in \naturals^{I \times J}\)</span> denote a matrix of counts <span class="math notranslate nohighlight">\(X_{ij}\)</span> for each cell of the table. We need a model of how <span class="math notranslate nohighlight">\(\mbX\)</span> is sampled.</p>
 <section id="poisson-sampling">
-<h3>Poisson Sampling<a class="headerlink" href="#poisson-sampling" title="Permalink to this heading">#</a></h3>
+<h3>Poisson Sampling<a class="headerlink" href="#poisson-sampling" title="Link to this heading">#</a></h3>
 <p>Under a Poisson sampling model,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -468,7 +482,7 @@ X_{\bullet \bullet} &amp;\sim \mathrm{Po}(\lambda_{\bullet \bullet}).
 <p>The sampling models below correspond to special cases of Poisson sampling when we condition on certain marginal counts.</p>
 </section>
 <section id="multinomial-sampling">
-<h3>Multinomial Sampling<a class="headerlink" href="#multinomial-sampling" title="Permalink to this heading">#</a></h3>
+<h3>Multinomial Sampling<a class="headerlink" href="#multinomial-sampling" title="Link to this heading">#</a></h3>
 <p>If we condition on the total count, we obtain a multinomial sampling model,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -482,7 +496,7 @@ X_{\bullet \bullet} &amp;\sim \mathrm{Po}(\lambda_{\bullet \bullet}).
 \end{align*}\]</div>
 </section>
 <section id="independent-multinomial-sampling">
-<h3>Independent Multinomial Sampling<a class="headerlink" href="#independent-multinomial-sampling" title="Permalink to this heading">#</a></h3>
+<h3>Independent Multinomial Sampling<a class="headerlink" href="#independent-multinomial-sampling" title="Link to this heading">#</a></h3>
 <p>When the row variables are explanatory variables, we often model each row of counts as conditionally independent given the row-sums,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -497,7 +511,7 @@ X_{\bullet \bullet} &amp;\sim \mathrm{Po}(\lambda_{\bullet \bullet}).
 \end{align*}\]</div>
 </section>
 <section id="hypergeometric-sampling">
-<h3>Hypergeometric sampling<a class="headerlink" href="#hypergeometric-sampling" title="Permalink to this heading">#</a></h3>
+<h3>Hypergeometric sampling<a class="headerlink" href="#hypergeometric-sampling" title="Link to this heading">#</a></h3>
 <p>Sometimes we condition on <em>both</em> the row and column sums. For 2x2 tables, under the null hypothesis that the rows are independent (i.e., assuming homogenous conditionals), the resulting sampling distribution is the hypergeometric,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -559,7 +573,7 @@ X_{i1} &amp;\ind\sim \mathrm{Bin}(x_{i \bullet}, p) &amp; \text{for } i&amp;\in0
 </section>
 </section>
 <section id="comparing-two-proportions">
-<h2>Comparing Two Proportions<a class="headerlink" href="#comparing-two-proportions" title="Permalink to this heading">#</a></h2>
+<h2>Comparing Two Proportions<a class="headerlink" href="#comparing-two-proportions" title="Link to this heading">#</a></h2>
 <p>Contingency tables are often used to compare two groups <span class="math notranslate nohighlight">\(X \in \{0,1\}\)</span> based on a binary response variables <span class="math notranslate nohighlight">\(Y \in \{0,1\}\)</span>. The resulting tables are 2x2. The association between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> can be summarized with a variety of statistics: the difference of proportions, the relative risk, and the odds ratio. We will focus on the latter.</p>
 <p>For a Bernoulli random variable with probability <span class="math notranslate nohighlight">\(p\)</span>, the odds are defined as</p>
 <div class="amsmath math notranslate nohighlight">
@@ -599,7 +613,7 @@ Y \mid X=i &amp;\sim \mathrm{Bern}(\pi_{1|i}) &amp; \text{for } i &amp;\in \{0,1
 <p>Under independence, the log odds ratio is 0. The magnitude of the log odds ratio represents the strength of association.</p>
 </section>
 <section id="conditional-independence">
-<h2>Conditional Independence<a class="headerlink" href="#conditional-independence" title="Permalink to this heading">#</a></h2>
+<h2>Conditional Independence<a class="headerlink" href="#conditional-independence" title="Link to this heading">#</a></h2>
 <p>We often need to control for confounding variables <span class="math notranslate nohighlight">\(Z\)</span> when studying the relationship between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>. Suppose <span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(Y\)</span>, and <span class="math notranslate nohighlight">\(Z\)</span> are all binary random variables. We can represent their joint distribution with a 2x2x2 contingency table,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -626,12 +640,12 @@ Y \mid X=i &amp;\sim \mathrm{Bern}(\pi_{1|i}) &amp; \text{for } i &amp;\in \{0,1
 \end{align*}\]</div>
 <p>Conditional independence corresponds to <span class="math notranslate nohighlight">\(\log \theta_k = 0 \; \forall k\)</span>.</p>
 <section id="simpsons-paradox">
-<h3>Simpsons paradox<a class="headerlink" href="#simpsons-paradox" title="Permalink to this heading">#</a></h3>
+<h3>Simpsons paradox<a class="headerlink" href="#simpsons-paradox" title="Link to this heading">#</a></h3>
 <p>Conditional independence does not imply marginal independence. Indeed, measures of marginal association and conditional association can even differ in sign. This is called <em>Simpson’s paradox</em>.</p>
 </section>
 </section>
 <section id="confidence-intervals-for-log-odds-ratio">
-<h2>Confidence Intervals for Log Odds Ratio<a class="headerlink" href="#confidence-intervals-for-log-odds-ratio" title="Permalink to this heading">#</a></h2>
+<h2>Confidence Intervals for Log Odds Ratio<a class="headerlink" href="#confidence-intervals-for-log-odds-ratio" title="Link to this heading">#</a></h2>
 <p>Given a sample of counts <span class="math notranslate nohighlight">\(\mbX=\mbx\)</span> from a contingency table, the MLE estimate of the probabilities is</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -656,7 +670,7 @@ Y \mid X=i &amp;\sim \mathrm{Bern}(\pi_{1|i}) &amp; \text{for } i &amp;\in \{0,1
 \end{align*}\]</div>
 <p>is an estimate of the standard error using the <em>delta method</em>.</p>
 <section id="delta-method">
-<h3>Delta method<a class="headerlink" href="#delta-method" title="Permalink to this heading">#</a></h3>
+<h3>Delta method<a class="headerlink" href="#delta-method" title="Link to this heading">#</a></h3>
 <p>The sample log odds ratio is a nonlinear function of the maximum likelihood estimates of <span class="math notranslate nohighlight">\(\hat{\pi}_{ij}\)</span>,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -724,7 +738,7 @@ g(\hat{\mbpi}) &amp;\approx g(\mbpi) + \nabla g(\mbpi)^\top (\hat{\mbpi} - \mbpi
 </section>
 </section>
 <section id="independence-testing-in-two-way-tables">
-<h2>Independence Testing in Two-Way Tables<a class="headerlink" href="#independence-testing-in-two-way-tables" title="Permalink to this heading">#</a></h2>
+<h2>Independence Testing in Two-Way Tables<a class="headerlink" href="#independence-testing-in-two-way-tables" title="Link to this heading">#</a></h2>
 <p>Last time, we derived Wald confidence intervals from the acceptance region of a Wald hypothesis test. We could do the reverse here to to test independence in <span class="math notranslate nohighlight">\(2 \times 2\)</span> tables using the Wald confidence. Instead, we will derive an independence test that works more generally for <span class="math notranslate nohighlight">\(I \times J\)</span> tables. Instead of a Wald test, we’ll use a likelihood ratio test.</p>
 <p>Let <span class="math notranslate nohighlight">\(\cH_0: \pi_{ij} = \pi_{i \bullet} \pi_{\bullet j}\)</span> for all <span class="math notranslate nohighlight">\(i,j\)</span> be our null hypothesis of independence. The null hypothesis imposes a constraint on the set of probabilities <span class="math notranslate nohighlight">\(\mbPi\)</span>. Rather than taking on any value <span class="math notranslate nohighlight">\(\mbPi \in \Delta_{IJ - 1}\)</span>, they are constrained to the <span class="math notranslate nohighlight">\(\Delta_{I-1} \times \Delta_{J-1}\)</span> subset of probabilities that factor into an outer product of marginal probabilities.</p>
 <p>The likelihood ratio test compares the maximum likelihood under the constrained set to the maximum likelihood under the larger space of all probabilities,</p>
@@ -761,7 +775,7 @@ g(\hat{\mbpi}) &amp;\approx g(\mbpi) + \nabla g(\mbpi)^\top (\hat{\mbpi} - \mbpi
 <p>allowing us to construct p-values.</p>
 </section>
 <section id="fisher-s-exact-test-for-two-way-tables">
-<h2>Fisher’s Exact Test for Two-Way Tables<a class="headerlink" href="#fisher-s-exact-test-for-two-way-tables" title="Permalink to this heading">#</a></h2>
+<h2>Fisher’s Exact Test for Two-Way Tables<a class="headerlink" href="#fisher-s-exact-test-for-two-way-tables" title="Link to this heading">#</a></h2>
 <p>The p-value for the likelihood ratio test is based on an asymptotic chi-squared distribution, which only holds as <span class="math notranslate nohighlight">\(n = x_{\bullet \bullet} \to \infty\)</span>. For two-way tables with small <span class="math notranslate nohighlight">\(n\)</span>, we can do exact inference using the hypergeometric sampling distribution for <span class="math notranslate nohighlight">\(x_{11}\)</span> given the row- and column-marginals under the null hypothesis of independence. This is called <em>Fisher’s exact test</em>.</p>
 <p>Consider testing the null hypothesis <span class="math notranslate nohighlight">\(\cH_0: \log \theta = 0\)</span> against the one-sided alternative,  <span class="math notranslate nohighlight">\(\cH_0 \log \theta &gt; 0\)</span> (i.e., a positive association between the two variables). The sample log odds ratio, <span class="math notranslate nohighlight">\(\log \hat{\theta} = \frac{x_{11} x_{00}}{x_{10} x_{01}}\)</span>, is monotonically increasing in <span class="math notranslate nohighlight">\(x_{11}\)</span>. That is, increasing <span class="math notranslate nohighlight">\(x_{11}\)</span> leads to increasing <span class="math notranslate nohighlight">\(\log \hat{\theta}\)</span>. Fisher’s exact test corresponds to the probability of seeing a value at least as large as <span class="math notranslate nohighlight">\(x_{11}\)</span> under the null hypothesis,</p>
 <div class="amsmath math notranslate nohighlight">
@@ -769,43 +783,44 @@ g(\hat{\mbpi}) &amp;\approx g(\mbpi) + \nabla g(\mbpi)^\top (\hat{\mbpi} - \mbpi
 \Pr(X_{11} \geq x_{11} \mid x_{1 \bullet}, x_{\bullet 1}, x_{\bullet \bullet}, \cH_0)
 &amp;= \sum_{k=x_{11}}^{\min\{x_{\bullet 1}, x_{1 \bullet} \}} \mathrm{HyperGeom}(k; x_{\bullet \bullet}, x_{1 \bullet}, x_{\bullet 1}).
 \end{align*}\]</div>
-</section>
-<section id="bayesian-inference-for-two-way-tables">
-<h2>Bayesian Inference for Two-Way Tables<a class="headerlink" href="#bayesian-inference-for-two-way-tables" title="Permalink to this heading">#</a></h2>
-<p>Finally, let’s conclude with some approaches for Bayesian inference. Again, this involves placing a prior on the parameters of interest. For example, in a two-way table, we could use independent, conjugate beta priors,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\pi_{1|i} &amp;\iid\sim \mathrm{Beta}(\alpha, \beta) &amp; \text{for } i &amp;\in \{0, 1\}.
-\end{align*}\]</div>
-<p>When <span class="math notranslate nohighlight">\(\alpha = \beta = 1\)</span>, this reduces to <span class="math notranslate nohighlight">\(\pi_{1|i} \iid\sim \mathrm{Unif}([0,1])\)</span>.</p>
-<p>Under an independent beta prior, the posterior distribution on parameters factors into a product of betas as well,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+<!-- 
+## Bayesian Inference for Two-Way Tables
+
+Finally, let's conclude with some approaches for Bayesian inference. Again, this involves placing a prior on the parameters of interest. For example, in a two-way table, we could use independent, conjugate beta priors,
+\begin{align*}
+\pi_{1|i} &\iid\sim \mathrm{Beta}(\alpha, \beta) & \text{for } i &\in \{0, 1\}.
+\end{align*}
+When $\alpha = \beta = 1$, this reduces to $\pi_{1|i} \iid\sim \mathrm{Unif}([0,1])$. 
+
+Under an independent beta prior, the posterior distribution on parameters factors into a product of betas as well,
+\begin{align*}
 p(\mbPi \mid \mbX=\mbx) 
-&amp;= \mathrm{Beta}(\pi_{1|1} \mid \alpha + x_{11}, \beta + x_{10}) \, 
+&= \mathrm{Beta}(\pi_{1|1} \mid \alpha + x_{11}, \beta + x_{10}) \, 
 \mathrm{Beta}(\pi_{1|0} \mid \alpha + x_{01}, \beta + x_{00})
-\end{align*}\]</div>
-<p>Under this prior, the rows are <em>almost surely dependent</em>, since <span class="math notranslate nohighlight">\(p(\pi_{1|1} = \pi_{1|0}) = 0\)</span>. Nevertheless, we can use this model to draw posterior inferences about association measures like the log odds ratio, <span class="math notranslate nohighlight">\(\log \theta\)</span>. For example, we can use Monte Carlo to estimate tail probabilities,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+\end{align*}
+
+Under this prior, the rows are _almost surely dependent_, since $p(\pi_{1|1} = \pi_{1|0}) = 0$. Nevertheless, we can use this model to draw posterior inferences about association measures like the log odds ratio, $\log \theta$. For example, we can use Monte Carlo to estimate tail probabilities,
+\begin{align*}
 \Pr(\log \theta \geq t \mid \mbX = \mbx) 
-&amp;= \int \bbI\left[\log \frac{\pi_{1|1} / (1 - \pi_{1|1})}{\pi_{1|0} / (1 - \pi_{1|0})} \geq t \right] \; p(\mbPi \mid \mbX = \mbx) \dif \mbPi \\
-&amp;\approx \frac{1}{M} \sum_{m=1}^M \bbI\left[\log \frac{\pi_{1|1}^{(m)} / (1 - \pi_{1|1}^{(m)})}{\pi_{1|0}^{(m)} / (1 - \pi_{1|0}^{(m)})} \geq t \right]
-\end{align*}\]</div>
-<p>where</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\pi_{1|1}^{(m)} &amp;\iid\sim \mathrm{Beta}(\alpha + x_{11}, \beta + x_{10}), \\
-\pi_{1|0}^{(m)} &amp;\iid\sim \mathrm{Beta}(\alpha + x_{01}, \beta + x_{00}), \\
-\end{align*}\]</div>
-<p>Likewise, we can use the same approach to compute posterior credible intervals for <span class="math notranslate nohighlight">\(\log \theta\)</span>.</p>
-<div class="tip admonition">
-<p class="admonition-title">Question</p>
-<p>How could you construct a more appropriate prior distribution for capturing correlations (or exact equality) between the conditional probabilities?</p>
-</div>
+&= \int \bbI\left[\log \frac{\pi_{1|1} / (1 - \pi_{1|1})}{\pi_{1|0} / (1 - \pi_{1|0})} \geq t \right] \; p(\mbPi \mid \mbX = \mbx) \dif \mbPi \\
+&\approx \frac{1}{M} \sum_{m=1}^M \bbI\left[\log \frac{\pi_{1|1}^{(m)} / (1 - \pi_{1|1}^{(m)})}{\pi_{1|0}^{(m)} / (1 - \pi_{1|0}^{(m)})} \geq t \right]
+\end{align*}
+where 
+\begin{align*}
+\pi_{1|1}^{(m)} &\iid\sim \mathrm{Beta}(\alpha + x_{11}, \beta + x_{10}), \\
+\pi_{1|0}^{(m)} &\iid\sim \mathrm{Beta}(\alpha + x_{01}, \beta + x_{00}), \\
+\end{align*}
+Likewise, we can use the same approach to compute posterior credible intervals for $\log \theta$. 
+
+:::{admonition} Question
+:class: tip
+
+How could you construct a more appropriate prior distribution for capturing correlations (or exact equality) between the conditional probabilities?
+
+::: -->
 </section>
 <section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h2>
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
 <p>Contingency tables are fundamental tools for studying the relationship between two categorical random variables. We discussed models sampling contingency tables, conditioning on various marginals, as well as various measures of association between the random variables. Then we presented methods for inferring associations and testing hypotheses of independence. However, these methods were ultimately limited to just two (often binary) variables. Next, we’ll consider models for capturing relationships between a response and several covariates.</p>
 </section>
 </section>
@@ -895,7 +910,6 @@ p(\mbPi \mid \mbX=\mbx)
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#independence-testing-in-two-way-tables">Independence Testing in Two-Way Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fisher-s-exact-test-for-two-way-tables">Fisher’s Exact Test for Two-Way Tables</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference-for-two-way-tables">Bayesian Inference for Two-Way Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
   </nav></div>

@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Exponential Families &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
@@ -29,39 +28,43 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/04_expfam';</script>
@@ -156,7 +159,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -173,6 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Exponential Families</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -369,10 +384,10 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="exponential-families">
-<h1>Exponential Families<a class="headerlink" href="#exponential-families" title="Permalink to this heading">#</a></h1>
+<h1>Exponential Families<a class="headerlink" href="#exponential-families" title="Link to this heading">#</a></h1>
 <p>Many familiar distributions like the ones we covered in lecture 1 are <em>exponential family distributions</em>. As Brad Efron likes to say, exponential family distributions bridge the gap between the Gaussian family and general distributions. For Gaussian distributions, we have exact small-sample distributional results (<span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(F\)</span>, and <span class="math notranslate nohighlight">\(\chi^2\)</span> tests); in the exponential family setting we have approximate distributional results (deviance tests); in the general setting, we have to appeal to asymptotics.</p>
 <section id="definition">
-<h2>Definition<a class="headerlink" href="#definition" title="Permalink to this heading">#</a></h2>
+<h2>Definition<a class="headerlink" href="#definition" title="Link to this heading">#</a></h2>
 <p>Exponential family distributions have densities of the form,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -393,9 +408,9 @@ document.write(`
 <p>The domain of the exponential family is the set of valid natural parameters, <span class="math notranslate nohighlight">\(\Omega = \{\eta: A(\eta) &lt; \infty\}\)</span>. An exponential family is a family of distributions defined by base measure <span class="math notranslate nohighlight">\(h\)</span> and sufficient statistics <span class="math notranslate nohighlight">\(t\)</span>, and it is indexed by natural paremeters <span class="math notranslate nohighlight">\(\eta \in \Omega\)</span>.</p>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
 <section id="gaussian-with-known-variance">
-<h3>Gaussian with known variance<a class="headerlink" href="#gaussian-with-known-variance" title="Permalink to this heading">#</a></h3>
+<h3>Gaussian with known variance<a class="headerlink" href="#gaussian-with-known-variance" title="Link to this heading">#</a></h3>
 <p>Consider the scalar Gaussian distribution,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -414,7 +429,7 @@ where</p>
 </ul>
 </section>
 <section id="bernoulli-distribution">
-<h3>Bernoulli distribution<a class="headerlink" href="#bernoulli-distribution" title="Permalink to this heading">#</a></h3>
+<h3>Bernoulli distribution<a class="headerlink" href="#bernoulli-distribution" title="Link to this heading">#</a></h3>
 <p>The Bernoulli distribution can be written in exponential family form,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -441,7 +456,7 @@ where</p>
 </ul>
 </section>
 <section id="poisson-distribution">
-<h3>Poisson distribution<a class="headerlink" href="#poisson-distribution" title="Permalink to this heading">#</a></h3>
+<h3>Poisson distribution<a class="headerlink" href="#poisson-distribution" title="Link to this heading">#</a></h3>
 <p>Likewise, take the Poisson pmf,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -460,7 +475,7 @@ where</p>
 </ul>
 </section>
 <section id="categorical-distribution">
-<h3>Categorical distribution<a class="headerlink" href="#categorical-distribution" title="Permalink to this heading">#</a></h3>
+<h3>Categorical distribution<a class="headerlink" href="#categorical-distribution" title="Link to this heading">#</a></h3>
 <p>Finally, take the categorical pmf for $Y \in {1, \ldots, K},</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -481,7 +496,7 @@ where</p>
 </section>
 </section>
 <section id="the-log-normalizer">
-<h2>The Log Normalizer<a class="headerlink" href="#the-log-normalizer" title="Permalink to this heading">#</a></h2>
+<h2>The Log Normalizer<a class="headerlink" href="#the-log-normalizer" title="Link to this heading">#</a></h2>
 <p>The <strong>cumulant generating function</strong> — i.e., the log of the moment generative function — is a difference of log normalizers,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -498,7 +513,7 @@ where</p>
 </ul>
 <p>Higher order cumulants can be used to compute skewness, kurtosis, etc.</p>
 <section id="gradient-of-the-log-normalizer">
-<h3>Gradient of the log normalizer<a class="headerlink" href="#gradient-of-the-log-normalizer" title="Permalink to this heading">#</a></h3>
+<h3>Gradient of the log normalizer<a class="headerlink" href="#gradient-of-the-log-normalizer" title="Link to this heading">#</a></h3>
 <p>We can also obtain this result more directly.</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -511,7 +526,7 @@ where</p>
 <p>Again, the gradient of the log normalizer yields the <strong>expected sufficient statistics</strong>,</p>
 </section>
 <section id="hessian-of-the-log-normalizer">
-<h3>Hessian of the log normalizer<a class="headerlink" href="#hessian-of-the-log-normalizer" title="Permalink to this heading">#</a></h3>
+<h3>Hessian of the log normalizer<a class="headerlink" href="#hessian-of-the-log-normalizer" title="Link to this heading">#</a></h3>
 <p>The Hessian of the log normalizer yields the <strong>covariance of the sufficient statistics</strong>,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -524,7 +539,7 @@ where</p>
 </section>
 </section>
 <section id="maximum-likelihood-estimation">
-<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this heading">#</a></h2>
+<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Link to this heading">#</a></h2>
 <p>Suppose we have <span class="math notranslate nohighlight">\(y_i \iid\sim p(y; \eta)\)</span> for a minimal exponential family distribution with natural parameter <span class="math notranslate nohighlight">\(\eta\)</span>. The log likelihood is,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -548,7 +563,7 @@ where</p>
 \end{align*}\]</div>
 <p>When <span class="math notranslate nohighlight">\(\nabla A\)</span> is invertible, the MLE is unique. Regardless, maximum likelihood estimation amounts to matching empirical means of the sufficient statistics to corresponding natural parameters.</p>
 <section id="asymptotic-normality">
-<h3>Asymptotic normality<a class="headerlink" href="#asymptotic-normality" title="Permalink to this heading">#</a></h3>
+<h3>Asymptotic normality<a class="headerlink" href="#asymptotic-normality" title="Link to this heading">#</a></h3>
 <p>Recall that the MLE is asymptotically normal with variance given by the inverse Fisher information,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -558,7 +573,7 @@ where</p>
 </section>
 </section>
 <section id="minimal-exponential-families">
-<h2>Minimal Exponential Families<a class="headerlink" href="#minimal-exponential-families" title="Permalink to this heading">#</a></h2>
+<h2>Minimal Exponential Families<a class="headerlink" href="#minimal-exponential-families" title="Link to this heading">#</a></h2>
 <p>The Hessian of the log normalizer gives the covariance of the sufficient statistic. Since covariance matrices are positive semi-definite, the <em>log normalizer is a convex function</em> on <span class="math notranslate nohighlight">\(\Omega\)</span>.</p>
 <p>If the covariance is strictly positidive definite — i.e., if the minimum eigenvalue of <span class="math notranslate nohighlight">\(\nabla^2 A(\eta)\)</span> is strictly greater than zero for all <span class="math notranslate nohighlight">\(\eta \in \Omega\)</span> — then the log normalizer is <em>strictly</em> convex. In that case, we say that the exponential family is <strong>minimal</strong></p>
 <div class="admonition-question admonition">
@@ -588,7 +603,7 @@ where</p>
 </div>
 </section>
 <section id="mean-parameterization">
-<h2>Mean Parameterization<a class="headerlink" href="#mean-parameterization" title="Permalink to this heading">#</a></h2>
+<h2>Mean Parameterization<a class="headerlink" href="#mean-parameterization" title="Link to this heading">#</a></h2>
 <p>When constructing models with exponential family distributions, like the generalized linear models below, it is often more convenient to work with the <strong>mean parameters</strong> instead. for a <span class="math notranslate nohighlight">\(d\)</span>-dimensional sufficient statistic, let,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -610,7 +625,7 @@ p(y; \mu)
 <p>for mean parameters <span class="math notranslate nohighlight">\(\mu\)</span> in the interior of <span class="math notranslate nohighlight">\(\cM\)</span>.</p>
 </section>
 <section id="mle-for-the-mean-parameters">
-<h2>MLE for the Mean Parameters<a class="headerlink" href="#mle-for-the-mean-parameters" title="Permalink to this heading">#</a></h2>
+<h2>MLE for the Mean Parameters<a class="headerlink" href="#mle-for-the-mean-parameters" title="Link to this heading">#</a></h2>
 <p>Alternatively, consider the maximum likelihood estimate of the mean parameter <span class="math notranslate nohighlight">\(\mu \in \cM\)</span>. Before doing any math, we might expect the MLE to be the empirical mean. Indeed, that is the case. To simplify notation, let <span class="math notranslate nohighlight">\(\eta(\mu) = [\nabla A]^{-1}(\mu)\)</span>. The log likelihood,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -639,7 +654,7 @@ p(y; \mu)
 \end{align*}\]</div>
 <p>which is indeed positive definite for minimal exponential families.</p>
 <section id="id1">
-<h3>Asymptotic normality<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<h3>Asymptotic normality<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
 <p>We obtain the Fisher information of the mean parameter <span class="math notranslate nohighlight">\(\mu\)</span> by left and right multiplying by the Jacobian,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -706,7 +721,7 @@ For more on conjugate duality, see {cite:t}`wainwright2008graphical`, ch. 3.6.
 </section>
 </section>
 <section id="kl-divergence">
-<h2>KL Divergence<a class="headerlink" href="#kl-divergence" title="Permalink to this heading">#</a></h2>
+<h2>KL Divergence<a class="headerlink" href="#kl-divergence" title="Link to this heading">#</a></h2>
 <p>The <strong>Kullback-Leibler (KL) divergence</strong>, or <strong>relative entropy</strong>, between two distributions is,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -784,7 +799,7 @@ For more on conjugate duality, see {cite:t}`wainwright2008graphical`, ch. 3.6.
 :::: -->
 </section>
 <section id="deviance">
-<h2>Deviance<a class="headerlink" href="#deviance" title="Permalink to this heading">#</a></h2>
+<h2>Deviance<a class="headerlink" href="#deviance" title="Link to this heading">#</a></h2>
 <p>Rearranging terms, we can view the KL divergence as a remainder in a Taylor approximation of the log normalizer,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -807,7 +822,7 @@ A(\eta_q)
 <p>We call this quantity the <strong>deviance</strong>. It is simply twice the KL divergence.</p>
 </section>
 <section id="deviance-residuals">
-<span id="expfam-deviance-residuals"></span><h2>Deviance Residuals<a class="headerlink" href="#deviance-residuals" title="Permalink to this heading">#</a></h2>
+<span id="expfam-deviance-residuals"></span><h2>Deviance Residuals<a class="headerlink" href="#deviance-residuals" title="Link to this heading">#</a></h2>
 <p>In a normal model, the standarized residual is <span class="math notranslate nohighlight">\(\frac{\hat{\mu} - \mu}{\sigma}\)</span>. We can view this as a function of the deviance between two normals,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -832,7 +847,7 @@ r_{\mathsf{P}}(\mu, \hat{\mu}) &amp;= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \h
 <p>For more on deviance residuals, see <span id="id2">Efron [<a class="reference internal" href="99_references.html#id11" title="Bradley Efron. Exponential families in theory and practice. Cambridge University Press, 2022.">Efr22</a>]</span>, ch. 1.</p>
 </section>
 <section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h2>
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
 <p>Exponential family distributions have many beautiful properties, and we’ve only scratched the surface in this chapter.</p>
 <ul class="simple">
 <li><p>We’ll see other nice properties when we talk about building probabilistic models for joint distributions of random variables using exponential family distributions, and conjugate relationships between exponential families will simplify many aspects of Bayesian inference.</p></li>

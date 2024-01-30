@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>HW1: Logistic Regression &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
@@ -29,39 +28,43 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
-    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'assignments/hw1/hw1';</script>
@@ -156,7 +159,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -173,6 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../../lectures/03_logreg.html">Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../lectures/04_expfam.html">Exponential Families</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../lectures/05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/06_bayes.html">Bayesian Inference</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="current nav bd-sidenav">
@@ -401,7 +416,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="hw1-logistic-regression">
-<h1>HW1: Logistic Regression<a class="headerlink" href="#hw1-logistic-regression" title="Permalink to this heading">#</a></h1>
+<h1>HW1: Logistic Regression<a class="headerlink" href="#hw1-logistic-regression" title="Link to this heading">#</a></h1>
 <p>This class is about models and algorithms for discrete data. This homework will have all 3 ingredients:</p>
 <ul class="simple">
 <li><p><strong>Data</strong>: the results from all college football games in the 2023 season</p></li>
@@ -409,7 +424,7 @@ document.write(`
 <li><p><strong>Algorithm</strong>: We will implement two ways of fitting logistic regression: gradient descent and Newton’s method</p></li>
 </ul>
 <section id="the-bradley-terry-model">
-<h2>The Bradley-Terry Model<a class="headerlink" href="#the-bradley-terry-model" title="Permalink to this heading">#</a></h2>
+<h2>The Bradley-Terry Model<a class="headerlink" href="#the-bradley-terry-model" title="Link to this heading">#</a></h2>
 <p>In the Bradley-Terry Model, we give team <span class="math notranslate nohighlight">\(k\)</span> a team-effect <span class="math notranslate nohighlight">\(\beta_k\)</span>. Basically, higher <span class="math notranslate nohighlight">\(\beta_k\)</span> (relatively speaking), means that team <span class="math notranslate nohighlight">\(k\)</span> is a better team.
 The Bradley-Terry model formalizes this intution by modeling the log odds of team <span class="math notranslate nohighlight">\(k\)</span> beating team <span class="math notranslate nohighlight">\(k'\)</span> by the difference in their team effects, <span class="math notranslate nohighlight">\(\beta_k - \beta_{k'}\)</span>.</p>
 <p>Let <span class="math notranslate nohighlight">\(i = 1,\ldots, n\)</span> index games, and let <span class="math notranslate nohighlight">\(h(i) \in \{1,\ldots,K\}\)</span> and <span class="math notranslate nohighlight">\(a(i) \in \{1,\ldots,K\}\)</span> denote the indices of the home and away teams, respectively.
@@ -432,7 +447,7 @@ x_{i,k} &amp;=
 <p>and parameters <span class="math notranslate nohighlight">\(\beta \in \mathbb{R}^K\)</span>.</p>
 </section>
 <section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h2>
+<h2>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h2>
 <p>We use the results of college football games in the fall 2023 season, which are available from the course github page and loaded for you below.</p>
 <p>The data comes as a list of the outcomes of individual games. You’ll need to wrangle the data to get it into a format that you can feed into the Bradley-Terry model.</p>
 <div class="cell docutils container">
@@ -953,7 +968,7 @@ x_{i,k} &amp;=
 </div>
 </section>
 <section id="problem-0-preprocessing">
-<h2>Problem 0: Preprocessing<a class="headerlink" href="#problem-0-preprocessing" title="Permalink to this heading">#</a></h2>
+<h2>Problem 0: Preprocessing<a class="headerlink" href="#problem-0-preprocessing" title="Link to this heading">#</a></h2>
 <p>Preprocess the data to drop games with nan scores, construct the covariate matrix <span class="math notranslate nohighlight">\(X\)</span>, construct the response vector <span class="math notranslate nohighlight">\(y\)</span>, and do any other preprocessing you find useful.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -964,7 +979,7 @@ x_{i,k} &amp;=
 </div>
 </section>
 <section id="problem-1-loss-function">
-<h2>Problem 1: Loss function<a class="headerlink" href="#problem-1-loss-function" title="Permalink to this heading">#</a></h2>
+<h2>Problem 1: Loss function<a class="headerlink" href="#problem-1-loss-function" title="Link to this heading">#</a></h2>
 <p>Write a function to compute the loss, <span class="math notranslate nohighlight">\(L(\beta)\)</span> defined be</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{equation*}
@@ -981,9 +996,9 @@ x_{i,k} &amp;=
 </div>
 </section>
 <section id="problem-2-gradient-descent">
-<h2>Problem 2: Gradient Descent<a class="headerlink" href="#problem-2-gradient-descent" title="Permalink to this heading">#</a></h2>
+<h2>Problem 2: Gradient Descent<a class="headerlink" href="#problem-2-gradient-descent" title="Link to this heading">#</a></h2>
 <section id="problem-2-1-implementing-and-checking-your-gradients">
-<h3>Problem 2.1 Implementing and checking your gradients<a class="headerlink" href="#problem-2-1-implementing-and-checking-your-gradients" title="Permalink to this heading">#</a></h3>
+<h3>Problem 2.1 Implementing and checking your gradients<a class="headerlink" href="#problem-2-1-implementing-and-checking-your-gradients" title="Link to this heading">#</a></h3>
 <p>Write a function to compute the gradient of the average negative log likelihood and check your output against the results obtained by PyTorch’s automatic differentiation functionality.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -994,7 +1009,7 @@ x_{i,k} &amp;=
 </div>
 </section>
 <section id="problem-2-2-implement-gradient-descent">
-<h3>Problem 2.2: Implement Gradient Descent<a class="headerlink" href="#problem-2-2-implement-gradient-descent" title="Permalink to this heading">#</a></h3>
+<h3>Problem 2.2: Implement Gradient Descent<a class="headerlink" href="#problem-2-2-implement-gradient-descent" title="Link to this heading">#</a></h3>
 <p>Now, use gradient descent to fit your Bradley-Terry model to the provided data.</p>
 <p>Deliverables for this question:</p>
 <ol class="arabic simple">
@@ -1013,16 +1028,16 @@ x_{i,k} &amp;=
 </section>
 </section>
 <section id="problem-3-newton-s-method">
-<h2>Problem 3: Newton’s Method<a class="headerlink" href="#problem-3-newton-s-method" title="Permalink to this heading">#</a></h2>
+<h2>Problem 3: Newton’s Method<a class="headerlink" href="#problem-3-newton-s-method" title="Link to this heading">#</a></h2>
 <p>Now, use Newton’s method to fit your Bradley-Terry model to the provided data.</p>
 <section id="problem-3-1-the-hessian">
-<h3>Problem 3.1 The Hessian<a class="headerlink" href="#problem-3-1-the-hessian" title="Permalink to this heading">#</a></h3>
+<h3>Problem 3.1 The Hessian<a class="headerlink" href="#problem-3-1-the-hessian" title="Link to this heading">#</a></h3>
 <section id="problem-3-1-1-implement-and-check-the-hessian">
-<h4>Problem 3.1.1. Implement and check the Hessian<a class="headerlink" href="#problem-3-1-1-implement-and-check-the-hessian" title="Permalink to this heading">#</a></h4>
+<h4>Problem 3.1.1. Implement and check the Hessian<a class="headerlink" href="#problem-3-1-1-implement-and-check-the-hessian" title="Link to this heading">#</a></h4>
 <p>Write a function to compute the Hessian of the average negative log likelihood and check your answer against the output of <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">torch.autograd.functional.hessian</span></code>.</p>
 </section>
 <section id="problem-3-1-2-positive-definiteness">
-<h4>Problem 3.1.2: Positive definiteness<a class="headerlink" href="#problem-3-1-2-positive-definiteness" title="Permalink to this heading">#</a></h4>
+<h4>Problem 3.1.2: Positive definiteness<a class="headerlink" href="#problem-3-1-2-positive-definiteness" title="Link to this heading">#</a></h4>
 <p>Compute the Hessian at the point <span class="math notranslate nohighlight">\(\beta = 0\)</span> without regularization (set <span class="math notranslate nohighlight">\(\gamma = 0\)</span>). Unless you’ve done sort of pre-processing, it’s probably singular.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1033,12 +1048,12 @@ x_{i,k} &amp;=
 </div>
 </section>
 <section id="problem-3-1-3">
-<h4>Problem 3.1.3<a class="headerlink" href="#problem-3-1-3" title="Permalink to this heading">#</a></h4>
+<h4>Problem 3.1.3<a class="headerlink" href="#problem-3-1-3" title="Link to this heading">#</a></h4>
 <p>Describe intuitively and mathematically what it means for the Hessian of the negative log likelihood to be singular in the context of this data and model</p>
 <p><em>your answer here</em></p>
 </section>
 <section id="problem-3-1-4">
-<h4>Problem 3.1.4<a class="headerlink" href="#problem-3-1-4" title="Permalink to this heading">#</a></h4>
+<h4>Problem 3.1.4<a class="headerlink" href="#problem-3-1-4" title="Link to this heading">#</a></h4>
 <p>Give a hypothesis for why the Hessian in this dataset and model is singular, and provide empirical evidence to support your hypothesis.</p>
 <p><em>your answer here</em></p>
 <div class="cell docutils container">
@@ -1050,13 +1065,13 @@ x_{i,k} &amp;=
 </div>
 </section>
 <section id="problem-3-1-5">
-<h4>Problem 3.1.5<a class="headerlink" href="#problem-3-1-5" title="Permalink to this heading">#</a></h4>
+<h4>Problem 3.1.5<a class="headerlink" href="#problem-3-1-5" title="Link to this heading">#</a></h4>
 <p>Explain why the Hessian is invertible when <span class="math notranslate nohighlight">\(\gamma &gt; 0\)</span>.</p>
 <p><em>your answer here</em></p>
 </section>
 </section>
 <section id="problem-3-2-implement-newton-s-method">
-<h3>Problem 3.2: Implement Newton’s method<a class="headerlink" href="#problem-3-2-implement-newton-s-method" title="Permalink to this heading">#</a></h3>
+<h3>Problem 3.2: Implement Newton’s method<a class="headerlink" href="#problem-3-2-implement-newton-s-method" title="Link to this heading">#</a></h3>
 <p>Now, use Newton’s method to fit your <span class="math notranslate nohighlight">\(\ell_2\)</span>-regularized Bradley-Terry model to the provided data.</p>
 <p>Deliverables for this question:</p>
 <ol class="arabic simple">
@@ -1075,26 +1090,26 @@ x_{i,k} &amp;=
 </section>
 </section>
 <section id="problem-4-model-criticism-and-revision">
-<h2>Problem 4: Model criticism and revision<a class="headerlink" href="#problem-4-model-criticism-and-revision" title="Permalink to this heading">#</a></h2>
+<h2>Problem 4: Model criticism and revision<a class="headerlink" href="#problem-4-model-criticism-and-revision" title="Link to this heading">#</a></h2>
 <p>Let’s take another look the Bradley-Terry model from earlier and think about improvements we can make.</p>
 <section id="problem-4-1-improvements-to-bradley-terry-model">
-<h3>Problem 4.1: Improvements to Bradley-Terry Model<a class="headerlink" href="#problem-4-1-improvements-to-bradley-terry-model" title="Permalink to this heading">#</a></h3>
+<h3>Problem 4.1: Improvements to Bradley-Terry Model<a class="headerlink" href="#problem-4-1-improvements-to-bradley-terry-model" title="Link to this heading">#</a></h3>
 <p>Choose one way to improve the Bradley-Terry model. Discuss <em>a priori</em> why you think this change will improve the model and implement your change.</p>
 <p><em>your answer here</em></p>
 </section>
 <section id="problem-4-2-evaluation">
-<h3>Problem 4.2: Evaluation<a class="headerlink" href="#problem-4-2-evaluation" title="Permalink to this heading">#</a></h3>
+<h3>Problem 4.2: Evaluation<a class="headerlink" href="#problem-4-2-evaluation" title="Link to this heading">#</a></h3>
 <p>Assess whether or not your change was an improvement or not. Provide empirical evidence by evaluating performance on a held out test set and include at least one plot supporting your assessment.</p>
 <p><em>your answer here</em></p>
 </section>
 <section id="problem-4-3-reflection">
-<h3>Problem 4.3: Reflection<a class="headerlink" href="#problem-4-3-reflection" title="Permalink to this heading">#</a></h3>
+<h3>Problem 4.3: Reflection<a class="headerlink" href="#problem-4-3-reflection" title="Link to this heading">#</a></h3>
 <p>Reflecting on the analysis we’ve conducted in this assignemnt, which conference is best? Is there a significant difference? Please justify your answer.</p>
 <p><em>your answer here</em></p>
 </section>
 </section>
 <section id="submission-instructions">
-<h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Permalink to this heading">#</a></h2>
+<h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Link to this heading">#</a></h2>
 <p><strong>Formatting:</strong> check that your code does not exceed 80 characters in line width. You can set <em>Tools → Settings → Editor → Vertical ruler column</em> to 80 to see when you’ve exceeded the limit.</p>
 <p><strong>Converting to PDF</strong> The simplest way to convert to PDF is to use the “Print to PDF” option in your browser. Just make sure that your code and plots aren’t cut off, as it may not wrap lines.</p>
 <p><strong>Alternatively</strong> You can download your notebook in .ipynb format and use the following commands to convert it to PDF.  Then run the following command to convert to a PDF:</p>

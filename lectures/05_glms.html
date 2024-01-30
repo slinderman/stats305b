@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Generalized Linear Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
@@ -29,45 +28,49 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/05_glms';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="next" title="Bayesian Inference" href="06_bayes.html" />
     <link rel="prev" title="Exponential Families" href="04_expfam.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -156,7 +159,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -173,6 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -356,10 +371,10 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="generalized-linear-models">
-<h1>Generalized Linear Models<a class="headerlink" href="#generalized-linear-models" title="Permalink to this heading">#</a></h1>
+<h1>Generalized Linear Models<a class="headerlink" href="#generalized-linear-models" title="Link to this heading">#</a></h1>
 <p>Logistic regression was a special case of a more general class of models called <em>generalized linear models</em> (GLMs). In a GLM, the conditional distribution <span class="math notranslate nohighlight">\(p(Y \mid X=x)\)</span> is modeled as an exponential family distribution whose mean parameter is a function of <span class="math notranslate nohighlight">\(X\)</span>. For example, if <span class="math notranslate nohighlight">\(Y \in \naturals\)</span>, we could model it with a Poisson GLM; if <span class="math notranslate nohighlight">\(Y \in \{1,\ldots,K\}\)</span>, we could model it as a categorical GLM. It turns out that many of the nice properties of logistic regression carry over to the more general case.</p>
 <section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">#</a></h2>
+<h2>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
 <p>To construct a generalized linear model with exponential family observations, we set</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -375,7 +390,7 @@ document.write(`
 <p>The <strong>canonical mean function</strong> is <span class="math notranslate nohighlight">\(f(\cdot) = \nabla A(\cdot)\)</span> so that <span class="math notranslate nohighlight">\(\eta_i = \mbbeta^\top \mbx_i\)</span>.</p>
 <p>The (canonical) <strong>link function</strong> is the inverse of the (canonical) mean function.</p>
 <section id="logistic-regression-revisited">
-<h3>Logistic regression revisited<a class="headerlink" href="#logistic-regression-revisited" title="Permalink to this heading">#</a></h3>
+<h3>Logistic regression revisited<a class="headerlink" href="#logistic-regression-revisited" title="Link to this heading">#</a></h3>
 <p>Consider the Bernoulli distribution once more. The gradient of the log normalizer is,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -387,7 +402,7 @@ document.write(`
 </section>
 </section>
 <section id="canonical-case">
-<h2>Canonical case<a class="headerlink" href="#canonical-case" title="Permalink to this heading">#</a></h2>
+<h2>Canonical case<a class="headerlink" href="#canonical-case" title="Link to this heading">#</a></h2>
 <p>Canonical mean functions lead to nice math. Consider the log joint probability,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -435,7 +450,7 @@ document.write(`
 <p>This is <strong>iteratively reweighted least squares (IRLS)</strong> with weights <span class="math notranslate nohighlight">\(w_i\)</span> and working responses <span class="math notranslate nohighlight">\(\hat{z}_i = \frac{y_i - \hat{y}_i}{w_i}\)</span>, both of which are functions of the current weights <span class="math notranslate nohighlight">\(\mbbeta\)</span>. As in logistic regression, the working responses can be seen as linear approximations to the observed responses mapped back through the link function.</p>
 </section>
 <section id="non-canonical-case">
-<h2>Non-canonical case<a class="headerlink" href="#non-canonical-case" title="Permalink to this heading">#</a></h2>
+<h2>Non-canonical case<a class="headerlink" href="#non-canonical-case" title="Link to this heading">#</a></h2>
 <p>When we choose an arbitrary covariance matrix, the expressions are a bit more complex. Let’s focus on the case where <span class="math notranslate nohighlight">\(t(y_i) = y_i\)</span> for scalar <span class="math notranslate nohighlight">\(y_i\)</span>, but allow for arbitrary mean function <span class="math notranslate nohighlight">\(f\)</span>.</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -463,7 +478,7 @@ document.write(`
 \end{align*}\]</div>
 </section>
 <section id="deviance-and-goodness-of-fit">
-<h2>Deviance and Goodness of Fit<a class="headerlink" href="#deviance-and-goodness-of-fit" title="Permalink to this heading">#</a></h2>
+<h2>Deviance and Goodness of Fit<a class="headerlink" href="#deviance-and-goodness-of-fit" title="Link to this heading">#</a></h2>
 <p>We can perform maximum likelihood estimation via Newton’s method, but do the resulting parameters <span class="math notranslate nohighlight">\(\hat{\mbbeta}_{\mathsf{MLE}}\)</span> provide a good fit to the data? One way to answer this question is by comparing the fitted model to two reference points: a <strong>saturated</strong> model and a <strong>baseline</strong> model.</p>
 <p>For binomial GLMs (including logistic regression) and Poisson GLMs, the saturated model conditions on the mean equaling the observed response. For example, in a Poisson GLM the saturated model’s log probability is,</p>
 <div class="amsmath math notranslate nohighlight">
@@ -505,11 +520,11 @@ D(\mby, \bar{y} \mbone)
 <p>In models with an (unregularized) intercept term, the MLE should be such that <span class="math notranslate nohighlight">\(\sum \mu_i = \sum y_i\)</span>, which simplifies the deviance.</p>
 </div>
 <section id="fraction-of-deviance-explained">
-<h3>Fraction of Deviance Explained<a class="headerlink" href="#fraction-of-deviance-explained" title="Permalink to this heading">#</a></h3>
+<h3>Fraction of Deviance Explained<a class="headerlink" href="#fraction-of-deviance-explained" title="Link to this heading">#</a></h3>
 <p>As with linear models where we use the fraction of variance explaiend (<span class="math notranslate nohighlight">\(R^2\)</span>), in GLMs we can consider the fraction of <em>deviance</em> explained. Note that the deviance is positive for any model that is not saturated. The <strong>fraction of deviance explained</strong> is <span class="math notranslate nohighlight">\(1 - \frac{D(\mby; \hat{\mbmu})}{D(\mby; \bar{y} \mbone)}\)</span>. Unless your model is worse than guessing the mean, the fraction of deviance explained is between 0 and 1.</p>
 </section>
 <section id="model-comparison">
-<h3>Model Comparison<a class="headerlink" href="#model-comparison" title="Permalink to this heading">#</a></h3>
+<h3>Model Comparison<a class="headerlink" href="#model-comparison" title="Link to this heading">#</a></h3>
 <p>The difference in deviance between two models with predicted means <span class="math notranslate nohighlight">\(\hat{\mbmu}_0\)</span> and <span class="math notranslate nohighlight">\(\hat{\mbmu}_1\)</span>, the difference in deviance,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -518,17 +533,17 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>has an approximately chi-squared null distribution. We can use this fact to sequentially add or subtract features from a model depending on whether the change in deviance is significant or not.</p>
 </section>
 <section id="model-checking">
-<h3>Model Checking<a class="headerlink" href="#model-checking" title="Permalink to this heading">#</a></h3>
+<h3>Model Checking<a class="headerlink" href="#model-checking" title="Link to this heading">#</a></h3>
 <p>Just like in standard linear models, we should inspect the residuals in generalized linear models for evidence of model misspecification. For example, we can plot the residuals as a function of <span class="math notranslate nohighlight">\(\hat{\mu}_i\)</span> and they should be approximately normal at all levels of <span class="math notranslate nohighlight">\(\hat{\mu}_i\)</span>.</p>
 </section>
 </section>
 <section id="cross-validation">
-<h2>Cross-Validation<a class="headerlink" href="#cross-validation" title="Permalink to this heading">#</a></h2>
+<h2>Cross-Validation<a class="headerlink" href="#cross-validation" title="Link to this heading">#</a></h2>
 <p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
 <p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
 <p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-aa2f5e20-0ef3-4fcb-8763-f30857dbf2dd">
-<span class="eqno">(2)<a class="headerlink" href="#equation-aa2f5e20-0ef3-4fcb-8763-f30857dbf2dd" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-e14e1002-fec6-499e-9eb6-0709788d4354">
+<span class="eqno">(1)<a class="headerlink" href="#equation-e14e1002-fec6-499e-9eb6-0709788d4354" title="Permalink to this equation">#</a></span>\[\begin{align}
     \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
     \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
 \end{align}\]</div>
@@ -538,7 +553,7 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>Cross-validated predictive log likelihood estimates are similar to the \emph{jackknife} resampling method in the sense that it is estimating an expectation wrt the unknown data-generating distribution <span class="math notranslate nohighlight">\(p^\star\)</span> by resampling the given data.</p>
 </section>
 <section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h2>
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
 <p>Generalized linear models allow us to build flexible regression models that respect the domain of the response variable. Logistic regression is a special case of a Bernoulli GLM with the canonical link function. For categorical data, we could use a categorical distribution with the softmax link function, and for count data, we could use a Poisson GLM with exponential, softplus, or other link functions. Leveraging the deviance and deviance residuals for exponential family distribiutions, we can derive analogs of familiar terms from linear modeling, like the fraction of variance explained and the residual analysis.</p>
 <p>Next, we’ll consider techniques for Bayesian analysis in GLMs, which allow for more expressive moodels. That will give us an excuse to <em>finally</em> dig into Bayesian inference methods.</p>
 </section>
@@ -584,11 +599,11 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
       </div>
     </a>
     <a class="right-next"
-       href="../assignments/hw0/hw0.html"
+       href="06_bayes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">HW0: PyTorch Primer</p>
+        <p class="prev-next-title">Bayesian Inference</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

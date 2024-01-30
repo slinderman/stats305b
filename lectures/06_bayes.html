@@ -1,0 +1,930 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bayesian Inference &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/06_bayes';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Generalized Linear Models" href="05_glms.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bayesian Inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/06_bayes.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bayesian Inference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-priors">Conjugate Priors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-family-likelihoods">Exponential Family Likelihoods</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#laplace-approximation">Laplace Approximation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bernstein-von-mises-theorem">Bernstein-von Mises Theorem</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-posterior-expectations">Approximating Posterior Expectations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-approximations">Monte Carlo Approximations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unbiasedness">Unbiasedness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-variance">Monte Carlo Variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-to-numerical-quadrature">Comparison to Numerical Quadrature</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-catch">The Catch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chains">Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-distributions">Stationary distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detailed-balance">Detailed balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity">Ergodicity</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-hastings-algorithm">The Metropolis-Hastings algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-algorithm">The Metropolis algorithm</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibbs-sampling">Gibbs Sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bayesian-inference">
+<h1>Bayesian Inference<a class="headerlink" href="#bayesian-inference" title="Link to this heading">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>So far we’ve focused on classical inference techniques: asymptotically normal approximations, Wald confidence intervals, etc.
+It is tempting to interpret the confidence interval as saying that <span class="math notranslate nohighlight">\(\theta\)</span> is in the interval with probability <span class="math notranslate nohighlight">\(1-\alpha\)</span> given the observed data, but <strong>that is not justified!</strong> In the setting above, the parameter <span class="math notranslate nohighlight">\(\theta\)</span> is <strong>not</strong> a random variable. This fallacy is a classic misinterpretation of frequentist confidence intervals.</p>
+<p>To make such a claim, we need to adopt a Bayesian perspective and reason about the <em>posterior</em> distribution of the parameters, <span class="math notranslate nohighlight">\(\theta\)</span>, given the data, <span class="math notranslate nohighlight">\(x\)</span>. To obtain a posterior, we first need to specify a <em>prior</em> distribution on parameters, <span class="math notranslate nohighlight">\(p(\theta)\)</span>. Given a prior and likelihood, the posterior follows from Bayes’ rule,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\theta \mid x) &amp;= \frac{p(x \mid \theta) \, p(\theta)}{p(x)},
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(p(\theta \mid x)\)</span> is the <strong>posterior</strong>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(p(x \mid \theta)\)</span> is the <strong>likelihood</strong>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(p(\theta)\)</span> is the <strong>prior</strong>, and</p></li>
+<li><p><span class="math notranslate nohighlight">\(p(x) = \int p(x \mid \theta) \, p(\theta) \dif \theta\)</span> is the <strong>marginal likelihood</strong>.</p></li>
+</ul>
+<p>Once we have the posterior distribution, then we’re really in business.  Often, we are particularly interested in <strong>posterior expectations</strong>, like:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\E_{p(\theta | x)}[\theta]\)</span>, the posterior mean,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\E_{p(\theta | x)}[\bbI[\theta \in \cA]]\)</span>, the probability of the parameters being in set <span class="math notranslate nohighlight">\(\cA\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\E_{p(\theta | x)}[p(x' \mid \theta)]\)</span>, the posterior predictive density of new data <span class="math notranslate nohighlight">\(x'\)</span>.</p></li>
+</ul>
+<p>All of these can be written as <span class="math notranslate nohighlight">\(\E_{p(\theta | x)}[f(\theta)]\)</span> for some function <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<p>For point estimation, we may choose the mode, <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathsf{MAP}} = \arg \max p(\theta \mid x)\)</span>  a.k.a., the <strong><em>maximum a posteriori</em> (MAP)</strong> estimate.</p>
+<p>We can also obtain an analogue of frequentist confidence intervals by summarizing the posterior in terms of a <strong>Bayesian credible interval</strong>: a set of parameters that captures <span class="math notranslate nohighlight">\(1-\alpha\)</span> probability under the posterior. There are infinitely many such sets, but a common choice for scalar parameters is the interval ranging from the <span class="math notranslate nohighlight">\(\alpha/2\)</span> to the <span class="math notranslate nohighlight">\(1-\alpha/2\)</span> quantiles of the posterior distribution.</p>
+<p>The posterior distribution depends on the choice of prior. Indeed, the subjective choice of prior distributions is the source of much of the criticism of Bayesian approaches. In cases where we truly know nothing about the parameter <em>a priori</em>, we can often specify “weak” or “uninformative” prior distributions. Under such assumptions, we’ll find that Bayesian and frequentist approaches can yield similar estimates, with the advantage that the Bayesian credible interval admits the intuitive interpretation as a set where <span class="math notranslate nohighlight">\(\theta\)</span> is most probable.</p>
+</section>
+<section id="conjugate-priors">
+<h2>Conjugate Priors<a class="headerlink" href="#conjugate-priors" title="Link to this heading">#</a></h2>
+<p>When it comes to choosing a prior distribution, one desiderata is computational tractability. The hard part of Bayesian inference is typically integration: to normalize the posterior we need to compute the marginal likelihood, which is an integral over the parameter space; to compute posterior expectations, we need to do the same. <strong>Conjugate priors</strong> are distributions on <span class="math notranslate nohighlight">\(\theta\)</span> that often render these integrals tractable.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example: Bernoulli Likelihood with a Beta Prior</p>
+<p>The beta distribution is a conjugate prior for a Bernoulli likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\theta &amp;\sim \mathrm{Beta}(\alpha, \beta)
+\end{align*}\]</div>
+<p>with support on <span class="math notranslate nohighlight">\(\theta \in [0,1]\)</span>. Its probability density function (pdf) is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{Beta}(\theta; \alpha, \beta) &amp;= \frac{1}{\mathrm{B}(\alpha, \beta)} \theta^{\alpha - 1} (1 - \theta)^{\beta - 1},
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{B}(\alpha, \beta)\)</span> is the <a class="reference external" href="https://en.wikipedia.org/wiki/Beta_function">beta function</a> and the hyperparameters <span class="math notranslate nohighlight">\(\alpha, \beta \in \reals_+\)</span> determine the shape of the prior. When <span class="math notranslate nohighlight">\(\alpha = \beta = 1\)</span>, the prior reduces to a uniform distribution on <span class="math notranslate nohighlight">\([0,1]\)</span>.</p>
+<p>Under the beta prior, the posterior distribution over <span class="math notranslate nohighlight">\(\theta\)</span> is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\theta \mid \{x_i\}_{i=1}^n) 
+&amp;\propto \mathrm{Beta}(\theta; \alpha, \beta) \prod_{i=1}^n p(x_i \mid \theta) \\
+&amp;\propto \theta^{\alpha - 1} (1 - \theta)^{\beta - 1} \prod_{i=1}^n \theta^{x_i} (1 - \theta)^{1 - x_i} \\
+&amp;= \theta^{x + \alpha - 1} (1- \theta)^{n - x + \beta - 1} \\
+&amp;\propto \mathrm{Beta}(\theta; x + \alpha, n - x + \beta)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = \sum_{i=1}^n x_i\)</span> is the number of coins that came up heads.</p>
+<p>The posterior mode — i.e., the maximum a posteriori (MAP) estimate — is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\theta}_{\mathsf{MAP}} 
+&amp;= \frac{x + \alpha - 1}{n + \alpha + \beta - 2},
+\end{align*}\]</div>
+<p>and under an uninformative prior with <span class="math notranslate nohighlight">\(\alpha = \beta = 1\)</span>, it is equivalent to the MLE, <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathsf{MLE}} = x / n\)</span>.</p>
+<p>Bayesian credible intervals can be derived using the cumulative distribution function (cdf) of the beta distribution, which is given by the incomplete beta function.</p>
+<p>In the large sample limit, the beta posterior is approximately Gaussian.
+The variance of the posterior beta distribution is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Var[\theta \mid X] 
+&amp;= \frac{(x + \alpha)(n - x + \beta)}{(n + \alpha + \beta)^2 (n + \alpha + \beta + 1)}
+\end{align*}\]</div>
+<p>In this limit, <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> are much smaller than <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(x\)</span>. Thus, the posterior variance is approximately</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Var[\theta \mid X] \approx \frac{x(n - x)}{n^3} 
+= \frac{\hat{\theta}_{\mathsf{MLE}} (1 - \hat{\theta}_{\mathsf{MLE}})}{n}
+= \cI(\hat{\theta}_{\mathsf{MLE}})^{-1} / n,
+\end{align*}\]</div>
+<p>and the Bayesian credible intervals match the Wald confidence interval.</p>
+</div>
+<section id="exponential-family-likelihoods">
+<h3>Exponential Family Likelihoods<a class="headerlink" href="#exponential-family-likelihoods" title="Link to this heading">#</a></h3>
+<p>Consider a general <strong>exponential family</strong> likelihood with natural parameter <span class="math notranslate nohighlight">\(\theta\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(x \mid \theta) &amp;= h(x) \exp \left \{\langle t(x), \theta \rangle - A(\theta) \right \}.
+\end{align*}\]</div>
+<p>Exponential family distributions have conjugate priors,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\theta; \chi, \nu) 
+    &amp;\propto \exp \left \{ \langle \chi, \theta \rangle - \nu A(\theta) \right \} \\
+    &amp;= \exp \left\{ \langle \chi, \theta \rangle + \langle \nu, -A(\theta) \rangle - B(\chi, \nu) \right\}.
+\end{align*}\]</div>
+<p>We recognize the conjugate prior as another exponential family distribution in which,</p>
+<ul class="simple">
+<li><p>the natural parameter <span class="math notranslate nohighlight">\(\chi\)</span> are <strong>pseudo-observations</strong> of the sufficient statistics (like statistics from fake data points),</p></li>
+<li><p>the natural parameter <span class="math notranslate nohighlight">\(\nu\)</span> is a <strong>pseudo-count</strong> (like the number of fake data points),</p></li>
+<li><p>the prior sufficient statistics are <span class="math notranslate nohighlight">\((\theta, -A(\theta))\)</span>,</p></li>
+<li><p>the prior log normalizer is <span class="math notranslate nohighlight">\(B(\chi, \nu)\)</span>, and</p></li>
+</ul>
+<p>With a conjugate prior, the posterior distribution belongs to the same family as the prior,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\theta \mid \{x_i\}_{i=1}^n; \chi, \nu)
+&amp;\propto p(\theta; \chi, \nu) \prod_{i=1}^n p(x_i \mid \theta) \\
+&amp;\propto \exp \left\{ \chi + \sum_{i=1}^n t(x_i), \theta \rangle + \langle \nu + n, -A(\theta) \rangle \right\} \\
+&amp;= p(\theta \mid \chi', \nu')
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\chi' &amp;= \chi + \sum_{i=1}^n t(x_i) \\
+\nu' &amp;= \nu + n.
+\end{align*}\]</div>
+<p>The posterior is a function of two quantities of fixed dimension, <span class="math notranslate nohighlight">\(\chi'\)</span> and <span class="math notranslate nohighlight">\(\nu'\)</span>, regardless of how many data points are observed.</p>
+<div class="admonition-questions admonition">
+<p class="admonition-title">Questions</p>
+<ol class="arabic simple">
+<li><p>Does each exponential family likelihood have a unique conjugate prior?</p></li>
+<li><p>With a conjugate prior, the posterior is just a function of <span class="math notranslate nohighlight">\(\chi'\)</span> and <span class="math notranslate nohighlight">\(\nu'\)</span>. Does that make it computationally tractable?</p></li>
+<li><p>Do conjugate priors exist for likelihoods that are not exponential families?</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="laplace-approximation">
+<h2>Laplace Approximation<a class="headerlink" href="#laplace-approximation" title="Link to this heading">#</a></h2>
+<p>Conjugate priors are a common choice for simple exponential family models, but we need more general approaches for more complex models.</p>
+<p>Suppose you wanted to perform Bayesian inference of the weights in a logistic regression model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(y \mid x, \mbbeta) 
+&amp;= \prod_{i=1}^n \mathrm{Bern}(y_i \mid \sigma(x_i^\top \mbbeta)).
+\end{align*}\]</div>
+<p>Assume a Gaussian prior,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta &amp;\sim \mathrm{N}(\mbzero, \gamma^{-1} \mbI).
+\end{align*}\]</div>
+<p>Unfortunately, the posterior does not have a closed formation solution. Instead, a common form of approximate posterior inference is the <strong>Laplace approximation</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbbeta \mid x, y) &amp;\approx \mathrm{N}(\hat{\mbbeta}_{\mathsf{MAP}}, \widehat{\mbSigma})
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\mbbeta}_{\mathsf{MAP}} 
+&amp;= \arg \max_{\mbbeta} \cL(\mbbeta)
+\end{align*}\]</div>
+<p>is the <em>maximum a posteriori (MAP)</em> estimate,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\widehat{\mbSigma}
+&amp;= -[\nabla^2 \cL(\hat{\mbbeta}_{\mathsf{MAP}})]^{-1} = \cI(\hat{\mbbeta}_{\mathsf{MAP}})^{-1}
+\end{align*}\]</div>
+<p>is an approximation of the posterior covariance, and</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta) 
+&amp;= \log p(\mbbeta) + \sum_{i=1}^n \log p(y_i \mid x_i, \mbbeta) \\
+&amp;= \log \mathrm{N}(\mbbeta; \mbzero, \gamma^{-1} \mbI) + \sum_{i=1}^n \log \mathrm{Bern}(y_i \mid \sigma(x_i^\top \mbbeta))
+\end{align*}\]</div>
+<p>is the log joint probability, <em>not the loss function from previous chapters!</em></p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>How do posterior credible intervals under the Laplace approximation compare to Wald confidence intervals of the MLE under L2 regularization?</p>
+</div>
+<section id="bernstein-von-mises-theorem">
+<h3>Bernstein-von Mises Theorem<a class="headerlink" href="#bernstein-von-mises-theorem" title="Link to this heading">#</a></h3>
+<p>In the large data limit (as <span class="math notranslate nohighlight">\(n \to \infty\)</span>), the posterior is asymptotically normal, justifying the Laplace approximation in this regime.</p>
+<p>Consider a simpler setting in which we have data <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^n \iid{\sim} p(x \mid \theta^\star)\)</span>.</p>
+<p>Under some conditions (e.g. <span class="math notranslate nohighlight">\(\theta^\star\)</span> not on the boundary of <span class="math notranslate nohighlight">\(\Theta\)</span> and <span class="math notranslate nohighlight">\(\theta^\star\)</span> has nonzero prior probability), then the MAP estimate is consistent. As <span class="math notranslate nohighlight">\(n \to \infty\)</span>,  <span class="math notranslate nohighlight">\(\theta_{\mathsf{MAP}} \to \theta^\star\)</span>.</p>
+<p>Likewise,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*} 
+    p(\theta \mid \{x_i\}_{i=1}^n) \to \mathrm{N} \big(\theta \mid \theta^\star, \tfrac{1}{n} \cI(\theta^\star)^{-1} \big)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\cI(\theta)\)</span> is the Fisher information matrix.</p>
+<!-- 
+### Approximating the model evidence
+
+We can use the Laplace approximate to estimate the log marginal likelihood &mdash; a.k.a., the **model evidence**. Note that,
+\begin{align*}
+\log p(y \mid x) 
+&= \log p(y, \mbbeta \mid x) - \log p(\mbbeta \mid x, y) \\
+&\approx \cL(\mbbeta) - \log \mathrm{N}(\mbbeta \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}).
+\end{align*}
+The first line is just Bayes' rule, and the right hand side holds for all $\mbbeta$. The second line is our Laplace approximation.
+Evaluating at the MAP estimate,
+\begin{align*}
+\log p(y \mid x) 
+&\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
+&\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
+\end{align*}
+The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week.  -->
+</section>
+</section>
+<section id="approximating-posterior-expectations">
+<h2>Approximating Posterior Expectations<a class="headerlink" href="#approximating-posterior-expectations" title="Link to this heading">#</a></h2>
+<p>Generally, we can’t analytically compute posterior expectations. In these cases, we need to resort to approximations. For example, we could use <em>quadrature methods</em> like Simpson’s rule or the trapezoid rule to numerically approximate the integral over <span class="math notranslate nohighlight">\(\Theta\)</span>.</p>
+<p>Roughly,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E_{p(\theta | x)}[f(\theta)] \approx \sum_{m=1}^M p(\theta_m \mid x) \, f(\theta_m) \, \Delta_m
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_m \subset \Theta\)</span> is a grid of points and <span class="math notranslate nohighlight">\(\Delta_m\)</span> is a volume around that point.</p>
+<p>This works for low-dimensional problems (say, up to <span class="math notranslate nohighlight">\(5\)</span> dimensions), but the number of points (<span class="math notranslate nohighlight">\(M\)</span>) needed to get a good estimate grows exponentially with the parameter dimension.</p>
+</section>
+<section id="monte-carlo-approximations">
+<h2>Monte Carlo Approximations<a class="headerlink" href="#monte-carlo-approximations" title="Link to this heading">#</a></h2>
+<p><strong>Idea:</strong> approximate the expectation via sampling,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E_{p(\theta | x)}[f(\theta)] \approx \frac{1}{M} \sum_{m=1}^M f(\theta_m) \quad \text{where} \quad \theta_m \sim p(\theta \mid x).
+\end{align*}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\hat{f} = \frac{1}{M} \sum_{m=1}^M f(\theta_m)\)</span> denote the Monte Carlo estimate. It is a random variable, since it’s a function of random samples <span class="math notranslate nohighlight">\(\theta_m\)</span>. As such, we can reason about its mean and variance.</p>
+<section id="unbiasedness">
+<h3>Unbiasedness<a class="headerlink" href="#unbiasedness" title="Link to this heading">#</a></h3>
+<p>Clearly,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[\hat{f}] = \frac{1}{M} \sum_{m=1}^M \E_{p(\theta | x)}[f(\theta)] = \E_{p(\theta | x)}[f(\theta)].
+\end{align*}\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(\hat{f}\)</span> is an <em>unbiased</em> estimate of the desired expectation.</p>
+</section>
+<section id="monte-carlo-variance">
+<h3>Monte Carlo Variance<a class="headerlink" href="#monte-carlo-variance" title="Link to this heading">#</a></h3>
+<p>What about its variance?</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Var[\hat{f}] = \Var \left(\frac{1}{M} \sum_{m=1}^M f(\theta_m) \right) = \frac{1}{M^2} \left( \sum_{m=1}^M \Var[f(\theta)] + 2 \sum_{1 \leq m &lt; m' \leq M} \mathrm{Cov} [f(\theta_m), f(\theta_{m'})] \right)
+\end{align*}\]</div>
+</section>
+<section id="comparison-to-numerical-quadrature">
+<h3>Comparison to Numerical Quadrature<a class="headerlink" href="#comparison-to-numerical-quadrature" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>If the samples are not only identically distributed but also <em>uncorrelated</em>, then <span class="math notranslate nohighlight">\(\Var[\hat{f}] = \frac{1}{M} \Var[f(\theta)]\)</span>.</p></li>
+<li><p>In this case, the <em>root mean squared error</em> (RMSE) of the estimate is <span class="math notranslate nohighlight">\(\sqrt{\Var[\hat{f}]} = O(M^{-\frac{1}{2}})\)</span>.</p></li>
+<li><p>Compare this to Simpson’s rule, which for smooth 1D problems has an error rate of <span class="math notranslate nohighlight">\(O(M^{-4})\)</span>. That’s roughly 8 times better than Monte Carlo!</p></li>
+<li><p>However, for multidimensional problems, Simpson’s rule is <span class="math notranslate nohighlight">\(O(M^{-\frac{4}{D}})\)</span>, whereas the <strong>error rate of Monte Carlo does not depend on the dimensionality!</strong></p></li>
+</ul>
+</section>
+<section id="the-catch">
+<h3>The Catch<a class="headerlink" href="#the-catch" title="Link to this heading">#</a></h3>
+<p>So far so good: we’ll just draw a lot of samples to drive down our Monte Carlo error. <strong>Here’s the catch!</strong> How do you draw samples from the posterior <span class="math notranslate nohighlight">\(p(\theta \mid x)\)</span>?
+We’re interested in Monte Carlo for cases where the posterior does not admit a simple closed form!
+In general, sampling the posterior is as hard as computing the marginal likelihood.</p>
+</section>
+</section>
+<section id="markov-chains">
+<h2>Markov Chains<a class="headerlink" href="#markov-chains" title="Link to this heading">#</a></h2>
+<p>A <em>Markov chain</em> is a joint distribution of a sequence of variables, <span class="math notranslate nohighlight">\(\pi(\theta_1, \theta_2, \ldots, \theta_M)\)</span>. (To avoid confusion with the model <span class="math notranslate nohighlight">\(p\)</span>, we denote the densities associated with the Markov chain by <span class="math notranslate nohighlight">\(\pi\)</span>.) The Markov chain factorizes so that each variable is drawn conditional on the previous variable,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi(\theta_1, \theta_2, \ldots, \theta_M) = \pi_{1}(\theta_1) \prod_{m=2}^M \pi(\theta_m \mid \theta_{m-1}).
+\end{align*}\]</div>
+<p>This is called the <em>Markov property</em>.</p>
+<ul class="simple">
+<li><p>The distribution <span class="math notranslate nohighlight">\(\pi_1(\theta_1)\)</span> is called the <em>initial distribution</em>.</p></li>
+<li><p>The distribution <span class="math notranslate nohighlight">\(\pi(\theta_m \mid \theta_{m-1})\)</span> is called the <em>transition distribution</em>. If the transition distribution is the same for each <span class="math notranslate nohighlight">\(m\)</span>, the Markov chain is <em>homogeneous</em>.</p></li>
+</ul>
+<section id="stationary-distributions">
+<h3>Stationary distributions<a class="headerlink" href="#stationary-distributions" title="Link to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\pi_m(\theta_m)\)</span> denote the marginal distribution of sample <span class="math notranslate nohighlight">\(\theta_m\)</span>. It can be obtained recursively as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi_m(\theta_m) = \int \pi_{m-1}(\theta_{m-1}) \, \pi(\theta_m \mid \theta_{m-1}) \dif \theta_{m-1}.
+\end{align*}\]</div>
+<p>We are interested in the asymptotic behavior of the marginal distributions as <span class="math notranslate nohighlight">\(m \to \infty\)</span>.</p>
+<p>A distribution <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> is a <strong>stationary distribution</strong> if,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi^\star(\theta) = \int \pi^\star(\theta') \, \pi(\theta \mid \theta') \dif \theta'.
+\end{align*}\]</div>
+<p>That is, suppose the marginal of sample <span class="math notranslate nohighlight">\(\theta'\)</span> is <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span>. Then the marginal of the next time point is also <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span>.</p>
+</section>
+<section id="detailed-balance">
+<h3>Detailed balance<a class="headerlink" href="#detailed-balance" title="Link to this heading">#</a></h3>
+<p>How can we relate transition distributions and stationary distributions? A sufficient (but not necessary) condition for <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> to be a stationary distribution is that it satisfies <em>detailed balance</em>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi^\star(\theta') \pi(\theta \mid \theta') = \pi^\star(\theta) \pi(\theta' \mid \theta).
+\end{align*}\]</div>
+<p>In words, the probability of starting at <span class="math notranslate nohighlight">\(\theta'\)</span> and moving to <span class="math notranslate nohighlight">\(\theta\)</span> is the same as that of starting at <span class="math notranslate nohighlight">\(\theta\)</span> and moving to <span class="math notranslate nohighlight">\(\theta'\)</span>, if you draw the starting point from the stationary distribution.</p>
+<p>To see that detailed balance is sufficient, integrate both sides to get,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\int \pi^\star(\theta') \pi(\theta \mid \theta') \dif \theta' = \int \pi^\star(\theta) \pi(\theta' \mid \theta) \dif \theta' = \pi^\star(\theta).
+\end{align*}\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> is a stationary distribution of the Markov chain with transitions <span class="math notranslate nohighlight">\(\pi(\theta \mid \theta')\)</span>.</p>
+</section>
+<section id="ergodicity">
+<h3>Ergodicity<a class="headerlink" href="#ergodicity" title="Link to this heading">#</a></h3>
+<p>Detailed balance can be used to show that <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> is <em>a</em> stationary distribution, but not that it is <em>the unique</em> one. This is where <em>ergodicity</em> comes in. A Markov chain is ergodic if <span class="math notranslate nohighlight">\(\pi_m(\theta_m) \to \pi^\star(\theta)\)</span> regardless of <span class="math notranslate nohighlight">\(\pi_1(\theta_1)\)</span>. An ergodic chain has only one stationary distribution, <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span>.</p>
+<p>The easiest way to prove ergodicity is to show that it is possible to reach any <span class="math notranslate nohighlight">\(\theta'\)</span> from any other <span class="math notranslate nohighlight">\(\theta\)</span>. E.g. this is trivially so if <span class="math notranslate nohighlight">\(\pi(\theta' \mid \theta) &gt; 0\)</span>.</p>
+<div class="admonition-note admonition">
+<p class="admonition-title">Note</p>
+<p>A more technical definition is that all pairs of sets <em>communicate</em>, in which case the chain is <em>irreducible</em>, and that each state is <em>aperiodic</em>. The definitions can be a bit overwhelming.</p>
+</div>
+</section>
+</section>
+<section id="markov-chain-monte-carlo-mcmc">
+<h2>Markov Chain Monte Carlo (MCMC)<a class="headerlink" href="#markov-chain-monte-carlo-mcmc" title="Link to this heading">#</a></h2>
+<p>Finally, we come to our <strong>main objective</strong>: designing a Markov chain for which <em>the posterior is the unique stationary distribution.</em> That is, we want <span class="math notranslate nohighlight">\(\pi^\star(\theta) = p(\theta \mid x)\)</span>.</p>
+<p>Recall our <strong>constraint</strong>: we can only compute the joint probability (the numerator in Bayes’ rule), not the marginal likelihood (the denominator). Fortunately, that still allows us to compute ratios of posterior densities! We have,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{p(\theta \mid x)}{p(\theta' \mid x)} = \frac{p(\theta, x)}{p(x)} \frac{p(x)}{p(\theta', x)} = \frac{p(\theta, x)}{p(\theta', x)}.
+\end{align*}\]</div>
+<p>Now rearrange the detailed balance condition to relate ratios of transition probabilities to ratios of joint probabilities,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\pi(\theta \mid \theta')}{\pi(\theta' \mid \theta)} = \frac{\pi^\star(\theta)}{\pi^\star(\theta')} 
+= \frac{p(\theta \mid x)}{p(\theta' \mid x)} = \frac{p(\theta, x)}{p(\theta', x)}
+\end{align*}\]</div>
+<section id="the-metropolis-hastings-algorithm">
+<h3>The Metropolis-Hastings algorithm<a class="headerlink" href="#the-metropolis-hastings-algorithm" title="Link to this heading">#</a></h3>
+<p>To construct such a transition distribution <span class="math notranslate nohighlight">\(\pi(\theta \mid \theta')\)</span>, break it down into two steps.</p>
+<ol class="arabic simple">
+<li><p>Sample a proposal <span class="math notranslate nohighlight">\(\theta\)</span> from a <em>proposal distribution</em> <span class="math notranslate nohighlight">\(q(\theta \mid \theta')\)</span>,</p></li>
+<li><p>Accept the proposal with <em>acceptance probability</em> <span class="math notranslate nohighlight">\(a(\theta' \to \theta)\)</span>. (Otherwise, set <span class="math notranslate nohighlight">\(\theta = \theta'\)</span>.)</p></li>
+</ol>
+<p>Thus,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi(\theta \mid \theta') = 
+\begin{cases}
+q(\theta \mid \theta') \, a(\theta' \to \theta) &amp; \text{if } \theta' \neq \theta \\
+\int q(\theta'' \mid \theta') \, (1 - a(\theta' \to \theta'')) \dif \theta'' &amp; \text{if } \theta' = \theta
+\end{cases}
+\end{align*}\]</div>
+<p>Detailed balance is trivially satisfied when <span class="math notranslate nohighlight">\(\theta = \theta'\)</span>. When <span class="math notranslate nohighlight">\(\theta \neq \theta'\)</span>, we need</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\pi(\theta \mid \theta')}{\pi(\theta' \mid \theta)} = \frac{q(\theta \mid \theta') \, a(\theta' \to \theta)}{q(\theta' \mid \theta) \, a(\theta \to \theta')} = \frac{p(\theta, x)}{p(\theta', x)} \Rightarrow \frac{a(\theta' \to \theta)}{a(\theta \to \theta')} = \underbrace{\frac{p(\theta, x) \, q(\theta' \mid \theta)}{p(\theta', x) \, q(\theta \mid \theta')}}_{\triangleq A(\theta' \to \theta)}
+\end{align*}\]</div>
+<p>WLOG, assume <span class="math notranslate nohighlight">\( A(\theta' \to \theta) \leq 1\)</span>. (If it’s not, its inverse <span class="math notranslate nohighlight">\(A(\theta \to \theta')\)</span> must be.) A simple way to ensure detailed balance is to set <span class="math notranslate nohighlight">\(a(\theta' \to \theta) = A(\theta' \to \theta)\)</span> and <span class="math notranslate nohighlight">\(a(\theta \to \theta') = 1\)</span>.</p>
+<p>We can succinctly capture both cases with,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a(\theta' \to \theta) = \min \left\{1, \, A(\theta' \to \theta) \right \} = \min \left\{1, \, \frac{p(\theta, x) \, q(\theta' \mid \theta)}{p(\theta', x) \, q(\theta \mid \theta')} \right \}.
+\end{align*}\]</div>
+</section>
+<section id="the-metropolis-algorithm">
+<h3>The Metropolis algorithm<a class="headerlink" href="#the-metropolis-algorithm" title="Link to this heading">#</a></h3>
+<p>Now consider the special case in which the proposal distribution is symmetric; i.e. <span class="math notranslate nohighlight">\(q(\theta \mid \theta') = q(\theta' \mid \theta)\)</span>. Then the proposal densities cancel in the acceptance probability and,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a(\theta' \to \theta) = \min \left\{1, \, \frac{p(\theta, x)}{p(\theta', x)} \right \}.
+\end{align*}\]</div>
+<p>In other words, you accept any proposal that moves “uphill,” and only accept “downhill” moves with some probability.</p>
+<p>This is called the <em>Metropolis algorithm</em> and it has close connections to <em>simulated annealing</em>.</p>
+</section>
+</section>
+<section id="gibbs-sampling">
+<h2>Gibbs Sampling<a class="headerlink" href="#gibbs-sampling" title="Link to this heading">#</a></h2>
+<p>Gibbs is a special case of MH with proposals that always accept. Gibbs sampling updates one “coordinate” of <span class="math notranslate nohighlight">\(\theta\)</span> at a time by sampling from its conditional distribution. Think of this as a proposal distribution. Suppose <span class="math notranslate nohighlight">\(\theta \in \reals^D\)</span>. For each coordinate <span class="math notranslate nohighlight">\(d \in 1,\ldots,D\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q_d(\theta \mid \theta') = p(\theta_d \mid \theta'_{\neg d}, x) \, \delta_{\theta'_{\neg d}}(\theta_{\neg d}),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_{\neg d} = (\theta_1, \ldots, \theta_{d-1}, \theta_{d+1}, \ldots, \theta_D)\)</span> denotes all parameters except <span class="math notranslate nohighlight">\(\theta_d\)</span>.</p>
+<p>In other words, the proposal distribution <span class="math notranslate nohighlight">\(q_d\)</span> samples <span class="math notranslate nohighlight">\(\theta_d\)</span> from its conditional distribution and leaves all the other parameters unchanged.</p>
+<p>What is the probability of accepting this proposal?</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a_d(\theta' \to \theta) 
+&amp;= \min \left\{ 1, \, \frac{p(\theta, x) q_d(\theta' \mid \theta)}{p(\theta', x) q_d(\theta \mid \theta')} \right\} \\
+&amp;= \min \left\{ 1, \, \frac{p(\theta, x) p(\theta_d' \mid \theta_{\neg d}, x) \delta_{\theta_{\neg d}}(\theta'_{\neg d})}{p(\theta', x) p(\theta_d \mid \theta'_{\neg d}, x) \delta_{\theta'_{\neg d}}(\theta_{\neg d})} \right\} \\
+&amp;= \min \left\{ 1, \, \frac{p(\theta_{\neg d}, x) p(\theta_d \mid \theta_{\neg d}, x) p(\theta_d' \mid \theta_{\neg d}, x) \delta_{\theta_{\neg d}}(\theta'_{\neg d})}{p(\theta'_{\neg d}, x) p(\theta'_d \mid \theta'_{\neg d}, x) p(\theta_d \mid \theta'_{\neg d}, x) \delta_{\theta'_{\neg d}}(\theta_{\neg d})} \right\} \\
+&amp;= \min \left\{1, 1 \right\} = 1
+\end{align*}\]</div>
+<p>for all <span class="math notranslate nohighlight">\(\theta, \theta'\)</span> that differ only in their <span class="math notranslate nohighlight">\(d\)</span>-th coordinate.</p>
+<div class="tip admonition">
+<p class="admonition-title">The Godfather</p>
+<center>The Gibbs proposal is <i>an offer you cannot refuse</i>.</center>
+</div>
+<p>Of course, if we only update one coordinate, the chain can’t be ergodic. However, if we cycle through coordinates it generally will be.</p>
+<div class="admonition-questions admonition">
+<p class="admonition-title">Questions</p>
+<ol class="arabic simple">
+<li><p>Does the order in which we update coordinates matter?</p></li>
+<li><p>If Gibbs sampling always accepts, is it strictly better than other Metropolis-Hastings algorithms?</p></li>
+</ol>
+</div>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>This was obviously a whirlwind of an introduction to Bayesian inference! There’s plenty more to be said about Bayesian statistics — choosing a prior, subjective vs objective vs empirical Bayesian approaches, the role of the marginal likelihood in Bayesian model comparison, varieties of MCMC, and other approaches to approximate Bayesian inference. We’ll dig into some of these topics as the course goes on, but for now, we have some valuable tools for developing Bayesian modeling and inference with discrete data!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="05_glms.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Generalized Linear Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-priors">Conjugate Priors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-family-likelihoods">Exponential Family Likelihoods</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#laplace-approximation">Laplace Approximation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bernstein-von-mises-theorem">Bernstein-von Mises Theorem</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-posterior-expectations">Approximating Posterior Expectations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-approximations">Monte Carlo Approximations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unbiasedness">Unbiasedness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-variance">Monte Carlo Variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-to-numerical-quadrature">Comparison to Numerical Quadrature</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-catch">The Catch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chains">Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-distributions">Stationary distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detailed-balance">Detailed balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity">Ergodicity</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-hastings-algorithm">The Metropolis-Hastings algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-algorithm">The Metropolis algorithm</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibbs-sampling">Gibbs Sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

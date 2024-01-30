@@ -20,12 +20,15 @@ Students should be comfortable with undergraduate probability and statistics as 
 
 
 ## Books
-The first part of the course will draw from:
+This course will draw from a few textbooks:
 - Agresti, Alan. Categorical Data Analysis, 2nd edition. John Wiley & Sons, 2002. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
+- Gelman, Andrew, et al. Bayesian Data Analysis, 3rd edition. Chapman and Hall/CRC, 2013. [link](http://www.stat.columbia.edu/~gelman/book/)
 
-Then we will switch to following research papers and chapters from other textbooks.
+We will also cover material from research papers.
 
-## Tentative Schedule
+## Schedule
+
+_Please note that this is a **tentative** schedule. It may change slightly depending on our pace._
 
 | Date         | Topic                                  | Reading |
 | ------------ | -------------------------------------- | ------- |
@@ -35,9 +38,9 @@ Then we will switch to following research papers and chapters from other textboo
 | Jan 17, 2024 | [Logistic Regression](lectures/03_logreg.md) | {cite:p}`agresti2002categorical` Ch. 4-5 | 
 | Jan 22, 2024 | [Exponential Families](lectures/04_expfam.md) | {cite:p}`agresti2002categorical` Ch. 4-5 |
 | Jan 24, 2024 | [Generalized Linear Models](lectures/05_glms.md) | {cite:p}`agresti2002categorical` Ch. 6 | 
-| Jan 29, 2024 | Bayesian Probit and Logistic Regression | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
-| Jan 31, 2024 | Generalized Linear Mixed Models        | {cite:p}`agresti2002categorical` Ch. 12 |
-| Feb 5, 2024 | L1-regularized GLMs                    | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
+| Jan 29, 2024 | [Bayesian Inference](lectures/06_bayes.md) | {cite:p}`gelman1995bayesian` Ch. 1 |
+| Jan 31, 2024 | Bayesian GLMs | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
+| Feb 5, 2024 | L1-regularized GLMs | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
 | Feb 12, 2024 | Discrete Latent Variable Models        |         |
 | Feb 14, 2024 | Hidden Markov Models                   |         | 

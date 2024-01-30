@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Logistic Regression &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
@@ -29,39 +28,43 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/03_logreg';</script>
@@ -156,7 +159,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -173,6 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -353,10 +368,6 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iteratively-reweighted-least-squares">Iteratively Reweighted Least Squares</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-covariance-of-mle">Asymptotic Covariance of MLE</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference-with-the-laplace-approximation">Bayesian Inference with the Laplace Approximation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-the-model-evidence">Approximating the model evidence</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
             </nav>
@@ -370,10 +381,10 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="logistic-regression">
-<h1>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Permalink to this heading">#</a></h1>
+<h1>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Link to this heading">#</a></h1>
 <p><a class="reference external" href="https://www.science.org/doi/10.1126/science.1094492">One, two, many…</a> We started with basic discrete distributions for single random variables, and then we modeled pairs of categorical variables with continency tables. Here, we build models for predicting categorical responses given several explanatory variables.</p>
 <section id="setup">
-<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">#</a></h2>
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
 <p>Let <span class="math notranslate nohighlight">\(Y \in \{0,1\}\)</span> denote a binary response and let <span class="math notranslate nohighlight">\(\mbX \in \reals^p\)</span> denote associated covariates. For example, <span class="math notranslate nohighlight">\(Y\)</span> could denote whether or not your favorite football team wins their match, and <span class="math notranslate nohighlight">\(X\)</span> could represent features of the match like whether its a home or away game, who their opponent is, etc. We will model the conditional distribution of <span class="math notranslate nohighlight">\(Y\)</span> given the covariates,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -387,7 +398,7 @@ Y \mid \mbX = \mbx &amp;\sim \mathrm{Bern}(\pi(\mbx))
 <p>This is a standard regression setup. The modeling problem boils down to choosing the functional form of <span class="math notranslate nohighlight">\(\pi(\mbx)\)</span>.</p>
 </section>
 <section id="linear-regression">
-<h2>Linear Regression<a class="headerlink" href="#linear-regression" title="Permalink to this heading">#</a></h2>
+<h2>Linear Regression<a class="headerlink" href="#linear-regression" title="Link to this heading">#</a></h2>
 <p>If you took STATS 305A, you know pretty much everything there is to know about linear regression with continuous response variables, <span class="math notranslate nohighlight">\(Y \in \reals\)</span>. Why don’t we just apply that same model to binary responses? Specifically, let,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -408,7 +419,7 @@ Y \mid \mbX = \mbx &amp;\sim \mathrm{Bern}(\pi(\mbx))
 <p>Nevertheless, it’s not a totally crazy thing to do. When the estimated probabilities are in an intermediate range (say, 0.3-0.7), the outputs aren’t that different from what we obtain with the alternative models below. But we can do better.</p>
 </section>
 <section id="id1">
-<h2>Logistic Regression<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<h2>Logistic Regression<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p>The idea is simple: keep the linear part of linear regression, but apply a <strong>mean (aka inverse link) function</strong>, <span class="math notranslate nohighlight">\(f: \reals \mapsto [0,1]\)</span>, to ensure <span class="math notranslate nohighlight">\(\pi(\mbx)\)</span> returns valid probabilities,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -428,7 +439,7 @@ f(a) = \frac{e^a}{1 + e^a} = \frac{1}{1 + e^{-a}} \triangleq \sigma(a).
 <p>Another common mean function is the Gaussian CDF, and we’ll consider that in a later chapter.</p>
 </section>
 <section id="relationship-with-two-way-contingency-tables">
-<h2>Relationship with Two-Way Contingency Tables<a class="headerlink" href="#relationship-with-two-way-contingency-tables" title="Permalink to this heading">#</a></h2>
+<h2>Relationship with Two-Way Contingency Tables<a class="headerlink" href="#relationship-with-two-way-contingency-tables" title="Link to this heading">#</a></h2>
 <p>Suppose we have a single, binary covariate <span class="math notranslate nohighlight">\(X \in \{0,1\}\)</span>. In the last chapter, we constructed 2x2 contingency tables for such settings, and we used the log odds ratio to measure the association between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>. We could do the same thing with logistic regression.</p>
 <p>First, we need to extend the model with an intercept term,</p>
 <div class="amsmath math notranslate nohighlight">
@@ -450,7 +461,7 @@ f(a) = \frac{e^a}{1 + e^a} = \frac{1}{1 + e^{-a}} \triangleq \sigma(a).
 <p>In other words, the coefficients of the logistic regression model correspond to the log odds in a contingency table.</p>
 </section>
 <section id="maximum-likelihood-estimation">
-<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this heading">#</a></h2>
+<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Link to this heading">#</a></h2>
 <p>Unfortunately, unlike in standard linear regression (equivalently, when <span class="math notranslate nohighlight">\(f(a) = a\)</span> is the identity function), there isn’t a simple closed form estimator for <span class="math notranslate nohighlight">\(\hat{\mbbeta}\)</span>. However, we can use standard optimization techniques to do maximum likelihood estimation.</p>
 <p>Maximizing the likelihood is equivalent to minimizing the (average) negative log likelihood for a collection of covariates and responses, <span class="math notranslate nohighlight">\(\{\mbx_i, y_i\}_{i=1}^n\)</span>,</p>
 <div class="amsmath math notranslate nohighlight">
@@ -468,7 +479,7 @@ f(a) = \frac{e^a}{1 + e^a} = \frac{1}{1 + e^{-a}} \triangleq \sigma(a).
 &amp;= - \frac{1}{n} \sum_{i=1}^n \left[y_i \mbbeta^\top \mbx_i - \log \left(1 + e^{\mbbeta^\top \mbx_i} \right) \right].
 \end{align*}\]</div>
 <section id="computing-the-gradient">
-<h3>Computing the Gradient<a class="headerlink" href="#computing-the-gradient" title="Permalink to this heading">#</a></h3>
+<h3>Computing the Gradient<a class="headerlink" href="#computing-the-gradient" title="Link to this heading">#</a></h3>
 <p>We want to maximize the log likelihood, which is of course equivalent to minimizing the negative log likelihood, so let’s take the gradient,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -486,7 +497,7 @@ f(a) = \frac{e^a}{1 + e^a} = \frac{1}{1 + e^{-a}} \triangleq \sigma(a).
 <p>where <span class="math notranslate nohighlight">\(\alpha_t \in \reals_+\)</span> is the step-size at iteration <span class="math notranslate nohighlight">\(i\)</span> of the algorithm. If the step sizes are chosen appropriately and the objective is well behaved, the alorithm converges to at least a local optimum of the log likelihood.</p>
 </section>
 <section id="convexity-of-the-log-likelhood">
-<h3>Convexity of the Log Likelhood<a class="headerlink" href="#convexity-of-the-log-likelhood" title="Permalink to this heading">#</a></h3>
+<h3>Convexity of the Log Likelhood<a class="headerlink" href="#convexity-of-the-log-likelhood" title="Link to this heading">#</a></h3>
 <p>If the objective is convex, then all local optima are also global optima, and we can give stronger guarantees on gradient descent. To check the convexity of the log likelihood, we need to compute its Hessian,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -514,7 +525,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 </section>
 </section>
 <section id="converge-rate-of-gradient-descent">
-<h2>Converge Rate of Gradient Descent<a class="headerlink" href="#converge-rate-of-gradient-descent" title="Permalink to this heading">#</a></h2>
+<h2>Converge Rate of Gradient Descent<a class="headerlink" href="#converge-rate-of-gradient-descent" title="Link to this heading">#</a></h2>
 <p>To determine when and at what rate gradient descent converges, we need to know more about the eigenvalues of the Hessian.</p>
 <p>If we can bound the maximum eigenvalue of the Hessian by <span class="math notranslate nohighlight">\(L\)</span>, then we can obtain a quadratic upper bound on the negative log likelihood,</p>
 <div class="amsmath math notranslate nohighlight">
@@ -543,7 +554,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 <p>Put differently, if we want a gap of at most epsilon, we need to run <span class="math notranslate nohighlight">\(t \sim (1/\epsilon\)</span> iterations of gradient descent. Put differently, if we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we need to run around 100 times as many iterations. This is called a <strong>sub-linear convergence</strong> rate.</p>
 </section>
 <section id="pathologies-in-the-separable-regime">
-<h2>Pathologies in the Separable Regime<a class="headerlink" href="#pathologies-in-the-separable-regime" title="Permalink to this heading">#</a></h2>
+<h2>Pathologies in the Separable Regime<a class="headerlink" href="#pathologies-in-the-separable-regime" title="Link to this heading">#</a></h2>
 <p>Suppose the two classes are <em>linearly separable</em>,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -562,7 +573,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 <p>If we run gradient descent in this setting, the magnitude of the estimate <span class="math notranslate nohighlight">\(\hat{\mbbeta}\)</span> will grow without bound, but the objective should converge to zero. Nevertheless, the diverging MLE is problematic for our convergence rate analysis, since it depends on the norm <span class="math notranslate nohighlight">\(\|\mbbeta^\star - \mbbeta_0\|_2^2\)</span>.</p>
 </section>
 <section id="regularization">
-<h2>Regularization<a class="headerlink" href="#regularization" title="Permalink to this heading">#</a></h2>
+<h2>Regularization<a class="headerlink" href="#regularization" title="Link to this heading">#</a></h2>
 <p>These pathologies can be averted with a little regularization,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -579,11 +590,11 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 &amp;= \frac{1}{n} \sum_{i=1}^n w_i \mbx_i \mbx_i^\top \textcolor{red}{+ \gamma \mbI}. 
 \end{align*}\]</div>
 <section id="choosing-the-hyperparameter">
-<h3>Choosing the Hyperparameter<a class="headerlink" href="#choosing-the-hyperparameter" title="Permalink to this heading">#</a></h3>
+<h3>Choosing the Hyperparameter<a class="headerlink" href="#choosing-the-hyperparameter" title="Link to this heading">#</a></h3>
 <p>It remains to select a value of <span class="math notranslate nohighlight">\(\gamma\)</span>. There are many ways to do so. One approach is to <em>not</em> choose a single value and instead try to compute the <strong>regularization path</strong>; i.e., the solution <span class="math notranslate nohighlight">\(\hat{\mbbeta}(\gamma)\)</span> for a range of <span class="math notranslate nohighlight">\(\gamma \in [0, \infty)\)</span>.  Another is to hold out a fraction of data and use cross-validation to select the hyperparameter setting that yields the best performance on the held-out data.</p>
 </section>
 <section id="bayesian-perspective">
-<h3>Bayesian Perspective<a class="headerlink" href="#bayesian-perspective" title="Permalink to this heading">#</a></h3>
+<h3>Bayesian Perspective<a class="headerlink" href="#bayesian-perspective" title="Link to this heading">#</a></h3>
 <p>From a Bayesian perspective, we can think of the regularizer as a <strong>prior log probability</strong>. In the case above, the regularizer corresponds to a spherical Gaussian prior,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -592,7 +603,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 <p>where <strong>precision (inverse covariance)</strong> <span class="math notranslate nohighlight">\(\gamma n \mbI\)</span>.  Minimizing the objective above corresponds to doing <strong>maximum a posteriori (MAP)</strong> estimation in the Bayesian model. If you are going to take a Bayesian stance, it’s a bit strange to summarize the entire posterior by its mode, though. We are interested in the posterior distribution as a whole. At the very least, we’d like to know the variance around the mode. We’ll talk more about Bayesian methods in the coming weeks.</p>
 </section>
 <section id="revisiting-the-converge-rate-of-gradient-descent">
-<h3>Revisiting the Converge Rate of Gradient Descent<a class="headerlink" href="#revisiting-the-converge-rate-of-gradient-descent" title="Permalink to this heading">#</a></h3>
+<h3>Revisiting the Converge Rate of Gradient Descent<a class="headerlink" href="#revisiting-the-converge-rate-of-gradient-descent" title="Link to this heading">#</a></h3>
 <p>With regularization, we can also <strong>lower bound</strong> the objective by a quadratic function,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -614,7 +625,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 </section>
 </section>
 <section id="newton-s-method">
-<h2>Newton’s Method<a class="headerlink" href="#newton-s-method" title="Permalink to this heading">#</a></h2>
+<h2>Newton’s Method<a class="headerlink" href="#newton-s-method" title="Link to this heading">#</a></h2>
 <p>Gradient descent leverages the gradient at <span class="math notranslate nohighlight">\(\mbbeta\)</span> to determine the update. Newton’s method uses the Hessian to inform the update as well, and in doing so it can achieve considerably faster convergence.</p>
 <p>The second order Taylor approximation of <span class="math notranslate nohighlight">\(\cL\)</span> around <span class="math notranslate nohighlight">\(\mbbeta\)</span> is</p>
 <div class="amsmath math notranslate nohighlight">
@@ -639,7 +650,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 <p>Compare the Newton update to that of gradient descent. How do they differ?</p>
 </div>
 <section id="converge-rate-of-newton-s-method">
-<h3>Converge Rate of Newton’s Method<a class="headerlink" href="#converge-rate-of-newton-s-method" title="Permalink to this heading">#</a></h3>
+<h3>Converge Rate of Newton’s Method<a class="headerlink" href="#converge-rate-of-newton-s-method" title="Link to this heading">#</a></h3>
 <p>Under certain conditions — if the objective is strongly convex, the Hessian is Lipschitz continuous, and we start near enough to the global optimum — Newton’s method achieves <strong>second order convergence</strong>, meaning</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -661,7 +672,7 @@ Note that here the convergence is in terms of distance to the optimum, rather th
 </section>
 </section>
 <section id="iteratively-reweighted-least-squares">
-<h2>Iteratively Reweighted Least Squares<a class="headerlink" href="#iteratively-reweighted-least-squares" title="Permalink to this heading">#</a></h2>
+<h2>Iteratively Reweighted Least Squares<a class="headerlink" href="#iteratively-reweighted-least-squares" title="Link to this heading">#</a></h2>
 <p>Newton’s method solves for the minimum of a quadratic approximation to the loss function at each iteration. What else involves minimizing a quadratic loss function? Least squares. It turns out that Newton’s method can be viewed as iteratively solving a weighted least squares problem. To see this, Let’s first write the gradient and Hessian in matrix form,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -700,8 +711,8 @@ Note that here the convergence is in terms of distance to the optimum, rather th
 \end{align*}\]</div>
 </section>
 <section id="asymptotic-covariance-of-mle">
-<h2>Asymptotic Covariance of MLE<a class="headerlink" href="#asymptotic-covariance-of-mle" title="Permalink to this heading">#</a></h2>
-<p>What other insight can we glean from the Hessian? Recall our discussion of the asymptotic normality of the MLE from <span class="xref myst">Lecture 1</span>. For iid observations <span class="math notranslate nohighlight">\(Y_i \iid{\sim} p(\cdot; \mbtheta)\)</span> for <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>, the asymptotic covariance is <span class="math notranslate nohighlight">\(\cI(\mbtheta)^{-1} / n\)</span>, where</p>
+<h2>Asymptotic Covariance of MLE<a class="headerlink" href="#asymptotic-covariance-of-mle" title="Link to this heading">#</a></h2>
+<p>What other insight can we glean from the Hessian? Recall our discussion of the asymptotic normality of the MLE from <a class="reference internal" href="#lectures/01_distributions.ipynb"><span class="xref myst">Lecture 1</span></a>. For iid observations <span class="math notranslate nohighlight">\(Y_i \iid{\sim} p(\cdot; \mbtheta)\)</span> for <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>, the asymptotic covariance is <span class="math notranslate nohighlight">\(\cI(\mbtheta)^{-1} / n\)</span>, where</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 \cI(\mbtheta)= -\E[\nabla_{\mbtheta}^2 \log p(Y; \mbtheta)]
@@ -730,75 +741,57 @@ Note that here the convergence is in terms of distance to the optimum, rather th
 <p class="admonition-title">Caution</p>
 <p>Remember, Wald confidence intervals are only as good as the asymptotic normality assumption. When the likelihod is not well approximated by a quadratic, the covariance estimate will be poor, and the confidence intervals will be invalid. When might the Gaussian approximation not hold?</p>
 </div>
-<!-- ## Deviance and Goodness of Fit
+<!-- ## Bayesian Inference with the Laplace Approximation
 
-Instead of Wald tests and interval estimates, we coulda also use likelihood ratio inference, which is based on the difference in log likelihood between the fitted and the saturated model,
+Finally, suppose you wanted to perform Bayesian inference of the weights under a Gaussian prior,
 \begin{align*}
-\lambda = -2 \log \frac{p(\mby \mid \mbX, \hat{\mbbeta})}{p_{\mathsf{sat}}(\mby)}.
+\mbbeta &\sim \mathrm{N}(\mbzero, \gamma^{-1} \mbI).
 \end{align*}
-For logistic regression, the saturated model assigns probability one to the observed data,
+Unfortunately, the posterior does not have a closed formation solution. Instead, a common form of approximate posterior inference is the **Laplace approximation**,
 \begin{align*}
-p_{\mathsf{sat}}(\mby) &= \prod_{i=1}^n \mathrm{Bern}(y_i; y_i) = 1.
-\end{align*} -->
-</section>
-<section id="bayesian-inference-with-the-laplace-approximation">
-<h2>Bayesian Inference with the Laplace Approximation<a class="headerlink" href="#bayesian-inference-with-the-laplace-approximation" title="Permalink to this heading">#</a></h2>
-<p>Finally, suppose you wanted to perform Bayesian inference of the weights under a Gaussian prior,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\mbbeta &amp;\sim \mathrm{N}(\mbzero, \gamma^{-1} \mbI).
-\end{align*}\]</div>
-<p>Unfortunately, the posterior does not have a closed formation solution. Instead, a common form of approximate posterior inference is the <strong>Laplace approximation</strong>,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-p(\mbbeta \mid \mbX, \mby) &amp;\approx \mathrm{N}(\mbbeta_{\mathsf{MAP}}, \widehat{\mbSigma})
-\end{align*}\]</div>
-<p>where</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+p(\mbbeta \mid \mbX, \mby) &\approx \mathrm{N}(\mbbeta_{\mathsf{MAP}}, \widehat{\mbSigma})
+\end{align*}
+where
+\begin{align*}
 \cL(\mbbeta) 
-&amp;= \log p(\mbbeta) + \sum_{i=1}^n \log p(y_i \mid \mbx_i, \mbbeta) \\
-&amp;= \log \mathrm{N}(\mbbeta; \mbzero, \gamma^{-1} \mbI) + \sum_{i=1}^n \log \mathrm{Bern}(y_i \mid \sigma(\mbx_i^\top \mbbeta))
-\end{align*}\]</div>
-<p>is the log joint probability (<em>no longer the same as the loss function above!</em>),</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+&= \log p(\mbbeta) + \sum_{i=1}^n \log p(y_i \mid \mbx_i, \mbbeta) \\
+&= \log \mathrm{N}(\mbbeta; \mbzero, \gamma^{-1} \mbI) + \sum_{i=1}^n \log \mathrm{Bern}(y_i \mid \sigma(\mbx_i^\top \mbbeta))
+\end{align*}
+is the log joint probability (_no longer the same as the loss function above!_),
+\begin{align*}
 \mbbeta_{\mathsf{MAP}} 
-&amp;= \arg \max_{\mbbeta} \cL(\mbbeta)
-\end{align*}\]</div>
-<p>is the <em>maximum a posteriori (MAP)</em> estimate, and,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-5b5c4d21-7da9-447b-bf73-6bce11ce538d">
-<span class="eqno">(1)<a class="headerlink" href="#equation-5b5c4d21-7da9-447b-bf73-6bce11ce538d" title="Permalink to this equation">#</a></span>\[\begin{align}
+&= \arg \max_{\mbbeta} \cL(\mbbeta)
+\end{align*}
+is the _maximum a posteriori (MAP)_ estimate, and,
+\begin{align}
 \widehat{\mbSigma}
-&amp;= -[\nabla^2 \cL(\mbbeta_{\mathsf{MAP}})]^{-1} = \cI(\mbbeta_{\mathsf{MAP}})^{-1}
-\end{align}\]</div>
-<p>is an approximation of the posterior covariance.</p>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>How do posterior credible intervals under the Laplace approximation compare to Wald confidence intervals of the MLE under L2 regularization?</p>
-</div>
-<section id="approximating-the-model-evidence">
-<h3>Approximating the model evidence<a class="headerlink" href="#approximating-the-model-evidence" title="Permalink to this heading">#</a></h3>
-<p>We can use the Laplace approximate to estimate the log marginal likelihood — a.k.a., the <strong>model evidence</strong>. Note that,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+&= -[\nabla^2 \cL(\mbbeta_{\mathsf{MAP}})]^{-1} = \cI(\mbbeta_{\mathsf{MAP}})^{-1}
+\end{align}
+is an approximation of the posterior covariance.
+
+:::{admonition} Question
+How do posterior credible intervals under the Laplace approximation compare to Wald confidence intervals of the MLE under L2 regularization? 
+:::
+
+### Approximating the model evidence
+
+We can use the Laplace approximate to estimate the log marginal likelihood &mdash; a.k.a., the **model evidence**. Note that,
+\begin{align*}
 \log p(\mby \mid \mbX) 
-&amp;= \log p(\mby, \mbbeta \mid \mbX) - \log p(\mbbeta \mid \mbX, \mby) \\
-&amp;\approx \cL(\mbbeta) - \log \mathrm{N}(\mbbeta \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}).
-\end{align*}\]</div>
-<p>The first line is just Bayes’ rule, and the right hand side holds for all <span class="math notranslate nohighlight">\(\mbbeta\)</span>. The second line is our Laplace approximation.
-Evaluating at the MAP estimate,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
+&= \log p(\mby, \mbbeta \mid \mbX) - \log p(\mbbeta \mid \mbX, \mby) \\
+&\approx \cL(\mbbeta) - \log \mathrm{N}(\mbbeta \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}).
+\end{align*}
+The first line is just Bayes' rule, and the right hand side holds for all $\mbbeta$. The second line is our Laplace approximation.
+Evaluating at the MAP estimate,
+\begin{align*}
 \log p(\mby \mid \mbX) 
-&amp;\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
-&amp;\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
-\end{align*}\]</div>
-<p>The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the “width” of the posterior. We’ll revisit this approximation when we talk about model selection next week.</p>
-</section>
+&\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
+&\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
+\end{align*}
+The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week.  -->
 </section>
 <section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h2>
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
 <p>One, two, many… with logistic regression, we can begin modeling relationships between binary response variables and (possibly arbitrary-valued) covariates.  Next, we’ll see how to expand from logistic regression to generalized linear models for exponential family responses.</p>
 </section>
 </section>
@@ -890,10 +883,6 @@ Evaluating at the MAP estimate,</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iteratively-reweighted-least-squares">Iteratively Reweighted Least Squares</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-covariance-of-mle">Asymptotic Covariance of MLE</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-inference-with-the-laplace-approximation">Bayesian Inference with the Laplace Approximation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-the-model-evidence">Approximating the model evidence</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
   </nav></div>
