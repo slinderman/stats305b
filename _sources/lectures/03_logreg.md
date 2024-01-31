@@ -313,7 +313,7 @@ How can we interpret the working responses? We can view them as the real respons
 
 ## Asymptotic Covariance of MLE
 
-What other insight can we glean from the Hessian? Recall our discussion of the asymptotic normality of the MLE from [Lecture 1](lectures/01_distributions.ipynb). For iid observations $Y_i \iid{\sim} p(\cdot; \mbtheta)$ for $i=1,\ldots,n$, the asymptotic covariance is $\cI(\mbtheta)^{-1} / n$, where
+What other insight can we glean from the Hessian? Recall our discussion of the asymptotic normality of the MLE from [Lecture 1](01_distributions.ipynb). For iid observations $Y_i \iid{\sim} p(\cdot; \mbtheta)$ for $i=1,\ldots,n$, the asymptotic covariance is $\cI(\mbtheta)^{-1} / n$, where
 \begin{align*}
 \cI(\mbtheta)= -\E[\nabla_{\mbtheta}^2 \log p(Y; \mbtheta)]
 \end{align*} 
