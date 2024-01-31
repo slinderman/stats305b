@@ -10,6 +10,7 @@ parts:
     - file: lectures/04_expfam.md
     - file: lectures/05_glms.md
     - file: lectures/06_bayes.md
+    - file: lectures/07_bayes_glms.ipynb
     
   - caption: Assignments
     chapters:

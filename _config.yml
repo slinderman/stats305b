@@ -11,6 +11,7 @@ execute:
     - 'hw2.ipynb'
     - 'hw3.ipynb'
     - 'hw4.ipynb'
+    - '07_bayes_glms.ipynb'
 only_build_toc_files: true
 
 # Add a bibtex file so that we can create citations
