@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -745,7 +746,25 @@ a(\theta' \to \theta) = \min \left\{1, \, \frac{p(\theta, x)}{p(\theta', x)} \ri
 </section>
 <section id="gibbs-sampling">
 <h2>Gibbs Sampling<a class="headerlink" href="#gibbs-sampling" title="Link to this heading">#</a></h2>
-<p>Gibbs is a special case of MH with proposals that always accept. Gibbs sampling updates one “coordinate” of <span class="math notranslate nohighlight">\(\theta\)</span> at a time by sampling from its conditional distribution. Think of this as a proposal distribution. Suppose <span class="math notranslate nohighlight">\(\theta \in \reals^D\)</span>. For each coordinate <span class="math notranslate nohighlight">\(d \in 1,\ldots,D\)</span>,</p>
+<p>Gibbs is a special case of MH with proposals that always accept. Gibbs sampling updates one “coordinate” of <span class="math notranslate nohighlight">\(\theta \in \reals^D\)</span> at a time by sampling from its conditional distribution. The algorithm is:</p>
+<div class="proof algorithm admonition" id="gibbs_sampling">
+<p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Gibbs Sampling)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Input:</strong> Initial parameters <span class="math notranslate nohighlight">\(\theta^{(0)}\)</span>, observations <span class="math notranslate nohighlight">\(x\)</span></p>
+<ul class="simple">
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(t=1,\ldots, T\)</span></p>
+<ul>
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(d=1,\ldots, D\)</span></p>
+<ul>
+<li><p>Sample <span class="math notranslate nohighlight">\(\theta_d^{(t)} \sim p(\theta_d \mid \theta_{1}^{(t)}, \ldots, \theta_{d-}^{(t)}, \theta_{d+1}^{(t-1)}, \ldots, \theta_D^{(t-1)}, x)\)</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Return</strong> samples <span class="math notranslate nohighlight">\(\{\theta^{(t)}\}_{t=1}^T\)</span></p>
+</section>
+</div><p>You can think of Gibbs as cycling through <span class="math notranslate nohighlight">\(D\)</span> Metropolis-Hastings proposals, one for each coordinate <span class="math notranslate nohighlight">\(d \in 1,\ldots,D\)</span>,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 q_d(\theta \mid \theta') = p(\theta_d \mid \theta'_{\neg d}, x) \, \delta_{\theta'_{\neg d}}(\theta_{\neg d}),

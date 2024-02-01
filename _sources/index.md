@@ -39,7 +39,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Jan 22, 2024 | [Exponential Families](lectures/04_expfam.md) | {cite:p}`agresti2002categorical` Ch. 4-5 |
 | Jan 24, 2024 | [Generalized Linear Models](lectures/05_glms.md) | {cite:p}`agresti2002categorical` Ch. 6 | 
 | Jan 29, 2024 | [Bayesian Inference](lectures/06_bayes.md) | {cite:p}`gelman1995bayesian` Ch. 1 |
-| Jan 31, 2024 | Bayesian GLMs | {cite:p}`albert1993bayesian` and {cite:p}`polson2013bayesian` |
+| Jan 31, 2024 | [Bayesian GLMs](lectures/07_bayes_glms_soln.ipynb) | {cite:p}`albert1993bayesian` |
 | Feb 5, 2024 | L1-regularized GLMs | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
 | Feb 12, 2024 | Discrete Latent Variable Models        |         |
