@@ -194,6 +194,7 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -873,8 +874,8 @@ p(y, \beta \mid X)
 &amp;= \mathrm{N}(\beta \mid 0, \gamma^{-1} I) \prod_{i=1}^n \mathrm{St}(y_i \mid \beta^\top x_i, \sigma_0^2, \nu)
 \end{align*}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathrm{St}(\mu, \sigma_0^2, \nu)\)</span> denotes the <strong>Students’ t distribution</strong> with mean <span class="math notranslate nohighlight">\(\mu\)</span>, scale <span class="math notranslate nohighlight">\(\sigma_0\)</span>, and <span class="math notranslate nohighlight">\(\nu\)</span> degrees of freedom. Its density is,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-a54a02ea-c156-462c-849b-2cd881b64deb">
-<span class="eqno">(2)<a class="headerlink" href="#equation-a54a02ea-c156-462c-849b-2cd881b64deb" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-3573de43-23f4-4e11-a4a9-031d326cf418">
+<span class="eqno">(2)<a class="headerlink" href="#equation-3573de43-23f4-4e11-a4a9-031d326cf418" title="Permalink to this equation">#</a></span>\[\begin{align}
     \mathrm{St}(y; \mu, \sigma_0^2, \nu)
     &amp;= \frac{\Gamma(\tfrac{\nu + 1}{2})}{\Gamma(\tfrac{\nu}{2})} \frac{1}{\sqrt{\pi \nu \sigma_0^2}} \left[1 + \frac{\Delta^2}{\nu} \right]^{-\tfrac{\nu + 1}{2}}
 \end{align}\]</div>
@@ -885,8 +886,8 @@ Its mean is <span class="math notranslate nohighlight">\(\mu\)</span> and its va
 <section id="student-s-t-as-a-scale-mixture-of-gaussians">
 <h3>Student’s t as a scale-mixture of Gaussians<a class="headerlink" href="#student-s-t-as-a-scale-mixture-of-gaussians" title="Link to this heading">#</a></h3>
 <p>However, here’s a <strong>nifty trick</strong>! The Student’s t density can be written as a scale-mixture of Gaussians,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-210972a3-ba45-4dd2-8453-a6da56086c88">
-<span class="eqno">(3)<a class="headerlink" href="#equation-210972a3-ba45-4dd2-8453-a6da56086c88" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-e3984835-82c2-44a9-a56d-cefe759f7eeb">
+<span class="eqno">(3)<a class="headerlink" href="#equation-e3984835-82c2-44a9-a56d-cefe759f7eeb" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{St}\left(y; \mu, \sigma_0^2, \nu \right)
 &amp;= \int \mathrm{IGa}(\sigma \mid \tfrac{\nu}{2}, \tfrac{\nu \sigma_0^2}{2}) \, \mathrm{N}(y \mid \mu, \sigma^2) \, \mathrm{d} \sigma^2
 \end{align}\]</div>
@@ -1274,8 +1275,8 @@ p(y_i \mid x_i, \beta)
 &amp;= \int_{-\infty}^\infty p(y_i \mid z_i) \, \mathrm{N}(z_i \mid \beta^\top x_i, 1) \, \mathrm{d} z_i
 \end{align*}\]</div>
 <p>where</p>
-<div class="amsmath math notranslate nohighlight" id="equation-821fd6b6-606c-4c41-8f8f-a030b8c68d2b">
-<span class="eqno">(4)<a class="headerlink" href="#equation-821fd6b6-606c-4c41-8f8f-a030b8c68d2b" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-4719a0f8-1661-49ac-aa66-107aeb908066">
+<span class="eqno">(4)<a class="headerlink" href="#equation-4719a0f8-1661-49ac-aa66-107aeb908066" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(y_i \mid z_i) &amp;=
     \begin{cases}
     \delta_1(y_i) &amp; \text{if } z_i &gt; 0\\

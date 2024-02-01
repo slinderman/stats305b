@@ -194,6 +194,7 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -543,8 +544,8 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
 <p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
 <p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-15cc0d70-09ad-4e0d-837b-803532cb478b">
-<span class="eqno">(1)<a class="headerlink" href="#equation-15cc0d70-09ad-4e0d-837b-803532cb478b" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-35468773-223d-4bb5-af53-945baf650cb6">
+<span class="eqno">(1)<a class="headerlink" href="#equation-35468773-223d-4bb5-af53-945baf650cb6" title="Permalink to this equation">#</a></span>\[\begin{align}
     \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
     \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
 \end{align}\]</div>

@@ -1,0 +1,1487 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>HW2: Bayesian GLMs &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'assignments/hw2/hw2';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="References" href="../../lectures/99_references.html" />
+    <link rel="prev" title="HW1: Logistic Regression" href="../hw1/hw1.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/06_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">HW2: Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2024/assignments/hw2/hw2.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/assignments/hw2/hw2.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>HW2: Bayesian GLMs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-vote-data">Load the vote data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-demographic-data">Load the demographic data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-plotting">Helper function for plotting</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0a">Problem 0a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0b-one-hot-encodings">Problem 0b: One-hot encodings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0c-other-covariates">Problem 0c: Other covariates</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation">Part 1: Bayesian Inference in a Binomial GLM via Polya-gamma augmentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a">Problem 1a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b">Problem 1b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c">Problem 1c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d">Problem 1d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1e-posterior-analysis">Problem 1e: Posterior analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-model-checking">Part 2: Model Checking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-binomial-deviance-residuals">Problem 2a: Binomial deviance residuals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-residual-analysis">Problem 2b: Residual analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-generalized-linear-mixed-modeling">Part 3: Generalized Linear Mixed Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3a">Problem 3a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3b">Problem 3b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3c">Problem 3c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3d">Problem 3d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3e">Problem 3e</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3f">Problem 3f</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-reflection">Part 4: Reflection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4a">Problem 4a</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw2-bayesian-glms">
+<h1>HW2: Bayesian GLMs<a class="headerlink" href="#hw2-bayesian-glms" title="Link to this heading">#</a></h1>
+<p>In this assignment, you will develop Bayesian inference algorithms for generalized linear (mixed) models (GL(M)Ms). We’ll put down football and focus on another timely subject: US presidential elections. We have downloaded data from the <a class="reference external" href="https://electionlab.mit.edu/data">MIT Election Data Science Lab</a> consisting of presidential votes for each county in the US from 2000-2020. We have also downloaded demographic covariates from 2018 for each county. In this assignment, you will develop models to predict county-level votes given demographic data.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">jaxtyping</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+
+<span class="kn">from</span> <span class="nn">fastprogress</span> <span class="kn">import</span> <span class="n">progress_bar</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Array</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">Binomial</span><span class="p">,</span> <span class="n">Gamma</span><span class="p">,</span> <span class="n">MultivariateNormal</span><span class="p">,</span> <span class="n">Normal</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scott/anaconda3/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+<section id="load-the-vote-data">
+<h3>Load the vote data<a class="headerlink" href="#load-the-vote-data" title="Link to this heading">#</a></h3>
+<p><em>Note: we did a little preprocessing of the raw data from the MIT Election Data Science Lab to extract counties that have both election and demographic data.</em></p>
+<p>The vote data consists of votes per candidate for each county in the US for presidential elections from 2000 to 2020. Each county is identified by its <a class="reference external" href="https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt">FIPS code</a>. The FIPS code is a five digit integer representing the state and county within the state. We represent the FIPS code as a string since some codes start with zero.</p>
+<p><strong>Note</strong>: Broomfield County CO (FIPS code 08014) did not exist in 2000</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">votes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;votes.csv&quot;</span><span class="p">)</span>
+<span class="n">votes</span><span class="o">.</span><span class="n">fips</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">votes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>state</th>
+      <th>state_po</th>
+      <th>county_name</th>
+      <th>fips</th>
+      <th>candidate</th>
+      <th>party</th>
+      <th>totalvotes</th>
+      <th>candidatevotes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>AL GORE</td>
+      <td>DEMOCRAT</td>
+      <td>17208</td>
+      <td>4942</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>GEORGE W. BUSH</td>
+      <td>REPUBLICAN</td>
+      <td>17208</td>
+      <td>11993</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>OTHER</td>
+      <td>OTHER</td>
+      <td>17208</td>
+      <td>113</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>RALPH NADER</td>
+      <td>GREEN</td>
+      <td>17208</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>BALDWIN</td>
+      <td>01003</td>
+      <td>AL GORE</td>
+      <td>DEMOCRAT</td>
+      <td>56480</td>
+      <td>13997</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>63206</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WASHAKIE</td>
+      <td>56043</td>
+      <td>OTHER</td>
+      <td>OTHER</td>
+      <td>4032</td>
+      <td>71</td>
+    </tr>
+    <tr>
+      <th>63207</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>DONALD J TRUMP</td>
+      <td>REPUBLICAN</td>
+      <td>3560</td>
+      <td>3107</td>
+    </tr>
+    <tr>
+      <th>63208</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>JO JORGENSEN</td>
+      <td>LIBERTARIAN</td>
+      <td>3560</td>
+      <td>46</td>
+    </tr>
+    <tr>
+      <th>63209</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>JOSEPH R BIDEN JR</td>
+      <td>DEMOCRAT</td>
+      <td>3560</td>
+      <td>360</td>
+    </tr>
+    <tr>
+      <th>63210</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>OTHER</td>
+      <td>OTHER</td>
+      <td>3560</td>
+      <td>47</td>
+    </tr>
+  </tbody>
+</table>
+<p>63211 rows × 9 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="load-the-demographic-data">
+<h3>Load the demographic data<a class="headerlink" href="#load-the-demographic-data" title="Link to this heading">#</a></h3>
+<p>We also have county-level demographic data for all counties except those in Alaska. The data was collected in 2018. The fields of the table are described <a class="reference external" href="https://github.com/MEDSL/2018-elections-unoffical/blob/master/election-context-2018.md">here</a>. Note that each county has a matching FIPS code, again represented as a five digit string.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;demographics.csv&quot;</span><span class="p">)</span>
+<span class="n">demo</span><span class="o">.</span><span class="n">fips</span> <span class="o">=</span> <span class="n">demo</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">demo</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state</th>
+      <th>county</th>
+      <th>trump16</th>
+      <th>clinton16</th>
+      <th>otherpres16</th>
+      <th>romney12</th>
+      <th>obama12</th>
+      <th>otherpres12</th>
+      <th>demsen16</th>
+      <th>repsen16</th>
+      <th>...</th>
+      <th>age65andolder_pct</th>
+      <th>median_hh_inc</th>
+      <th>clf_unemploy_pct</th>
+      <th>lesshs_pct</th>
+      <th>lesscollege_pct</th>
+      <th>lesshs_whites_pct</th>
+      <th>lesscollege_whites_pct</th>
+      <th>rural_pct</th>
+      <th>ruralurban_cc</th>
+      <th>fips</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Alabama</td>
+      <td>Autauga</td>
+      <td>18172</td>
+      <td>5936</td>
+      <td>865</td>
+      <td>17379</td>
+      <td>6363</td>
+      <td>190</td>
+      <td>6331.0</td>
+      <td>18220.0</td>
+      <td>...</td>
+      <td>13.978456</td>
+      <td>53099.0</td>
+      <td>5.591657</td>
+      <td>12.417046</td>
+      <td>75.407229</td>
+      <td>10.002112</td>
+      <td>74.065601</td>
+      <td>42.002162</td>
+      <td>2.0</td>
+      <td>01001</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Alabama</td>
+      <td>Baldwin</td>
+      <td>72883</td>
+      <td>18458</td>
+      <td>3874</td>
+      <td>66016</td>
+      <td>18424</td>
+      <td>898</td>
+      <td>19145.0</td>
+      <td>74021.0</td>
+      <td>...</td>
+      <td>18.714851</td>
+      <td>51365.0</td>
+      <td>6.286843</td>
+      <td>9.972418</td>
+      <td>70.452889</td>
+      <td>7.842227</td>
+      <td>68.405607</td>
+      <td>42.279099</td>
+      <td>3.0</td>
+      <td>01003</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Alabama</td>
+      <td>Barbour</td>
+      <td>5454</td>
+      <td>4871</td>
+      <td>144</td>
+      <td>5550</td>
+      <td>5912</td>
+      <td>47</td>
+      <td>4777.0</td>
+      <td>5436.0</td>
+      <td>...</td>
+      <td>16.528895</td>
+      <td>33956.0</td>
+      <td>12.824738</td>
+      <td>26.235928</td>
+      <td>87.132213</td>
+      <td>19.579752</td>
+      <td>81.364746</td>
+      <td>67.789635</td>
+      <td>6.0</td>
+      <td>01005</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Alabama</td>
+      <td>Bibb</td>
+      <td>6738</td>
+      <td>1874</td>
+      <td>207</td>
+      <td>6132</td>
+      <td>2202</td>
+      <td>86</td>
+      <td>2082.0</td>
+      <td>6612.0</td>
+      <td>...</td>
+      <td>14.885699</td>
+      <td>39776.0</td>
+      <td>7.146827</td>
+      <td>19.301587</td>
+      <td>88.000000</td>
+      <td>15.020490</td>
+      <td>87.471774</td>
+      <td>68.352607</td>
+      <td>1.0</td>
+      <td>01007</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Alabama</td>
+      <td>Blount</td>
+      <td>22859</td>
+      <td>2156</td>
+      <td>573</td>
+      <td>20757</td>
+      <td>2970</td>
+      <td>279</td>
+      <td>2980.0</td>
+      <td>22169.0</td>
+      <td>...</td>
+      <td>17.192916</td>
+      <td>46212.0</td>
+      <td>5.953833</td>
+      <td>19.968585</td>
+      <td>86.950243</td>
+      <td>16.643368</td>
+      <td>86.163610</td>
+      <td>89.951502</td>
+      <td>1.0</td>
+      <td>01009</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3106</th>
+      <td>Wyoming</td>
+      <td>Sweetwater</td>
+      <td>12154</td>
+      <td>3231</td>
+      <td>1745</td>
+      <td>11428</td>
+      <td>4774</td>
+      <td>693</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>9.417120</td>
+      <td>68233.0</td>
+      <td>5.072255</td>
+      <td>9.314606</td>
+      <td>78.628507</td>
+      <td>6.238463</td>
+      <td>76.606813</td>
+      <td>10.916313</td>
+      <td>5.0</td>
+      <td>56037</td>
+    </tr>
+    <tr>
+      <th>3107</th>
+      <td>Wyoming</td>
+      <td>Teton</td>
+      <td>3921</td>
+      <td>7314</td>
+      <td>1392</td>
+      <td>4858</td>
+      <td>6213</td>
+      <td>393</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>11.837510</td>
+      <td>75594.0</td>
+      <td>2.123447</td>
+      <td>4.633570</td>
+      <td>46.211584</td>
+      <td>1.526877</td>
+      <td>41.769504</td>
+      <td>46.430920</td>
+      <td>7.0</td>
+      <td>56039</td>
+    </tr>
+    <tr>
+      <th>3108</th>
+      <td>Wyoming</td>
+      <td>Uinta</td>
+      <td>6154</td>
+      <td>1202</td>
+      <td>1114</td>
+      <td>6615</td>
+      <td>1628</td>
+      <td>296</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>10.678218</td>
+      <td>53323.0</td>
+      <td>6.390755</td>
+      <td>10.361224</td>
+      <td>81.793082</td>
+      <td>8.806312</td>
+      <td>81.080852</td>
+      <td>43.095937</td>
+      <td>7.0</td>
+      <td>56041</td>
+    </tr>
+    <tr>
+      <th>3109</th>
+      <td>Wyoming</td>
+      <td>Washakie</td>
+      <td>2911</td>
+      <td>532</td>
+      <td>371</td>
+      <td>3014</td>
+      <td>794</td>
+      <td>136</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>19.650341</td>
+      <td>46212.0</td>
+      <td>7.441860</td>
+      <td>12.577108</td>
+      <td>78.923920</td>
+      <td>10.299738</td>
+      <td>75.980688</td>
+      <td>35.954529</td>
+      <td>7.0</td>
+      <td>56043</td>
+    </tr>
+    <tr>
+      <th>3110</th>
+      <td>Wyoming</td>
+      <td>Weston</td>
+      <td>3033</td>
+      <td>299</td>
+      <td>194</td>
+      <td>2821</td>
+      <td>422</td>
+      <td>116</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>18.355401</td>
+      <td>55640.0</td>
+      <td>3.610949</td>
+      <td>8.592392</td>
+      <td>81.193281</td>
+      <td>7.342144</td>
+      <td>81.141179</td>
+      <td>54.536626</td>
+      <td>7.0</td>
+      <td>56045</td>
+    </tr>
+  </tbody>
+</table>
+<p>3111 rows × 39 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;state&#39;, &#39;county&#39;, &#39;trump16&#39;, &#39;clinton16&#39;, &#39;otherpres16&#39;, &#39;romney12&#39;,
+       &#39;obama12&#39;, &#39;otherpres12&#39;, &#39;demsen16&#39;, &#39;repsen16&#39;, &#39;othersen16&#39;,
+       &#39;demhouse16&#39;, &#39;rephouse16&#39;, &#39;otherhouse16&#39;, &#39;demgov16&#39;, &#39;repgov16&#39;,
+       &#39;othergov16&#39;, &#39;repgov14&#39;, &#39;demgov14&#39;, &#39;othergov14&#39;, &#39;total_population&#39;,
+       &#39;cvap&#39;, &#39;white_pct&#39;, &#39;black_pct&#39;, &#39;hispanic_pct&#39;, &#39;nonwhite_pct&#39;,
+       &#39;foreignborn_pct&#39;, &#39;female_pct&#39;, &#39;age29andunder_pct&#39;,
+       &#39;age65andolder_pct&#39;, &#39;median_hh_inc&#39;, &#39;clf_unemploy_pct&#39;, &#39;lesshs_pct&#39;,
+       &#39;lesscollege_pct&#39;, &#39;lesshs_whites_pct&#39;, &#39;lesscollege_whites_pct&#39;,
+       &#39;rural_pct&#39;, &#39;ruralurban_cc&#39;, &#39;fips&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="helper-function-for-plotting">
+<h3>Helper function for plotting<a class="headerlink" href="#helper-function-for-plotting" title="Link to this heading">#</a></h3>
+<p>We provide a simple function to plot values associated with each county.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">urlopen</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+    <span class="n">geojson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_counties</span><span class="p">(</span><span class="n">fips</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu&quot;</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">choropleth</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">fips</span><span class="o">=</span><span class="n">fips</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)),</span> 
+                        <span class="n">geojson</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span> 
+                        <span class="n">locations</span><span class="o">=</span><span class="s2">&quot;fips&quot;</span><span class="p">,</span> 
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;values&quot;</span><span class="p">,</span>
+                        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                        <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;usa&quot;</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;values&quot;</span><span class="p">:</span><span class="n">label</span><span class="p">})</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">margin</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;t&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;l&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">interactive</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fig</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">to_image</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">2.0</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Demo of how to plot. </span>
+<span class="c1"># Note: you can use interactive plots in Colab. I turned off interactive mode</span>
+<span class="c1">#   because the interactive plots don&#39;t renter in the online book.</span>
+<span class="n">plot_counties</span><span class="p">(</span><span class="n">demo</span><span class="o">.</span><span class="n">fips</span><span class="p">,</span> 
+              <span class="n">demo</span><span class="o">.</span><span class="n">median_hh_inc</span><span class="p">,</span> 
+              <span class="n">label</span><span class="o">=</span><span class="s2">&quot;median_hh_inc&quot;</span><span class="p">,</span> 
+              <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu&quot;</span><span class="p">,</span> 
+              <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b72f08f97e1745123034e3aa134c02d21e61c93dc9d36a2687a1f2806a066a4a.png" src="../../_images/b72f08f97e1745123034e3aa134c02d21e61c93dc9d36a2687a1f2806a066a4a.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="part-0-preprocessing">
+<h2>Part 0: Preprocessing<a class="headerlink" href="#part-0-preprocessing" title="Link to this heading">#</a></h2>
+<p>There are <span class="math notranslate nohighlight">\(n=3111\)</span> counties and <span class="math notranslate nohighlight">\(m=6\)</span> presidential elections in this dataset.</p>
+<p>Let</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(y_{i,k} \in \mathbb{N}\)</span> denote the number of votes for the <strong>Democratic Party candidate</strong> in county <span class="math notranslate nohighlight">\(i\)</span> and election <span class="math notranslate nohighlight">\(k\)</span> for <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span> and <span class="math notranslate nohighlight">\(k=1,\ldots,m\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(N_{i,k} \in \mathbb{N}\)</span> denote the <strong>total number of votes</strong> cast in county <span class="math notranslate nohighlight">\(i\)</span> and election <span class="math notranslate nohighlight">\(k\)</span> for <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span> and <span class="math notranslate nohighlight">\(k=1,\ldots,m\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}_i \in \mathbb{R}^p\)</span> denote the vector of demographic covariates for county <span class="math notranslate nohighlight">\(i\)</span> from the table above.</p></li>
+</ul>
+<p>We will use the following covariates:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">white_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">black_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hispanic_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">foreignborn_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">female_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">age29andunder_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">age65andolder_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">median_hh_inc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf_unemploy_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesshs_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesscollege_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesshs_whites_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesscollege_whites_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rural_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ruralurban_cc</span></code></p></li>
+</ul>
+<section id="problem-0a">
+<h3>Problem 0a<a class="headerlink" href="#problem-0a" title="Link to this heading">#</a></h3>
+<p>Extract PyTorch tensors for the Democratic votes (<span class="math notranslate nohighlight">\(n \times m\)</span> tensor), total votes (<span class="math notranslate nohighlight">\(n \times m\)</span> tensor), and covariates (<span class="math notranslate nohighlight">\(n \times p\)</span> tensor).</p>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>Set the first covariate to <span class="math notranslate nohighlight">\(x_{i,1} = 1\)</span> for all <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span> in order to allow for an intercept.</p></li>
+<li><p>Make sure real-valued covariates are standardized to be mean-zero, unit standard deviation across counties.</p></li>
+<li><p>Use a one-hot encoding for categorical covariates, omitting the last category. For example, if a covariate <span class="math notranslate nohighlight">\(X\)</span> takes on discrete values <span class="math notranslate nohighlight">\(\{1, \ldots, C\}\)</span>, encode it as a vector <span class="math notranslate nohighlight">\(v\)</span> of length <span class="math notranslate nohighlight">\(C-1\)</span> where <span class="math notranslate nohighlight">\(v_j = \mathbb{I}[X=j]\)</span>.</p></li>
+</ul>
+</section>
+<section id="problem-0b-one-hot-encodings">
+<h3>Problem 0b: One-hot encodings<a class="headerlink" href="#problem-0b-one-hot-encodings" title="Link to this heading">#</a></h3>
+<p>Explain why we omitted the laset category in the encoding of categorical covariates.</p>
+</section>
+<section id="problem-0c-other-covariates">
+<h3>Problem 0c: Other covariates<a class="headerlink" href="#problem-0c-other-covariates" title="Link to this heading">#</a></h3>
+<p>Explain why we didn’t include <code class="docutils literal notranslate"><span class="pre">nonwhite_pct</span></code> in our set of covariates.</p>
+</section>
+</section>
+<section id="part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation">
+<h2>Part 1: Bayesian Inference in a Binomial GLM via Polya-gamma augmentation<a class="headerlink" href="#part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation" title="Link to this heading">#</a></h2>
+<p>Start with a simple baseline model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+y_{i,k} &amp;\sim \mathrm{Bin}(N_{i,k}, \, \sigma(x_i^\top \beta))
+&amp; \text{for } &amp;i=1,\ldots,n; \, k=1,\ldots,m \\
+\beta &amp;\sim \mathrm{N}(0, I)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma\)</span> is the logistic function.</p>
+<p>The Polya-gamma (PG) augmentation trick <span id="id1">[<a class="reference internal" href="../../lectures/99_references.html#id6" title="Nicholas G Polson, James G Scott, and Jesse Windle. Bayesian inference for logistic models using Pólya–gamma latent variables. Journal of the American statistical Association, 108(504):1339–1349, 2013.">PSW13</a>]</span> is based on the following identity,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{(e^u)^y}{(1 + e^u)^N} = 2^{-N} e^{(y - \frac{N}{2}) u} \int e^{-\frac{1}{2} \omega u^2} \, \mathrm{PG}(\omega; N, 0) \, \mathrm{d} \omega,
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{PG}(\omega; b, c)\)</span> denotes the Polya-gamma density. The PG distribution has support on the non-negative reals, and it parameterized by a <em>shape</em> <span class="math notranslate nohighlight">\(b \geq 0\)</span> and a <em>tilt</em> <span class="math notranslate nohighlight">\(c \in \mathbb{R}\)</span>.</p>
+<p>The PG distribution isn’t exactly textbook, but it has many nice properties. For instance, PG random variables are equal in distribution to a weighted sum of gamma random variables. If <span class="math notranslate nohighlight">\(\omega \sim \mathrm{PG}(b, c)\)</span> then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\omega \overset{d}{=} \frac{1}{2 \pi^2} \sum_{k=1}^\infty \frac{g_k}{(k - \tfrac{1}{2})^2 + \tfrac{c^2}{4 \pi^2}}
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(g_k \overset{\mathrm{iid}}{\sim} \mathrm{Ga}(b, 1)\)</span>. Since the coefficients in this sum are decreasing with <span class="math notranslate nohighlight">\(k\)</span>, we can draw an approximate sample from a PG distribution by truncating the sum. Since the PG distribution doesn’t exist in PyTorch, we have provided a helper function below to draw samples from the PG distribution.</p>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>As <span class="math notranslate nohighlight">\(b \to 0\)</span>, the PG density converges to a delta function at zero. This is useful when you have missing data.</p></li>
+<li><p>There are more efficient ways to sample PG random variables. See <span id="id2">Windle <em>et al.</em> [<a class="reference internal" href="../../lectures/99_references.html#id13" title="Jesse Windle, Nicholas G Polson, and James G Scott. Sampling pólya-gamma random variates: alternate and approximate techniques. arXiv preprint arXiv:1405.0506, 2014.">WPS14</a>]</span> and <a class="github reference external" href="https://github.com/slinderman/pypolyagamma">slinderman/pypolyagamma</a>. The naive sampling code below should work for this assignment though.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sample_pg</span><span class="p">(</span><span class="n">b</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> 
+              <span class="n">c</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> 
+              <span class="n">trunc</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span> <span class="o">-&gt;</span> \
+              <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sample X ~ PG(b, c) the naive way using a weighted sum of gammas.</span>
+<span class="sd">    Note: there are much more efficient sampling methods. See </span>
+
+<span class="sd">    Windle, Jesse, Nicholas G. Polson, and James G. Scott. &quot;Sampling </span>
+<span class="sd">        Pólya-gamma random variates: alternate and approximate techniques.&quot; </span>
+<span class="sd">        arXiv preprint arXiv:1405.0506 (2014).</span>
+<span class="sd">        https://arxiv.org/abs/1405.0506</span>
+
+<span class="sd">    and https://github.com/slinderman/pypolyagamma</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    b: tensor of arbitrary shape specifying the &quot;shape&quot; argument of </span>
+<span class="sd">        the PG distribution.</span>
+
+<span class="sd">    c: tensor of arbitrary shape specifying the &quot;tilt&quot; argument of </span>
+<span class="sd">        the PG distribution. Must broadcast with b.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tensor of independent draws of PG(b, c) matching the shapes of b and c.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># make sure the parameters are float tensors and broadcast compatible</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> 
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> 
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">broadcast_tensors</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># Draw the PG random variates</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">Gamma</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">trunc</span><span class="p">,))</span>                          <span class="c1"># (trunc, b.shape)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>                                       <span class="c1"># (b.shape, trunc)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">trunc</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">((</span><span class="n">k</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>        <span class="c1"># (c.shape, trunc)</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">g</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>           <span class="c1"># (b.shape,)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">omegas</span> <span class="o">=</span> <span class="n">sample_pg</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10000</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10000</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\omega$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$p(\omega)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;samples of PG(1,0) distribution&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;samples of PG(1,0) distribution&#39;)
+</pre></div>
+</div>
+<img alt="../../_images/ec22d08366fe7bde4c4d858c0e97828daefa72c43f9f2cea69046ca22c6a2fd5.png" src="../../_images/ec22d08366fe7bde4c4d858c0e97828daefa72c43f9f2cea69046ca22c6a2fd5.png" />
+</div>
+</div>
+<section id="problem-1a">
+<h3>Problem 1a<a class="headerlink" href="#problem-1a" title="Link to this heading">#</a></h3>
+<p>Use the integral identity above to write the distribution <span class="math notranslate nohighlight">\(p(y, \beta \mid X)\)</span> as a marginal of a distribution over an augmented space, <span class="math notranslate nohighlight">\(p(y, \beta, \omega \mid X)\)</span>. (Note that we are using the shorthand <span class="math notranslate nohighlight">\(y\)</span> for the set of all responses.)</p>
+</section>
+<section id="problem-1b">
+<h3>Problem 1b<a class="headerlink" href="#problem-1b" title="Link to this heading">#</a></h3>
+<p>The nice thing about this augmented distribution is that it has simple conditional distributions, which allows for a simple Gibbs sampling algorithm to approximate the posterior distribution.</p>
+<p>Derive the conditional distribution, <span class="math notranslate nohighlight">\(p(\beta \mid y, X, \omega)\)</span>.</p>
+</section>
+<section id="problem-1c">
+<h3>Problem 1c<a class="headerlink" href="#problem-1c" title="Link to this heading">#</a></h3>
+<p>One nice property of the Polya-gamma distribution is that it is closed under exponential tilting,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+e^{-\frac{1}{2} \omega c^2} \mathrm{PG}(\omega; b, 0) &amp;\propto \mathrm{PG}(\omega; b, c).
+\end{align*}\]</div>
+<p>(Again, <span class="math notranslate nohighlight">\(\mathrm{PG}(\omega; b, c)\)</span> denotes the Polya-gamma pdf.)</p>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(\omega \mid y, X, \beta)\)</span>.</p>
+</section>
+<section id="problem-1d">
+<h3>Problem 1d<a class="headerlink" href="#problem-1d" title="Link to this heading">#</a></h3>
+<p>Implement a Gibbs sampling algorithm to sample the posterior distribution of the augmented model, <span class="math notranslate nohighlight">\(p(\beta, \omega \mid y, X)\)</span>. As described in the course notes, Gibbs sampling is a type of MCMC algorithm in which we iteratively draw samples from the conditional distributions. Here, the algorithm is,</p>
+<blockquote>
+<div><p><strong>Input:</strong> Initial weights <span class="math notranslate nohighlight">\(\beta^{(0)}\)</span>, responses <span class="math notranslate nohighlight">\(y\)</span>, and covariates <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p><strong>For</strong> <span class="math notranslate nohighlight">\(t=1,\ldots, T\)</span></p>
+<ol class="arabic simple">
+<li><p>Sample <span class="math notranslate nohighlight">\(\omega^{(t)} \sim p(\omega \mid \beta^{(t-1)}, y, X)\)</span></p></li>
+<li><p>Sample <span class="math notranslate nohighlight">\(\beta^{(t)} \sim p(\beta \mid y, X, \omega^{(t)})\)</span></p></li>
+<li><p>Compute log probability <span class="math notranslate nohighlight">\(\ell^{(t)} = \log p(y, \beta \mid X)\)</span></p></li>
+</ol>
+<p><strong>Return</strong> samples <span class="math notranslate nohighlight">\(\{\beta^{(t)}\}_{t=1}^T\)</span> and log probabilities <span class="math notranslate nohighlight">\(\{\ell^{(t)}\}_{t=1}^T\)</span>.</p>
+</div></blockquote>
+<p>Implement that algorithm.</p>
+</section>
+<section id="problem-1e-posterior-analysis">
+<h3>Problem 1e: Posterior analysis<a class="headerlink" href="#problem-1e-posterior-analysis" title="Link to this heading">#</a></h3>
+<p>Run your algorithm and <strong>make the following plots</strong>:</p>
+<ol class="arabic simple">
+<li><p>A trace of the log joint probability <span class="math notranslate nohighlight">\(p(y, \beta \mid X)\)</span> across MCMC iterations (i.e., samples of <span class="math notranslate nohighlight">\(\beta\)</span>).</p></li>
+<li><p>A trace of the sampled values of <span class="math notranslate nohighlight">\(\beta_j\)</span> across MCMC iterations. You can plot all the line plots for <span class="math notranslate nohighlight">\(j=1,\ldots,p\)</span> on one plot, rather than making a bunch of subplots.</p></li>
+<li><p>A box-and-whiskers plot of sampled values of <span class="math notranslate nohighlight">\(\beta_j\)</span> for the covariates <span class="math notranslate nohighlight">\(j=1,\ldots,p\)</span>.</p></li>
+<li><p>Discard the first 20 samples of your MCMC algorithm and use the remaining samples to approximate the posterior expectation <span class="math notranslate nohighlight">\(\mathbb{E}[\sigma(x_i^\top \beta)]\)</span> for each county <span class="math notranslate nohighlight">\(i\)</span>. Plot the predictions using the <code class="docutils literal notranslate"><span class="pre">plot_counties</span></code> function given above.</p></li>
+</ol>
+<p>Remember to label your axes!</p>
+<p><strong>Discuss</strong>: How much posterior uncertainty do you find in <span class="math notranslate nohighlight">\(\beta\)</span>? Why does your result make sense?</p>
+</section>
+</section>
+<section id="part-2-model-checking">
+<h2>Part 2: Model Checking<a class="headerlink" href="#part-2-model-checking" title="Link to this heading">#</a></h2>
+<p>Building a model and running an inference algorithm are just the first steps of an applied statistical analysis. Now we need to check the model and see if it offers a good fit to the data. With exponential family GLMs like this one, it’s a good idea to check the deviance residuals</p>
+<section id="problem-2a-binomial-deviance-residuals">
+<h3>Problem 2a: Binomial deviance residuals<a class="headerlink" href="#problem-2a-binomial-deviance-residuals" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Write the binomial pmf, <span class="math notranslate nohighlight">\(\mathrm{Bin}(y; N, \pi)\)</span>, in exponential family form.</p></li>
+<li><p>Derive a closed form expression for the KL divergence between two binomial distributions (with the same total count <span class="math notranslate nohighlight">\(N\)</span> but different probabilities <span class="math notranslate nohighlight">\(\pi\)</span>) in terms of the natural parameters.</p></li>
+<li><p>Write the KL divergence in terms of the mean parameters.</p></li>
+<li><p>Derive a closed form expression for the deviance residuals between a observed value <span class="math notranslate nohighlight">\(y\)</span> and a a predicted value <span class="math notranslate nohighlight">\(\hat{y} = N \pi\)</span> in terms of the mean parameters.</p></li>
+</ol>
+</section>
+<section id="problem-2b-residual-analysis">
+<h3>Problem 2b: Residual analysis<a class="headerlink" href="#problem-2b-residual-analysis" title="Link to this heading">#</a></h3>
+<p>Using the posterior mean of <span class="math notranslate nohighlight">\(\beta\)</span> approximated with samples of your Markov chain, compute the deviance residuals between the observed vote counts and the expected counts.</p>
+<ol class="arabic simple">
+<li><p><strong>Plot:</strong> a histogram of the deviance residuals (across all years and counties).</p></li>
+<li><p><strong>Discuss:</strong> Do the deviance residuals look marginally distributed like a standard normal? If not, discuss why that could be the case.</p></li>
+<li><p><strong>Plot:</strong> a scatter plot of deviance residuals for all pairs of election years (you should organize the subplots in a grid). Do you see correlations in the residuals across years?</p></li>
+</ol>
+</section>
+</section>
+<section id="part-3-generalized-linear-mixed-modeling">
+<h2>Part 3: Generalized Linear Mixed Modeling<a class="headerlink" href="#part-3-generalized-linear-mixed-modeling" title="Link to this heading">#</a></h2>
+<p>According to the model above, the responses (and residuals) should be conditionally independent across counties and election years given the covariates and weights. Correlated residuals can arise from unmodeled factors of variation. For example, perhaps there is some feature of counties that would explain their voting tendencies, but which was not captured in the demographic covariates above. Maybe some geographic regions tend to vote for Democrats or Republicans, even though other regions with similar demographics vote differently.</p>
+<p><strong>Generalized linear <em>mixed</em> models (GLMMs)</strong> try to capture those unmeasured factors of variation using latent variables. Since we have multiple election years of data for each county, we might expect to be able to model and estimate the correlation in voting tendencies across counties.</p>
+<p>For this problem, you will develop a Bayesian inference algorithm for the following model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+y_{i,k} &amp;\sim \mathrm{Bin}(N_{i,k}, \sigma(a_{i,k}))
+&amp; \text{for } &amp;i=1,\ldots,n; \, k=1,\ldots,m
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a_{i,k} &amp;= x_i^\top \beta + z_i \gamma_k.
+\end{align*}\]</div>
+<p>Assume the following priors,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\beta &amp;\sim \mathrm{N}(0, I) \\
+z_i &amp;\sim \mathrm{N}(0, 1) &amp; \text{for } &amp;i=1,\ldots,n \\
+\gamma_k &amp;\sim \mathrm{N}(0, 1) &amp; \text{for } &amp;k=1,\ldots,m \\
+\end{align*}\]</div>
+<p>This model adds the following components:</p>
+<ul class="simple">
+<li><p>a per-county <strong>latent variable</strong> <span class="math notranslate nohighlight">\(z_i \in \mathbb{R}\)</span></p></li>
+<li><p>a per-year <strong>random effect</strong> <span class="math notranslate nohighlight">\(\gamma_k \in \mathbb{R}\)</span></p></li>
+</ul>
+<p>Note that while <span class="math notranslate nohighlight">\(y_{i,k}\)</span> and <span class="math notranslate nohighlight">\(y_{i',k}\)</span> are <em>conditionally independent</em> given the parameters, covariates, and latent variables of the model, they are <em>marginally dependent</em> when we integrate over latent variables. Thus, this model is better suited to capture the county-to-county correlations indicated by the residual analyses above.</p>
+<p>Finally, as above, we can use Polya-gamma augmentation to implement a Gibbs sampler for this model.</p>
+<section id="problem-3a">
+<h3>Problem 3a<a class="headerlink" href="#problem-3a" title="Link to this heading">#</a></h3>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(\beta \mid y, X, z, \gamma, \omega)\)</span> where <span class="math notranslate nohighlight">\(\omega\)</span> are PG augmentation variables.</p>
+</section>
+<section id="problem-3b">
+<h3>Problem 3b<a class="headerlink" href="#problem-3b" title="Link to this heading">#</a></h3>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(z \mid y, X, \beta, \gamma, \omega)\)</span> where <span class="math notranslate nohighlight">\(\omega\)</span> are PG augmentation variables.</p>
+</section>
+<section id="problem-3c">
+<h3>Problem 3c<a class="headerlink" href="#problem-3c" title="Link to this heading">#</a></h3>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(\gamma \mid y, X, \beta, z, \omega)\)</span> where <span class="math notranslate nohighlight">\(\omega\)</span> are PG augmentation variables.</p>
+</section>
+<section id="problem-3d">
+<h3>Problem 3d<a class="headerlink" href="#problem-3d" title="Link to this heading">#</a></h3>
+<p>Implement a Gibbs sampler for this binomial generalized linear mixed model using PG augmentation. Run the sampler and make the following plots:</p>
+<ol class="arabic simple">
+<li><p>A trace of the log joint probability</p></li>
+<li><p>A trace of the samples of <span class="math notranslate nohighlight">\(\beta\)</span>.</p></li>
+<li><p>A box-and-whiskers plot of the samples of <span class="math notranslate nohighlight">\(\beta\)</span></p></li>
+</ol>
+</section>
+<section id="problem-3e">
+<h3>Problem 3e<a class="headerlink" href="#problem-3e" title="Link to this heading">#</a></h3>
+<p>Plot the deviance residuals like you did in Problem 2b, now using your last MCMC sample of the parameters, latent variables, and random effects. Compared to your results from Problem 2b, is the model improving?</p>
+</section>
+<section id="problem-3f">
+<h3>Problem 3f<a class="headerlink" href="#problem-3f" title="Link to this heading">#</a></h3>
+<p>Visualize the last MCMC sample of the latent variables <span class="math notranslate nohighlight">\(z\)</span> using the <code class="docutils literal notranslate"><span class="pre">plot_counties</span></code> function. Likewise, plot the last sample of the random effects <span class="math notranslate nohighlight">\(\gamma\)</span>. Can you spectulate what type of unmodeled feature this latent variable is capturing?</p>
+<p>Looks like rust belt is getting more red and the coastal elites are getting more blue!</p>
+</section>
+</section>
+<section id="part-4-reflection">
+<h2>Part 4: Reflection<a class="headerlink" href="#part-4-reflection" title="Link to this heading">#</a></h2>
+<p>You just went through two iterations of what some call <em>Box’s Loop</em> <span id="id3">[<a class="reference internal" href="../../lectures/99_references.html#id14" title="David M Blei. Build, compute, critique, repeat: Data analysis with latent variable models. Annual Review of Statistics and Its Application, 1:203–232, 2014.">Ble14</a>]</span>: you extracted relevant features from a real world dataset, built an initial model, implemented and ran a Bayesian inference algorithm, inspected the posterior, critiqued the model and revised it accordingly, and then repeated the process. In actual applied statistics problems, we often repeat this process many times as we hone our models and improve our algorithms.</p>
+<section id="problem-4a">
+<h3>Problem 4a<a class="headerlink" href="#problem-4a" title="Link to this heading">#</a></h3>
+<p>If you were to further refine this model, what change would you make next? Why? How do you hypothesize it would alter your results?</p>
+</section>
+</section>
+<section id="submission-instructions">
+<h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Link to this heading">#</a></h2>
+<p><strong>Formatting:</strong> check that your code does not exceed 80 characters in line width. You can set <em>Tools → Settings → Editor → Vertical ruler column</em> to 80 to see when you’ve exceeded the limit.</p>
+<p><strong>Converting to PDF</strong> The simplest way to convert to PDF is to use the “Print to PDF” option in your browser. Just make sure that your code and plots aren’t cut off, as it may not wrap lines.</p>
+<p><strong>Alternatively</strong> You can download your notebook in .ipynb format and use the following commands to convert it to PDF.  Then run the following command to convert to a PDF:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">nbconvert</span> <span class="o">--</span><span class="n">to</span> <span class="n">pdf</span> <span class="o">&lt;</span><span class="n">yourlastname</span><span class="o">&gt;</span><span class="n">_hw</span><span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;.</span><span class="n">ipynb</span>
+</pre></div>
+</div>
+<p>(Note that for the above code to work, you need to rename your file <code class="docutils literal notranslate"><span class="pre">&lt;yourlastname&gt;_hw&lt;number&gt;.ipynb</span></code>)</p>
+<p><strong>Installing nbconvert:</strong></p>
+<p>If you’re using Anaconda for package management,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">anaconda</span> <span class="n">nbconvert</span>
+</pre></div>
+</div>
+<p><strong>Upload</strong> your .pdf file to Gradescope. Please tag your questions correctly! I.e., for each question, all of and only the relevant sections are tagged.</p>
+<p>Please post on Ed or come to OH if there are any other problems submitting the HW.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./assignments/hw2"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../hw1/hw1.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">HW1: Logistic Regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../lectures/99_references.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-vote-data">Load the vote data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-demographic-data">Load the demographic data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-plotting">Helper function for plotting</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0a">Problem 0a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0b-one-hot-encodings">Problem 0b: One-hot encodings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0c-other-covariates">Problem 0c: Other covariates</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation">Part 1: Bayesian Inference in a Binomial GLM via Polya-gamma augmentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a">Problem 1a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b">Problem 1b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c">Problem 1c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d">Problem 1d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1e-posterior-analysis">Problem 1e: Posterior analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-model-checking">Part 2: Model Checking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-binomial-deviance-residuals">Problem 2a: Binomial deviance residuals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-residual-analysis">Problem 2b: Residual analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-generalized-linear-mixed-modeling">Part 3: Generalized Linear Mixed Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3a">Problem 3a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3b">Problem 3b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3c">Problem 3c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3d">Problem 3d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3e">Problem 3e</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3f">Problem 3f</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-reflection">Part 4: Reflection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4a">Problem 4a</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
