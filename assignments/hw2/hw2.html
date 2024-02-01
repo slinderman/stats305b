@@ -470,7 +470,7 @@ document.write(`
 <p><strong>Note</strong>: Broomfield County CO (FIPS code 08014) did not exist in 2000</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">votes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;votes.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">votes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/assignments/hw2/votes.csv&quot;</span><span class="p">)</span>
 <span class="n">votes</span><span class="o">.</span><span class="n">fips</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">votes</span>
 </pre></div>
@@ -650,7 +650,7 @@ document.write(`
 <p>We also have county-level demographic data for all counties except those in Alaska. The data was collected in 2018. The fields of the table are described <a class="reference external" href="https://github.com/MEDSL/2018-elections-unoffical/blob/master/election-context-2018.md">here</a>. Note that each county has a matching FIPS code, again represented as a five digit string.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;demographics.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/assignments/hw2/demographics.csv&quot;</span><span class="p">)</span>
 <span class="n">demo</span><span class="o">.</span><span class="n">fips</span> <span class="o">=</span> <span class="n">demo</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">demo</span>
 </pre></div>
