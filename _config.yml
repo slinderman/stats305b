@@ -9,6 +9,7 @@ execute:
     - '01_distributions.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
+    - 'hw2_solutions.ipynb'
     - 'hw3.ipynb'
     - 'hw4.ipynb'
     - '07_bayes_glms.ipynb'
