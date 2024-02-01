@@ -6,3 +6,4 @@ jupyter-book
 matplotlib
 seaborn
 fastprogress
+sphinx_proof

@@ -344,7 +344,23 @@ This is called the *Metropolis algorithm* and it has close connections to *simul
 
 ## Gibbs Sampling
 
-Gibbs is a special case of MH with proposals that always accept. Gibbs sampling updates one "coordinate" of $\theta$ at a time by sampling from its conditional distribution. Think of this as a proposal distribution. Suppose $\theta \in \reals^D$. For each coordinate $d \in 1,\ldots,D$,
+Gibbs is a special case of MH with proposals that always accept. Gibbs sampling updates one "coordinate" of $\theta \in \reals^D$ at a time by sampling from its conditional distribution. The algorithm is:
+
+```{prf:algorithm} Gibbs Sampling
+:label: gibbs_sampling
+
+**Input:** Initial parameters $\theta^{(0)}$, observations $x$
+
+- **For** $t=1,\ldots, T$
+
+    - **For** $d=1,\ldots, D$
+
+        - Sample $\theta_d^{(t)} \sim p(\theta_d \mid \theta_{1}^{(t)}, \ldots, \theta_{d-}^{(t)}, \theta_{d+1}^{(t-1)}, \ldots, \theta_D^{(t-1)}, x)$
+
+**Return** samples $\{\theta^{(t)}\}_{t=1}^T$ 
+```
+
+You can think of Gibbs as cycling through $D$ Metropolis-Hastings proposals, one for each coordinate $d \in 1,\ldots,D$,
 \begin{align*}
 q_d(\theta \mid \theta') = p(\theta_d \mid \theta'_{\neg d}, x) \, \delta_{\theta'_{\neg d}}(\theta_{\neg d}),
 \end{align*}
