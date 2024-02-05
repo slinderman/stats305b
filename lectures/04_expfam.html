@@ -840,12 +840,12 @@ A(\eta_q)
 <p>The same form generalizes to other exponential families as well, with the <strong>deviance residual</strong> between the true and estimated mean parameters defined as,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-r_{\mathsf{D}}(\mu, \hat{\mu}) &amp;= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\mu}{\hat{\mu}}}.
+r_{\mathsf{D}}(\hat{\mu}, \mu) &amp;= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\hat{\mu}}{\mu}}.
 \end{align*}\]</div>
 <p>One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-r_{\mathsf{P}}(\mu, \hat{\mu}) &amp;= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \hat{\mu}]}}.
+r_{\mathsf{P}}(\hat{\mu}, \mu) &amp;= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \hat{\mu}]}}.
 \end{align*}\]</div>
 <p>For more on deviance residuals, see <span id="id2">Efron [<a class="reference internal" href="99_references.html#id11" title="Bradley Efron. Exponential families in theory and practice. Cambridge University Press, 2022.">Efr22</a>]</span>, ch. 1.</p>
 </section>
