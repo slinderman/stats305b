@@ -430,11 +430,11 @@ where we have used the shorthand notation
 
 The same form generalizes to other exponential families as well, with the **deviance residual** between the true and estimated mean parameters defined as,
 \begin{align*}
-r_{\mathsf{D}}(\mu, \hat{\mu}) &= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\mu}{\hat{\mu}}}.
+r_{\mathsf{D}}(\hat{\mu}, \mu) &= \mathrm{sign}(\hat{\mu} - \mu) \sqrt{2 \KL{\hat{\mu}}{\mu}}.
 \end{align*}
 One can show that deviance residuals tend to be closer to normal than the more obvious Pearson residuals, 
 \begin{align*}
-r_{\mathsf{P}}(\mu, \hat{\mu}) &= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \hat{\mu}]}}.
+r_{\mathsf{P}}(\hat{\mu}, \mu) &= \frac{\hat{\mu} - \mu}{\sqrt{\Var[t(Y); \hat{\mu}]}}.
 \end{align*}
 For more on deviance residuals, see {cite:t}`efron2022exponential`, ch. 1.
 
