@@ -162,7 +162,7 @@ If we run gradient descent with a constant step size of $\alpha = 1/L$, then the
 \end{align*}
 where $\mbbeta_0$ is the initial setting of the parameters and $\mbbeta^\star$ is the global optimum. 
 
-Put differently, if we want a gap of at most epsilon, we need to run $t \sim (1/\epsilon$ iterations of gradient descent. Put differently, if we want to reduce $\epsilon$ by a factor of 100, we need to run around 100 times as many iterations. This is called a **sub-linear convergence** rate.
+Put differently, if we want a gap of at most epsilon, we need to run $t \sim \cO(1/\epsilon)$ iterations of gradient descent. Put differently, if we want to reduce $\epsilon$ by a factor of 100, we need to run around 100 times as many iterations. This is called a **sub-linear convergence** rate.
 
 ## Pathologies in the Separable Regime
 
