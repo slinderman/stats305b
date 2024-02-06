@@ -71,7 +71,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/07_bayes_glms_soln';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="next" title="Sparse GLMs" href="08_sparse_glms.html" />
     <link rel="prev" title="Bayesian Inference" href="06_bayes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -190,6 +190,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_sparse_glms.html">Sparse GLMs</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -875,8 +876,8 @@ p(y, \beta \mid X)
 &amp;= \mathrm{N}(\beta \mid 0, \gamma^{-1} I) \prod_{i=1}^n \mathrm{St}(y_i \mid \beta^\top x_i, \sigma_0^2, \nu)
 \end{align*}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathrm{St}(\mu, \sigma_0^2, \nu)\)</span> denotes the <strong>Students’ t distribution</strong> with mean <span class="math notranslate nohighlight">\(\mu\)</span>, scale <span class="math notranslate nohighlight">\(\sigma_0\)</span>, and <span class="math notranslate nohighlight">\(\nu\)</span> degrees of freedom. Its density is,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-e83b1352-eab9-4e40-b741-e1649c01e573">
-<span class="eqno">(2)<a class="headerlink" href="#equation-e83b1352-eab9-4e40-b741-e1649c01e573" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-379c996f-f2e1-4f0b-86f3-1168982ed2f9">
+<span class="eqno">(2)<a class="headerlink" href="#equation-379c996f-f2e1-4f0b-86f3-1168982ed2f9" title="Permalink to this equation">#</a></span>\[\begin{align}
     \mathrm{St}(y; \mu, \sigma_0^2, \nu)
     &amp;= \frac{\Gamma(\tfrac{\nu + 1}{2})}{\Gamma(\tfrac{\nu}{2})} \frac{1}{\sqrt{\pi \nu \sigma_0^2}} \left[1 + \frac{\Delta^2}{\nu} \right]^{-\tfrac{\nu + 1}{2}}
 \end{align}\]</div>
@@ -887,8 +888,8 @@ Its mean is <span class="math notranslate nohighlight">\(\mu\)</span> and its va
 <section id="student-s-t-as-a-scale-mixture-of-gaussians">
 <h3>Student’s t as a scale-mixture of Gaussians<a class="headerlink" href="#student-s-t-as-a-scale-mixture-of-gaussians" title="Link to this heading">#</a></h3>
 <p>However, here’s a <strong>nifty trick</strong>! The Student’s t density can be written as a scale-mixture of Gaussians,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-598adbef-0411-4591-ba1f-f245dcc8476d">
-<span class="eqno">(3)<a class="headerlink" href="#equation-598adbef-0411-4591-ba1f-f245dcc8476d" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-973d8ff5-5056-494b-8828-3e492c6a551b">
+<span class="eqno">(3)<a class="headerlink" href="#equation-973d8ff5-5056-494b-8828-3e492c6a551b" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{St}\left(y; \mu, \sigma_0^2, \nu \right)
 &amp;= \int \mathrm{IGa}(\sigma \mid \tfrac{\nu}{2}, \tfrac{\nu \sigma_0^2}{2}) \, \mathrm{N}(y \mid \mu, \sigma^2) \, \mathrm{d} \sigma^2
 \end{align}\]</div>
@@ -1276,8 +1277,8 @@ p(y_i \mid x_i, \beta)
 &amp;= \int_{-\infty}^\infty p(y_i \mid z_i) \, \mathrm{N}(z_i \mid \beta^\top x_i, 1) \, \mathrm{d} z_i
 \end{align*}\]</div>
 <p>where</p>
-<div class="amsmath math notranslate nohighlight" id="equation-38279385-e06a-487d-aac8-a98574569daa">
-<span class="eqno">(4)<a class="headerlink" href="#equation-38279385-e06a-487d-aac8-a98574569daa" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-a92a7e8d-8516-48f1-aa70-5d5c1bcea09d">
+<span class="eqno">(4)<a class="headerlink" href="#equation-a92a7e8d-8516-48f1-aa70-5d5c1bcea09d" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(y_i \mid z_i) &amp;=
     \begin{cases}
     \delta_1(y_i) &amp; \text{if } z_i &gt; 0\\
@@ -1383,11 +1384,11 @@ y_i &amp;= \mathbb{I}[z_i &gt; 0].
       </div>
     </a>
     <a class="right-next"
-       href="../assignments/hw0/hw0.html"
+       href="08_sparse_glms.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">HW0: PyTorch Primer</p>
+        <p class="prev-next-title">Sparse GLMs</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

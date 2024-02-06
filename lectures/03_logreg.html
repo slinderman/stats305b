@@ -190,6 +190,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_sparse_glms.html">Sparse GLMs</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -554,7 +555,7 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 \cL(\mbbeta^\star) - \cL(\mbbeta_t) \leq \frac{L}{t} \|\mbbeta^\star - \mbbeta_0\|_2^2,
 \end{align*}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mbbeta_0\)</span> is the initial setting of the parameters and <span class="math notranslate nohighlight">\(\mbbeta^\star\)</span> is the global optimum.</p>
-<p>Put differently, if we want a gap of at most epsilon, we need to run <span class="math notranslate nohighlight">\(t \sim (1/\epsilon\)</span> iterations of gradient descent. Put differently, if we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we need to run around 100 times as many iterations. This is called a <strong>sub-linear convergence</strong> rate.</p>
+<p>Put differently, if we want a gap of at most epsilon, we need to run <span class="math notranslate nohighlight">\(t \sim \cO(1/\epsilon)\)</span> iterations of gradient descent. Put differently, if we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we need to run around 100 times as many iterations. This is called a <strong>sub-linear convergence</strong> rate.</p>
 </section>
 <section id="pathologies-in-the-separable-regime">
 <h2>Pathologies in the Separable Regime<a class="headerlink" href="#pathologies-in-the-separable-regime" title="Link to this heading">#</a></h2>

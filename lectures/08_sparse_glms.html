@@ -1,0 +1,782 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sparse GLMs &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/08_sparse_glms';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Bayesian GLMs" href="07_bayes_glms_soln.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Sparse GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/08_sparse_glms.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Sparse GLMs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lasso-regression">Lasso Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-gradient-descent">Proximal Gradient Descent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-mapping">Proximal Mapping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm">Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-gradient-descent-for-lasso-regression">Proximal Gradient Descent for Lasso Regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Proximal Mapping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterative-soft-thresholding-algorithm">Iterative Soft-Thresholding Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence">Convergence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-newton-method">Proximal Newton Method</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-newton-with-ell-1-regularization">Proximal Newton with <span class="math notranslate nohighlight">\(\ell_1\)</span> Regularization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplifications-for-glms">Simplifications for GLMs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="sparse-glms">
+<h1>Sparse GLMs<a class="headerlink" href="#sparse-glms" title="Link to this heading">#</a></h1>
+<p>One reason we like linear and generalized linear models is that the parameters are readily interpretable. The parameter <span class="math notranslate nohighlight">\(\beta_j\)</span> relates changes in covariate <span class="math notranslate nohighlight">\(x_j\)</span> to changes in the natural parameter of the response distribution. One common application of such models is for <em>variable selection</em>, finding a subset of covariates that are most predictive of the response. To that end, we would like our estimates, <span class="math notranslate nohighlight">\(\hat{\mbbeta}\)</span>, to be <em>sparse</em>. When we have a vast number covariates — as in genome-wide association studies (GWAS) where we aim to predict a trait given thousands of single nucleotide polymorphisms (SNPs) in the genome — sparse solutions help focus our attention on the most relevant covariates.</p>
+<section id="lasso-regression">
+<h2>Lasso Regression<a class="headerlink" href="#lasso-regression" title="Link to this heading">#</a></h2>
+<p>The Lasso yields sparse solutions for linear models by solving an <span class="math notranslate nohighlight">\(\ell_1\)</span> regularized linear regression problem. The goal is to minimize,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta) 
+&amp;= \frac{1}{2} \|\mby - \mbX \mbbeta\|_2^2 + \lambda \|\mbbeta\|_1 \\
+&amp;= \frac{1}{2} \sum_{i=1}^n (y_i - \mbx_i^\top \mbbeta)^2 + \lambda \sum_{j=1}^p |\beta_j|.
+\end{align*}\]</div>
+<p>This is a convex objective function!</p>
+<p>It’s tempting to just use vanilla gradient descent to find the minimizer,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta^{(t+1)} &amp;\leftarrow \mbbeta^{(t)} - \alpha_t \nabla \cL(\mbbeta^{(t)}),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha_t \in \reals_+\)</span> is the step size at iteration <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>One way to think about this update is as the solution to a quadratic minimization problem,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta^{(t+1)} &amp;\leftarrow 
+\arg \min_{\mbz} \cL(\mbbeta^{(t)}) + \nabla \cL(\mbbeta^{(t)})^\top (\mbz - \mbbeta^{(t)}) + \frac{1}{2 \alpha_t} \| \mbz - \mbbeta^{(t)}\|_2^2
+\end{align*}\]</div>
+<p>We can think of the surrogate problem as a second order approximation of the objective in which the Hessian is replaced with <span class="math notranslate nohighlight">\(\frac{1}{\alpha_t} \mbI\)</span>.</p>
+<p>The <span class="math notranslate nohighlight">\(\cO(1/\epsilon)\)</span> convergence rate we discussed for gradient descent in the context of <a class="reference internal" href="03_logreg.html"><span class="std std-doc">logistic regression</span></a> applied to <span class="math notranslate nohighlight">\(L\)</span>-smooth functions; i.e., functions that are continuously differentiable with <span class="math notranslate nohighlight">\(L\)</span>-Lipschitz gradients. (For twice differentiable objective functions, the Lipschitz condition is equivalent to an upper bound on the eigenvalues of the Hessian.)</p>
+<p>Unfortunately, the Lasso objective it is not continuously differentiable: the <strong>gradient at <span class="math notranslate nohighlight">\(\beta_j=0\)</span> is discontinuous</strong> due to the absolute value in the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm. We could instead use <em>subgradient</em> descent, where we take a step in the direction of any subgradient of <span class="math notranslate nohighlight">\(\cL\)</span>, but that approach tends to be much slower, with convergence rates of only <span class="math notranslate nohighlight">\(\cO(1/\epsilon^2)\)</span>. Thankfully, we can do much better than that for the Lasso using proximal gradient descent!</p>
+</section>
+<section id="proximal-gradient-descent">
+<h2>Proximal Gradient Descent<a class="headerlink" href="#proximal-gradient-descent" title="Link to this heading">#</a></h2>
+<p>Proximal gradient descent is an optimization algorithm for convex objectives that decompose into a differentiable part and a non-differentiable part,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta) &amp;= \cL_{\mathsf{d}}(\mbbeta) + \cL_{\mathsf{nd}}(\mbbeta)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\cL_{\mathsf{d}}\)</span> is convex and <em>differentiable</em>, whereas <span class="math notranslate nohighlight">\(\cL_{\mathsf{nd}}\)</span> is convex but <em>not differentiable</em>.</p>
+<p>The idea is to stick as close to vanilla gradient descent as possible, while correcting for the non-differentiable part of the objective. To that end, let’s apply the quadratic approximation logic to just the differentiable part so that our update becomes,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta^{(t+1)} &amp;\leftarrow 
+\arg \min_{\mbz} \cL_{\mathsf{d}}(\mbbeta^{(t)}) + \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})^\top (\mbz - \mbbeta^{(t)}) + \frac{1}{2 \alpha_t} \| \mbz - \mbbeta^{(t)}\|_2^2 + \cL_{\mathsf{nd}}(\mbbeta^{(t)}) \\
+&amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - (\mbbeta^{(t)} - \alpha_t \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})) \|_2^2 + \cL_{\mathsf{nd}}(\mbz) \\
+\end{align*}\]</div>
+<p>The resulting update balances two parts:</p>
+<ol class="arabic simple">
+<li><p>Stay close to the vanilla gradient descent update, <span class="math notranslate nohighlight">\(\mbbeta^{(t)} - \alpha_t \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})\)</span>.</p></li>
+<li><p>Also minimize the non-differentiable part of the objective, <span class="math notranslate nohighlight">\(\cL_{\mathsf{nd}}(\mbbeta^{(t)})\)</span>.</p></li>
+</ol>
+<p>As a sanity check, note that we recover vanilla gradient descent with <span class="math notranslate nohighlight">\(\cL_{\mathsf{nd}}(\mbbeta^{(t)}) = 0\)</span>.</p>
+<section id="proximal-mapping">
+<h3>Proximal Mapping<a class="headerlink" href="#proximal-mapping" title="Link to this heading">#</a></h3>
+<p>We call the function,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-aa634e90-729e-46cc-9bfc-14acd34940b4">
+<span class="eqno">(5)<a class="headerlink" href="#equation-aa634e90-729e-46cc-9bfc-14acd34940b4" title="Permalink to this equation">#</a></span>\[\begin{align}
+\mathrm{prox}(\mbu; \alpha_t) 
+&amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \cL_{\mathsf{nd}}(\mbz)
+\end{align}\]</div>
+<p>the <strong>proximal mapping</strong>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Notes</p>
+<ul class="simple">
+<li><p>The proximal mapping depends on the form of the non-differentiable part of the objective, even though we have suppressed that in the notation.</p></li>
+<li><p>However, it does <em>not</em> depend on the form of the continuous part of the objective.</p></li>
+</ul>
+</div>
+</section>
+<section id="algorithm">
+<h3>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading">#</a></h3>
+<p>With this definition, the proximal gradient descent algorithm is,</p>
+<div class="proof algorithm admonition" id="prox_grad">
+<p class="admonition-title"><span class="caption-number">Algorithm 2 </span> (Proximal Gradient Descent)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Input:</strong> Initial parameters <span class="math notranslate nohighlight">\(\mbbeta^{(0)}\)</span>, proximal mapping <span class="math notranslate nohighlight">\(\mathrm{prox}(\cdot; \cdot)\)</span>.</p>
+<ul class="simple">
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(t=1,\ldots, T\)</span></p>
+<ul>
+<li><p>Set <span class="math notranslate nohighlight">\(\mbbeta^{(t)} \leftarrow \mathrm{prox}(\mbbeta^{(t-1)} - \alpha_t \nabla \cL_{\mathsf{d}}(\mbbeta^{(t-1)}); \alpha_t)\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Return</strong> <span class="math notranslate nohighlight">\(\mbbeta^{(T)}\)</span>.</p>
+</section>
+</div><p>So far, it’s not obvious that this framing is helpful. We still have a potentially challenging optimization problem to solve in computing the proximal mapping. However, for many problems of interest, the proximal mapping has simpled closed solutions.</p>
+</section>
+<section id="proximal-gradient-descent-for-lasso-regression">
+<h3>Proximal Gradient Descent for Lasso Regression<a class="headerlink" href="#proximal-gradient-descent-for-lasso-regression" title="Link to this heading">#</a></h3>
+<p>Consider the Lasso problem. The objective decomposes into convex differentiable and non-differentiable parts,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL_{\mathsf{d}}(\mbbeta) &amp;= \frac{1}{2} \|\mby - \mbX \mbbeta\|_2^2 \\
+\cL_{\mathsf{nd}}(\mbbeta) &amp;= \lambda \|\mbbeta\|_1.
+\end{align*}\]</div>
+</section>
+<section id="id1">
+<h3>Proximal Mapping<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>The proximal mapping is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{prox}(\mbu; \alpha_t) 
+&amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \lambda \|\mbz\|_1 \\
+&amp;= \arg \min_{\mbz} \sum_{j=1}^p  \frac{1}{2 \alpha_t} (z_j - u_j)^2 + \lambda |z_j| 
+\end{align*}\]</div>
+<p>It separates into optimization problems for each coordinate!</p>
+<p>Isolate one coordinate and consider the case where <span class="math notranslate nohighlight">\(z_j &gt; 0\)</span>. Completing the square yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+f(z_j) 
+&amp;= \frac{1}{2 \alpha_t} (z_j - u_j)^2 + \lambda z_j  \\
+&amp;= \frac{1}{2 \alpha_t} z_j^2 - (\frac{u_j}{\alpha_t} - \lambda) z_j + \mathrm{const}\\
+&amp;= \frac{1}{2 \alpha_t} (z_j - (u_j - \alpha_t \lambda))^2 + \mathrm{const}
+\end{align*}\]</div>
+<p>which is minimized at <span class="math notranslate nohighlight">\(z_j = \max\{0, u_j - \alpha_t \lambda \}\)</span>. The same logic applied to the case where <span class="math notranslate nohighlight">\(z_j \leq 0\)</span> yields, <span class="math notranslate nohighlight">\(z_j = \min\{0, u_j + \alpha_t \lambda \}\)</span>. Combined, we have that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+[\mathrm{prox}(\mbu; \alpha_t)]_j 
+&amp;= \begin{cases}
+u_j - \alpha_t \lambda &amp; \text{if } u_j &gt; \alpha_t \lambda \\
+0 &amp;\text{if } |u_j| &lt; \alpha_t \lambda \\
+u_j + \alpha_t \lambda &amp;\text{if } u_j &lt; -\alpha_t \lambda
+\end{cases}
+\triangleq S_{\alpha_t \lambda}(u_j)
+\end{align*}\]</div>
+<p>This is called the <strong>soft-thresholding operator</strong>. (Plot it!)</p>
+</section>
+<section id="iterative-soft-thresholding-algorithm">
+<h3>Iterative Soft-Thresholding Algorithm<a class="headerlink" href="#iterative-soft-thresholding-algorithm" title="Link to this heading">#</a></h3>
+<p>Now let’s plug in the gradient of the differentiable part,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla \cL_{\mathsf{d}}(\mbbeta) &amp;= \mbX^\top (\mby - \mbX \mbbeta).
+\end{align*}\]</div>
+<p>Substituting this into the proximal gradient descent algorithm yields what is sometimes called the <strong>iterative soft-thresholding algorithm (ISTA)</strong>,</p>
+<div class="proof algorithm admonition" id="ista">
+<p class="admonition-title"><span class="caption-number">Algorithm 3 </span> (Iterative Soft-Thresholding)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Input:</strong> Initial parameters <span class="math notranslate nohighlight">\(\mbbeta^{(0)}\)</span>, covariates <span class="math notranslate nohighlight">\(\mbX \in \reals^{n \times p}\)</span>, responses <span class="math notranslate nohighlight">\(\mby \in \reals^n\)</span></p>
+<ul class="simple">
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(t=1,\ldots, T\)</span></p>
+<ul>
+<li><p>Set <span class="math notranslate nohighlight">\(\mbbeta^{(t)} \leftarrow S_{\alpha_t \lambda}(\mbbeta^{(t-1)} - \alpha_t \mbX^\top (\mby - \mbX \mbbeta^{(t-1)}))\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Return</strong> <span class="math notranslate nohighlight">\(\mbbeta^{(T)}\)</span>.</p>
+</section>
+</div></section>
+<section id="convergence">
+<h3>Convergence<a class="headerlink" href="#convergence" title="Link to this heading">#</a></h3>
+<p>If <span class="math notranslate nohighlight">\(\nabla \cL_{\mathsf{d}}\)</span> is <span class="math notranslate nohighlight">\(L\)</span>-smooth then proximal gradient descent with fixed step size <span class="math notranslate nohighlight">\(\alpha_t = 1/L\)</span> then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+f(\mbbeta^{(t)}) - f(\mbbeta^\star) \leq \frac{L}{2 t} \|\mbbeta^{(0)} - \mbbeta^\star \|_2^2,
+\end{align*}\]</div>
+<p>so it matches the gradient descent convergence rate of <span class="math notranslate nohighlight">\(\cO(1/\epsilon)\)</span>. (With Nesterov’s accelerated gradient techniques, you can speed this up to <span class="math notranslate nohighlight">\(\cO(1/\sqrt{\epsilon})\)</span>.</p>
+<!-- 
+:::{admonition} Note about intercepts
+:class: warning
+Note that we have explicitly separated out the intercept in the objective since we typically don't include that term in the regularizer.
+::: -->
+</section>
+</section>
+<section id="proximal-newton-method">
+<h2>Proximal Newton Method<a class="headerlink" href="#proximal-newton-method" title="Link to this heading">#</a></h2>
+<p>One great thing about proximal gradient descent is its generality. We could easily apply it to <span class="math notranslate nohighlight">\(\ell_1\)</span> regularized GLMs, substituting the gradient of the negative log likelihood, which also has a simple closed form expression. The proximal operator remains the same, and we obtain the same converge rates as gradient descent on standard GLMs.</p>
+<p>However, we saw that Newton’s method yielded significantly faster convergence rates of <span class="math notranslate nohighlight">\(\cO(\log \log \frac{1}{\epsilon})\)</span>. Can we obtain similar performance for <span class="math notranslate nohighlight">\(\ell_1\)</span> regularized GLMs?</p>
+<p>To obtain a <strong>proximal Newton method</strong>, we proceed in the same fashion as above, but rather than approximating the second order term with <span class="math notranslate nohighlight">\(\alpha_t^{-1} \mbI\)</span>, we will use the Hessian of <span class="math notranslate nohighlight">\(\cL_{\mathsf{d}}\)</span>.  That leads to a proximal mapping of the form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{prox}(\mbu; \mbH_t) 
+&amp;= \arg \min_{\mbz} \frac{1}{2} \| \mbz - \mbu \|_{\mbH_t}^2 + \cL_{\mathsf{nd}}(\mbz)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\|\mbx \|_{\mbH_t}^2 = \mbx^\top \mbH_t \mbx\)</span> is a squared norm induced by the positive definite matrix <span class="math notranslate nohighlight">\(\mbH_t\)</span>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Note</p>
+<p>Note that proximal mapping for proximal gradient descent corresponds to the special case in which <span class="math notranslate nohighlight">\(\mbH_t = \frac{1}{\alpha_t} \mbI\)</span>.</p>
+</div>
+<p>Let <span class="math notranslate nohighlight">\(\mbg_t = \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})\)</span> and <span class="math notranslate nohighlight">\(\mbH_t = \nabla^2 \cL_{\mathsf{d}}(\mbbeta^{(t)})\)</span> denote the gradient and Hessian, respectively. The <em>undamped</em> proximal Newton update is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\mbbeta}^{(t+1)}
+&amp;\leftarrow \arg \min_{\mbz} \cL_{\mathsf{d}}(\mbbeta^{(t)}) + (\mbz - \mbbeta^{(t)})^\top \mbg_t + \frac{1}{2} (\mbz - \mbbeta^{(t)})^\top \mbH_t (\mbz - \mbbeta^{(t)}) + \cL_{\mathsf{nd}}(z) \\
+&amp;= \arg \min_{\mbz} \frac{1}{2} \| \mbz - (\mbbeta^{(t)} -  \mbH_t^{-1} \mbg_t)\|_{\mbH_t}^2 + \cL_{\mathsf{nd}}(\mbz)  \\
+&amp;= \mathrm{prox}(\mbbeta^{(t)} -  \mbH_t^{-1} \mbg_t; \mbH_t)
+\end{align*}\]</div>
+<p>As with Newton’s method, however, we often need to use damped updates,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta^{(t+1)} &amp;= \mbbeta^{(t)} + \alpha_t (\hat{\mbbeta}^{(t+1)} - \mbbeta^{(t)}),
+\end{align*}\]</div>
+<p>with step size <span class="math notranslate nohighlight">\(\alpha_t \in [0, 1]\)</span>.</p>
+<p>The challenge, as we will see below, is that solving the proximal Newton mapping can be more challenging.</p>
+</section>
+<section id="proximal-newton-with-ell-1-regularization">
+<h2>Proximal Newton with <span class="math notranslate nohighlight">\(\ell_1\)</span> Regularization<a class="headerlink" href="#proximal-newton-with-ell-1-regularization" title="Link to this heading">#</a></h2>
+<p>Let’s consider the proximal Newton mapping for <span class="math notranslate nohighlight">\(\ell_1\)</span> regularized GLMs, like logistic regression. Here, the non-differentiable part of the objective is <span class="math notranslate nohighlight">\(\cL_{\mathsf{nd}}(\mbbeta) = \lambda \|\mbbeta\|\)</span>. Unfortunately, the proximal Newton update no longer has a closed form solution because when we introduce the Hessian, the problem no longer separates across coordinates:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{prox}(\mbu; \mbH_t) 
+&amp;= \arg \min_{\mbz} \frac{1}{2} \| \mbz - \mbu \|_{\mbH_t}^2 + \lambda \|\mbz\|_1 \\
+&amp;= \arg \min_{\mbz} \frac{1}{2} (\mbz - \mbu)^\top \mbH_t (\mbz - \mbu) + \lambda \|\mbz\|_1 .
+\end{align*}\]</div>
+<p>However, if we fix all coordinates but one, the problem is tractable. First, expand the quadratic form in the proximal mapping,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{prox}(\mbu; \mbH_t) 
+&amp;= \arg \min_{\mbz} \sum_{j=1}^p \left[ \frac{1}{2}  H_{t,j,j} (z_j - u_j)^2 + \sum_{k=j+1}^p H_{t,j,k} (z_j - u_j) (z_k - u_k) + \lambda |z_j| \right].
+\end{align*}\]</div>
+<p>As a function of a single coordinate <span class="math notranslate nohighlight">\(z_j\)</span>, the objective is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+f(z_j) 
+&amp;= 
+\frac{1}{2} H_{t,j,j} z_j^2 + \left(-H_{t,j,j} u_j + \sum_{k\neq j}^p H_{t,j,k} (z_k - u_k)\right) z_j + \lambda |z_j| \\
+&amp;= 
+\frac{1}{2 H_{t,j,j}^{-1}} \left(z_j - \mu_j \right)^2 + \lambda |z_j| + \mathrm{const}
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mu_j \triangleq H_{t,j,j}^{-1} \left(H_{t,j,j} u_j - \sum_{k\neq j}^p H_{t,j,k} (z_k - u_k)\right)
+\end{align*}\]</div>
+<p>This is the same problem we solved above for Lasso regression! If we freeze the values of <span class="math notranslate nohighlight">\(\mbz_{\neg j}\)</span>, the minimizer as a function of <span class="math notranslate nohighlight">\(z_j\)</span> is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+z_j &amp;\leftarrow S_{\lambda / H_{t,j,j}}(\mu_j).
+\end{align*}\]</div>
+<p>To implement the proximal Newton step, we perform coordinate descent, iteratively minimizing with respect to one coordinate at a time until convergence.</p>
+<div class="proof algorithm admonition" id="prox-newton">
+<p class="admonition-title"><span class="caption-number">Algorithm 4 </span> (Proximal Newton Mapping for <span class="math notranslate nohighlight">\(\ell_1\)</span> Regularized Logistic Regression)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Input:</strong> initial guess <span class="math notranslate nohighlight">\(\mbz^{(0)}\)</span>, target <span class="math notranslate nohighlight">\(\mbu \in \reals^p\)</span>, Hessian <span class="math notranslate nohighlight">\(\mbH_t \in \reals^{p \times p}_{\succeq 0}\)</span>, num iterations <span class="math notranslate nohighlight">\(M\)</span></p>
+<ul>
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(m=1,\ldots, M\)</span></p>
+<ul>
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(j=1, \ldots, p\)</span></p>
+<ul class="simple">
+<li><p>Set</p></li>
+</ul>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+        \mu_j^{(m)} = H_{t,j,j}^{-1} \left(H_{t,j,j} u_j - \sum_{k &lt; j} H_{t,j,k} (z_k^{(m)} - u_k) - \sum_{k &gt; j} H_{t,j,k} (z_k^{(m-1)} - u_k) \right)
+        \end{align*}\]</div>
+<ul class="simple">
+<li><p>Set <span class="math notranslate nohighlight">\(z_j^{(m)} \leftarrow S_{\lambda/H_{t,j,j}}(\mu_j^{(m)})\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Return</strong> <span class="math notranslate nohighlight">\(\mbz^{(M)}\)</span>.</p>
+</section>
+</div><p>As with regular Newton’s method, proximal Newton exhibits local quadratic convergence to obtain error <span class="math notranslate nohighlight">\(\epsilon\)</span> in <span class="math notranslate nohighlight">\(\cO(\log \log 1/\epsilon)\)</span> iterations. Though here, each iteration requires an inner coordinate descent loop to solve the proximal mapping.</p>
+<div class="warning admonition">
+<p class="admonition-title">Note</p>
+<p>In practice, you may need to also implement a backtracking line search to choose the step size <span class="math notranslate nohighlight">\(\alpha_t\)</span>, since you may not start in the local quadratic regime. Logistic regression with decent initialization is reasonably well behaved, but Poisson regression with log link functions can be sensitive.</p>
+</div>
+<section id="simplifications-for-glms">
+<h3>Simplifications for GLMs<a class="headerlink" href="#simplifications-for-glms" title="Link to this heading">#</a></h3>
+<p>Another way to arrive at the same answer is to leverage the relationship between Newton’s method and iteratively reweighted least squares. We cast each Newton update as the solution to a weighted least squares problem. In the <span class="math notranslate nohighlight">\(\ell_1\)</span> regularized case, each <em>proximal</em> Newton update involves solving a weighted least squares problem with an extra <span class="math notranslate nohighlight">\(\ell_1\)</span> norm penalty. That problem can be solved by coordinate descent, and each update amounts to solving a scalar quadratic minimization problem as above. The difference is that the abstract terms in the proximal Newton mapping can be identified as weights and residuals.</p>
+<p>There are also lots of speed-ups to be had by exploiting problem-specific structure. See <span id="id2">Friedman <em>et al.</em> [<a class="reference internal" href="99_references.html#id7" title="Jerome Friedman, Trevor Hastie, and Rob Tibshirani. Regularization paths for generalized linear models via coordinate descent. Journal of statistical software, 33(1):1, 2010.">FHT10</a>]</span> for details.</p>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>The proximal methods disussed today are what run behind the scenes of modern packages for sparse linear and logistic regression. In particular, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html"><code class="docutils literal notranslate"><span class="pre">sklearn.linear_model.Lasso</span></code></a> uses a fast coordinate descent algorithm like discussed above, and <a class="reference external" href="https://glmnet.stanford.edu/articles/glmnet.html">GLMNet</a> <span id="id3">[<a class="reference internal" href="99_references.html#id7" title="Jerome Friedman, Trevor Hastie, and Rob Tibshirani. Regularization paths for generalized linear models via coordinate descent. Journal of statistical software, 33(1):1, 2010.">FHT10</a>]</span> uses a proximal Newton algorithm with coordinate descent for the proximal step.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="07_bayes_glms_soln.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bayesian GLMs</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lasso-regression">Lasso Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-gradient-descent">Proximal Gradient Descent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-mapping">Proximal Mapping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm">Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-gradient-descent-for-lasso-regression">Proximal Gradient Descent for Lasso Regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Proximal Mapping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterative-soft-thresholding-algorithm">Iterative Soft-Thresholding Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence">Convergence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-newton-method">Proximal Newton Method</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-newton-with-ell-1-regularization">Proximal Newton with <span class="math notranslate nohighlight">\(\ell_1\)</span> Regularization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplifications-for-glms">Simplifications for GLMs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
