@@ -11,6 +11,7 @@ parts:
     - file: lectures/05_glms.md
     - file: lectures/06_bayes.md
     - file: lectures/07_bayes_glms_soln.ipynb
+    - file: lectures/08_sparse_glms.md
     
   - caption: Assignments
     chapters:
