@@ -23,6 +23,7 @@ Students should be comfortable with undergraduate probability and statistics as 
 This course will draw from a few textbooks:
 - Agresti, Alan. Categorical Data Analysis, 2nd edition. John Wiley & Sons, 2002. [link](https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688)
 - Gelman, Andrew, et al. Bayesian Data Analysis, 3rd edition. Chapman and Hall/CRC, 2013. [link](http://www.stat.columbia.edu/~gelman/book/)
+- Bishop, Christopher. Pattern Recognition and Machine Learning. Springer, 2006. [link](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf)
 
 We will also cover material from research papers.
 
@@ -40,9 +41,9 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Jan 24, 2024 | [Generalized Linear Models](lectures/05_glms.md) | {cite:p}`agresti2002categorical` Ch. 6 | 
 | Jan 29, 2024 | [Bayesian Inference](lectures/06_bayes.md) | {cite:p}`gelman1995bayesian` Ch. 1 |
 | Jan 31, 2024 | [Bayesian GLMs](lectures/07_bayes_glms_soln.ipynb) | {cite:p}`albert1993bayesian` |
-| Feb 5, 2024 | L1-regularized GLMs | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
+| Feb 5, 2024 | [L1-regularized GLMs](lectures/08_sparse_glms.md) | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Feb  7, 2024 | **Midterm (in class)**                 |         |
-| Feb 12, 2024 | Discrete Latent Variable Models        |         |
+| Feb 12, 2024 | [Mixture Models and EM](lectures/09_mixtures.md) | {cite:p}`bishop2006pattern` Ch. 9 |
 | Feb 14, 2024 | Hidden Markov Models                   |         | 
 | Feb 19, 2024 | _Presidents' Day. No class_            |         |
 | Feb 21, 2024 | Mean-Field Variational Inference       |         |
