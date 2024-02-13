@@ -9,7 +9,7 @@ Let,
 - $z_n \in \{1, \ldots, K\}$ be a latent variable denoting the cluster assignment of the $n$-th data point
 - $\mbtheta_k$ be natural parameters of cluster $k$.
 - $\mbpi \in \Delta_{K-1}$ be cluster proportions (probabilities).
-- $\mbphi, \nu$ be hyperparameters of the prior on $\mbtheta$.
+<!-- - $\mbphi, \nu$ be hyperparameters of the prior on $\mbtheta$. -->
 - $\mbalpha \in \reals_+^{K}$ be the concentration of the prior on $\mbpi$.
 
 The generative model is as follows
@@ -22,7 +22,7 @@ The generative model is as follows
 > 
 > 2. Sample the parameters for each component:
 >     \begin{align*}
-          \mbtheta_k &\iid{\sim} p(\mbtheta \mid \mbphi, \nu) \quad \text{for } k = 1, \ldots, K
+          \mbtheta_k &\iid{\sim} p(\mbtheta) \quad \text{for } k = 1, \ldots, K
       \end{align*}
 > 
 > 3. Sample the assignment of each data point:
@@ -38,9 +38,9 @@ The generative model is as follows
 ### Joint distribution
 The joint distribution is,
 \begin{align*}
-    p(\mbpi, \{\mbtheta_k\}_{k=1}^K, \{(z_n, \mbx_n)\}_{n=1}^N \mid \mbphi, \nu, \mbalpha) 
+    p(\mbpi, \{\mbtheta_k\}_{k=1}^K, \{(z_n, \mbx_n)\}_{n=1}^N \mid) 
     &\propto 
-    p(\mbpi \mid \mbalpha) \prod_{k=1}^K p(\mbtheta_k \mid \mbphi, \nu) \prod_{n=1}^N \prod_{k=1}^K \left[ \pi_k \, p(\mbx_n \mid \mbtheta_k) \right]^{\bbI[z_n = k]}
+    p(\mbpi \mid \mbalpha) \prod_{k=1}^K p(\mbtheta_k) \prod_{n=1}^N \prod_{k=1}^K \left[ \pi_k \, p(\mbx_n \mid \mbtheta_k) \right]^{\bbI[z_n = k]}
 \end{align*}
 
 ### Exponential family mixture models
@@ -63,9 +63,12 @@ Assume the conditional distribution of $\mbx_n$ is a Gaussian with mean $\mbthet
 
 The conjugate prior is a Gaussian prior on the mean:
 \begin{align*}
-    p(\mbtheta_k \mid \mbphi, \nu) &= \mathrm{N}(\nu^{-1} \mbphi, \nu^{-1} \mbI) \nonumber \\
-    &\propto \exp \left\{\mbphi^\top \mbtheta_k -\tfrac{\nu}{2} \mbtheta_k^\top \mbtheta_k \right\}
+    p(\mbtheta_k) &= \mathrm{N}(\mbmu_0, \sigma_0^{2} \mbI) \nonumber \\
+    &\propto \exp \left\{-\tfrac{1}{2 \sigma_0^2} (\mbtheta_k - \mbmu_0)^\top (\mbtheta_k - \mbmu_0) \right\}
 \end{align*}
+
+In exponential family form, the prior precision is $\nu = 1/\sigma_0^2$ and the prior precision-weighted mean is $\mbphi = \mbmu_0 / \sigma_0^2$. 
+
 :::
 
 ## Two Inference Algorithms
@@ -160,33 +163,34 @@ Suppose we fix $\mbq$. Since each $z_n$ is a discrete latent variable, $q_n$ mus
 \end{align*}
 (These will be the **responsibilities** from before.)
 
-Now, recall our basic model, $\mbx_n \sim \mathrm{N}(\mbtheta_{z_n}, \mbI)$, and assume a prior $\mbtheta_k \sim \mathrm{N}(\mbphi, \nu^{-1} \mbI)$, Then,
+Now, recall our basic model, $\mbx_n \sim \mathrm{N}(\mbtheta_{z_n}, \mbI)$, and assume a prior $\mbtheta_k \sim \mathrm{N}(\mbmu_0, \sigma_0^2 \mbI)$, Then,
 \begin{align*}
     \cL[\mbtheta, \mbq] 
     &= \log p(\mbtheta) + 
     \sum_{n=1}^N \E_{q_n} [\log p(\mbx_n, z_n \mid \mbtheta)] + c \\
     &= \log p(\mbtheta) + 
     \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \log p(\mbx_n, z_n=k \mid \mbtheta) + c \\
-    &= \sum_{k=1}^K \left[\mbphi^\top \mbtheta_k - \tfrac{\nu}{2} \mbtheta_k^\top \mbtheta_k \right] +
+    &= \sum_{k=1}^K \left[\frac{1}{\sigma_0^2} \mbmu_0^\top \mbtheta_k - \tfrac{1}{2 \sigma_0^2} \mbtheta_k^\top \mbtheta_k \right] +
     \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \left[ \mbx_n^\top \mbtheta_k - \tfrac{1}{2} \mbtheta_k^\top \mbtheta_k \right] + c
 \end{align*}
     
 Zooming in on just $\mbtheta_k$,
 \begin{align*}
     \cL[\mbtheta, \mbq] 
-    &= \mbphi_{N,k}^\top \mbtheta_k - \tfrac{1}{2} \nu_{N,k} \mbtheta_k^\top \mbtheta_k
+    &= \widetilde{\mbphi}_{k}^\top \mbtheta_k - \tfrac{1}{2} \widetilde{\nu}_{k} \mbtheta_k^\top \mbtheta_k
 \end{align*}
 where
 \begin{align*}
-    \mbphi_{N,k} &= \mbphi + \sum_{n=1}^N \omega_{nk} \mbx_n
+    \widetilde{\mbphi}_{k} &= \mbmu_0 / \sigma_0^2 + \sum_{n=1}^N \omega_{nk} \mbx_n
     \qquad
-    \nu_{N,k} = \nu + \sum_{n=1}^N \omega_{nk}
+    \widetilde{\nu}_{k} = 1/\sigma_0^2 + \sum_{n=1}^N \omega_{nk}
 \end{align*}
 Taking derivatives and setting to zero yields, 
 \begin{align*}
-    \mbtheta_k^\star &=  \frac{\mbphi_{N,k}}{\nu_{N,k}} = \frac{\mbphi + \sum_{n=1}^N \omega_{nk} \mbx_n}{\nu + \sum_{n=1}^N \omega_{nk}}.
+    \mbtheta_k^\star &=  \frac{\widetilde{\mbphi}_{k}}{\widetilde{\nu}_{k}} 
+    = \frac{\mbmu_0/\sigma_0^2 + \sum_{n=1}^N \omega_{nk} \mbx_n}{1/\sigma_0^2 + \sum_{n=1}^N \omega_{nk}}.
 \end{align*}
-In the improper uniform prior limit where $\mbphi \to 0$ and $\nu \to 0$, we recover the EM updates shown above.
+In the improper uniform prior limit where $\mbmu_0 = 0$ and $\sigma_0^2 \to \infty$, we recover the EM updates shown above.
 
 ### E-step: Gaussian case
 As a function of $q_n$, for discrete Gaussian mixtures with identity covariance,
@@ -233,15 +237,16 @@ At that point, the ELBO simplifies to,
     &= \log p(\{\mbx_n\}_{n=1}^N, \mbtheta)
 \end{align*}
 
-:::{admonition} Note
+:::{admonition} EM as a minorize-maximize (MM) algorithm
 :class: tip
-<center>
-<b>The ELBO is tight after the E-step!</b>
-</center>
+Note that the <b>The ELBO is tight after the E-step!</b>.
+
+We can view the EM algorihtm as a **minorize-maximize (MM)** algorithm where we iteratively lower bound the ELBO and and then maximize the lower bound.
 :::
 
+<!--
 ### EM as a minorize-maximize (MM) algorithm
-<!-- \begin{figure}
+ \begin{figure}
     \centering
     \includegraphics[width=3.5in]{figures/lecture7/em.png}
     \caption{Bishop, Figure 9.14: EM alternates between constructing a lower bound (minorizing) and finding new parameters that maximize it.}
@@ -264,21 +269,21 @@ Now let's consider the general Bayesian mixture with exponential family likeliho
 Zooming in on just $\mbtheta_k$,
 \begin{align*}
     \cL[\mbtheta, \mbq] 
-    &= \mbphi_{N,k}^\top \mbtheta_k - \nu_{N,k} A(\mbtheta_k)
+    &= \widetilde{\mbphi}_{k}^\top \mbtheta_k - \widetilde{\nu}_{k} A(\mbtheta_k)
 \end{align*}
 where
 \begin{align*}
-    \mbphi_{N,k} &= \mbphi + \sum_{n=1}^N \omega_{nk} t(\mbx_n)
+    \widetilde{\mbphi}_{k} &= \mbphi + \sum_{n=1}^N \omega_{nk} t(\mbx_n)
     \qquad
-    \nu_{N,k} = \nu + \sum_{n=1}^N \omega_{nk}
+    \widetilde{\nu}_{k} = \nu + \sum_{n=1}^N \omega_{nk}
 \end{align*}
 Taking derivatives and setting to zero yields, 
 \begin{align*}
     \label{eq:gen_mstep}
-    \mbtheta_k^* &= \left[\nabla A \right]^{-1} \left(\frac{\mbphi_{N,k}}{\nu_{N,k}}\right)
+    \mbtheta_k^* &= \left[\nabla A \right]^{-1} \left(\frac{\widetilde{\mbphi}_{k}}{\widetilde{\nu}_{k}}\right)
 \end{align*}
 
-Recall that $\nabla A^{-1}: \cM \mapsto \Omega$ is a mapping from mean parameters to natural parameters (and the inverse exists for minimal exponential families). Thus, the generic M-step above amounts to finding the natural parameters $\mbtheta_k^*$ that yield the expected sufficient statistics $\mbphi_{N,k} / \nu_{N,k}$ by inverting the gradient mapping.
+Recall that $\nabla A^{-1}: \cM \mapsto \Omega$ is a mapping from mean parameters to natural parameters (and the inverse exists for minimal exponential families). Thus, the generic M-step above amounts to finding the natural parameters $\mbtheta_k^*$ that yield the expected sufficient statistics $\widetilde{\mbphi}_{k} / \widetilde{\nu}_{k}$ by inverting the gradient mapping.
 
 ### E-step: General Case
 In our first pass, we assumed $q_n$ was a finite pmf. More generally, $q_n$ will be a probability density function, and optimizing over functions usually requires the _calculus of variations_. (Ugh!)
