@@ -13,6 +13,7 @@ parts:
     - file: lectures/07_bayes_glms_soln.ipynb
     - file: lectures/08_sparse_glms.md
     - file: lectures/09_mixtures.md
+    - file: lectures/10_hmms.md
     
   - caption: Assignments
     chapters:
