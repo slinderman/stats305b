@@ -619,7 +619,22 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 \[\begin{align*}
 \cL(\mbbeta_t) - \cL(\mbbeta^\star) &amp;\leq \left(1 - \frac{\mu}{L} \right)^t (\cL(\mbbeta_0) - \cL(\mbbeta^\star)).
 \end{align*}\]</div>
-<p>Put differently, if we want a gap of at most epsilon, we need to run <span class="math notranslate nohighlight">\(t \leq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}\)</span> iterations of gradient descent. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 100\)</span> times as many iterations. This is called <strong>linear convergence</strong>.</p>
+<p>If we want to find the number of iterations <span class="math notranslate nohighlight">\(t\)</span> to bound the gap by at most <span class="math notranslate nohighlight">\(\epsilon\)</span>, we need to solve for <span class="math notranslate nohighlight">\(t\)</span> in</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\left(1 - \frac{\mu}{L}\right)^t ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) \leq \epsilon.
+\end{align*}\]</div>
+<p>This inequality is equivalent to taking the log of both sides</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) + t \log\left(1 - \frac{\mu}{L}\right) \leq \log \epsilon.
+\end{align*}\]</div>
+<p>We can further upper bound the LHS by using the inequality <span class="math notranslate nohighlight">\(\log ( 1 - x) \leq -x\)</span> to get</p>
+<div class="amsmath math notranslate nohighlight" id="equation-68c62056-d5bf-4980-bbd9-e43d7d744143">
+<span class="eqno">(1)<a class="headerlink" href="#equation-68c62056-d5bf-4980-bbd9-e43d7d744143" title="Permalink to this equation">#</a></span>\[\begin{align}
+	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*))  - \frac{\mu t}{L}\leq \log \epsilon.
+\end{align}\]</div>
+<p>So, we need to run <span class="math notranslate nohighlight">\(t \geq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}\)</span> iterations of gradient descent. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 100\)</span> times as many iterations. This is called <strong>linear convergence</strong>.</p>
 </section>
 </section>
 <section id="newton-s-method">

@@ -227,7 +227,19 @@ Applying this bound recursively yields that,
 \begin{align*}
 \cL(\mbbeta_t) - \cL(\mbbeta^\star) &\leq \left(1 - \frac{\mu}{L} \right)^t (\cL(\mbbeta_0) - \cL(\mbbeta^\star)).
 \end{align*}
-Put differently, if we want a gap of at most epsilon, we need to run $t \leq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}$ iterations of gradient descent. If we want to reduce $\epsilon$ by a factor of 100, we only need to run around $\log 100$ times as many iterations. This is called **linear convergence**.
+If we want to find the number of iterations $t$ to bound the gap by at most $\epsilon$, we need to solve for $t$ in 
+\begin{align*}
+\left(1 - \frac{\mu}{L}\right)^t ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) \leq \epsilon.
+\end{align*}
+This inequality is equivalent to taking the log of both sides
+\begin{align*}
+	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) + t \log\left(1 - \frac{\mu}{L}\right) \leq \log \epsilon.
+\end{align*}
+We can further upper bound the LHS by using the inequality $\log ( 1 - x) \leq -x$ to get
+\begin{align}
+	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*))  - \frac{\mu t}{L}\leq \log \epsilon.
+\end{align}
+So, we need to run $t \geq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}$ iterations of gradient descent. If we want to reduce $\epsilon$ by a factor of 100, we only need to run around $\log 100$ times as many iterations. This is called **linear convergence**.
 
 ## Newton's Method
 Gradient descent leverages the gradient at $\mbbeta$ to determine the update. Newton's method uses the Hessian to inform the update as well, and in doing so it can achieve considerably faster convergence.
