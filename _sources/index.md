@@ -46,7 +46,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Feb 12, 2024 | [Mixture Models and EM](lectures/09_mixtures.md) | {cite:p}`bishop2006pattern` Ch. 9 |
 | Feb 14, 2024 | [Hidden Markov Models](lectures/10_hmms.md) | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Feb 19, 2024 | _Presidents' Day. No class_            |         |
-| Feb 21, 2024 | Mean-Field Variational Inference       |         |
+| Feb 21, 2024 | Variational Autoencoders |         |
 | Feb 26, 2024 | Recurrent Neural Networks              |         |
 | Feb 28, 2024 | Attention and Tranformers              |         |
 | Mar  4, 2024 | State Space Layers (S4, S5, Mamba) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     |         |
