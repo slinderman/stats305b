@@ -191,6 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -630,8 +631,8 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) + t \log\left(1 - \frac{\mu}{L}\right) \leq \log \epsilon.
 \end{align*}\]</div>
 <p>We can further upper bound the LHS by using the inequality <span class="math notranslate nohighlight">\(\log ( 1 - x) \leq -x\)</span> to get</p>
-<div class="amsmath math notranslate nohighlight" id="equation-636f673b-4676-40b4-8016-20819a599a1e">
-<span class="eqno">(1)<a class="headerlink" href="#equation-636f673b-4676-40b4-8016-20819a599a1e" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-3c0b71f3-7bb1-4dec-a6e8-c32d2ddbd3dd">
+<span class="eqno">(1)<a class="headerlink" href="#equation-3c0b71f3-7bb1-4dec-a6e8-c32d2ddbd3dd" title="Permalink to this equation">#</a></span>\[\begin{align}
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*))  - \frac{\mu t}{L}\leq \log \epsilon.
 \end{align}\]</div>
 <p>So, we need to run <span class="math notranslate nohighlight">\(t \geq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}\)</span> iterations of gradient descent. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 100\)</span> times as many iterations. This is called <strong>linear convergence</strong>.</p>

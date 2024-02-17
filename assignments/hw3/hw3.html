@@ -1,0 +1,885 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>HW3: Hidden Markov Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'assignments/hw3/hw3';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="References" href="../../lectures/99_references.html" />
+    <link rel="prev" title="HW2: Bayesian GLMs" href="../hw2/hw2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/06_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/08_sparse_glms.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/09_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/10_hmms.html">Hidden Markov Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">HW3: Hidden Markov Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2024/assignments/hw3/hw3.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/assignments/hw3/hw3.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>HW3: Hidden Markov Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-state-estimation">Part 1: State Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a-estimate-the-model-parameters">Problem 1a: Estimate the Model Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b-implement-the-forward-backward-algorithm">Problem 1b: Implement the Forward-Backward Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c-infer-the-sleep-states">Problem 1c: Infer the Sleep States</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d-evaluate-your-classifier">Problem 1d: Evaluate your classifier</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1e-discussion">Problem 1e: Discussion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-parameter-estimation">Part 2: Parameter Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-implement-the-em-algorithm">Problem 2a: Implement the EM Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-run-your-code">Problem 2b: Run your Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2c-model-selection">Problem 2c: Model Selection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2d-discussion">Problem 2d: Discussion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-model-criticism">Part 3: Model Criticism</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw3-hidden-markov-models">
+<h1>HW3: Hidden Markov Models<a class="headerlink" href="#hw3-hidden-markov-models" title="Link to this heading">#</a></h1>
+<p>This assignment considers the problem of classifying sleep states based on noisy heart rate sensor data, like what you might obtain from an Apple Watch.
+We will work with a synthetic dataset modeled after a sleep study by Walch et al (2019).
+We found it too difficult to make accurate predictions on their real data, so we simulated synthetic data with which you should be able to detect sleep states more reliably.</p>
+<p>Sleep researchers use <a class="reference external" href="https://en.wikipedia.org/wiki/Polysomnography">polysomnography (PSG)</a> to characterize sleep states. PSG combines measurements of your brain (EEG), muscles (EMG), and heart (EKG) to determine which of four sleep states you are in:</p>
+<ol class="arabic simple">
+<li><p><em>Awake</em></p></li>
+<li><p><em>Core Sleep</em>: Non-REM stages 1 and 2. Heart rate and body temperature drop. Sleep spindles, which are thought to be important for memory consolidation, seen in EEG.</p></li>
+<li><p><em>Deep Sleep</em>: Non-Rem stage 3. Hard to wake up, and you feel groggy if you do. Lowest heart rate.</p></li>
+<li><p><em>Rapid Eye Movement (REM) Sleep</em>: This is when dreaming occurs. Heart rate increases, similar to in an awake state. Not considered restful sleep.</p></li>
+</ol>
+<p>Of course, measuring EEG, EMG, and EKG while you’re sleeping is a big pain. It would be great if we could predict sleep states using less invasive measures, like what you might obtain with an Apple Watch. That’s the goal of this assignment!</p>
+<blockquote>
+<div><p><strong><u>This Assignment</u></strong></p>
+<p><strong>Model:</strong> You will use a <strong>Hidden Markov Model (HMM)</strong> to classify sleep stages based on (synthetic) heart rate measurements.</p>
+<p><strong>Algorithm:</strong> You will use <strong>expectation-maximization (EM)</strong> and the <strong>forward-backward algorithm</strong> to estimate the model parameters and infer the latent states.</p>
+<p><strong>Data</strong>: In this case, we simulated the heart rate data to look like real heart rate traces from Walch et al. (2019), but since we had control of the generative model, we could ensure a stronger relationship between sleep states and heart rate. This way, you should be able to predict sleep states with better accuracy than we were able to achieve with the actual data.</p>
+</div></blockquote>
+<p><strong>References</strong></p>
+<ul class="simple">
+<li><p>Walch, O. (2019). Motion and heart rate from a wrist-worn wearable and labeled sleep from polysomnography (version 1.0.0). PhysioNet. <a class="reference external" href="https://doi.org/10.13026/hmhs-py35">https://doi.org/10.13026/hmhs-py35</a>.</p></li>
+<li><p>Olivia Walch, Yitong Huang, Daniel Forger, and Cathy Goldstein. Sleep stage prediction with raw acceleration and photoplethysmography heart rate data derived from a consumer wearable device. Sleep, 2019. <a class="reference external" href="https://academic.oup.com/sleep/article/42/12/zsz180/5549536">link</a></p></li>
+</ul>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The data consists of 30 time series, each corresponding to one subject’s sleep data over from a single night. The time series have been concatenated together in the data frame below. The fields are,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: the index of the time series (0, …, 29)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">state</span></code> : the “true” sleep state</p>
+<ul>
+<li><p>0 = “awake”</p></li>
+<li><p>1 = “core sleep”</p></li>
+<li><p>2 = “deep sleep”</p></li>
+<li><p>3 = “REM”</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hr</span></code>: the measured heart rate. Missing data is marked by <code class="docutils literal notranslate"><span class="pre">NaN</span></code>.</p></li>
+</ul>
+<p>Each row corresponds to a 30 second time bin. The time series are variable in length, ranging from just shy of 4 hours to over 8 hours. Again, these are simulated data, but we generated the data to look like heart rate traces measured by Walch et al. (2019).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the concatenated data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/assignments/hw3/hw3_synth.csv&quot;</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>state</th>
+      <th>hr</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>97.378630</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>97.254448</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>118.884372</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>99.038121</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0</td>
+      <td>98.649347</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>26609</th>
+      <td>29</td>
+      <td>1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26610</th>
+      <td>29</td>
+      <td>1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26611</th>
+      <td>29</td>
+      <td>1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26612</th>
+      <td>29</td>
+      <td>1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26613</th>
+      <td>29</td>
+      <td>1</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>26614 rows × 3 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="part-0-preprocessing">
+<h2>Part 0: Preprocessing<a class="headerlink" href="#part-0-preprocessing" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Split the data into separate data frames, one for each subject.</p></li>
+<li><p>Plot a couple of the heart rate time series along with the true underlying state.</p></li>
+<li><p>Plot histograms of heart rate for each state.</p></li>
+</ol>
+<p>Make your plots look good, like you would for a figure in a paper.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="part-1-state-estimation">
+<h2>Part 1: State Estimation<a class="headerlink" href="#part-1-state-estimation" title="Link to this heading">#</a></h2>
+<p>Now we will use an HMM to estimate the sleep states given the heart rate data.</p>
+<p><strong>Notation:</strong></p>
+<p>Let:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N=30\)</span> denote the number of subjects</p></li>
+<li><p><span class="math notranslate nohighlight">\(K=4\)</span> denote the number of sleep states</p></li>
+<li><p><span class="math notranslate nohighlight">\(T_i\)</span> denote the number of time bins for subject <span class="math notranslate nohighlight">\(i \in \{1, \ldots, N\}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(z_{i,t} \in \{1, \ldots K\}\)</span> denote the sleep state for subject <span class="math notranslate nohighlight">\(i\)</span> and time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_{i,t} \in \mathbb{R}\)</span> denote the measured heart rate for subject <span class="math notranslate nohighlight">\(i\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\pi}_0 \in \Delta_{K-1}\)</span> denote the initial distribution</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{P} \in [0,1]^{K \times K}\)</span> denote the transition matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_k \in \mathbb{R}\)</span> denote the conditional mean of the heart rate in state <span class="math notranslate nohighlight">\(k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma^2_k \in \mathbb{R}_+\)</span> denote the conditional variance of the heart rate in state <span class="math notranslate nohighlight">\(k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Theta = \{\boldsymbol{\pi}_0, \mathbf{P}, \{\mu_k, \sigma_k^2\}\}\)</span> denote the set of all model parameters</p></li>
+</ul>
+<p><strong>Model:</strong></p>
+<p>We will use a Gaussian HMM of the form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\{\{z_{i,t}, x_{i,t}\}_{t=1}^{T_i}\}_{i=1}^N; \Theta) 
+&amp;=
+\prod_{i=1}^N \left[
+\mathrm{Cat}(z_{i,1} \mid \boldsymbol{\pi}_0) 
+\prod_{t=2}^{T_i} \mathrm{Cat}(z_{i, t} \mid \mathbf{P}_{z_{i,t-1}}) 
+\prod_{t=1}^{T_i} \mathrm{N}(x_{i, t} \mid \mu_{z_{i,t}}, \sigma^2_{z_{i,t}}) 
+\right]
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{P}_{k} \in \Delta_{K-1}\)</span> is the <span class="math notranslate nohighlight">\(k\)</span>-th row of the transition matrix.</p>
+<p>Assume that the missing heart rate values are “missing at random,” so that the correspondign likelihood terms can simply be dropped from the joint probability above. That is, replace <span class="math notranslate nohighlight">\(\mathrm{N}(x_{i, t} \mid \mu_{z_{i,t}}, \sigma^2_{z_{i,t}})\)</span> with <span class="math notranslate nohighlight">\(1\)</span> for missing values.</p>
+<section id="problem-1a-estimate-the-model-parameters">
+<h3>Problem 1a: Estimate the Model Parameters<a class="headerlink" href="#problem-1a-estimate-the-model-parameters" title="Link to this heading">#</a></h3>
+<p>Hold out the last 5 subjects for evaluation. Using the first 25 subjects as your training data, estimate the mean and variance of the heart rate in each sleep state.</p>
+<ol class="arabic simple">
+<li><p>Estimate <span class="math notranslate nohighlight">\(\mu_k = \mathbb{E}[X_t \mid Z_t=k]\)</span> and <span class="math notranslate nohighlight">\(\sigma_k^2 = \mathrm{Var}[X_t \mid Z_t=k]\)</span>. Assume the subjects are iid so you can pool all the data in your estimates.</p></li>
+<li><p>Estimate the transition matrix <span class="math notranslate nohighlight">\(\mathbf{P} \in [0,1]^{K \times K}\)</span>.</p></li>
+</ol>
+<p>Assume the initial state distribution is <span class="math notranslate nohighlight">\(\boldsymbol{\pi}_0 = (1, 0, 0, 0)^\top\)</span>. That is, assume the subjects always start in the awake state.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-1b-implement-the-forward-backward-algorithm">
+<h3>Problem 1b: Implement the Forward-Backward Algorithm<a class="headerlink" href="#problem-1b-implement-the-forward-backward-algorithm" title="Link to this heading">#</a></h3>
+<p>Implement the forward-backward algorithm for inferring the posterior probabilities <span class="math notranslate nohighlight">\(\Pr(z_{i,t}=k \mid x_{i,1:T_i}; \Theta)\)</span> for all <span class="math notranslate nohighlight">\(k=1,\ldots,K\)</span> and <span class="math notranslate nohighlight">\(t=1,\ldots,T_i\)</span>. Your function should also return the marginal log likelihood, <span class="math notranslate nohighlight">\(\log p(x_{i,1:T_i}; \Theta)\)</span>, which is a byproduct of the forward pass (see lecture notes).</p>
+<p><em>Note: Make sure you use a numerically stable implementation!</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-1c-infer-the-sleep-states">
+<h3>Problem 1c: Infer the Sleep States<a class="headerlink" href="#problem-1c-infer-the-sleep-states" title="Link to this heading">#</a></h3>
+<p>Using your estimated parameters, <span class="math notranslate nohighlight">\(\hat{\Theta}\)</span>, from Problem 1a and your implementation from 1b, compute the posterior probabilities of each sleep state and time step on the held-out subjects’ data. Make a nice plot of your results for one subject, including the computed probabilities as well as the true states.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-1d-evaluate-your-classifier">
+<h3>Problem 1d: Evaluate your classifier<a class="headerlink" href="#problem-1d-evaluate-your-classifier" title="Link to this heading">#</a></h3>
+<p>Let</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{z}_{i,t} = \arg \max_{k \in [K]} \Pr(z_{i,t}=k \mid x_{i,1:T_i}; \hat{\Theta})
+\end{align*}\]</div>
+<p>denote the state with the highest posterior marginal probability.</p>
+<p>Make a confusion matrix to compare your state estimates with the true states of held-out subjects.</p>
+</section>
+<section id="problem-1e-discussion">
+<h3>Problem 1e: Discussion<a class="headerlink" href="#problem-1e-discussion" title="Link to this heading">#</a></h3>
+<p>Discuss your results from Problems 1c and 1d. How accurate is your classifer? Do the errors make sense?</p>
+<hr class="docutils" />
+<p><em>Your answer here</em></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-2-parameter-estimation">
+<h2>Part 2: Parameter Estimation<a class="headerlink" href="#part-2-parameter-estimation" title="Link to this heading">#</a></h2>
+<p>In Part 1, you fixed the parameters using estimates derived from training data. Often, we don’t have ground truth state labels and we need to simultaneously estimate the states and the parameters. For this part of the assignment, imagine the true state labels are unknown and all you have access to are the heart rate time series.</p>
+<section id="problem-2a-implement-the-em-algorithm">
+<h3>Problem 2a: Implement the EM Algorithm<a class="headerlink" href="#problem-2a-implement-the-em-algorithm" title="Link to this heading">#</a></h3>
+<p>Using your implementation of the forward-backward algorithm from above, implement the expectation-maximization (EM) algorithm to simultaneously infer the latent states <span class="math notranslate nohighlight">\(\{\{z_{i,t}\}_{t=1}^{T_i}\}_{i=1}^N\)</span> and estimate the parameters <span class="math notranslate nohighlight">\(\{\mu_k, \sigma_k^2\}_{k=1}^K\)</span>.</p>
+<p>To keep things simple, you can assume that you have <span class="math notranslate nohighlight">\(\hat{\mathbf{P}}\)</span> from above and that <span class="math notranslate nohighlight">\(\boldsymbol{\pi}_0 = (1,0,0,0)^\top\)</span> is known. (It’s not hard to estimate these parameters too, but it’s a little tedious so we’ll spare you the trouble.)</p>
+<p>Your EM function should return:</p>
+<ul class="simple">
+<li><p>the marginal log likelihoods after each iteration of EM</p></li>
+<li><p>the final parameter estimates</p></li>
+<li><p>the posterior state probabilities under the final parameter estimates</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-2b-run-your-code">
+<h3>Problem 2b: Run your Code<a class="headerlink" href="#problem-2b-run-your-code" title="Link to this heading">#</a></h3>
+<p>Run your EM algorithm on the 25 training subjects. Using your estimated parameters, run the forward-backward algorithm to infer the latent states of the held-out 5 subjects.</p>
+<ul class="simple">
+<li><p>Plot the marginal log likelihood as a function of EM iteration.</p></li>
+<li><p>Plot a confusion matrix of true and inferred states on the held-out data</p></li>
+</ul>
+</section>
+<section id="problem-2c-model-selection">
+<h3>Problem 2c: Model Selection<a class="headerlink" href="#problem-2c-model-selection" title="Link to this heading">#</a></h3>
+<p>In the unsupervised setting, we often need to estimate the number of discrete states, <span class="math notranslate nohighlight">\(K\)</span>, as well. One way to do that is by comparing the marginal log likelihood of held-out data using parameters estimated on the training data, for a range of <span class="math notranslate nohighlight">\(K\)</span>.</p>
+<p>Sweep over a range of values of <span class="math notranslate nohighlight">\(K\)</span> and for each value run EM on the training data to estimate your model parameters. Then using your forward-backward algorithm to compute the marginal log likelihood of the held-out data. Plot the held-out marginal log likelihood as a function of <span class="math notranslate nohighlight">\(K\)</span>.</p>
+<p><em>Note: for this problem you can use a dummy transition matrix that simply imposes a “sticky” prior. Let <span class="math notranslate nohighlight">\(\mathbf{P} = [[p_{i,j}]]\)</span> where <span class="math notranslate nohighlight">\(p_{i,j} = 0.95\)</span> if <span class="math notranslate nohighlight">\(i=j\)</span> and <span class="math notranslate nohighlight">\(p_{i,j} = \frac{0.05}{K-1}\)</span> if <span class="math notranslate nohighlight">\(i \neq j\)</span>.</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-2d-discussion">
+<h3>Problem 2d: Discussion<a class="headerlink" href="#problem-2d-discussion" title="Link to this heading">#</a></h3>
+<p>Discuss your results from Part 2. How do your parameter estimates from EM compare to those estimated from the true state labels in Part 1? How many states would you select based on Problem 2c? Does your result make sense?</p>
+<hr class="docutils" />
+<p><em>Your answer here</em></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-3-model-criticism">
+<h2>Part 3: Model Criticism<a class="headerlink" href="#part-3-model-criticism" title="Link to this heading">#</a></h2>
+<p>As we said in HW1, applied statistics is an iterative process. We don’t just fit one model and call it a day — we revisit our modeling assumptions in light of our findings and look for ways to improve our fit.</p>
+<p>Let’s keep <span class="math notranslate nohighlight">\(K=4\)</span> fixed, since we know there are really four official sleep states. Let’s also continue to only consider variations of HMMs. In this part, suggest and then implement <em>at least one</em> improvement to your model, based on your findings above. Quantify your improvements using classification accuracy on held-out subjects.</p>
+<p><em>Note: You may use the true state labels from the training subjects for this part of the assignment.</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="submission-instructions">
+<h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Link to this heading">#</a></h2>
+<p><strong>Formatting:</strong> check that your code does not exceed 80 characters in line width. You can set <em>Tools → Settings → Editor → Vertical ruler column</em> to 80 to see when you’ve exceeded the limit.</p>
+<p><strong>Converting to PDF</strong> The simplest way to convert to PDF is to use the “Print to PDF” option in your browser. Just make sure that your code and plots aren’t cut off, as it may not wrap lines.</p>
+<p><strong>Alternatively</strong> You can download your notebook in .ipynb format and use the following commands to convert it to PDF.  Then run the following command to convert to a PDF:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">nbconvert</span> <span class="o">--</span><span class="n">to</span> <span class="n">pdf</span> <span class="o">&lt;</span><span class="n">yourlastname</span><span class="o">&gt;</span><span class="n">_hw</span><span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;.</span><span class="n">ipynb</span>
+</pre></div>
+</div>
+<p>(Note that for the above code to work, you need to rename your file <code class="docutils literal notranslate"><span class="pre">&lt;yourlastname&gt;_hw&lt;number&gt;.ipynb</span></code>)</p>
+<p><strong>Installing nbconvert:</strong></p>
+<p>If you’re using Anaconda for package management,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">anaconda</span> <span class="n">nbconvert</span>
+</pre></div>
+</div>
+<p><strong>Upload</strong> your .pdf file to Gradescope. Please tag your questions correctly! I.e., for each question, all of and only the relevant sections are tagged.</p>
+<p>Please post on Ed or come to OH if there are any other problems submitting the HW.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./assignments/hw3"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../hw2/hw2.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">HW2: Bayesian GLMs</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../lectures/99_references.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-state-estimation">Part 1: State Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a-estimate-the-model-parameters">Problem 1a: Estimate the Model Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b-implement-the-forward-backward-algorithm">Problem 1b: Implement the Forward-Backward Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c-infer-the-sleep-states">Problem 1c: Infer the Sleep States</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d-evaluate-your-classifier">Problem 1d: Evaluate your classifier</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1e-discussion">Problem 1e: Discussion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-parameter-estimation">Part 2: Parameter Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-implement-the-em-algorithm">Problem 2a: Implement the EM Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-run-your-code">Problem 2b: Run your Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2c-model-selection">Problem 2c: Model Selection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2d-discussion">Problem 2d: Discussion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-model-criticism">Part 3: Model Criticism</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
