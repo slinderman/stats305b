@@ -407,14 +407,11 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="hw3-hidden-markov-models">
 <h1>HW3: Hidden Markov Models<a class="headerlink" href="#hw3-hidden-markov-models" title="Link to this heading">#</a></h1>
-<p>This assignment considers the problem of classifying sleep states based on noisy heart rate sensor data, like what you might obtain from an Apple Watch.
-We will work with a synthetic dataset modeled after a sleep study by Walch et al (2019).
-We found it too difficult to make accurate predictions on their real data, so we simulated synthetic data with which you should be able to detect sleep states more reliably.</p>
-<p>Sleep researchers use <a class="reference external" href="https://en.wikipedia.org/wiki/Polysomnography">polysomnography (PSG)</a> to characterize sleep states. PSG combines measurements of your brain (EEG), muscles (EMG), and heart (EKG) to determine which of four sleep states you are in:</p>
+<p>This assignment considers the problem of classifying sleep states based on noisy heart rate sensor data, like what you might obtain from an Apple Watch. Sleep researchers use <a class="reference external" href="https://en.wikipedia.org/wiki/Polysomnography">polysomnography (PSG)</a> to obtain ground truth sleep states. PSG combines measurements of your brain (EEG), muscles (EMG), and heart (EKG) to determine which of four sleep states you are in:</p>
 <ol class="arabic simple">
 <li><p><em>Awake</em></p></li>
 <li><p><em>Core Sleep</em>: Non-REM stages 1 and 2. Heart rate and body temperature drop. Sleep spindles, which are thought to be important for memory consolidation, seen in EEG.</p></li>
-<li><p><em>Deep Sleep</em>: Non-Rem stage 3. Hard to wake up, and you feel groggy if you do. Lowest heart rate.</p></li>
+<li><p><em>Deep Sleep</em>: Non-REM stage 3. Hard to wake up, and you feel groggy if you do. Lowest heart rate.</p></li>
 <li><p><em>Rapid Eye Movement (REM) Sleep</em>: This is when dreaming occurs. Heart rate increases, similar to in an awake state. Not considered restful sleep.</p></li>
 </ol>
 <p>Of course, measuring EEG, EMG, and EKG while you’re sleeping is a big pain. It would be great if we could predict sleep states using less invasive measures, like what you might obtain with an Apple Watch. That’s the goal of this assignment!</p>
@@ -422,12 +419,11 @@ We found it too difficult to make accurate predictions on their real data, so we
 <div><p><strong><u>This Assignment</u></strong></p>
 <p><strong>Model:</strong> You will use a <strong>Hidden Markov Model (HMM)</strong> to classify sleep stages based on (synthetic) heart rate measurements.</p>
 <p><strong>Algorithm:</strong> You will use <strong>expectation-maximization (EM)</strong> and the <strong>forward-backward algorithm</strong> to estimate the model parameters and infer the latent states.</p>
-<p><strong>Data</strong>: In this case, we simulated the heart rate data to look like real heart rate traces from Walch et al. (2019), but since we had control of the generative model, we could ensure a stronger relationship between sleep states and heart rate. This way, you should be able to predict sleep states with better accuracy than we were able to achieve with the actual data.</p>
+<p><strong>Data</strong>: We will work with a synthetic dataset modeled after a sleep study by Walch et al (2019). We found it too difficult to make accurate predictions on their real data, so we simulated synthetic data with a stronger relationship between sleep states and heart rate. This way, you should be able to predict sleep states with better accuracy than we were able to achieve with the actual data. Though the data is synthetic, it still serves as a good exercise for learning about these models and algorithms.</p>
 </div></blockquote>
 <p><strong>References</strong></p>
 <ul class="simple">
 <li><p>Walch, O. (2019). Motion and heart rate from a wrist-worn wearable and labeled sleep from polysomnography (version 1.0.0). PhysioNet. <a class="reference external" href="https://doi.org/10.13026/hmhs-py35">https://doi.org/10.13026/hmhs-py35</a>.</p></li>
-<li><p>Olivia Walch, Yitong Huang, Daniel Forger, and Cathy Goldstein. Sleep stage prediction with raw acceleration and photoplethysmography heart rate data derived from a consumer wearable device. Sleep, 2019. <a class="reference external" href="https://academic.oup.com/sleep/article/42/12/zsz180/5549536">link</a></p></li>
 </ul>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
@@ -605,7 +601,7 @@ p(\{\{z_{i,t}, x_{i,t}\}_{t=1}^{T_i}\}_{i=1}^N; \Theta)
 \right]
 \end{align*}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{P}_{k} \in \Delta_{K-1}\)</span> is the <span class="math notranslate nohighlight">\(k\)</span>-th row of the transition matrix.</p>
-<p>Assume that the missing heart rate values are “missing at random,” so that the correspondign likelihood terms can simply be dropped from the joint probability above. That is, replace <span class="math notranslate nohighlight">\(\mathrm{N}(x_{i, t} \mid \mu_{z_{i,t}}, \sigma^2_{z_{i,t}})\)</span> with <span class="math notranslate nohighlight">\(1\)</span> for missing values.</p>
+<p>Assume that the missing heart rate values are “missing at random,” so that the corresponding likelihood terms can simply be dropped from the joint probability above. That is, replace <span class="math notranslate nohighlight">\(\mathrm{N}(x_{i, t} \mid \mu_{z_{i,t}}, \sigma^2_{z_{i,t}})\)</span> with <span class="math notranslate nohighlight">\(1\)</span> for missing values.</p>
 <section id="problem-1a-estimate-the-model-parameters">
 <h3>Problem 1a: Estimate the Model Parameters<a class="headerlink" href="#problem-1a-estimate-the-model-parameters" title="Link to this heading">#</a></h3>
 <p>Hold out the last 5 subjects for evaluation. Using the first 25 subjects as your training data, estimate the mean and variance of the heart rate in each sleep state.</p>
