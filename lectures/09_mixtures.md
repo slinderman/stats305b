@@ -38,7 +38,7 @@ The generative model is as follows
 ### Joint distribution
 The joint distribution is,
 \begin{align*}
-    p(\mbpi, \{\mbtheta_k\}_{k=1}^K, \{(z_n, \mbx_n)\}_{n=1}^N \mid) 
+    p(\mbpi, \{\mbtheta_k\}_{k=1}^K, \{(z_n, \mbx_n)\}_{n=1}^N \mid \mbalpha) 
     &\propto 
     p(\mbpi \mid \mbalpha) \prod_{k=1}^K p(\mbtheta_k) \prod_{n=1}^N \prod_{k=1}^K \left[ \pi_k \, p(\mbx_n \mid \mbtheta_k) \right]^{\bbI[z_n = k]}
 \end{align*}
