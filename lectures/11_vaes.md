@@ -1,12 +1,17 @@
 # Variational Autoencoders
 
 ## Generative Model
-Variational Autoencodres (VAEs) are "deep" but conceptually simple generative models,
+Variational Autoencodres (VAEs) are "deep" but conceptually simple generative models. To sample a data point $\mbx_n$,
+1. First, sample **latent variables** $\mbz_n$,
 \begin{align*}
-    \mbz_n &\sim \mathrm{N}(\mbzero, \mbI) \\
-    \mbx_n &\sim \mathrm{N}(g(\mbz_n; \mbtheta), \mbI)
+    \mbz_n &\sim \mathrm{N}(\mbzero, \mbI) 
 \end{align*}
-where $g: \reals^H \to \reals^D$ is a nonlinear mapping from $\mbz_n \in \reals^H$ to $\E[\mbx_n] \in \reals^D$, parameterized by $\mbtheta$.
+
+2. Then sample the data point $\mbx_n$ from a conditional distribution with mean,
+\begin{align*}
+    \E[\mbx_n \mid \mbz_n] &= g(\mbz_n; \mbtheta),
+\end{align*}
+where $g: \reals^H \to \reals^D$ is a nonlinear mapping parameterized by $\mbtheta$.
 
 We will assume $g$ is a simple **feedforward neural network** of the form,
 \begin{align*}
@@ -60,7 +65,7 @@ The ELBO is still maximized (and the bound is tight) when each $q_n$ is equal to
 Unfortunately, the posterior no longer has a simple, closed form.
 
 :::{admonition} Question
-The deep generative model above has a Gaussian prior on $\mbz_n$ and a Gaussian likelihood for $\mbx_n$ given $\mbz_n$. Why isn't the posterior Gaussian?
+Suppose $\mbx_n \sim \mathrm{N}(g(\mbz_n; \mbtheta), \mbI)$. This deep generative model has a Gaussian prior on $\mbz_n$ and a Gaussian likelihood for $\mbx_n$ given $\mbz_n$. Why isn't the posterior Gaussian?
 :::
 
 Nevertheless, we can still constrain $q_n$ to belong to a simple family. For example, we could constrain it to be Gaussian and seek the best Gaussian approximation to the posterior. This is sometimes called **fixed-form variational inference**. Let,
@@ -75,8 +80,6 @@ Then, for fixed parameters $\mbtheta$, the best $q_n$ in this **variational fami
     &= \arg \max_{\mblambda_n \in \reals^{2H}} \cL_n(\mblambda_n, \mbtheta).
 \end{align*}
 
-We can maximize the ELBO with **stochastic gradient ascent** using unbiased estimates of the gradient, $\widehat{\nabla}_{\mblambda_n} \cL(\mblambda_n, \mbtheta)$, e.g., using the **score-function** or the **pathwise gradient estimators**.
-
 
 ## Variational Expectation-Maximization (vEM)
 Now we can introduce a new algorithm.
@@ -84,14 +87,11 @@ Now we can introduce a new algorithm.
 :::{prf:algorithm} Variational EM (vEM)
 Repeat until either the ELBO or the parameters converges:
 1. **M-step:** Set $\mbtheta \leftarrow \arg \max_{\mbtheta} \cL(\mblambda, \mbtheta)$
-2. **E-step:** For $n=1,\ldots,N$ :
-    
-    a. Set $\mblambda_n \leftarrow \arg \max_{\mblambda_n \in \mbLambda} \cL_n(\mblambda_n, \mbtheta)$
-
+2. **E-step:** Set $\mblambda_n \leftarrow \arg \max_{\mblambda_n \in \mbLambda} \cL_n(\mblambda_n, \mbtheta)$ for $n=1,\ldots,N$
 3. Compute (an estimate of) the ELBO $\cL(\mblambda, \mbtheta)$.
 :::
 
-Unfortunately, none of these steps will have closed form solutions, so we'll have to use approximations. 
+In general, none of these steps will have closed form solutions, so we'll have to use approximations. 
 
 
 ### Generic M-step with Stochastic Gradient Ascent
