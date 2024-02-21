@@ -46,12 +46,12 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Feb 12, 2024 | [Mixture Models and EM](lectures/09_mixtures.md) | {cite:p}`bishop2006pattern` Ch. 9 |
 | Feb 14, 2024 | [Hidden Markov Models](lectures/10_hmms.md) | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Feb 19, 2024 | _Presidents' Day. No class_            |         |
-| Feb 21, 2024 | [Variational Autoencoders](lectures/11_vaes.md) |         |
-| Feb 26, 2024 | Recurrent Neural Networks              |         |
-| Feb 28, 2024 | Attention and Tranformers              |         |
-| Mar  4, 2024 | State Space Layers (S4, S5, Mamba) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     |         |
+| Feb 21, 2024 | [Variational Autoencoders](lectures/11_vaes.md) | {cite:p}`kingma2019introduction` Ch.1-2 |
+| Feb 26, 2024 | Recurrent Neural Networks              | {cite:p}`goodfellow2016deep` Ch. 10 |
+| Feb 28, 2024 | Tranformers              | {cite:p}`turner2023introduction` |
+| Mar  4, 2024 | State Space Layers (S4, S5, Mamba) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Mar  6, 2024 | Models for Graph-Structured Data       |         |
-| Mar 11, 2024 | (Discrete) Denoising Diffusion Models  |         | 
+| Mar 11, 2024 | (Discrete) Denoising Diffusion Models  | {cite:p}`turner2024denoising` | 
 | Mar 13, 2024 | Everything Else                        |         |
 
 ## Assignments
@@ -67,6 +67,11 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
 - [**Homework 2: Bayesian GLMs**](assignments/hw2/hw2.ipynb)
   - Released Wed, Jan 31, 2024
   - Due Wed, Feb 14, 2024 at 11:59pm
+
+- [**Homework 3: Hidden Markov Models**](assignments/hw3/hw3.ipynb)
+  - Released Fri, Feb 16, 2024
+  - Due Mon, Feb 26, 2024 at 11:59pm
+
 
 ## Exams
 - **Midterm Exam**: In class on Wed, Feb 7, 2024

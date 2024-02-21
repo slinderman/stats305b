@@ -872,8 +872,8 @@ p(y, \beta \mid X)
 &amp;= \mathrm{N}(\beta \mid 0, \gamma^{-1} I) \prod_{i=1}^n \mathrm{St}(y_i \mid \beta^\top x_i, \sigma_0^2, \nu)
 \end{align*}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathrm{St}(\mu, \sigma_0^2, \nu)\)</span> denotes the <strong>Students’ t distribution</strong> with mean <span class="math notranslate nohighlight">\(\mu\)</span>, scale <span class="math notranslate nohighlight">\(\sigma_0\)</span>, and <span class="math notranslate nohighlight">\(\nu\)</span> degrees of freedom. Its density is,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-2e0b9ba0-b485-4683-bc34-67b8910a6185">
-<span class="eqno">(3)<a class="headerlink" href="#equation-2e0b9ba0-b485-4683-bc34-67b8910a6185" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-386c3e18-f638-4382-b848-1dc84660074d">
+<span class="eqno">(3)<a class="headerlink" href="#equation-386c3e18-f638-4382-b848-1dc84660074d" title="Permalink to this equation">#</a></span>\[\begin{align}
     \mathrm{St}(y; \mu, \sigma_0^2, \nu)
     &amp;= \frac{\Gamma(\tfrac{\nu + 1}{2})}{\Gamma(\tfrac{\nu}{2})} \frac{1}{\sqrt{\pi \nu \sigma_0^2}} \left[1 + \frac{\Delta^2}{\nu} \right]^{-\tfrac{\nu + 1}{2}}
 \end{align}\]</div>
@@ -884,8 +884,8 @@ Its mean is <span class="math notranslate nohighlight">\(\mu\)</span> and its va
 <section id="student-s-t-as-a-scale-mixture-of-gaussians">
 <h3>Student’s t as a scale-mixture of Gaussians<a class="headerlink" href="#student-s-t-as-a-scale-mixture-of-gaussians" title="Link to this heading">#</a></h3>
 <p>However, here’s a <strong>nifty trick</strong>! The Student’s t density can be written as a scale-mixture of Gaussians,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-72b2f837-0a86-41c3-bd23-61c2ca3e74e5">
-<span class="eqno">(4)<a class="headerlink" href="#equation-72b2f837-0a86-41c3-bd23-61c2ca3e74e5" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-9350ad41-6c67-40c2-9218-05c80a57c6dc">
+<span class="eqno">(4)<a class="headerlink" href="#equation-9350ad41-6c67-40c2-9218-05c80a57c6dc" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{St}\left(y; \mu, \sigma_0^2, \nu \right)
 &amp;= \int \mathrm{IGa}(\sigma \mid \tfrac{\nu}{2}, \tfrac{\nu \sigma_0^2}{2}) \, \mathrm{N}(y \mid \mu, \sigma^2) \, \mathrm{d} \sigma^2
 \end{align}\]</div>
@@ -1273,8 +1273,8 @@ p(y_i \mid x_i, \beta)
 &amp;= \int_{-\infty}^\infty p(y_i \mid z_i) \, \mathrm{N}(z_i \mid \beta^\top x_i, 1) \, \mathrm{d} z_i
 \end{align*}\]</div>
 <p>where</p>
-<div class="amsmath math notranslate nohighlight" id="equation-24020c3a-e3be-4d27-b16a-61c7d1cc5eda">
-<span class="eqno">(5)<a class="headerlink" href="#equation-24020c3a-e3be-4d27-b16a-61c7d1cc5eda" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-e6521429-c819-4bef-addd-7d4ea0f0d00c">
+<span class="eqno">(5)<a class="headerlink" href="#equation-e6521429-c819-4bef-addd-7d4ea0f0d00c" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(y_i \mid z_i) &amp;=
     \begin{cases}
     \delta_1(y_i) &amp; \text{if } z_i &gt; 0\\

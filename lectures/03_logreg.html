@@ -632,8 +632,8 @@ Since variances are non-negative, so are the weights, which implies that the Hes
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) + t \log\left(1 - \frac{\mu}{L}\right) \leq \log \epsilon.
 \end{align*}\]</div>
 <p>We can further upper bound the LHS by using the inequality <span class="math notranslate nohighlight">\(\log ( 1 - x) \leq -x\)</span> to get</p>
-<div class="amsmath math notranslate nohighlight" id="equation-c56dda47-42be-41b8-a7b9-edecf925cfe7">
-<span class="eqno">(1)<a class="headerlink" href="#equation-c56dda47-42be-41b8-a7b9-edecf925cfe7" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-1c6ee0eb-f228-4fb1-b7f5-9cb3a8b9a137">
+<span class="eqno">(1)<a class="headerlink" href="#equation-1c6ee0eb-f228-4fb1-b7f5-9cb3a8b9a137" title="Permalink to this equation">#</a></span>\[\begin{align}
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*))  - \frac{\mu t}{L}\leq \log \epsilon.
 \end{align}\]</div>
 <p>So, we need to run <span class="math notranslate nohighlight">\(t \geq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}\)</span> iterations of gradient descent. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 100\)</span> times as many iterations. This is called <strong>linear convergence</strong>.</p>
