@@ -15,6 +15,7 @@ parts:
     - file: lectures/09_mixtures.md
     - file: lectures/10_hmms.md
     - file: lectures/11_vaes.md
+    - file: lectures/11_vaes_demo.ipynb
     
   - caption: Assignments
     chapters:
