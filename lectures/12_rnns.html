@@ -1,0 +1,840 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Recurrent Neural Networks &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/12_rnns';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Variational Autoencoders" href="11_vaes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_sparse_glms.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_hmms.html">Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_vaes.html">Variational Autoencoders</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Recurrent Neural Networks</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/12_rnns.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Recurrent Neural Networks</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-models">Autoregressive Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Recurrent Neural Networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vanilla-rnns">Vanilla RNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-neuroscience">Theoretical Neuroscience</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backpropagation-through-time">Backpropagation Through Time</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vanishing-gradients">Vanishing Gradients</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gated-rnns">Gated RNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-variations-and-uses-of-rnns">Other Variations and Uses of RNNs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-to-sequence-models">Sequence to Sequence Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bidirectional-rnns">Bidirectional RNNs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-rnns">Deep RNNs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hmms-are-rnns-too">HMMs Are RNNs Too!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-hmms">Categorical HMMs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-cool-trick-for-computing-the-gradients">A Cool Trick for Computing the Gradients</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#computational-cost">Computational Cost</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="recurrent-neural-networks">
+<h1>Recurrent Neural Networks<a class="headerlink" href="#recurrent-neural-networks" title="Link to this heading">#</a></h1>
+<p>Let’s turn our attention back to models for sequential data for the next few lectures. With all the excitement around large language modeling, this is a timely topic.</p>
+<section id="autoregressive-models">
+<h2>Autoregressive Models<a class="headerlink" href="#autoregressive-models" title="Link to this heading">#</a></h2>
+<p>Consider a sequence of observations <span class="math notranslate nohighlight">\(\mbx_{1:T} = (\mbx_1, \ldots, \mbx_T)\)</span> with each <span class="math notranslate nohighlight">\(\mbx_t \in \reals^D\)</span>.
+We can always factor a joint distribution over observation into a product of conditionals using the chain rule,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbx_{1:T}) &amp;= p(\mbx_1) \prod_{t=2}^T p(\mbx_t \mid \mbx_{1:t-1}).
+\end{align*}\]</div>
+<p>This is called an <strong>autoregressive model</strong> since the conditional of <span class="math notranslate nohighlight">\(\mbx_t\)</span> depends only on previous observations <span class="math notranslate nohighlight">\(\mbx_{1}, \ldots, \mbx_{t-1}\)</span>.</p>
+<p>Autoregressive models are well-suited to sequential modeling since they make forward generation or <em>forecasting</em> easy.
+As long as we have access to the conditionals, we can sample forward indefinitely.</p>
+<p>The question is, how should we parameterize these conditional distributions?
+It looks challenging since each one takes in a variable-length history of previous observations.</p>
+</section>
+<section id="id1">
+<h2>Recurrent Neural Networks<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Recurrent Neural Networks (RNNs) are autoregressive models in which the conditional distributions are functions of a finite-dimensional <strong>hidden state</strong>, <span class="math notranslate nohighlight">\(\mbh_t \in \reals^K\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbx_t \mid \mbx_{1:t-1}) &amp;= p(\mbx_t \mid g(\mbh_t; \mbtheta)).
+\end{align*}\]</div>
+<p>The hidden state is updated with each new observation as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbh_{t+1} &amp;= f(\mbh_t, \mbx_t; \mbtheta).
+\end{align*}\]</div>
+<div class="tip admonition">
+<p class="admonition-title">Defining Property of an RNN</p>
+<p><em>The conditional distribution over the next observation is a function of hidden state. The hidden state is updated recursively, and its size is fixed regardless of the sequence length.</em></p>
+</div>
+</section>
+<section id="vanilla-rnns">
+<h2>Vanilla RNNs<a class="headerlink" href="#vanilla-rnns" title="Link to this heading">#</a></h2>
+<p>The standard, “vanilla” RNN consists of a linear-nonlinear state update. For example,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+f(\mbh_t, \mbx_t; \mbtheta)
+&amp;= \tanh \left(\mbW \mbh_t + \mbB \mbx_t \right),
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mbW \in \reals^{K \times K}\)</span> are the dynamics weights,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbB \in \reals^{K \times D}\)</span> are the input weights,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tanh(\cdot)\)</span> is the hyperbolic tangent function.</p></li>
+</ul>
+<div class="dropdown admonition">
+<p class="admonition-title">Hyperbolic Tangent and the Logistic Function</p>
+<p>The hyperbolic tangent function equivalent is typically written as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\tanh(a) &amp;= \frac{e^a - e^{-a}}{e^a + e^{-a}}. 
+\end{align*}\]</div>
+<p>We can rewrite it as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\tanh(a) &amp;= 1 - \frac{2e^{-a}}{e^a + e^{-a}} \\
+&amp;= 1 - \frac{2}{e^{2a} + 1} \\
+&amp;= 1 - 2 \sigma(-2a) \\
+&amp;= 1 - 2 (1 - \sigma(2a)) \\
+&amp;= 2 \sigma(2a) - 1.
+\end{align*}\]</div>
+<p>Thus, we see that the the hyperbolic tangent is simply a scaled and shifted logistic function.</p>
+</div>
+<p>The “read-out” of a vanilla RNN is typically a simple linear or generalized linear model, depending on the type of observations. For example,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+g(\mbh_t, \mbx_t; \mbtheta) &amp;= \mbC \mbx_t + \mbd,
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mbC \in \reals^{D \times K}\)</span> are the read-out weights and</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbd \in \reals^D\)</span> is the bias.</p></li>
+</ul>
+<p>Let <span class="math notranslate nohighlight">\(\mbtheta = (\mbW, \mbB, \mbC, \mbd)\)</span> denote the set of parameters.</p>
+</section>
+<section id="theoretical-neuroscience">
+<h2>Theoretical Neuroscience<a class="headerlink" href="#theoretical-neuroscience" title="Link to this heading">#</a></h2>
+<p>From a machine learning perspective, RNNs are useful function approximators for sequential data. From a neuroscience perspective, they have a long history as theoretical models of neural computation.</p>
+<p>In such models, the hidden state <span class="math notranslate nohighlight">\(\mbh_t \in \reals^K\)</span> corresponds to the relative <strong>firing rates</strong> of <span class="math notranslate nohighlight">\(K\)</span> neurons. With a hyperbolic tangent nonlinearity, <span class="math notranslate nohighlight">\(\mbh_t \in (-1, 1)^K\)</span>, and negative rates don’t make sense. Instead, we think of <span class="math notranslate nohighlight">\(\mbh_t\)</span> as an additive offset to a baseline firing rate.</p>
+<p>The dynamics weights correspond to <strong>synaptic connections</strong>, with positive weights as excitatory synapses and negative weights as inhibitory. When a presynaptic neuron spikes, it induces an electrical current in postsynaptic neurons. Under this interpretation, the activation <span class="math notranslate nohighlight">\(\mbW \mbh_t\)</span> corresponds to the <strong>input current</strong> generated by inputs from other neurons.</p>
+<p>As a neuron receives input current, its voltage steadily increases until it reaches a <strong>threshold</strong>, at which point the voltage spikes and the neuron fires an <strong>action potential</strong>. These spikes induce currents on downstream neurons, as described above. After a cell fires, there is a short <strong>refractory period</strong> before the neuron can spike again. Thus, there is an upper bound on firing rates, which the hyperbolic tangent is meant to capture.</p>
+</section>
+<section id="backpropagation-through-time">
+<h2>Backpropagation Through Time<a class="headerlink" href="#backpropagation-through-time" title="Link to this heading">#</a></h2>
+<p>Artificial RNNs are trained using stochastic gradient descent (SGD) to minimize the negative log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbtheta)
+&amp;= - \sum_{t=1}^T \log p(\mbx_t \mid \mbx_{1:t-1}) \\
+&amp;= - \sum_{t=1}^T \log p(\mbx_t \mid g(\mbh_t; \mbtheta)) \\
+&amp;= - \sum_{t=1}^T \log p(\mbx_t \mid g(f(\mbh_{t-1}, \mbx_{t-1}; \mbtheta); \mbtheta)) \\
+&amp;= - \sum_{t=1}^T \log p(\mbx_t \mid g(f(\cdots f(\mbh_{1}, \mbx_{1}; \mbtheta) \cdots, \mbx_{t-1}; \mbtheta); \mbtheta)).
+\end{align*}\]</div>
+<p>Now, you would simply use automatic differentiation to compute the necessary gradients to minimize this loss, but we can gain some insight by working them out manually. With some algebra, we can show that the Jacobian of the loss with respect to the dynamics weights (other parameters are similar) is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\partial \cL(\mbtheta)}{\partial \mbW} &amp;= \sum_{t=1}^T \frac{\partial \cL(\mbtheta)}{\partial \mbh_t} \frac{ \partial \mbh_t}{\partial \mbW}
+\end{align*}\]</div>
+<p>We need the Jacobian of the loss with respect to the hidden states. These can be computed recursively by <strong>backpropagation through time (BPTT)</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\partial \cL(\mbtheta)}{\partial \mbh_t} 
+&amp;= \frac{\partial \cL(\mbtheta)}{\partial \mbh_{t+1}} \frac{\partial \mbh_{t+1}}{\partial \mbh_t} - \frac{\partial \log p(\mbx_t \mid g(\mbh_t; \mbtheta))}{\partial \mbh_t}
+\end{align*}\]</div>
+<p>For a vanilla RNN, the Jacobian of the next state with respect to the current state is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\partial \mbh_{t+1}}{\partial \mbh_t} 
+&amp;= \diag \left(1 - \mbh_{t+1}^2 \right) \mbW
+\end{align*}\]</div>
+<p>since <span class="math notranslate nohighlight">\(\frac{\dif}{\dif a}\tanh(a) = 1 - \tanh(a)^2\)</span>.</p>
+<div class="admonition-bptt-is-a-linear-dynamical-system admonition">
+<p class="admonition-title">BPTT is a linear dynamical system</p>
+<p>The “state” of the BPTT recursions is the Jacobian, or equivalently its transpose, the gradient <span class="math notranslate nohighlight">\(\mbs_t \triangleq \left(\frac{\partial \cL(\mbtheta)}{\partial \mbh_t}\right)^\top\)</span>. This state obeys a linear dynamical system,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbs_t &amp;= \mbA_t \mbs_{t+1} + \mbb_t
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbA_t = \left(\frac{\partial \mbh_{t+1}}{\partial \mbh_t} \right)^\top\)</span> and <span class="math notranslate nohighlight">\(\mbb_t = - \left(\frac{\partial \log p(\mbx_t \mid g(\mbh_t; \mbtheta))}{\partial \mbh_t} \right)^\top\)</span>.</p>
+</div>
+<div class="tip dropdown admonition">
+<p class="admonition-title">Biological Plausibility</p>
+<p>Backpropagation is the most effective way we know of to train artificial RNNs, so it’s reasonable to think that the brain might be using a similar learning algorithm. Unfortunately, it’s not clear how the backpropagation through time algorithm could be implemented by a neural circuit. The multiplication by <span class="math notranslate nohighlight">\(\mbA_t\)</span> in the gradient recursions amounts to passing information backward across synapses, and canonical synaptic models don’t have mechanisms to do this. Recent years have seen a substantial amount of research into biologically plausible mechanisms of backpropagation.</p>
+</div>
+<section id="vanishing-gradients">
+<h3>Vanishing Gradients<a class="headerlink" href="#vanishing-gradients" title="Link to this heading">#</a></h3>
+<p>When the Jacobians <span class="math notranslate nohighlight">\(\mbA_t\)</span> have small eigenvalues (<span class="math notranslate nohighlight">\(\ll 1\)</span>), we run into problems of <strong>vanishing gradients</strong>. Consider the case of a linear RNN in which the <span class="math notranslate nohighlight">\(\tanh\)</span> is replaced with identity: then the Jacobians are <span class="math notranslate nohighlight">\(\mbA_t = \mbW^\top\)</span> for all time steps. If the eigenvalues of <span class="math notranslate nohighlight">\(\mbW\)</span> are much less than one, the gradients will decay to zero exponentially quickly, absent strong inputs <span class="math notranslate nohighlight">\(\mbb_t\)</span>.</p>
+<p>Vanishing gradients are especially problematic when <span class="math notranslate nohighlight">\(\mbx_t\)</span> depends on much earlier observations, <span class="math notranslate nohighlight">\(\mbx_s\)</span> for <span class="math notranslate nohighlight">\(s \ll t\)</span>. In that case, the hidden state must propagate information about <span class="math notranslate nohighlight">\(\mbx_s\)</span> for many time steps during the forward pass, and likewise, the gradient must pass information backward many timesteps during the backward pass. If the weights have small eigenvalues, those gradients will decay and the learning signal will fail to propagate.</p>
+</section>
+</section>
+<section id="gated-rnns">
+<h2>Gated RNNs<a class="headerlink" href="#gated-rnns" title="Link to this heading">#</a></h2>
+<p>One way to combat the vanishing gradient problem is by modifying the RNN architecture. Architectures like <strong>long short-term memory (LSTM)</strong> networks achieve this via gated units.</p>
+<p>An LSTM has internal (aka “cell”) states <span class="math notranslate nohighlight">\(\mbc_t \in \reals^K\)</span> and hidden states <span class="math notranslate nohighlight">\(\mbh_t \in \reals^K\)</span>. The internal states follow <strong>conditionally linear</strong> dynamics,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbc_{t} &amp;= \mbF_t \mbc_{t-1} + \mbb_t
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbF_t &amp;= \diag(f_{t,1}, \ldots, f_{t,K}) \\
+f_{t,k} &amp;= \sigma(\mbW^{(f)} \mbh_{t-1} + \mbB^{(f)} \mbx_{t-1}).
+\end{align*}\]</div>
+<p>The bounded entries <span class="math notranslate nohighlight">\(f_{t,k} \in [0,1]\)</span> ensure stability. When <span class="math notranslate nohighlight">\(f_{t,k} \approx 1\)</span>, the state is propagated, and when <span class="math notranslate nohighlight">\(f_{t,k} \approx 0\)</span>, the state is forgotten.
+Thus, <span class="math notranslate nohighlight">\(\mbf_t = (f_{t,1}, \ldots, f_{t,K})^\top \in [0,1]^K\)</span> are called the <strong>forget gates</strong>, and they are parameterized by the matrices <span class="math notranslate nohighlight">\(\mbW^{(f)}\)</span> and <span class="math notranslate nohighlight">\(\mbB^{(f)}\)</span>.</p>
+<p>The affine term is determined by,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbb_t &amp;= \mbg_t \odot \mbi_t \\
+\mbg_t &amp;= \sigma(\mbW^{(g)} \mbh_{t-1} + \mbB^{(g)} \mbx_{t-1}) \\
+\mbi_t &amp;= \sigma(\mbW^{(i)} \mbh_{t-1} + \mbB^{(i)} \mbx_{t-1})
+\end{align*}\]</div>
+<p>The vector <span class="math notranslate nohighlight">\(\mbg_t \in [0,1]^K\)</span> plays the role of an <strong>input gate</strong>, and the input s themselves are given by <span class="math notranslate nohighlight">\(\mbi_t \in [0,1]^K\)</span>.</p>
+<p>Finally, the hidden states <span class="math notranslate nohighlight">\(\mbh_t\)</span> are gated functions of the internal state passed through a nonlinearity,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbh_t &amp;= \mbo_t \odot \tanh(\mbc_t) \\
+\mbo_t &amp;= \sigma(\mbW^{(o)} \mbh_{t-1} + \mbB^{(o)} \mbx_{t-1})
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbo_t \in [0,1]^K\)</span> are the <strong>output gates</strong>.
+As in a vanilla RNN, the final prediction depends on a (generalized) linear function of the hidden state, <span class="math notranslate nohighlight">\(g(\mbh_t; \mbtheta)\)</span>.</p>
+<p>We can think of an LSTM as an RNN that operates on an extended state <span class="math notranslate nohighlight">\((\mbc_t, \mbh_t) \in \reals_+^K \times [-1, 1]^K\)</span>.
+The forget gates let the eigenvalues of <span class="math notranslate nohighlight">\(\mbF_t\)</span> to be close to one, allowing cell states to be propagated for long periods of time on the forward pass, and gradients to be backpropagated without vanishing on the backward pass.</p>
+<p>There are many variants of gated RNNs. Besides the LSTM, the most commonly used in the gated recurrent unit (GRU), which has a slightly simplified architecture. See <span id="id2">Goodfellow <em>et al.</em> [<a class="reference internal" href="99_references.html#id17" title="Ian Goodfellow, Yoshua Bengio, and Aaron Courville. Deep Learning. MIT Press, 2016. http://www.deeplearningbook.org.">GBC16</a>]</span> (ch. 10) for more detail.</p>
+</section>
+<section id="other-variations-and-uses-of-rnns">
+<h2>Other Variations and Uses of RNNs<a class="headerlink" href="#other-variations-and-uses-of-rnns" title="Link to this heading">#</a></h2>
+<p>We motivated RNNs from an autoregressive modeling persepective, but they are useful in other sequential data settings as well. For example, suppose we want to predict the sentiment of a review <span class="math notranslate nohighlight">\(y \in \reals\)</span> given a variable-length sequence of input words <span class="math notranslate nohighlight">\(\mbx_{1:T}\)</span>. We can use an RNN to summarize the input sequence in terms of a hidden state for prediction,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(y \mid \mbx_{1:T}) &amp;= p(y \mid g(\mbh_t; \mbtheta)).
+\end{align*}\]</div>
+<section id="sequence-to-sequence-models">
+<h3>Sequence to Sequence Models<a class="headerlink" href="#sequence-to-sequence-models" title="Link to this heading">#</a></h3>
+<p>Sometimes we want to map one sequence <span class="math notranslate nohighlight">\(\mbx_{1:T}\)</span> to another sequence <span class="math notranslate nohighlight">\(\mby_{1:T'}\)</span>. The sequences may be of different length; e.g., when we want to translate a sentence from English to French. Again, we can train an <strong>encoder</strong> RNN to produce a hidden state <span class="math notranslate nohighlight">\(\mbh_T\)</span> that then becomes the initial condition for a <strong>decoder</strong> RNN that generates the output sequence. Formally,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*} 
+p(\mby_{1:T'} \mid \mbx_{1:T}) 
+&amp;= \prod_{t=1}^{T'} p(\mby_{t} \mid \mby_{1:t-1}, \mbx_{1:T}) \\
+&amp;= \prod_{t=1}^{T'} p(\mby_{t} \mid \mbh'_t, \mbh_T)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbh_T\)</span> is the output of an RNN that processed <span class="math notranslate nohighlight">\(\mbx_{1:T}\)</span>, and <span class="math notranslate nohighlight">\(\mbh'_t\)</span> is the state of an RNN that runs over <span class="math notranslate nohighlight">\(\mby_{1:T}\)</span>.</p>
+</section>
+<section id="bidirectional-rnns">
+<h3>Bidirectional RNNs<a class="headerlink" href="#bidirectional-rnns" title="Link to this heading">#</a></h3>
+<p>In the example above, one challenge is that the hidden state <span class="math notranslate nohighlight">\(\mbh_T\)</span> obtained by processing <span class="math notranslate nohighlight">\(\mbx_{1:T}\)</span> may not adequately represent early inputs like <span class="math notranslate nohighlight">\(x_1\)</span>. For these purposes, you can use a <strong>bidirectional RNN</strong> that runs one recursion forward <span class="math notranslate nohighlight">\(\mbx_1, \ldots, \mbx_T\)</span> and another backward <span class="math notranslate nohighlight">\(\mbx_T, \ldots, \mbx_1\)</span> to produce two hidden states at each time <span class="math notranslate nohighlight">\(t\)</span>. These combined states can then be passed into the decoder.</p>
+</section>
+<section id="deep-rnns">
+<h3>Deep RNNs<a class="headerlink" href="#deep-rnns" title="Link to this heading">#</a></h3>
+<p>As with  deep neural networks that stack layer upon layer, we can stack RNN upon RNN to construct a deeper model. In such models, the outputs of one layer, <span class="math notranslate nohighlight">\(g(\mbh_t^{(i)}; \mbtheta^{(i)})\)</span> become the inputs to the next layer, <span class="math notranslate nohighlight">\(\mbx_t^{(i+1)}\)</span>. Then we can backpropagate gradients through the entire stack to train the model.</p>
+</section>
+</section>
+<section id="hmms-are-rnns-too">
+<h2>HMMs Are RNNs Too!<a class="headerlink" href="#hmms-are-rnns-too" title="Link to this heading">#</a></h2>
+<p>It turns out, we’ve already seen an RNN in this class!
+We presented Hidden Markov Models (HMMs) as latent variable models with hidden states <span class="math notranslate nohighlight">\(\mbz_{1:T}\)</span> and conditionally indepedent observations <span class="math notranslate nohighlight">\(\mbx_{1:T}\)</span>, but we can also view them as an autoregressive model in which</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbx_t \mid \mbx_{1:t-1}) 
+&amp;= \sum_{k=1}^K p(z_t=k \mid \mbx_{1:t-1}) \, p(\mbx_t \mid z_t=k) \\
+&amp;= \sum_{z_t} \overline{\alpha}_{t,k} \, p(\mbx_t \mid z_t=k)
+\end{align*}\]</div>
+<p>where, <span class="math notranslate nohighlight">\(\overline{\mbalpha}_t \in \Delta_{K-1}\)</span> are the <strong>normalized forward messages</strong> from the forward-backward algorithm. They followed a simple recursion,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\overline{\mbalpha}_{t+1} &amp;= \mbP^\top \left( \frac{\overline{\mbalpha}_t \odot \mbl_t}{\overline{\mbalpha}_t^\top \mbl_t} \right)
+\end{align*}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mbl_t \in \reals^K\)</span> is the vector of likelihoods with entries <span class="math notranslate nohighlight">\(l_{t,k} = p(\mbx_t \mid z_t=k)\)</span> and <span class="math notranslate nohighlight">\(\mbP \in \reals^{K \times K}\)</span> is the transition matrix.</p>
+<section id="categorical-hmms">
+<h3>Categorical HMMs<a class="headerlink" href="#categorical-hmms" title="Link to this heading">#</a></h3>
+<p>Consider an HMM with categorical emissions,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbx_t \mid z_t) &amp;= \mathrm{Cat}(\mbx_t \mid \mbc_{z_t}),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbx_t\)</span> is a one-hot encoding of a variable that takes values in <span class="math notranslate nohighlight">\(\{1,\ldots,V\}\)</span>, and <span class="math notranslate nohighlight">\(\mbc_k \in \Delta_{V-1}\)</span> for <span class="math notranslate nohighlight">\(k=1,\ldots,K\)</span> are pmfs.
+Define the matrix of likelihoods <span class="math notranslate nohighlight">\(\mbC \in \reals^{V \times K}\)</span> to have columns <span class="math notranslate nohighlight">\(\mbc_k\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbC &amp;=
+\begin{bmatrix}
+| &amp; &amp; | \\
+\mbc_1 &amp; \cdots &amp; \mbc_K \\
+| &amp; &amp; | 
+\end{bmatrix}.
+\end{align*}\]</div>
+<p>The HMM parameters are <span class="math notranslate nohighlight">\(\mbtheta = (\mbP, \mbC)\)</span>. (Assume the initial distribution is fixed, for simplicity.)</p>
+<p>For a categorical HMM, we can write the likelihoods as <span class="math notranslate nohighlight">\(\mbl_t = \mbC^\top \mbx_t\)</span> so that the the forward recursions simplify to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\overline{\mbalpha}_{t+1} 
+&amp;= \mbP^\top \left( \frac{\overline{\mbalpha}_t \odot \mbC^\top \mbx_t}{\overline{\mbalpha}_t^\top \mbC^\top \mbx_t} \right) \\
+&amp;= f(\overline{\mbalpha}_t, \mbx_t; \mbtheta)
+\end{align*}\]</div>
+<p>Likewise, the autoregressive distributions reduce to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbx_t \mid \mbx_{1:t-1}) 
+&amp;= \mathrm{Cat}(\mbx_t \mid \mbC \overline{\mbalpha}_t) \\
+&amp;= \mathrm{Cat}(\mbx_t \mid g(\overline{\mbalpha}_t; \mbtheta)).
+\end{align*}\]</div>
+<p>Framed this way, a categorical HMM can be seen as a simple recurrent neural network!</p>
+</section>
+<section id="a-cool-trick-for-computing-the-gradients">
+<h3>A Cool Trick for Computing the Gradients<a class="headerlink" href="#a-cool-trick-for-computing-the-gradients" title="Link to this heading">#</a></h3>
+<p>This formulation suggests that we could estimate the parameters of an HMM by directly maximizing the log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbtheta) &amp;= \log p(\mbx_{1:T}; \mbtheta) = \sum_{t=1}^T \log p(\mbx_t \mid \mbx_{1:t-1}; \mbtheta).
+\end{align*}\]</div>
+<p>With automatic differentiation at our disposal, this sounds like it might be a lot easier!</p>
+<p>Let’s pursue this idea a little further. First, we’d prefer to do unconstrained optimization, so let’s parameterize the model in terms of <span class="math notranslate nohighlight">\(\log \mbP\)</span> and <span class="math notranslate nohighlight">\(\log \mbC\)</span>. When we need the constrained versions, we will just apply the softmax to obtain simplex vectors:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{softmax}(\log \mbc_k) 
+&amp;= \left(
+    \frac{e^{\log c_{k,1}}}{\sum_{v=1}^V e^{\log c_{k,v}}}, 
+    \ldots,
+    \frac{e^{\log c_{k,V}}}{\sum_{v=1}^V e^{\log c_{k,v}}}
+ \right)^\top
+\end{align*}\]</div>
+<div class="admonition-softmax-is-translation-invariant admonition">
+<p class="admonition-title">Softmax is translation invariant</p>
+<p>Note that the softmax operation is translation invariant,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{softmax}(\log \mbc_k) &amp;=
+\mathrm{softmax}(\log \mbc_k + a) 
+\end{align*}\]</div>
+<p>for any constant <span class="math notranslate nohighlight">\(a \in \reals\)</span>. Thus, we will call our optimization variables <span class="math notranslate nohighlight">\(\log \mbC\)</span> and <span class="math notranslate nohighlight">\(\log \mbP\)</span>, but they are not actually the log of matrices with simplex columns or rows; they are unconstrained parameters that become properly normalized via the softmax.</p>
+</div>
+<p>To maximize the likelihood with gradient ascent, we need the Jacobians, <span class="math notranslate nohighlight">\(\frac{\partial \cL(\mbtheta)}{\partial \log \mbP}\)</span> and <span class="math notranslate nohighlight">\(\frac{\partial \cL(\mbtheta)}{\partial \log \mbC}\)</span>. For the RNNs above, we computed them using backpropagation through time, but here we can use an even cooler trick.</p>
+<p>First, note that the posterior distribution in an HMM can be written as an exponential family,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbz_{1:T} \mid \mbx_{1:T}; \mbtheta) 
+&amp;= \exp \left\{ \log p(\mbz_{1:T}, \mbx_{1:T}; \mbtheta) - \log p(\mbx_{1:T}; \mbtheta) \right\} \\
+&amp;= \exp \left\{ 
+    \log p(z_1; \mbpi_0) 
+    + \sum_{t=2}^T \log p(z_t \mid z_{t-1}; \mbP) 
+    + \sum_{t=1}^T \log p(\mbx_t \mid z_{t}; \mbC) 
+    - \log p(\mbx_{1:T}; \mbtheta)
+    \right\} \\
+&amp;= \exp \bigg\{ 
+    \sum_{k=1}^K \langle \bbI[z_1 =k], \log \pi_{0,k} \\
+    &amp;\hspace{6em}
+    + \sum_{t=2}^T \sum_{i=1}^K \sum_{j=1}^K \langle \bbI[z_{t-1}=i \wedge z_{t} = j],  \log P_{i,j} \rangle \\
+    &amp;\hspace{12em}
+    + \sum_{t=1}^T \sum_{v=1}^V \sum_{k=1}^K \langle \bbI[x_t = v \wedge z_t = k], \log C_{v,k} \rangle \\
+    &amp;\hspace{18em} - A(\mbtheta)
+    \bigg\} 
+\end{align*}\]</div>
+<p>where the log marginal likelihood <span class="math notranslate nohighlight">\(A(\mbtheta) = \log p(\mbx_{1:T}; \mbtheta)\)</span> is the log normalizer.</p>
+<p>Recall that for exponential family distributions, gradients of the log normalizer yield expected sufficient statistics. Thus,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\partial A(\mbtheta)}{\partial \log C_{v,k}} 
+&amp;= \sum_{t=1}^T \bbI[x_{t} = v] \cdot \bbE_{p(\mbz_{1:T} \mid \mbx_{1:T}; \mbtheta)} \left[\bbI[z_{t}=k] \right]
+\end{align*}\]</div>
+<p>and</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\partial A(\mbtheta)}{\partial \log P_{i,j}} 
+&amp;= \sum_{t=2}^T \bbE_{p(\mbz_{1:T} \mid \mbx_{1:T}; \mbtheta)} \left[ \bbI[z_{t-1}=i \wedge z_{t} = j] \right]
+\end{align*}\]</div>
+<p>The gradients are essentially the posterior marginals and pairwise marginals we computed in the EM algorithm!</p>
+<p>In the M-step of EM, we solve for the parameters that satisfy the constrained optimality conditions, whereas in SGD we just take a step in the direction of the gradient. EM tends to converge must faster in practice for this reason.</p>
+</section>
+</section>
+<section id="computational-cost">
+<h2>Computational Cost<a class="headerlink" href="#computational-cost" title="Link to this heading">#</a></h2>
+<p>What is the cost of evaluating an RNN and computing its gradients? Both the forward computation of the states and the backward computation of the gradients are <span class="math notranslate nohighlight">\(\cO(T)\)</span> time complexity. For a vanilla RNN, the cost of the matrix-vector multiplications in the forward and backward passes are likewise <span class="math notranslate nohighlight">\(\cO(K^2)\)</span>. In terms of memory, we also need to store the states for the backward pass, which takes <span class="math notranslate nohighlight">\(\cO(TK)\)</span> memory.</p>
+<p>These costs are comparble to those of inference in an HMM, as we expect from the discussion above. However, <span class="math notranslate nohighlight">\(\cO(T)\)</span> time for evaluation and gradient calculations are still quite costly in modern machine learning pipelines, and the networks that are used most in practice mitigate these costs with clever architectural changes, as we’ll discuss next.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="11_vaes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Variational Autoencoders</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-models">Autoregressive Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Recurrent Neural Networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vanilla-rnns">Vanilla RNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-neuroscience">Theoretical Neuroscience</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backpropagation-through-time">Backpropagation Through Time</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vanishing-gradients">Vanishing Gradients</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gated-rnns">Gated RNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-variations-and-uses-of-rnns">Other Variations and Uses of RNNs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-to-sequence-models">Sequence to Sequence Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bidirectional-rnns">Bidirectional RNNs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-rnns">Deep RNNs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hmms-are-rnns-too">HMMs Are RNNs Too!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-hmms">Categorical HMMs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-cool-trick-for-computing-the-gradients">A Cool Trick for Computing the Gradients</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#computational-cost">Computational Cost</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
