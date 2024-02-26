@@ -47,7 +47,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Feb 14, 2024 | [Hidden Markov Models](lectures/10_hmms.md) | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Feb 19, 2024 | _Presidents' Day. No class_            |         |
 | Feb 21, 2024 | [Variational Autoencoders](lectures/11_vaes.md) | {cite:p}`kingma2019introduction` Ch.1-2 |
-| Feb 26, 2024 | Recurrent Neural Networks              | {cite:p}`goodfellow2016deep` Ch. 10 |
+| Feb 26, 2024 | [Recurrent Neural Networks](lectures/12_rnns.md) | {cite:p}`goodfellow2016deep` Ch. 10 |
 | Feb 28, 2024 | Tranformers              | {cite:p}`turner2023introduction` |
 | Mar  4, 2024 | State Space Layers (S4, S5, Mamba) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Mar  6, 2024 | Models for Graph-Structured Data       |         |
