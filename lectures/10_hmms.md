@@ -9,7 +9,7 @@ Recall the basic Gaussian mixture model,
 $$
 \begin{aligned}
     z_t &\stackrel{\text{iid}}{\sim} \mathrm{Cat}(\mbpi) \\
-    x_t ~\vert~z_t &\sim \mathcal{N}(\mbmu_{z_t}, \mbSigma_{z_t})
+    x_t  \mid z_t &\sim \mathcal{N}(\mbmu_{z_t}, \mbSigma_{z_t})
 \end{aligned}
 $$
 
@@ -43,8 +43,8 @@ Recall the EM algorithm for mixture models,
     $$
     \begin{aligned}
                 q(\mbz_{1:T})
-                &= p(\mbz_{1:T} ~\vert~\mbx_{1:T}; \mbTheta) \\
-                &= \prod_{t=1}^T p(z_t ~\vert~\mbx_t; \mbTheta) \\
+                &= p(\mbz_{1:T}  \mid \mbx_{1:T}; \mbTheta) \\
+                &= \prod_{t=1}^T p(z_t  \mid \mbx_t; \mbTheta) \\
                 &= \prod_{t=1}^T q_t(z_t)
     \end{aligned}
     $$
@@ -76,11 +76,11 @@ This graphical model says that the joint distribution factors as,
 
 $$
 \begin{aligned}
-    p(z_{1:T}, \mbx_{1:T}) &= p(z_1) \prod_{t=2}^T p(z_t ~\vert~z_{t-1}) \prod_{t=1}^T p(\mbx_t ~\vert~z_t).\end{aligned}
+    p(z_{1:T}, \mbx_{1:T}) &= p(z_1) \prod_{t=2}^T p(z_t  \mid z_{t-1}) \prod_{t=1}^T p(\mbx_t  \mid z_t).\end{aligned}
 $$
 
 We call this an HMM because the *hidden* states follow a Markov chain,
-$p(z_1) \prod_{t=2}^T p(z_t ~\vert~z_{t-1})$.
+$p(z_1) \prod_{t=2}^T p(z_t  \mid z_{t-1})$.
 
 
 An HMM consists of three components:
@@ -94,7 +94,7 @@ An HMM consists of three components:
     transition matrix with rows $\mbP_k$.
 
 3.  **Emission distribution:**
-    $\mbx_t \sim p(\cdot ~\vert~\boldsymbol{\theta}_{z_t})$
+    $\mbx_t \sim p(\cdot  \mid \boldsymbol{\theta}_{z_t})$
 
 
 ## Inference and Learning in HMM
@@ -102,19 +102,19 @@ An HMM consists of three components:
 We are interested in questions like:
 
 -   What are the *predictive distributions* of
-    $p(z_{t+1} ~\vert~\mbx_{1:t})$?
+    $p(z_{t+1}  \mid \mbx_{1:t})$?
 
 -   What is the *posterior marginal* distribution
-    $p(z_t ~\vert~\mbx_{1:T})$?
+    $p(z_t  \mid \mbx_{1:T})$?
 
 -   What is the *posterior pairwise marginal* distribution
-    $p(z_t, z_{t+1} ~\vert~\mbx_{1:T})$?
+    $p(z_t, z_{t+1}  \mid \mbx_{1:T})$?
 
 -   What is the *posterior mode*
-    $z_{1:T}^\star = \mathop{\mathrm{arg\,max}}p(z_{1:T} ~\vert~\mbx_{1:T})$?
+    $z_{1:T}^\star = \mathop{\mathrm{arg\,max}}p(z_{1:T}  \mid \mbx_{1:T})$?
 
 -   How can we *sample the posterior*
-    $p(\mbz_{1:T} ~\vert~\mbx_{1:T})$ of an HMM?
+    $p(\mbz_{1:T}  \mid \mbx_{1:T})$ of an HMM?
 
 -   What is the *marginal likelihood* $p(\mbx_{1:T})$?
 
@@ -132,15 +132,15 @@ The predictive distributions give the probability of the latent state $z_{t+1}$ 
 $$
 \begin{aligned}
         \alpha_{t+1}(z_{t+1}) &\triangleq p(z_{t+1}, \mbx_{1:t}) \\
-        &= \sum_{z_1=1}^K \cdots \sum_{z_{t}=1}^K p(z_1) \prod_{s=1}^{t} p(\mbx_s ~\vert~z_s) \, p(z_{s+1} ~\vert~z_{s})\\
-        &= \sum_{z_{t}=1}^K \left[ \left( \sum_{z_1=1}^K \cdots \sum_{z_{t-1}=1}^K p(z_1) \prod_{s=1}^{t-1} p(\mbx_s ~\vert~z_s) \, p(z_{s+1} ~\vert~z_{s}) \right) p(\mbx_t ~\vert~z_t) \, p(z_{t+1} ~\vert~z_{t}) \right]  \\
-        &= \sum_{z_{t}=1}^K \alpha_t(z_t) \, p(\mbx_t ~\vert~z_t) \, p(z_{t+1} ~\vert~z_{t}).
+        &= \sum_{z_1=1}^K \cdots \sum_{z_{t}=1}^K p(z_1) \prod_{s=1}^{t} p(\mbx_s  \mid z_s) \, p(z_{s+1}  \mid z_{s})\\
+        &= \sum_{z_{t}=1}^K \left[ \left( \sum_{z_1=1}^K \cdots \sum_{z_{t-1}=1}^K p(z_1) \prod_{s=1}^{t-1} p(\mbx_s  \mid z_s) \, p(z_{s+1}  \mid z_{s}) \right) p(\mbx_t  \mid z_t) \, p(z_{t+1}  \mid z_{t}) \right]  \\
+        &= \sum_{z_{t}=1}^K \alpha_t(z_t) \, p(\mbx_t  \mid z_t) \, p(z_{t+1}  \mid z_{t}).
 \end{aligned}
 $$
 
 We call $\alpha_t(z_t)$ the *forward messages*. We
 can compute them recursively! The base case is
-$p(z_1 ~\vert~\varnothing) \triangleq p(z_1)$.
+$p(z_1  \mid \varnothing) \triangleq p(z_1)$.
 
 
 We can also write these
@@ -148,7 +148,7 @@ recursions in a vectorized form. Let
 
 $$
 \begin{aligned}
-        \boldsymbol{\alpha}_t &=
+        \mbalpha_t &=
         \begin{bmatrix}
         \alpha_t(z_t = 1) \\
         \vdots \\
@@ -161,11 +161,11 @@ $$
         p(z_t = K, \mbx_{1:t-1})
         \end{bmatrix}
         \qquad \text{and} \qquad
-        \boldsymbol{l}_t =
+        \mbl_t =
         \begin{bmatrix}
-        p(\mbx_t ~\vert~z_t = 1) \\
+        p(\mbx_t  \mid z_t = 1) \\
         \vdots \\
-        p(\mbx_t ~\vert~z_t = K)
+        p(\mbx_t  \mid z_t = K)
         \end{bmatrix}
     \end{aligned}
 $$
@@ -174,7 +174,7 @@ both be vectors in $\reals_+^K$. Then,
 
 $$
 \begin{aligned}
-        \boldsymbol{\alpha}_{t+1} &= \mbP^\top (\boldsymbol{\alpha}_t \odot \boldsymbol{l}_t)
+        \mbalpha_{t+1} &= \mbP^\top (\mbalpha_t \odot \mbl_t)
     \end{aligned}
 $$
 
@@ -187,7 +187,7 @@ predictive distributions we just have to normalize,
 
 $$
 \begin{aligned}
-        p(z_{t+1} ~\vert~\mbx_{1:t}) &\propto p(z_{t+1}, \mbx_{1:t}) = \alpha_{t+1}(z_{t+1}).
+        p(z_{t+1}  \mid \mbx_{1:t}) &\propto p(z_{t+1}, \mbx_{1:t}) = \alpha_{t+1}(z_{t+1}).
     \end{aligned}
 $$
 
@@ -205,13 +205,13 @@ distributions give the probability of the latent state $z_{t}$ given
 
 $$
 \begin{aligned}
-        p(z_{t} ~\vert~\mbx_{1:T})
+        p(z_{t}  \mid \mbx_{1:T})
         &\propto \sum_{z_1=1}^K \cdots \sum_{z_{t-1}=1}^K \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K p(\mbz_{1:T}, \mbx_{1:T}) \\
         &= \nonumber
-        \bigg[ \sum_{z_{t}=1}^K \cdots \sum_{z_{t-1}=1}^K p(z_1) \prod_{s=1}^{t-1} p(\mbx_s ~\vert~z_s) \, p(z_{s+1} ~\vert~z_{s}) \bigg]
-        \times  p(\mbx_t ~\vert~z_t)   \\
-        &\qquad \times \bigg[ \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+1}^T p(z_{u} ~\vert~z_{u-1}) \, p(\mbx_u ~\vert~z_u) \bigg] \\
-        &= \alpha_t(z_t) \times p(\mbx_t ~\vert~z_t) \times \beta_t(z_t)
+        \bigg[ \sum_{z_{t}=1}^K \cdots \sum_{z_{t-1}=1}^K p(z_1) \prod_{s=1}^{t-1} p(\mbx_s  \mid z_s) \, p(z_{s+1}  \mid z_{s}) \bigg]
+        \times  p(\mbx_t  \mid z_t)   \\
+        &\qquad \times \bigg[ \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+1}^T p(z_{u}  \mid z_{u-1}) \, p(\mbx_u  \mid z_u) \bigg] \\
+        &= \alpha_t(z_t) \times p(\mbx_t  \mid z_t) \times \beta_t(z_t)
     \end{aligned}
 $$
 
@@ -226,9 +226,9 @@ recursively too,
 $$
 \begin{aligned}
         \beta_t(z_t)
-        &\triangleq \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+1}^T p(z_{u} ~\vert~z_{u-1}) \, p(\mbx_u ~\vert~z_u) \\
-        &= \sum_{z_{t+1}=1}^K p(z_{t+1} ~\vert~z_t) \, p(\mbx_{t_1} ~\vert~z_{t+1}) \left(\sum_{z_{t+2}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+2}^T p(z_{u} ~\vert~z_{u-1}) \, p(\mbx_u ~\vert~z_u) \right) \\
-        &= \sum_{z_{t+1}=1}^K p(z_{t+1} ~\vert~z_t) \, p(\mbx_{t_1} ~\vert~z_{t+1}) \, \beta_{t+1}(z_{t+1}).
+        &\triangleq \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+1}^T p(z_{u}  \mid z_{u-1}) \, p(\mbx_u  \mid z_u) \\
+        &= \sum_{z_{t+1}=1}^K p(z_{t+1}  \mid z_t) \, p(\mbx_{t_1}  \mid z_{t+1}) \left(\sum_{z_{t+2}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+2}^T p(z_{u}  \mid z_{u-1}) \, p(\mbx_u  \mid z_u) \right) \\
+        &= \sum_{z_{t+1}=1}^K p(z_{t+1}  \mid z_t) \, p(\mbx_{t_1}  \mid z_{t+1}) \, \beta_{t+1}(z_{t+1}).
     \end{aligned}
 $$
 
@@ -252,7 +252,7 @@ be a vector in $\reals_+^K$. Then,
 
 $$
 \begin{aligned}
-        \boldsymbol{\beta}_{t} &= \mbP(\boldsymbol{\beta}_{t+1} \odot \boldsymbol{l}_{t+1}).
+        \boldsymbol{\beta}_{t} &= \mbP(\boldsymbol{\beta}_{t+1} \odot \mbl_{t+1}).
     \end{aligned}
 $$
 
@@ -262,7 +262,7 @@ Now we have everything we need to compute the posterior marginal,
 
 $$
 \begin{aligned}
-        p(z_t = k ~\vert~\mbx_{1:T}) &= \frac{\alpha_{t,k} \, l_{t,k} \, \beta_{t,k}}{\sum_{j=1}^K \alpha_{t,j} l_{t,j} \beta_{t,j}}.
+        p(z_t = k  \mid \mbx_{1:T}) &= \frac{\alpha_{t,k} \, l_{t,k} \, \beta_{t,k}}{\sum_{j=1}^K \alpha_{t,j} l_{t,j} \beta_{t,j}}.
     \end{aligned}
 $$
 
@@ -284,7 +284,7 @@ backward messages represent?
 :class: tip
 Use the forward
 and backward messages to compute the posterior pairwise marginals
-$p(z_t, z_{t+1} ~\vert~\mbx_{1:T})$.
+$p(z_t, z_{t+1}  \mid \mbx_{1:T})$.
 :::
 
 ## Normalizing the messages for numerical stability
@@ -301,7 +301,7 @@ so that they sum to one. I.e replace
 
 $$
 \begin{aligned}
-        \boldsymbol{\alpha}_{t+1} &= \mbP^\top (\boldsymbol{\alpha}_t \odot \boldsymbol{l}_t)
+        \mbalpha_{t+1} &= \mbP^\top (\mbalpha_t \odot \mbl_t)
 \end{aligned}
 $$
 
@@ -309,17 +309,17 @@ with
 
 $$
 \begin{aligned}
-        \widetilde{\boldsymbol{\alpha}}_{t+1} &= \frac{1}{A_t} \mbP^\top (\widetilde{\boldsymbol{\alpha}}_t \odot \boldsymbol{l}_t) \\
-        A_t &= \sum_{k=1}^K \sum_{j=1}^K P_{jk} \widetilde{\alpha}_{t,j} l_{t,j}
-            \equiv \sum_{j=1}^K \widetilde{\alpha}_{t,j} l_{t,j} \quad \text{(since $\mbP$ is row-stochastic)}.
-    \end{aligned}
+        \overline{\mbalpha}_{t+1} &= \frac{1}{A_t} \mbP^\top (\overline{\mbalpha}_t \odot \mbl_t) \\
+        A_t &= \sum_{k=1}^K \sum_{j=1}^K P_{jk} \overline{\alpha}_{t,j} l_{t,j}
+            \equiv \sum_{j=1}^K \overline{\alpha}_{t,j} l_{t,j} \quad \text{(since $\mbP$ is row-stochastic)}.
+\end{aligned}
 $$
 
 This leads to a nice interpretation: The normalized
 messages are predictive likelihoods
-$\widetilde{\alpha}_{t+1,k} = p(z_{t+1}=k ~\vert~\mbx_{1:t})$,
+$\overline{\alpha}_{t+1,k} = p(z_{t+1}=k  \mid \mbx_{1:t})$,
 and the normalizing constants are
-$A_t = p(\mbx_t ~\vert~\mbx_{1:t-1})$.
+$A_t = p(\mbx_t  \mid \mbx_{1:t-1})$.
 
 ## EM for Hidden Markov Models
 
@@ -328,7 +328,7 @@ Now we can put it all together. To perform EM in an HMM,
 -   **E step:** Compute the posterior distribution
     \begin{align*}
                 q(\mbz_{1:T})
-                &= p(\mbz_{1:T} ~\vert~\mbx_{1:T}; \mbTheta).
+                &= p(\mbz_{1:T}  \mid \mbx_{1:T}; \mbTheta).
     \end{align*}
 
     (Really, run the **forward-backward algorithm** to get posterior marginals and pairwise marginals.)

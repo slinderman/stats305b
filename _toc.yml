@@ -16,6 +16,7 @@ parts:
     - file: lectures/10_hmms.md
     - file: lectures/11_vaes.md
     - file: lectures/11_vaes_demo.ipynb
+    - file: lectures/12_rnns.md
     
   - caption: Assignments
     chapters:
