@@ -14,11 +14,11 @@ The output results from a stack of transformer blocks,
 \begin{align*}
 \mbX^{(m)} &= \texttt{transformer-block}(\mbX^{(m-1)})
 \end{align*}
-Each block consists of two stages: one that operates vertically, combining information across time steps; another that operates horizontally, combining information across feature dimensions.
+Each block consists of two stages: one that operates vertically, combining information across the sequence length; another that operates horizontally, combining information across feature dimensions.
 
 ## Attention
 
-The first stage combines information across time using a mechanism called **attention**. Mathematically, attention is just a weighted average,
+The first stage combines information across sequence length using a mechanism called **attention**. Mathematically, attention is just a weighted average,
 \begin{align*}
 \mbY^{(m)} &= \mbA^{(m)} \mbX^{(m-1)},
 \end{align*}
@@ -82,7 +82,7 @@ A_{t,s}^{(m,h)} &=
 \end{align*}
 is an attention weight at layer $m$ and head $h$ for $h=1,\ldots,H$. (Now you see why we dropped superscripts above &mdash; the notation is a handful!)
 
-The outputs of the attention heads are linearly combined,
+The outputs of the attention heads are either concatenated or linearly combined,
 \begin{align*}
 \mbY^{(m)} &= \sum_{h=1}^H \mbY^{(m,h)} (\mbV^{(m,h)})^\top \\
 &\triangleq \texttt{mhsa}(\mbX^{(m-1)}).
@@ -113,7 +113,7 @@ After applying the multi-headed self-attention to obtain $\mbY^{(m)}$, the trans
 \begin{align*}
 \mbx_t^{(m)} &= \texttt{mlp}(\mby_t^{(m)})
 \end{align*}
-Note that the same function is applied to all time steps $t$. 
+Note that the same function is applied to all positions $t$. 
 
 :::{admonition} Computational Complexity
 :class: warning
@@ -171,7 +171,7 @@ To use a transformer for autoregressive modeling, we need to make predictions fr
 \begin{align*}
 \ell_{t+1} &\sim \mathrm{Cat}(\mathrm{softmax}(\mbW \mbx_t^{(M)}))
 \end{align*}
-where $\mbW \in \reals^{V \times D}$. Like the hidden states in an RNN, the final layer's representations $\mbx_t^{(M)}$ combine information from all tokens up to and including time $t$.
+where $\mbW \in \reals^{V \times D}$. Like the hidden states in an RNN, the final layer's representations $\mbx_t^{(M)}$ combine information from all tokens up to and including index $t$.
 
 ## Training
 
