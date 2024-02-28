@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Generalized Linear Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+    <title>Transformers &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
   
   
@@ -60,11 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/05_glms';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/13_transformers';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Bayesian Inference" href="06_bayes.html" />
-    <link rel="prev" title="Exponential Families" href="04_expfam.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Recurrent Neural Networks" href="12_rnns.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -179,7 +179,7 @@
 <li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_bayes_glms_soln.html">Bayesian GLMs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08_sparse_glms.html">Sparse GLMs</a></li>
@@ -188,7 +188,7 @@
 <li class="toctree-l1"><a class="reference internal" href="11_vaes.html">Variational Autoencoders</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11_vaes_demo.html">Demo: Neural Networks and VAEs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="12_rnns.html">Recurrent Neural Networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="13_transformers.html">Transformers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Transformers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -254,7 +254,7 @@
       
       
       
-      <li><a href="../_sources/lectures/05_glms.md" target="_blank"
+      <li><a href="../_sources/lectures/13_transformers.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -338,7 +338,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Generalized Linear Models</h1>
+    <h1>Transformers</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -348,19 +348,18 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression-revisited">Logistic regression revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminaries">Preliminaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attention">Attention</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention">Self-Attention</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-self-attention">Multi-Headed Self-Attention</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#canonical-case">Canonical case</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-canonical-case">Non-canonical case</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deviance-and-goodness-of-fit">Deviance and Goodness of Fit</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fraction-of-deviance-explained">Fraction of Deviance Explained</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-comparison">Model Comparison</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-checking">Model Checking</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation">Cross-Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#token-wise-nonlinearity">Token-wise Nonlinearity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-connections">Residual Connections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-norm">Layer Norm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#positional-encodings">Positional Encodings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-modeling">Autoregressive Modeling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
             </nav>
@@ -373,192 +372,189 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="generalized-linear-models">
-<h1>Generalized Linear Models<a class="headerlink" href="#generalized-linear-models" title="Link to this heading">#</a></h1>
-<p>Logistic regression was a special case of a more general class of models called <em>generalized linear models</em> (GLMs). In a GLM, the conditional distribution <span class="math notranslate nohighlight">\(p(Y \mid X=x)\)</span> is modeled as an exponential family distribution whose mean parameter is a function of <span class="math notranslate nohighlight">\(X\)</span>. For example, if <span class="math notranslate nohighlight">\(Y \in \naturals\)</span>, we could model it with a Poisson GLM; if <span class="math notranslate nohighlight">\(Y \in \{1,\ldots,K\}\)</span>, we could model it as a categorical GLM. It turns out that many of the nice properties of logistic regression carry over to the more general case.</p>
-<section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
-<p>To construct a generalized linear model with exponential family observations, we set</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="transformers">
+<h1>Transformers<a class="headerlink" href="#transformers" title="Link to this heading">#</a></h1>
+<p>RNNs are natural models for sequential data, but the <span class="math notranslate nohighlight">\(\cO(T)\)</span> time complexity of evaluation and backpropagating gradients is a severe limitation. In modern machine learning, one of the deciding factors is how many training epochs you can perform for a fixed computational budget. To that end, architectures that can process an entire sequence in parallel are advantageous. Transformers are one such architecture.</p>
+<p>Transformers underlie large language models (LLMs) like Open AI’s ChatGPT and Google’s Gemini. They are also widely used in computer vision and other domains of machine learning. This lecture will walk through the basic building blocks of a transformer: self-attention, token-wise nonlinear transformations, layer norm, and positional encodings. We will focus on modeling sequential data. We will follow the presentation of <span id="id1">Turner [<a class="reference internal" href="99_references.html#id18" title="Richard E Turner. An introduction to transformers. arXiv preprint arXiv:2304.10557, 2023.">Tur23</a>]</span>, but we will make some slight modifications to the notation to be consistent with our previous notes and Homework 4.</p>
+<section id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Link to this heading">#</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\mbX^{(0)} \in \reals^{T \times D}\)</span> denote our data matrix with row <span class="math notranslate nohighlight">\(\mbx_t^{(0)} \in \reals^D\)</span> representing the <span class="math notranslate nohighlight">\(t\)</span>-th <strong>token</strong> in the sequence. For example, the tokens could be a vector embedding of a word, sub-word, or character. The embeddings may be fixed or learned as part of the model.</p>
+<p>The output of the transformer will be another matrix of the same shape, <span class="math notranslate nohighlight">\(\mbX^{(M)} \in \reals^{T \times D}\)</span>. These output features can be used for downstream tasks like sentiment classification, machine translation, or autoregressive modeling.</p>
+<p>The output results from a stack of transformer blocks,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    \E[y_i \mid \mbx_i] &amp;= f(\mbbeta^\top \mbx_i).
+\mbX^{(m)} &amp;= \texttt{transformer-block}(\mbX^{(m-1)})
 \end{align*}\]</div>
-<p>From above, this implies,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-    \nabla A(\eta_i) &amp;= f(\mbbeta^\top \mbx_i) \\
-    \Rightarrow \eta_i &amp;= [\nabla A]^{-1} \big( f(\mbbeta^\top \mbx_i) \big),
-\end{align*}\]</div>
-<p>when <span class="math notranslate nohighlight">\(\nabla A(\cdot)\)</span> is invertible. (In this case, the exponential family is said to be <strong>minimal</strong>).</p>
-<p>The <strong>canonical mean function</strong> is <span class="math notranslate nohighlight">\(f(\cdot) = \nabla A(\cdot)\)</span> so that <span class="math notranslate nohighlight">\(\eta_i = \mbbeta^\top \mbx_i\)</span>.</p>
-<p>The (canonical) <strong>link function</strong> is the inverse of the (canonical) mean function.</p>
-<section id="logistic-regression-revisited">
-<h3>Logistic regression revisited<a class="headerlink" href="#logistic-regression-revisited" title="Link to this heading">#</a></h3>
-<p>Consider the Bernoulli distribution once more. The gradient of the log normalizer is,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-    \nabla A(\eta) &amp;= \nabla \log (1 + e^\eta) 
-    = \frac{e^\eta}{1+ e^\eta}
-\end{align*}\]</div>
-<p>This is the logistic function!</p>
-<p>Thus, logistic regression is a Bernoulli GLM with the canonical mean function.</p>
+<p>Each block consists of two stages: one that operates vertically, combining information across time steps; another that operates horizontally, combining information across feature dimensions.</p>
 </section>
-</section>
-<section id="canonical-case">
-<h2>Canonical case<a class="headerlink" href="#canonical-case" title="Link to this heading">#</a></h2>
-<p>Canonical mean functions lead to nice math. Consider the log joint probability,</p>
+<section id="attention">
+<h2>Attention<a class="headerlink" href="#attention" title="Link to this heading">#</a></h2>
+<p>The first stage combines information across time using a mechanism called <strong>attention</strong>. Mathematically, attention is just a weighted average,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    \cL(\mbbeta) 
-    &amp;= \sum_{i=1}^n \langle t(y_i), \eta_i \rangle - A(\eta_i)  + c \\
-    &amp;= \sum_{i=1}^n \langle t(y_i), \mbbeta^\top \mbx_i \rangle - A(\mbbeta^\top \mbx_i) + c,
+\mbY^{(m)} &amp;= \mbA^{(m)} \mbX^{(m-1)},
 \end{align*}\]</div>
-<p>where we have assumed a canonical mean function so <span class="math notranslate nohighlight">\(\eta_i = \mbbeta^\top \mbx_i\)</span>.</p>
-<p>The gradient is,</p>
+<p>where <span class="math notranslate nohighlight">\(\mbA^{(m)} \in \reals_+^{T \times T}\)</span> is a row-stochastic attention matrix. That is, <span class="math notranslate nohighlight">\(\sum_{s} A_{ts}^{(m)} = 1\)</span> for all <span class="math notranslate nohighlight">\(t\)</span>. Intuitively, <span class="math notranslate nohighlight">\(A_{t,s}^{(m)}\)</span> indicates how much output location <span class="math notranslate nohighlight">\(t\)</span> attends to input location <span class="math notranslate nohighlight">\(s\)</span>.</p>
+<p>When we are using transformers for autoregressive sequence modeling, we constrain the attention matrix to be <strong>causal</strong> by requiring <span class="math notranslate nohighlight">\(A_{t,s}^{(m)} = 0\)</span> for all <span class="math notranslate nohighlight">\(t &lt; s\)</span>. In other words, the matrix is <strong>lower triangular</strong>.</p>
+<section id="self-attention">
+<h3>Self-Attention<a class="headerlink" href="#self-attention" title="Link to this heading">#</a></h3>
+<p>Where does the attention matrix come from? In a transformer, the attention weights are determined by the pairwise similarity of tokens in the sequence. The simplest instantiation of this idea would be something like,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    \nabla \cL(\mbbeta) 
-    &amp;= \sum_{i=1}^n \langle t(y_i), \mbx_i \rangle - \langle \nabla A(\mbbeta^\top \mbx_i), \, \mbx_i \rangle\\
-    &amp;= \sum_{i=1}^n \langle t(y_i) - \E[t(Y); \eta_i], \, \mbx_i \rangle
+A_{t,s} &amp;\propto \exp \left\{ \mbx_t^\top \mbx_s \right\}
 \end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\eta_i = \mbx_i^\top \mbbeta\)</span> for a GLM with canonical link.</p>
-<p>In many cases, <span class="math notranslate nohighlight">\(t(y_i) = y_i \in \reals\)</span> so</p>
+<p>Once normalized,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    \nabla \cL(\mbbeta) 
-    &amp;= \sum_{i=1}^n (y_i - \hat{y}_i) \mbx_i.
+A_{t,s} &amp;= \frac{\exp \{ \mbx_t^\top \mbx_s\}}{\sum_{s'=1}^T \exp\{\mbx_t^\top \mbx_s\}}.
 \end{align*}\]</div>
-<p>And in that case the Hessian is</p>
+<p>(Note: we have dropped the superscript <span class="math notranslate nohighlight">\({}^{(m)}\)</span> for clarity in this section.)</p>
+<p>This approach implies that attention depends equally on all <span class="math notranslate nohighlight">\(D\)</span> dimensions of the embedding. In practice, some of those dimensions may convey different kinds of information that may be of greater or lesser relevance for the attention mechanism. One way to allow for this is to project the tokens into a feature space before computing the attention weights,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    \nabla^2_{\mbbeta} \cL(\mbbeta) 
-    &amp;= - \sum_{i=1}^n \nabla^2 A(\mbbeta^\top \mbx_i) \, \mbx_i \mbx_i^\top \\
-    &amp;= -\sum_{i=1}^n \Var[t(Y); \eta_i] \, \mbx_i \mbx_i^\top
+A_{t,s} &amp;= \frac{\exp \{ (\mbU \mbx_t)^\top (\mbU \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU \mbx_t)^\top (\mbU \mbx_s) \}}
 \end{align*}\]</div>
-<p>Now recall the Newton’s method updates, written here in terms of the change in weights,</p>
+<p>where <span class="math notranslate nohighlight">\(\mbU \in \reals^{K \times D}\)</span> with <span class="math notranslate nohighlight">\(K &lt; D\)</span>.</p>
+<p>Still, the numerator in this attention weight is symmetric. If we think of the attention weight as specifying how relevant token <span class="math notranslate nohighlight">\(\mbx_s\)</span> is to updating the feature representation for token <span class="math notranslate nohighlight">\(\mbx_t\)</span>, then directionality may matter. Personifying the tokens a bit, <span class="math notranslate nohighlight">\(\mbx_t\)</span> may need to know a certain kind of information to update its representation, and <span class="math notranslate nohighlight">\(\mbx_s\)</span> may be able to provide that information, but the converse need not be true.</p>
+<p>Transformers use a more general form of attention to address this asymmetry,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    \Delta \mbbeta &amp;= - [\nabla^2 \cL(\mbbeta)]^{-1} \nabla \cL(\mbbeta) \\
-    &amp;= \left[\sum_{i=1}^n \Var[t(Y); \eta_i] \, \mbx_i \mbx_i^\top \right]^{-1} \left[\sum_{i=1}^n (y_i - \hat{y}_i) \mbx_i \right]
+A_{t,s} &amp;= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_s) \}},
 \end{align*}\]</div>
-<p>Letting <span class="math notranslate nohighlight">\(w_i = \Var[t(Y); \eta_i]\)</span>,</p>
+<p>where <span class="math notranslate nohighlight">\(\mbU_q \mbx_t \in \reals^{K}\)</span> are the <strong>queries</strong> and <span class="math notranslate nohighlight">\(\mbU_k \mbx_s \in \reals^{K}\)</span> are the <strong>keys</strong>.</p>
+<p>The parameters <span class="math notranslate nohighlight">\(\mbU_q \in \reals^{K \times D}\)</span> and <span class="math notranslate nohighlight">\(\mbU_k \in \reals^{K \times D}\)</span> are the two parameters defining the self-attention mechanism.</p>
+<div class="admonition-causal-attention admonition">
+<p class="admonition-title">Causal attention</p>
+<p>To enforce causality in the attention layer, we simply zero out the upper triangular part of the attention matrix and normalize the rows appropriately,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    \Delta \mbbeta &amp;=
-    \left[\sum_{i=1}^n w_i \, \mbx_i \mbx_i^\top \right]^{-1} \left[ \sum_{i=1}^n (y_i - \hat{y}_i) \mbx_i \right] \\
-    % &amp;= (\mbX^\top \mbW \mbX)^{-1} [\mbX^\top \mbW \mbW^{-1} (\mby - \hat{\mby})] \\
-    &amp;= (\mbX^\top \mbW \mbX)^{-1} [\mbX^\top \mbW \hat{\mbz}]
+A_{t,s} &amp;= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\textcolor{red}{\sum_{s'=1}^{t}} \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}} \cdot \bbI[t \geq s].
 \end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbW = \diag([w_1, \ldots, w_i])\)</span> and <span class="math notranslate nohighlight">\(\hat{\mbz} = \mbW^{-1} (\mby - \hat{\mby})\)</span>.</p>
-<p>This is <strong>iteratively reweighted least squares (IRLS)</strong> with weights <span class="math notranslate nohighlight">\(w_i\)</span> and working responses <span class="math notranslate nohighlight">\(\hat{z}_i = \frac{y_i - \hat{y}_i}{w_i}\)</span>, both of which are functions of the current weights <span class="math notranslate nohighlight">\(\mbbeta\)</span>. As in logistic regression, the working responses can be seen as linear approximations to the observed responses mapped back through the link function.</p>
-</section>
-<section id="non-canonical-case">
-<h2>Non-canonical case<a class="headerlink" href="#non-canonical-case" title="Link to this heading">#</a></h2>
-<p>When we choose an arbitrary covariance matrix, the expressions are a bit more complex. Let’s focus on the case where <span class="math notranslate nohighlight">\(t(y_i) = y_i\)</span> for scalar <span class="math notranslate nohighlight">\(y_i\)</span>, but allow for arbitrary mean function <span class="math notranslate nohighlight">\(f\)</span>.</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-    \cL(\mbbeta) 
-    &amp;= \sum_{i=1}^n \langle y_i, \eta_i \rangle - A(\eta_i)  + c,
-\end{align*}\]</div>
-<p>but now <span class="math notranslate nohighlight">\(\eta_i = [\nabla A]^{-1} f(\mbbeta^\top \mbx_i)\)</span>.</p>
-<p>The gradient is,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-    \nabla \cL(\mbbeta) 
-    &amp;= \sum_{i=1}^n \left(y_i - \hat{y}_i\right) \frac{\partial \eta_i}{\partial \mbbeta}.
-\end{align*}\]</div>
-<p>Applying the inverse function theorem, as above, yields,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\frac{\partial \eta_i}{\partial \mbbeta} 
-&amp;= \mathrm{Var}[Y]^{-1} \mbx_i = \mbx_i / w_i,
-\end{align*}\]</div>
-<p>and</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-    \nabla \cL(\mbbeta) 
-    &amp;= \sum_{i=1}^n \left(\frac{y_i - \hat{y}_i}{w_i} \right) f'(\mbbeta^\top \mbx_i) \mbx_i.
-\end{align*}\]</div>
-</section>
-<section id="deviance-and-goodness-of-fit">
-<h2>Deviance and Goodness of Fit<a class="headerlink" href="#deviance-and-goodness-of-fit" title="Link to this heading">#</a></h2>
-<p>We can perform maximum likelihood estimation via Newton’s method, but do the resulting parameters <span class="math notranslate nohighlight">\(\hat{\mbbeta}_{\mathsf{MLE}}\)</span> provide a good fit to the data? One way to answer this question is by comparing the fitted model to two reference points: a <strong>saturated</strong> model and a <strong>baseline</strong> model.</p>
-<p>For binomial GLMs (including logistic regression) and Poisson GLMs, the saturated model conditions on the mean equaling the observed response. For example, in a Poisson GLM the saturated model’s log probability is,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\log p_{\mathsf{sat}}(\mby) 
-&amp;= \sum_{i=1}^n \log \mathrm{Po}(y_i; y_i) \\
-&amp;= \sum_{i=1}^n -\log y_i! + y_i \log y_i - y_i.
-\end{align*}\]</div>
-<p>The likelihood ratio statistic in this case is</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
--2 \log \frac{p(\mby \mid \mbX; \hat{\mbbeta})}{p_{\mathsf{sat}}(\mby)} 
-&amp;= 2 \sum_{i=1}^n \log \mathrm{Po}(y_i; y_i) - \log \mathrm{Po}(y_i; \hat{\mu}_i)\\
-&amp;= 2 \sum_{i=1}^n y_i \log \frac{y_i}{\hat{\mu}_i} + \hat{\mu}_i - y_i \\
-&amp;= \sum_{i=1}^n r_{\mathsf{D}}(y_i, \hat{\mu}_i)^2
-\end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat{\mu}_i = f(\mbx_i^\top \hat{\mbbeta})\)</span> is the predicted mean.
-We recognize the likelihood ratio statistic as the sum of squared deviance residuals! (See the <a class="reference internal" href="04_expfam.html#expfam-deviance-residuals"><span class="std std-ref">previous chapter</span></a> )</p>
-<p>Moreover, this statistic is just the deviance (twice the KL divergence) between the two models,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-2 \KL{p_{\mathsf{sat}}(\mbY)}{p(\mbY \mid \mbX=\mbx; \hat{\mbbeta})}
-&amp;= 2 \E_{p_{\mathsf{sat}}} \left[\log \frac{p_{\mathsf{sat}}(\mby)}{p(\mby \mid \mbX; \hat{\mbbeta})} \right] \\
-&amp;= 2 \sum_{i=1}^n \KL{\mathrm{Po}(y_i)}{\mathrm{Po}(\hat{\mu}_i)} \\
-&amp;\triangleq D(\mby, \hat{\mbmu}).
-\end{align*}\]</div>
-<p>We’ve shown the deviance for the case of a Poisson GLM, but the same idea holds for GLMs with other exponential family distributions. Larger deviance implies a poorer fit.</p>
-<p>The baseline model is typically a GLM with only an intercept term, in which case the MLE is <span class="math notranslate nohighlight">\(\mu_i \equiv \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}\)</span>. For that baseline model, the deviance is,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-D(\mby, \bar{y} \mbone)
-&amp;= 2 \sum_{i=1}^n y_i \log \frac{y_i}{\bar{y}} + \bar{y} - y_i \\
-&amp;= 2 \sum_{i=1}^n y_i \log \frac{y_i}{\bar{y}} 
-\\
-&amp;= \sum_{i=1}^n r_{\mathsf{D}}(y_i, \bar{y})^2.
-\end{align*}\]</div>
-<div class="admonition-note-on-intercepts admonition">
-<p class="admonition-title">Note on intercepts</p>
-<p>In models with an (unregularized) intercept term, the MLE should be such that <span class="math notranslate nohighlight">\(\sum \mu_i = \sum y_i\)</span>, which simplifies the deviance.</p>
 </div>
-<section id="fraction-of-deviance-explained">
-<h3>Fraction of Deviance Explained<a class="headerlink" href="#fraction-of-deviance-explained" title="Link to this heading">#</a></h3>
-<p>As with linear models where we use the fraction of variance explaiend (<span class="math notranslate nohighlight">\(R^2\)</span>), in GLMs we can consider the fraction of <em>deviance</em> explained. Note that the deviance is positive for any model that is not saturated. The <strong>fraction of deviance explained</strong> is <span class="math notranslate nohighlight">\(1 - \frac{D(\mby; \hat{\mbmu})}{D(\mby; \bar{y} \mbone)}\)</span>. Unless your model is worse than guessing the mean, the fraction of deviance explained is between 0 and 1.</p>
+<div class="admonition-comparison-to-rnns admonition">
+<p class="admonition-title">Comparison to RNNs</p>
+<p>Compare the self-attention mechanism to the information processing in an RNN. Rather than propagating information about past tokens via a hidden state, a transformer with causal attention can directly attend to any one of the past tokens.</p>
+</div>
+<div class="admonition-connection-to-convolutional-neural-networks-cnns admonition">
+<p class="admonition-title">Connection to Convolutional Neural Networks (CNNs)</p>
+<p>If the attention weights were only a function of the distance between tokens, <span class="math notranslate nohighlight">\(A_{t,s} = a_{t-s}\)</span>, then the matrix <span class="math notranslate nohighlight">\(\mbA\)</span> would be a <strong>Toeplitz matrix</strong>. Multiplication by a Toeplitz matrix corresponds to a discrete convolution. From this perspective, we can think of the attention mechanism in a transformer as a generalization of convolution that allows for input-dependent and time-varying filters.</p>
+</div>
 </section>
-<section id="model-comparison">
-<h3>Model Comparison<a class="headerlink" href="#model-comparison" title="Link to this heading">#</a></h3>
-<p>The difference in deviance between two models with predicted means <span class="math notranslate nohighlight">\(\hat{\mbmu}_0\)</span> and <span class="math notranslate nohighlight">\(\hat{\mbmu}_1\)</span>, the difference in deviance,</p>
+<section id="multi-headed-self-attention">
+<h3>Multi-Headed Self-Attention<a class="headerlink" href="#multi-headed-self-attention" title="Link to this heading">#</a></h3>
+<p>Just as in a CNN each layer performs convolutions with a bank of filters in parallel, in a transformer each block uses a bank of <span class="math notranslate nohighlight">\(H\)</span> <strong>attention heads</strong> in parallel.  Let,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
+\mbY^{(m,h)} &amp;= \mbA^{(m,h)} \mbX^{(m-1)} \in \reals^{T \times D}
 \end{align*}\]</div>
-<p>has an approximately chi-squared null distribution. We can use this fact to sequentially add or subtract features from a model depending on whether the change in deviance is significant or not.</p>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+A_{t,s}^{(m,h)} &amp;= 
+\frac{\exp \{ (\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_s^{(m-1)})\}}{\sum_{s'=1}^T \exp\{(\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_s^{(m-1)}) \}},
+\end{align*}\]</div>
+<p>is an attention weight at layer <span class="math notranslate nohighlight">\(m\)</span> and head <span class="math notranslate nohighlight">\(h\)</span> for <span class="math notranslate nohighlight">\(h=1,\ldots,H\)</span>. (Now you see why we dropped superscripts above — the notation is a handful!)</p>
+<p>The outputs of the attention heads are linearly combined,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbY^{(m)} &amp;= \sum_{h=1}^H \mbY^{(m,h)} (\mbV^{(m,h)})^\top \\
+&amp;\triangleq \texttt{mhsa}(\mbX^{(m-1)}).
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbV^{(m,h)} \in \reals^{D \times D}\)</span> is a read-out matrix for layer <span class="math notranslate nohighlight">\(m\)</span>, head <span class="math notranslate nohighlight">\(h\)</span>.
+We denote the multi-headed self-attention (MHSA) mapping by <span class="math notranslate nohighlight">\(\texttt{mhsa}(\cdot)\)</span>.</p>
+<div class="admonition-queries-keys-and-values admonition">
+<p class="admonition-title">Queries, Keys, and Values</p>
+<p>The original transformer paper presents the output of a single head as a set of values,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbY^{(m,h)} &amp;= \mbA^{(m,h)} (\mbX^{(m-1)} (\mbU_v^{(m,h)})^\top) \in \reals^{T \times K}
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbU_v^{(m,h)} \in \reals^{K \times D}\)</span> is a <strong>value matrix</strong>. Then the attention mechanism can be though of as taking a weighted average of <strong>values</strong> <span class="math notranslate nohighlight">\(\mbU_v \mbx_t\)</span> where the weights are determined by an inner product between the queries and keys.</p>
+<p>The final output is projected back into the original token dimension and linearly combined,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbY^{(m)} &amp;= \sum_{h=1}^H \mbY^{(m,h)} (\mbU_o^{(m,h)})^\top 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbU_o^{(m,h)} \in \reals^{D \times K}\)</span> is an <strong>output matrix</strong> that maps from values to new tokens.</p>
+<p>This formulation corresponds to a low-rank read-out matrix <span class="math notranslate nohighlight">\(\mbV = \mbU_o \mbU_v^\top\)</span>, where we have again dropped the superscripts for clarity.</p>
+</div>
 </section>
-<section id="model-checking">
-<h3>Model Checking<a class="headerlink" href="#model-checking" title="Link to this heading">#</a></h3>
-<p>Just like in standard linear models, we should inspect the residuals in generalized linear models for evidence of model misspecification. For example, we can plot the residuals as a function of <span class="math notranslate nohighlight">\(\hat{\mu}_i\)</span> and they should be approximately normal at all levels of <span class="math notranslate nohighlight">\(\hat{\mu}_i\)</span>.</p>
 </section>
+<section id="token-wise-nonlinearity">
+<h2>Token-wise Nonlinearity<a class="headerlink" href="#token-wise-nonlinearity" title="Link to this heading">#</a></h2>
+<p>After applying the multi-headed self-attention to obtain <span class="math notranslate nohighlight">\(\mbY^{(m)}\)</span>, the transformer applies a token-wise nonlinear transformation to nonlinearly mix the feature dimensions. This is done with a simple feedforward neural network, also known as a <strong>multilayer perceptron (MLP)</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbx_t^{(m)} &amp;= \texttt{mlp}(\mby_t^{(m)})
+\end{align*}\]</div>
+<p>Note that the same function is applied to all time steps <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<div class="warning admonition">
+<p class="admonition-title">Computational Complexity</p>
+<p>The MLP typically has hidden dimensions of at least <span class="math notranslate nohighlight">\(D\)</span>, so the computational complexity of this step is <span class="math notranslate nohighlight">\(\cO(TD^2)\)</span>. For transformers with very large featured dimensions, this can be the dominant cost.</p>
+</div>
 </section>
-<section id="cross-validation">
-<h2>Cross-Validation<a class="headerlink" href="#cross-validation" title="Link to this heading">#</a></h2>
-<p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
-<p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
-<p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-1488fc85-8f19-40f2-841f-9bea796a8bec">
-<span class="eqno">(2)<a class="headerlink" href="#equation-1488fc85-8f19-40f2-841f-9bea796a8bec" title="Permalink to this equation">#</a></span>\[\begin{align}
-    \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
-    \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
-\end{align}\]</div>
-<p>where <span class="math notranslate nohighlight">\(p^\star(x, y)\)</span> is the true data generating distribution</p>
-<p>For small <span class="math notranslate nohighlight">\(n\)</span> (or when using a small number of folds), a bias-correction can be used.</p>
-<!-- (See pg. 175-176 of the book.) -->
-<p>Cross-validated predictive log likelihood estimates are similar to the \emph{jackknife} resampling method in the sense that it is estimating an expectation wrt the unknown data-generating distribution <span class="math notranslate nohighlight">\(p^\star\)</span> by resampling the given data.</p>
+<section id="residual-connections">
+<h2>Residual Connections<a class="headerlink" href="#residual-connections" title="Link to this heading">#</a></h2>
+<p>Rather than parameterizing <span class="math notranslate nohighlight">\(\mbX^{(m)}\)</span> as the output of the MLP, a common trick in deep learning is to use residual connections. The idea is simple: when the input and output are of the same dimensionality, we can let the network learn the <strong>residual</strong>, which is typically smaller in magnitude than the overall funciton.</p>
+<p>Transformers use residual connections for both the multi-headed self-attention step and the MLP. So,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbY^{(m)} &amp;= \mbX^{(m-1)} + \texttt{mhsa}(\mbX^{(m-1)}) \\
+\mbX^{(m)} &amp;= \mbY^{(m)} + \texttt{mlp}(\mbY^{(m)})
+\end{align*}\]</div>
+</section>
+<section id="layer-norm">
+<h2>Layer Norm<a class="headerlink" href="#layer-norm" title="Link to this heading">#</a></h2>
+<p>Finally, it is important to use other deep learning “tricks” like LayerNorm to stabilize training. In a transformer, LayerNorm amounts to z-scoring each token <span class="math notranslate nohighlight">\(\mbx_t\)</span> and then applying a learned shift and scale to each feature dimension,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\texttt{layer-norm}(\mbx_t) 
+&amp;= \mbbeta + \mbgamma \odot \left( \frac{\mbx_t - \texttt{mean}(\mbx_t)}{\texttt{std}(\mbx_t)} \right)
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\texttt{mean}(\mbx_t) &amp;= \frac{1}{D} \sum_{d=1}^D x_{t,d} \\
+\texttt{std}(\mbx_t) &amp;= \Big(\frac{1}{D} \sum_{d=1}^D (x_{t,d} - \texttt{mean}(\mbx_t))^2 \Big)^{\frac{1}{2}}
+\end{align*}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\mbbeta, \mbgamma \in \reals^D\)</span> are learned parameters.</p>
+<p>LayerNorm is typically applied before the multi-headed self-attention and MLP steps,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\overline{\mbX}^{(m-1)} &amp;= \texttt{layer-norm}(\mbX^{(m-1)}) \\
+\mbY^{(m)} &amp;= \overline{\mbX}^{(m-1)} + \texttt{mhsa}(\overline{\mbX}^{(m-1)}) \\
+\overline{\mbY}^{(m)} &amp;= \texttt{layer-norm}(\mbY^{(m)}) \\
+\mbX^{(m)} &amp;= \overline{\mbY}^{(m)} + \texttt{mlp}(\overline{\mbY}^{(m)})
+\end{align*}\]</div>
+<p>This defines one <span class="math notranslate nohighlight">\(\texttt{transformer-block}\)</span>.</p>
+<p>A transformer stacks <span class="math notranslate nohighlight">\(M\)</span> <span class="math notranslate nohighlight">\(\texttt{transformer-blocks}\)</span> on top of one another to produce a deep sequence-to-sequence model.</p>
+</section>
+<section id="positional-encodings">
+<h2>Positional Encodings<a class="headerlink" href="#positional-encodings" title="Link to this heading">#</a></h2>
+<p>Except for the lower triangular constraint on the attention matrices, the transformer architecture knows nothing about the relative positions of the tokens. Absent this constraint, the transformer essentially treats the data as an <strong>unordered set</strong> of tokens. This can actually be a feature! It allows the transformer to act on a wide range of datasets aside from just sequences. For example, transformers are often applied to images by chunking the image up into patches and embedding each one.</p>
+<p>However, when the data posses some spatial or temporal structure, it is helpful to include that information in the embedding. A simple way to do so is to add position and content in the token,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbx_t^{(0)} &amp;= \mbc_t + \mbp_t,
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbc_t \in \reals^D\)</span> is an embedding of the content and <span class="math notranslate nohighlight">\(\mbp_t \in \reals^D\)</span> encodes the position (e.g., with a set of sinusoidal basis functions).</p>
+</section>
+<section id="autoregressive-modeling">
+<h2>Autoregressive Modeling<a class="headerlink" href="#autoregressive-modeling" title="Link to this heading">#</a></h2>
+<p>To use a transformer for autoregressive modeling, we need to make predictions from the final layer’s representations. If the goal is to predict the next word label <span class="math notranslate nohighlight">\(\ell_{t+1} \in \{1,\ldots,V\}\)</span> based on encodings of past words <span class="math notranslate nohighlight">\(\mbx_{1:t}^{(0)}\)</span>, where <span class="math notranslate nohighlight">\(V\)</span> is the vocabulary size, then we could use a categorical distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\ell_{t+1} &amp;\sim \mathrm{Cat}(\mathrm{softmax}(\mbW \mbx_t^{(M)}))
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbW \in \reals^{V \times D}\)</span>. Like the hidden states in an RNN, the final layer’s representations <span class="math notranslate nohighlight">\(\mbx_t^{(M)}\)</span> combine information from all tokens up to and including time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+</section>
+<section id="training">
+<h2>Training<a class="headerlink" href="#training" title="Link to this heading">#</a></h2>
+<p>Training deep neural networks is somewhat of a dark art. Standard practice is to use the Adam optimizer with a bag of tricks including gradient clipping, learning rate annealing schedules, increasing minibatch sizes, dropout, etc. Generally, treat these algorithmic decisions as hyperparameters to be tuned. We won’t try to put any details in writing lest you overfit to them.</p>
 </section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
-<p>Generalized linear models allow us to build flexible regression models that respect the domain of the response variable. Logistic regression is a special case of a Bernoulli GLM with the canonical link function. For categorical data, we could use a categorical distribution with the softmax link function, and for count data, we could use a Poisson GLM with exponential, softplus, or other link functions. Leveraging the deviance and deviance residuals for exponential family distribiutions, we can derive analogs of familiar terms from linear modeling, like the fraction of variance explained and the residual analysis.</p>
-<p>Next, we’ll consider techniques for Bayesian analysis in GLMs, which allow for more expressive moodels. That will give us an excuse to <em>finally</em> dig into Bayesian inference methods.</p>
+<p>Transformers are a workhorse of modern machine learning and key to many of the impressive advances over recent years. However, there are still areas for improvement. For example, the computational cost of attention is <span class="math notranslate nohighlight">\(\cO(T^2)\)</span>, and a lot of work has gone into cutting that down. Likewise, while the transformer allows for predictions to be made in parallel across an entire sequence, sampling from the learned autoregressive model is still takes linear time. In the lectures ahead, we’ll discuss other recent architectures that address some of these concerns.</p>
 </section>
 </section>
 
@@ -593,20 +589,20 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="04_expfam.html"
+       href="12_rnns.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Exponential Families</p>
+        <p class="prev-next-title">Recurrent Neural Networks</p>
       </div>
     </a>
     <a class="right-next"
-       href="06_bayes.html"
+       href="../assignments/hw0/hw0.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Bayesian Inference</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -626,19 +622,18 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression-revisited">Logistic regression revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminaries">Preliminaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attention">Attention</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention">Self-Attention</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-self-attention">Multi-Headed Self-Attention</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#canonical-case">Canonical case</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-canonical-case">Non-canonical case</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deviance-and-goodness-of-fit">Deviance and Goodness of Fit</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fraction-of-deviance-explained">Fraction of Deviance Explained</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-comparison">Model Comparison</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-checking">Model Checking</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation">Cross-Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#token-wise-nonlinearity">Token-wise Nonlinearity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-connections">Residual Connections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-norm">Layer Norm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#positional-encodings">Positional Encodings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-modeling">Autoregressive Modeling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
   </nav></div>
