@@ -72,6 +72,10 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
   - Released Fri, Feb 16, 2024
   - Due Mon, Feb 26, 2024 at 11:59pm
 
+- [**Homework 4: Large Language Models**](assignments/hw4/hw4.ipynb)
+  - Released Wed, Feb 28, 2024
+  - Due Fri, Mar 15, 2024 at 11:59pm
+
 
 ## Exams
 - **Midterm Exam**: In class on Wed, Feb 7, 2024
