@@ -1,0 +1,1708 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>HW4: Large Language Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'assignments/hw4/hw4';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="References" href="../../lectures/99_references.html" />
+    <link rel="prev" title="HW3: Hidden Markov Models" href="../hw3/hw3.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/06_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/08_sparse_glms.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/09_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/10_hmms.html">Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/11_vaes.html">Variational Autoencoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/11_vaes_demo.html">Demo: Neural Networks and VAEs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/12_rnns.html">Recurrent Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/13_transformers.html">Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">HW4: Large Language Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2024/assignments/hw4/hw4.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/assignments/hw4/hw4.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>HW4: Large Language Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-dataset">0.1: Loading the dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#question-0-2-examining-the-tokenizer">Question 0.2: Examining the tokenizer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-our-dataloader">0.3: Building our dataloader</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-language-modeling">Part 1: Language Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-token-prediction-as-multiclass-logistic-regression">1.1: Next token prediction as multiclass logistic regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-1">Question 1.1.1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-2">Question 1.1.2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-3">Question 1.1.3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-4">Question 1.1.4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-5">Question 1.1.5</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-6">Question 1.1.6</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-7-implement-the-bigramlanguagemodel">Question 1.1.7: Implement the BigramLanguageModel</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-8-evaluating-the-initialization">Question 1.1.8: Evaluating the initialization.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-9-training-your-bigram-model">Question 1.1.9: Training your bigram model</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#token-embeddings-going-from-discrete-tokens-to-continuous-latent-spaces">1.2: Token Embeddings: going from discrete tokens to continuous latent spaces</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-2-1-implement-bigramwithwordembeddingslm">Question 1.2.1: Implement BigramWithWordEmbeddingsLM</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-relaxing-markovian-assumptions-to-transmit-information-across-the-sequence-length">1.3: Attention: Relaxing Markovian assumptions to transmit information across the sequence length</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-1-averaging-over-word-embeddings">Question 1.3.1: Averaging over word embeddings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#single-headed-scaled-q-k-v-attention">1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-1">Question 1.3.2.1</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-2">Question 1.3.2.2</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-single-headed-scaled-u-q-u-k-v-attention">Question 1.3.2.3: Implement single-headed scaled <span class="math notranslate nohighlight">\((U_q,U_k,V)\)</span>-attention.</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-a-single-headed-attention-language-model">Question 1.3.2.3: Implement a single-headed attention language model</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-attention">1.3.3: Multi-headed attention</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-3-1-implement-multi-headed-attention">Question 1.3.3.1: Implement multi-headed attention</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-3-2-implement-a-multi-headed-attention-lm">Question 1.3.3.2: Implement a multi-headed attention LM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-transformer-architecture-combining-attention-with-deep-learning">1.4: The Transformer Architecture: combining attention with deep learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-4-1-implement-a-transformer-block">Question 1.4.1: Implement a transformer block</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-4-2-implement-your-baseline-transformer-model">Question 1.4.2: Implement your baseline transformer model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-4-3">Question 1.4.3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-mini-project">Part 2: Mini-Project</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#project-outline">Project Outline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-augmentation">Data augmentation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw4-large-language-models">
+<h1>HW4: Large Language Models<a class="headerlink" href="#hw4-large-language-models" title="Link to this heading">#</a></h1>
+<p>The first half of this assignment (Parts 0 and 1) will review some key ingredients of sequence modeling. In the process, we will build a baseline transformer model for next token prediction in code.
+<strong>The deliverable will be completing the questions posed in part 0 and part 1.</strong></p>
+<p>The second half of the assignment (Part 2) will be an open-ended mini-project where you have the freedom to delve more deeply into language modelling (where the language in question is python code). Further instructions are in <em>Part 2: Mini-project</em>. But, in general, you should feel free to try other architectures (HMMs, RNNs, transformers, state space layers, diffusion models etc.) or to invent new architectures. The goal will be to find some area of possible improvement (we interpret “improvement” quite loosely, but it is up to you to state precisely in what sense your proposed innovation might constitute an improvement and to show convincing evidence that your innovation does or does not constitue an improvement according to your definition); to formulate and state a precise hypothesis; and to falsify or support the hypothesis with rigorous empirical analyses.
+<strong>The deliverable will be a report of no more than 4 pages (references not included in the page limit).</strong></p>
+<p><strong>For this final assignment you have the option to work in pairs.</strong></p>
+<blockquote>
+<div><p><strong><u>This Assignment</u></strong></p>
+<p><strong>Model:</strong> You will begin by implementing a baseline using attention and transformers. But, for the mini-project, you will be free to use any model (HMMs, RNNs, transformers, state space layers, diffusion models etc.) that you would like!</p>
+<p><strong>Algorithm:</strong> mini-batched stochatic gradient descent / whatever you’d like! We will be using deep learning models in at least the first half of the assignment, so be sure to <strong>use the GPU on colab</strong> (make sure you switch to GPU in the “Runtime” tab above).</p>
+<p><strong>Data</strong>: A large corpus of python code from <a class="reference external" href="https://huggingface.co/datasets/bigcode/the-stack-dedup">the Stack</a>. We have taken a dataset of around 4 million tokens from the stack and stored in a csv file for you for easy access.</p>
+</div></blockquote>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># can take around 30s</span>
+<span class="o">%%</span><span class="n">capture</span>
+<span class="err">!</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">datasets</span> <span class="c1">#huggingface datasets library</span>
+<span class="err">!</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pyarrow</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># torch imports</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+
+<span class="c1"># hugging face imports</span>
+<span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">305</span><span class="p">)</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span>
+<span class="k">assert</span> <span class="n">device</span><span class="o">==</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="s2">&quot;you need to change runtime type to GPU&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># hyperparams and helper functions</span>
+<span class="n">SMALL_ITERS</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">LARGE_ITERS</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">context_window_size</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">512</span> <span class="c1"># BERT can only take max input size 512 characters</span>
+
+<span class="k">def</span> <span class="nf">chunk_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits a string into chunks of a specified size.</span>
+
+<span class="sd">    :param string: The string to be chunked.</span>
+<span class="sd">    :param size: The desired chunk size.</span>
+<span class="sd">    :return: A list of string chunks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">),</span> <span class="n">size</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="part-0-preprocessing">
+<h2>Part 0: Preprocessing<a class="headerlink" href="#part-0-preprocessing" title="Link to this heading">#</a></h2>
+<p>As in the previous problem sets, a certain amount of preprocessing for textual data is required.</p>
+<section id="loading-the-dataset">
+<h3>0.1: Loading the dataset<a class="headerlink" href="#loading-the-dataset" title="Link to this heading">#</a></h3>
+<p>The first step is to actually download the dataset. We will be using a dataset on <a class="reference external" href="https://huggingface.co/">huggingface</a>. You can think of hugging face as the sklearn of deep learning.</p>
+<p>The dominant mode for preprocessing textual data is to tokenize it, that is, to split the dataset into a finite vocabulary of tokens. Then, we can set up a dictionary where counting numbers map to tokens. Tokens can be characters, or words, or subwords; in fact, the “best” way to tokenize text is an active area of research. For our baseline, we will use a tokenizer that microsoft created for code.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;microsoft/CodeBERT-base&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the concatenated data</span>
+<span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/assignments/hw4/python_corpus_4M.csv&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># should take around 3 min to load in around 4M tokens</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="n">chunk_string</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+        <span class="n">new_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="c1"># logic to avoid incorrectly adding in start and end sequence tokens as an artifact of chunking</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">tokens</span><span class="p">,</span> <span class="n">new_tokens</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">tokens</span><span class="p">,</span> <span class="n">new_tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">tokens</span><span class="p">,</span> <span class="n">new_tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span><span class="si">}</span><span class="s2"> tokens have been loaded in&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-0-2-examining-the-tokenizer">
+<h3>Question 0.2: Examining the tokenizer<a class="headerlink" href="#question-0-2-examining-the-tokenizer" title="Link to this heading">#</a></h3>
+<p>Let’s see what the tokens look like! We will use these two prompts during the assignment.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prompt_1_text</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;def newton(eta, N, X, y, gamma, beta=None):</span>
+<span class="sd">  \&quot;&quot;&quot;</span>
+  <span class="n">Performs</span> <span class="n">Newton</span><span class="s1">&#39;s method on the negative average log likelihood with an</span>
+  <span class="n">l2</span> <span class="n">regularization</span> <span class="n">term</span>
+
+  <span class="n">beta</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">of</span> <span class="n">shape</span> <span class="p">(</span><span class="n">teams</span><span class="p">)</span>
+  <span class="n">X</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">the</span> <span class="n">covariate</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">of</span> <span class="n">shape</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">teams</span><span class="p">)</span>
+  <span class="n">y</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">the</span> <span class="n">response</span> <span class="n">vector</span><span class="p">,</span> <span class="n">of</span> <span class="n">shape</span> <span class="p">(</span><span class="n">teams</span><span class="p">)</span>
+  <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">the</span> <span class="n">scale</span> <span class="n">parameter</span> <span class="k">for</span> <span class="n">the</span> <span class="n">regularization</span>
+  <span class="n">beta</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">the</span> <span class="n">starting</span> <span class="n">point</span> <span class="k">for</span> <span class="n">gradient</span> <span class="n">descent</span><span class="p">,</span> <span class="k">if</span> <span class="n">specified</span>
+  \<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">  if beta is None:</span>
+<span class="s2">    # Instantiate the beta vector at a random point</span>
+<span class="s2">    beta = torch.randn(X.shape[1])</span>
+<span class="s2">  else:</span>
+<span class="s2">    beta = torch.clone(beta)</span>
+
+<span class="s2">  loss = []</span>
+
+<span class="s2">  # Instantiate a list to store the loss throughout the gradient descent</span>
+<span class="s2">  # path</span>
+<span class="s2">  for i in tqdm(range(N)):&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prompt_2_text</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;import torch</span>
+<span class="sd">import torch.nn.functional as F</span>
+
+
+<span class="sd">def normalize(x, axis=-1):</span>
+<span class="sd">    \&quot;&quot;&quot;</span><span class="n">Performs</span> <span class="n">L2</span><span class="o">-</span><span class="n">Norm</span><span class="o">.</span>\<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    num = x</span>
+<span class="s2">    denom = torch.norm(x, 2, axis, keepdim=True).expand_as(x) + 1e-12</span>
+<span class="s2">    return num / denom</span>
+
+<span class="s2">def euclidean_dist(x, y):</span>
+<span class="s2">    </span><span class="se">\&quot;</span><span class="s2">&quot;&quot;Computes Euclidean distance.</span><span class="se">\&quot;</span><span class="s2">&quot;&quot;</span>
+<span class="s2">    m, n = x.size(0), y.size(0)</span>
+<span class="s2">    xx = torch.pow(x, 2).sum(1, keepdim=True).expand(m, n)</span>
+<span class="s2">    yy = torch.pow(x, 2).sum(1, keepdim=True).expand(m, m).t()</span>
+<span class="s2">    dist = xx + yy - 2 * torch.matmul(x, y.t())</span>
+
+<span class="s2">    dist = dist.clamp(min=1e-12).sqrt()</span>
+
+<span class="s2">    return dist</span>
+
+
+<span class="s2">def cosine_dist(x, y):&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is what the tokenized output for the prompts looks like</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_1_text</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_2_text</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And here are what the first and last 10 tokens for prompt 1 look like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_1_text</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tok</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">([</span><span class="n">tok</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_1_text</span><span class="p">)[</span><span class="o">-</span><span class="mi">10</span><span class="p">:]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tok</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">([</span><span class="n">tok</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Question 0.2</strong>: What is the meanining of the <code class="docutils literal notranslate"><span class="pre">&lt;s&gt;</span></code> and the <code class="docutils literal notranslate"><span class="pre">&lt;\s&gt;</span></code> tokens? Why is it useful to have them?</p>
+</section>
+<section id="building-our-dataloader">
+<h3>0.3: Building our dataloader<a class="headerlink" href="#building-our-dataloader" title="Link to this heading">#</a></h3>
+<p>There are around 50,000 tokens in the codebert vocab, but we only use around 20,000 of them. To make our lives easier, we just reindex the token indices to go from 1 to around 20,000.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get unique elements</span>
+<span class="n">extra_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_1_text</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+                          <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_2_text</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">))),</span>
+                         <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">unique_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">tokens</span><span class="p">,</span> <span class="n">extra_tokens</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c1"># Create a mapping from code bert to ids that increment by one</span>
+<span class="n">from_code_bert_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">element</span><span class="o">.</span><span class="n">item</span><span class="p">():</span> <span class="nb">id</span> <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_tokens</span><span class="p">)}</span>
+
+<span class="c1"># Create a reverse mapping from ids to code bert token ids</span>
+<span class="n">to_code_bert_dict</span> <span class="o">=</span> <span class="p">{</span><span class="nb">id</span><span class="p">:</span> <span class="n">element</span> <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">from_code_bert_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+<span class="n">vocab_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_tokens</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;there are </span><span class="si">{</span><span class="n">vocab_size</span><span class="si">}</span><span class="s2"> distinct tokens in the vocabulary&quot;</span><span class="p">)</span>
+
+<span class="c1"># helper functions to move between code bert and simple ids</span>
+<span class="k">def</span> <span class="nf">from_code_bert</span><span class="p">(</span><span class="n">tkn_lst</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">    tkn_lst: a list of code bert tokens</span>
+<span class="sd">    Returns:</span>
+<span class="sd">    a list of simple ids</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tkns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">from_code_bert_dict</span><span class="p">[</span><span class="n">token</span><span class="p">])</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tkn_lst</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">tkns</span>
+
+
+<span class="k">def</span> <span class="nf">to_code_bert</span><span class="p">(</span><span class="n">tkn_lst</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">    tkn_lst: a list of simple ids</span>
+<span class="sd">    Returns:</span>
+<span class="sd">    a list of code bert tokens</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tkns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">to_code_bert_dict</span><span class="p">[</span><span class="n">token</span><span class="p">])</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tkn_lst</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">tkns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># let&#39;s translate our dataset into our ids</span>
+<span class="n">tokens_simple_id</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">from_code_bert_dict</span><span class="p">[</span><span class="n">token</span><span class="o">.</span><span class="n">item</span><span class="p">()]</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">])</span>
+
+<span class="c1"># split up the data into train and validation sets</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens_simple_id</span><span class="p">))</span> <span class="c1"># first 90% will be train, rest val</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">tokens_simple_id</span><span class="o">.</span><span class="n">clone</span><span class="p">()[:</span><span class="n">n</span><span class="p">]</span>
+<span class="n">val_data</span> <span class="o">=</span> <span class="n">tokens_simple_id</span><span class="o">.</span><span class="n">clone</span><span class="p">()[</span><span class="n">n</span><span class="p">:]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> tokens in the training set&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">val_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> tokens in the validation set&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;there are </span><span class="si">{</span><span class="n">vocab_size</span><span class="si">}</span><span class="s2"> distinct tokens in the vocabulary&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also write helper functions to get batches of data and to evaluate the loss of various models on them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># function for getting batches of data</span>
+<span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">split</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    generate a small batch of data of inputs x and targets y</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        split: &#39;train&#39; or &#39;val&#39;</span>
+<span class="sd">        device: &#39;cpu&#39; or &#39;cuda&#39; (should be &#39;cuda&#39; if available)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">train_data</span> <span class="k">if</span> <span class="n">split</span> <span class="o">==</span> <span class="s1">&#39;train&#39;</span> <span class="k">else</span> <span class="n">val_data</span>
+    <span class="n">ix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">context_window_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ix</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">context_window_size</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ix</span><span class="p">])</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="c1"># helper function for tracking loss during training</span>
+<span class="c1"># given to you</span>
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">estimate_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">eval_iters</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">      model: model being evaluated</span>
+<span class="sd">      eval_iters: number of batches to average over</span>
+<span class="sd">      context_window_size: size of the context window</span>
+<span class="sd">      device: &#39;cpu&#39; or &#39;cuda&#39; (should be &#39;cuda&#39; if available)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">split</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">]:</span>
+        <span class="n">losses</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">eval_iters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">eval_iters</span><span class="p">):</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">split</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+            <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+            <span class="n">losses</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">split</span><span class="p">]</span> <span class="o">=</span> <span class="n">losses</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-1-language-modeling">
+<h2>Part 1: Language Modeling<a class="headerlink" href="#part-1-language-modeling" title="Link to this heading">#</a></h2>
+<p>In this first part of the assignment, we will implement a baseline for code modeling.</p>
+<p>In the process of building this baseline, we will review 4 key ideas of sequence modeling that have become the backbone of modern language modeling such as ChatGPT:</p>
+<ol class="arabic simple">
+<li><p>Framing language modeling as next token prediction, and next token prediction as multiclass logistic regression</p></li>
+<li><p>Embedding discrete tokens in continuous latent spaces (word embeddings)</p></li>
+<li><p>Use the attention mechanism to move beyond Markovian models for sequences (we of course pay for this greater expressivity with increased compute, which is made possible in part by using matrix multiplications on acccelerated hardware like GPUs. Reducing the compute burden while maintaining the expressivity needed for good sequence modeling is an active area of research).</p></li>
+<li><p>Combining attention with deep learning in the Transformer architecture.</p></li>
+</ol>
+<section id="next-token-prediction-as-multiclass-logistic-regression">
+<h3>1.1: Next token prediction as multiclass logistic regression<a class="headerlink" href="#next-token-prediction-as-multiclass-logistic-regression" title="Link to this heading">#</a></h3>
+<p>Our first language model will simply be a lookup table. That is, given that we have token with value <span class="math notranslate nohighlight">\(v\)</span>, we will simply “look up” the logits that correspond to our prediction for the next token. This model is often known as a “bigram model” because it can be derived from the relative proportions of different bigrams (ordered pairs of tokens) occurring in a large text corpus.</p>
+<p>Let us be a bit more precise in our definition of the bigram model. Let’s say that the total size of our vocabulary (the number of tokens we are using) is <span class="math notranslate nohighlight">\(V\)</span>. Let <span class="math notranslate nohighlight">\(A\)</span> be a matrix in <span class="math notranslate nohighlight">\(\mathbb{R}^{V \times V}\)</span>, where each row <span class="math notranslate nohighlight">\(A_v\)</span> corresponds to the logits for the prediction of which token would follow a token that has value <span class="math notranslate nohighlight">\(v\)</span>.
+Thus, we are modeling the distribution of the token following a token that has value <span class="math notranslate nohighlight">\(v\)</span> as</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+y_{t+1} \mid y_t &amp;= v \sim \mathrm{Cat}(\mathbf{\pi}) \\
+\pi &amp;=\mathrm{softmax}(A_v)
+\end{align*}\]</div>
+<section id="question-1-1-1">
+<h4>Question 1.1.1<a class="headerlink" href="#question-1-1-1" title="Link to this heading">#</a></h4>
+<p><span class="math notranslate nohighlight">\(\mathbf{\pi} \in \Delta_{V-1}\)</span> is the vector of probabilities used to parameterize the categorical distribution for the next token prediction. Explain why we parameterize</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+  \mathbf{\pi} = \mathrm{softmax}(A_v),
+\end{equation*}\]</div>
+<p>and could not just use</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+  \mathbf{\pi} = A_v.
+\end{equation*}\]</div>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-1-2">
+<h4>Question 1.1.2<a class="headerlink" href="#question-1-1-2" title="Link to this heading">#</a></h4>
+<p>Discuss the relationship between the bigram model and contigency tables (discussed in Lecture 2).</p>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-1-3">
+<h4>Question 1.1.3<a class="headerlink" href="#question-1-1-3" title="Link to this heading">#</a></h4>
+<p>Say I have a string of three tokens with ids <span class="math notranslate nohighlight">\((7, 3, 6)\)</span>. If I use the bigram model as a generative model for language, given this information, what is distribution of the fourth token?</p>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-1-4">
+<h4>Question 1.1.4<a class="headerlink" href="#question-1-1-4" title="Link to this heading">#</a></h4>
+<p>Remember back in Section 0.2 “Tokenizing the data” when we gave you the helper function <code class="docutils literal notranslate"><span class="pre">get_batch</span></code>? Run <code class="docutils literal notranslate"><span class="pre">get_batch</span></code> and look at the inputs <code class="docutils literal notranslate"><span class="pre">x</span></code> and the targets <code class="docutils literal notranslate"><span class="pre">y</span></code>. Explain any relation between them in the context of formulating language modeling in the context of next token prediction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xb</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;the features have token ids </span><span class="si">{</span><span class="n">xb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;the targets have token ids </span><span class="si">{</span><span class="n">yb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-1-1-5">
+<h4>Question 1.1.5<a class="headerlink" href="#question-1-1-5" title="Link to this heading">#</a></h4>
+<p>Discuss the strengths and weaknesses of the bigram model as a generative model for language.</p>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-1-6">
+<h4>Question 1.1.6<a class="headerlink" href="#question-1-1-6" title="Link to this heading">#</a></h4>
+<p>Say I have a string <span class="math notranslate nohighlight">\(s\)</span> of length <span class="math notranslate nohighlight">\(T\)</span>. Derive the formula for the negative log likelihood of <span class="math notranslate nohighlight">\(s\)</span> under the bigram model in terms of the matrix of logits <span class="math notranslate nohighlight">\(A\)</span>. What would your answer be if the matrix of logits <span class="math notranslate nohighlight">\(A\)</span> were all zeros? What would be the value of the negative log likelihood of <span class="math notranslate nohighlight">\(s\)</span> under a model that always perfectly predicted the next token?</p>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-1-7-implement-the-bigramlanguagemodel">
+<h4>Question 1.1.7: Implement the BigramLanguageModel<a class="headerlink" href="#question-1-1-7-implement-the-bigramlanguagemodel" title="Link to this heading">#</a></h4>
+<p>Implement the bigram language model below.</p>
+<p>Your TODOs:</p>
+<ul class="simple">
+<li><p>if the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method is provided a target, the loss should be the negative log likelihood of the target (given the context)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generate</span></code> should take in (batched) contexts and a number of new tokens to generate, and then generate text from your model.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BigramLanguageModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          vocab_size: size of the vocabulary (the number of tokens)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># each token directly reads off the logits for the next token from a lookup table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logits_table</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: Int(B, T), token ids that make up the context (batch has size B, each entry in the batch has length T)</span>
+<span class="sd">          targets: Int(B, T), token ids corresponding to the target of each context in token_ids</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          logits: (B, T, V), logits[b,t, :] gives the length V vector of logits for the next token prediction in string b up to t tokens</span>
+<span class="sd">          loss: scalar, negative log likelihood of target given context</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># idx and targets are both (B,T) tensor of integers</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logits_table</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span> <span class="c1"># (B,T,V)</span>
+
+        <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># TODO: what should the loss in this setting be?</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="o">...</span>
+
+        <span class="k">return</span> <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">context_window_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: (B, T) tensor of token ids to provide as context</span>
+<span class="sd">          max_new_tokens: int, maximum number of new tokens to generate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (B, T+max_new_tokens) tensor of context with new tokens appended</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: your code below</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-1-1-8-evaluating-the-initialization">
+<h4>Question 1.1.8: Evaluating the initialization.<a class="headerlink" href="#question-1-1-8-evaluating-the-initialization" title="Link to this heading">#</a></h4>
+<p>Evaluate the loss of your untrained bigram model on a batch of data. Does this loss make sense in the context of your answer to Question 1.1.6? Discuss.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+<span class="n">bigram_model</span> <span class="o">=</span> <span class="n">BigramLanguageModel</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">)</span>
+<span class="n">bm</span> <span class="o">=</span> <span class="n">bigram_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="c1"># TODO: your code below</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-1-9-training-your-bigram-model">
+<h4>Question 1.1.9: Training your bigram model<a class="headerlink" href="#question-1-1-9-training-your-bigram-model" title="Link to this heading">#</a></h4>
+<p>Train your bigram model for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> iterations. Plot and interpret the loss curve.</p>
+<p>Our train loss gets down to around 4 in around 5 min of training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a PyTorch optimizer</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">1e-2</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">bigram_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+
+<span class="n">eval_interval</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">eval_iters</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">loss_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">SMALL_ITERS</span><span class="p">)):</span>
+
+    <span class="c1"># every once in a while evaluate the loss on train and val sets</span>
+    <span class="k">if</span> <span class="n">it</span> <span class="o">%</span> <span class="n">eval_interval</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">it</span> <span class="o">==</span> <span class="n">SMALL_ITERS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;iteration </span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">losses</span> <span class="o">=</span> <span class="n">estimate_loss</span><span class="p">(</span><span class="n">bm</span><span class="p">,</span> <span class="n">eval_iters</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;step </span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2">: train loss </span><span class="si">{</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, val loss </span><span class="si">{</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># sample a batch of data</span>
+    <span class="n">xb</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># evaluate the loss</span>
+    <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">bm</span><span class="p">(</span><span class="n">xb</span><span class="p">,</span> <span class="n">yb</span><span class="p">)</span>
+    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="token-embeddings-going-from-discrete-tokens-to-continuous-latent-spaces">
+<h3>1.2: Token Embeddings: going from discrete tokens to continuous latent spaces<a class="headerlink" href="#token-embeddings-going-from-discrete-tokens-to-continuous-latent-spaces" title="Link to this heading">#</a></h3>
+<p>In the look up table formulation of the bigram model, we are modelling the logits of the next token didstirbution independently for each token, even if two tokens are extremely similar to each other.
+One way arond this problem is to learn an embedding of the discrete tokens into <span class="math notranslate nohighlight">\(\mathbb{R}^{D}\)</span>, and then to run multi-class logistic regression on top of this learned embedding.</p>
+<p>More precisely, if we have a vocabulary of tokens of size <span class="math notranslate nohighlight">\(V\)</span> that we choose to embed in a Euclidean embedding space of dimension <span class="math notranslate nohighlight">\(D\)</span>, we can parameterize the distribution of the next token if the current token is <span class="math notranslate nohighlight">\(v\)</span> according to</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+  \mathrm{Cat}\Big( \mathrm{softmax} (\beta X_v) \Big),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(X_v \in \mathbb{R}^{D}\)</span> is the learned embedding of token <span class="math notranslate nohighlight">\(v\)</span> into <span class="math notranslate nohighlight">\(\mathbb{R}^{D}\)</span> and <span class="math notranslate nohighlight">\(\beta \in \mathbb{R}^{V \times D}\)</span>. Notice that if <span class="math notranslate nohighlight">\(X\)</span> were a fixed design matrix this formulation would be equivalent to multi-class logistic regression. However, both <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> are learnable parameters.</p>
+<section id="question-1-2-1-implement-bigramwithwordembeddingslm">
+<h4>Question 1.2.1: Implement BigramWithWordEmbeddingsLM<a class="headerlink" href="#question-1-2-1-implement-bigramwithwordembeddingslm" title="Link to this heading">#</a></h4>
+<p>Implement a bigram languge model that uses a linear readout from a low dimensional Euclidean embedding of each token to parameterize the logits of the next token distribution, instead of parameterizing the logits of the next token distribution directly. It should have almost the same implementation as <code class="docutils literal notranslate"><span class="pre">BigramLanguageModel</span></code> from Question 1.1.6, except <code class="docutils literal notranslate"><span class="pre">init</span></code> should also take in an <code class="docutils literal notranslate"><span class="pre">embed_size</span></code>, and the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method will need to be modified.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BigramWithWordEmbeddingsLM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Args:</span>
+<span class="sd">        vocab_size: int, size of the vocabulary</span>
+<span class="sd">        embed_size: int, dimension of the word embedding (D)</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="c1">#TODO, your code here</span>
+      <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: (B, T) token ids that make up the context (batch has size B, each entry in the batch has length T)</span>
+<span class="sd">          targets: (B, T) token ids corresponding to the target of each context in token_ids</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          logits: (B, T, V), logits[b,t, :] gives the length V vector of logits for the next token prediction in string b up to t tokens</span>
+<span class="sd">          loss: scalar, negative log likelihood of target given context</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO, your code here</span>
+
+        <span class="n">logits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">context_window_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: (B, T) tensor of token ids to provide as context</span>
+<span class="sd">          max_new_tokens: int, maximum number of new tokens to generate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (B, T+max_new_tokens) tensor of context with new tokens appended</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#TODO</span>
+        <span class="c1"># your code below</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="attention-relaxing-markovian-assumptions-to-transmit-information-across-the-sequence-length">
+<h3>1.3: Attention: Relaxing Markovian assumptions to transmit information across the sequence length<a class="headerlink" href="#attention-relaxing-markovian-assumptions-to-transmit-information-across-the-sequence-length" title="Link to this heading">#</a></h3>
+<p>A major problem with the bigram models of Sections 1.1 and 1.2 was that they were Markovian: the distribution of the next token was determined entirely by the current token! The attention mechanism provides a way to extract information between the previous tokens in the context to provide a better parameterization for the distribution of the next token.</p>
+<section id="question-1-3-1-averaging-over-word-embeddings">
+<h4>Question 1.3.1: Averaging over word embeddings<a class="headerlink" href="#question-1-3-1-averaging-over-word-embeddings" title="Link to this heading">#</a></h4>
+<p>One simple way to pool information from previous tokens would simply be to average the embeddings of all the previous tokens!</p>
+<p>Your TODO: Add comments to the the code snippet below. Write a description here explaining why the code is mathematically equivalent to averaging the embeddings of previous tokens</p>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># average word embedding via matrix multiply and softmax</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">4</span>              <span class="c1"># B</span>
+<span class="n">context_window_size</span> <span class="o">=</span> <span class="mi">8</span>     <span class="c1"># T</span>
+<span class="n">embed_size</span> <span class="o">=</span> <span class="mi">2</span>              <span class="c1"># D</span>
+
+<span class="c1"># make &quot;synthetic&quot; word embeddings (for illustration purposes only)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">)</span>
+
+<span class="c1"># TODO: comment the code below</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">tril</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">context_window_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">))</span>
+<span class="n">attn_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">context_window_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">))</span>
+<span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">tril</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">))</span>
+<span class="n">attn_weights</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">attn_weights</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">avgDmbds</span> <span class="o">=</span> <span class="n">attn_weights</span> <span class="o">@</span> <span class="n">X</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">avgDmbds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="single-headed-scaled-q-k-v-attention">
+<h4>1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention<a class="headerlink" href="#single-headed-scaled-q-k-v-attention" title="Link to this heading">#</a></h4>
+<p>A more sophisticated approach than simply averaging over previous word embeddings is single-headed (Query, Key, Value) scaled attention.
+That is, we now summarize the information contained in a length <span class="math notranslate nohighlight">\(T\)</span> sequence of tokens that have been embeded into <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{T \times D}\)</span> according to</p>
+<div class="amsmath math notranslate nohighlight" id="equation-de75d5b0-d4fb-433b-a57e-3af6bb526345">
+<span class="eqno">(7)<a class="headerlink" href="#equation-de75d5b0-d4fb-433b-a57e-3af6bb526345" title="Permalink to this equation">#</a></span>\[\begin{equation}
+   \mathrm{SoftmaxAcrossRows} \Bigg( \frac{\mathrm{CausalMask}\Big(X U_q^\top U_k X^\top \Big)}{\sqrt{K}} \Bigg) \Big( X V^\top \Big),
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(U_q, U_k \in \mathbb{R}^{K \times D}\)</span>, <span class="math notranslate nohighlight">\(V \in \mathbb{R}^{D \times D}\)</span>, and <span class="math notranslate nohighlight">\(K\)</span> is the “head size”.</p>
+<section id="question-1-3-2-1">
+<h5>Question 1.3.2.1<a class="headerlink" href="#question-1-3-2-1" title="Link to this heading">#</a></h5>
+<p>In the limiting case where <span class="math notranslate nohighlight">\(U_q\)</span> and <span class="math notranslate nohighlight">\(U_k\)</span> are all zeros, and <span class="math notranslate nohighlight">\(U_v = I_{D}\)</span>, what does <span class="math notranslate nohighlight">\((U_q, U_k, V)\)</span> attention simplify to?</p>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-3-2-2">
+<h5>Question 1.3.2.2<a class="headerlink" href="#question-1-3-2-2" title="Link to this heading">#</a></h5>
+<p>Imagine we had two matrices <span class="math notranslate nohighlight">\(U_q\)</span> and <span class="math notranslate nohighlight">\(U_k\)</span>, both in <span class="math notranslate nohighlight">\(\mathbb{R}^{K \times D}\)</span>, where every entry was an independent standard normal.</p>
+<p>What would be the distribution of an element of <span class="math notranslate nohighlight">\(U_q^\top U_k\)</span>? What about <span class="math notranslate nohighlight">\(U_q^\top U_k / \sqrt{K}\)</span>?</p>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+<hr class="docutils" />
+<section id="question-1-3-2-3-implement-single-headed-scaled-u-q-u-k-v-attention">
+<h5>Question 1.3.2.3: Implement single-headed scaled <span class="math notranslate nohighlight">\((U_q,U_k,V)\)</span>-attention.<a class="headerlink" href="#question-1-3-2-3-implement-single-headed-scaled-u-q-u-k-v-attention" title="Link to this heading">#</a></h5>
+<p>Complete the below code so the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method returns single-headed scaled <span class="math notranslate nohighlight">\((U_q,U_k,V)\)</span>-attention.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Head</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; one head of self-attention &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="o">=</span><span class="mi">384</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          head_size: int, size of the head embedding dimension (K)</span>
+<span class="sd">          context_window_size: int, number of tokens considered in the past for attention (T)</span>
+<span class="sd">          embed_size: int, size of the token embedding dimension (D)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_size</span> <span class="o">=</span> <span class="n">head_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_size</span><span class="p">,</span> <span class="n">head_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_size</span><span class="p">,</span> <span class="n">head_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># not a param of the model, so registered as a buffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;tril&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">context_window_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          x: (B,T,D) tensor of token embeddings</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (B,T,D) tensor of attention-weighted token embeddings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: your code here</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-1-3-2-3-implement-a-single-headed-attention-language-model">
+<h5>Question 1.3.2.3: Implement a single-headed attention language model<a class="headerlink" href="#question-1-3-2-3-implement-a-single-headed-attention-language-model" title="Link to this heading">#</a></h5>
+<p>Complete the code below. Note that because the transformer has no idea where tokens are occuring in space, we have also added in position embeddings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SingleHeadedAttentionLM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">head_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="o">=</span><span class="mi">384</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Args:</span>
+<span class="sd">        vocab_size: int, size of the vocabulary (V)</span>
+<span class="sd">        context_window_size: int, number of tokens considered in the past for attention (T)</span>
+<span class="sd">        head_size: int, size of the head embedding dimension (K)</span>
+<span class="sd">        embed_size: int, size of the token embedding dimension (D)</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding_table</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_table</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">context_window_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">context_window_size</span> <span class="o">=</span> <span class="n">context_window_size</span>
+
+      <span class="c1"># TODO: your code below</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">atten_head</span> <span class="o">=</span> <span class="n">Head</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">lm_head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: (B, T) token ids that make up the context (batch has size B, each entry</span>
+<span class="sd">                     in the batch has length T)</span>
+<span class="sd">          targets: (B, T) token ids corresponding to the target of each context in token_ids</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          logits: (B, T, V) logits[b,t] gives the length V vector of logits for the next token</span>
+<span class="sd">                   prediction in string b up to t tokens</span>
+<span class="sd">          loss: scalar, negative log likelihood of target given context</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">token_ids</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># (batch size, length)</span>
+        <span class="n">tok_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding_table</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span> <span class="c1"># (B,T,K)</span>
+        <span class="n">pos_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_table</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">))</span> <span class="c1"># (T,K)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tok_emb</span> <span class="o">+</span> <span class="n">pos_emb</span> <span class="c1"># (B,T,K)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atten_head</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># (B,T,D)</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lm_head</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># (B,T,V)</span>
+
+        <span class="c1"># TODO: your code here</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: (B, T) tensor of token ids to provide as context</span>
+<span class="sd">          max_new_tokens: int, maximum number of new tokens to generate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (B, T+max_new_tokens) tensor of context with new tokens appended</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#TODO</span>
+        <span class="c1"># your code below</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Train your new <code class="docutils literal notranslate"><span class="pre">SingleHeadedAttentionLM</span></code> for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> training iterations and plot the loss curve.
+Do you seen an improvement compared to your <code class="docutils literal notranslate"><span class="pre">BigramLanguageModel</span></code>? Discuss.</p>
+<p>Note: you may want to modify the learning rate. Training for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> with a learning rate of <code class="docutils literal notranslate"><span class="pre">6e-4</span></code>, we can get to a loss of around 3.3 in around 4 min of training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="multi-headed-attention">
+<h4>1.3.3: Multi-headed attention<a class="headerlink" href="#multi-headed-attention" title="Link to this heading">#</a></h4>
+<section id="question-1-3-3-1-implement-multi-headed-attention">
+<h5>Question 1.3.3.1: Implement multi-headed attention<a class="headerlink" href="#question-1-3-3-1-implement-multi-headed-attention" title="Link to this heading">#</a></h5>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MultiHeadAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; multiple heads of self-attention in parallel &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">head_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="o">=</span><span class="mi">384</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># TODO, your code below</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heads</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># TODO, your code below</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-1-3-3-2-implement-a-multi-headed-attention-lm">
+<h5>Question 1.3.3.2: Implement a multi-headed attention LM<a class="headerlink" href="#question-1-3-3-2-implement-a-multi-headed-attention-lm" title="Link to this heading">#</a></h5>
+<p>Fill in the code below to create a language model that outputs its logits for next token prediction using multi-headed attention. Train your model for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> training iterations. Compare the results with the single-headed attention model. Do you see an improvement?</p>
+<p>We get to a train loss of around 3 in around 5 mins of training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MultiHeadedAttentionLM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="o">=</span><span class="mi">384</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">head_size</span> <span class="o">=</span> <span class="n">embed_size</span> <span class="o">//</span> <span class="n">num_heads</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">context_window_size</span> <span class="o">=</span> <span class="n">context_window_size</span>
+      <span class="c1"># TODO: your code below</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: (B, T) token ids that make up the context (batch has size B, each entry in the</span>
+<span class="sd">                     batch has length T)</span>
+<span class="sd">          targets: (B, T) token ids corresponding to the target of each context in token_ids</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          logits: (B, T, V), logits[b,t] gives the length V vector of logits for the next token</span>
+<span class="sd">                  prediction in string b up to t tokens</span>
+<span class="sd">          loss: scalar, negative log likelihood of target given context</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: your code below</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          token_ids: (B, T) tensor of token ids to provide as context</span>
+<span class="sd">          max_new_tokens: int, maximum number of new tokens to generate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (B, T+max_new_tokens) tensor of context with new tokens appended</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: your code below</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p><em>your answer here</em></p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="the-transformer-architecture-combining-attention-with-deep-learning">
+<h3>1.4: The Transformer Architecture: combining attention with deep learning<a class="headerlink" href="#the-transformer-architecture-combining-attention-with-deep-learning" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># run this cell to initialize this deep learning module that you should use in the code your write later</span>
+<span class="c1"># you don&#39;t need to edit this layer</span>
+<span class="k">class</span> <span class="nc">FeedFoward</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; a simple linear layer followed by a non-linearity</span>
+<span class="sd">        Given to you, you don&#39;t need to write any code here!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_size</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">embed_size</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">embed_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="question-1-4-1-implement-a-transformer-block">
+<h4>Question 1.4.1: Implement a transformer block<a class="headerlink" href="#question-1-4-1-implement-a-transformer-block" title="Link to this heading">#</a></h4>
+<p>Complete the code below to implement a transformer block</p>
+<p>To make the your implemenation easier to train, we have added two deep learning best practices:</p>
+<ol class="arabic simple">
+<li><p>Residual connections.
+In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of the <code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code>, we have made the connections of the residual connection, which of the form</p></li>
+</ol>
+<div class="amsmath math notranslate nohighlight" id="equation-8ae293ff-e5bd-4590-bf7a-464240298c2d">
+<span class="eqno">(8)<a class="headerlink" href="#equation-8ae293ff-e5bd-4590-bf7a-464240298c2d" title="Permalink to this equation">#</a></span>\[\begin{equation}
+  x = (I + N)(x),
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(I\)</span> stands for the identity transformation and <span class="math notranslate nohighlight">\(N\)</span> stands for some non-linearity. The idea is that every layer is some adjustment of the identity function, which allows gradients to flow through a deep network during back propogation, especially at initialization.</p>
+<ol class="arabic simple" start="2">
+<li><p>Prenorm via <code class="docutils literal notranslate"><span class="pre">LayerNorm</span></code>
+Also in the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of the <code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code>, the nonlinearity first applied a <code class="docutils literal notranslate"><span class="pre">LayerNorm</span></code> to its arguments. The <code class="docutils literal notranslate"><span class="pre">LayerNorm</span></code> basically standardizes the neurons in that layer so that they have mean 0 and variance 1. Doing so is very helpful for numerical stability, espeically of the gradients.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TransformerBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Transformer block: communication across sequence length, followed by communication across embedding space</span>
+<span class="sd">        Uses multi-headed attention</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">block_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="o">=</span><span class="mi">384</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ln1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">embed_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ln2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">embed_size</span><span class="p">)</span>
+
+        <span class="c1"># TODO: your code below</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feed_forward</span> <span class="o">=</span> <span class="n">FeedForward</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mh_attention</span> <span class="o">=</span> <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mh_attention</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ln1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1"># communication over sequence length</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">feed_forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ln2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1"># communication across embedding space</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-1-4-2-implement-your-baseline-transformer-model">
+<h4>Question 1.4.2: Implement your baseline transformer model<a class="headerlink" href="#question-1-4-2-implement-your-baseline-transformer-model" title="Link to this heading">#</a></h4>
+<p>We now stack 6 <code class="docutils literal notranslate"><span class="pre">TransformerBlocks</span></code> (with a final layer norm applied after the blocks but before the logits) to create our basline <code class="docutils literal notranslate"><span class="pre">TransformerLM</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TransformerLM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="o">=</span><span class="mi">384</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">          Args:</span>
+<span class="sd">              vocab_size: int, number of tokens in the vocabulary (V)</span>
+<span class="sd">              context_window_size: int, size of the context window (T)</span>
+<span class="sd">              embed_size: int, embedding size (D)</span>
+<span class="sd">              num_heads: int, number of heads (H)</span>
+<span class="sd">              n_layers: int, number of layers (M)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding_table</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_table</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">context_window_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="p">[</span>
+            <span class="n">TransformerBlock</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span>
+                             <span class="n">context_window_size</span><span class="p">,</span>
+                             <span class="n">embed_size</span><span class="o">=</span><span class="n">embed_size</span><span class="p">,</span>
+                             <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span><span class="p">)])</span>
+
+        <span class="c1"># final layer norm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ln_f</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">embed_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lm_head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_size</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+
+        <span class="c1"># good initialization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_weights</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_init_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">):</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agrgs:</span>
+<span class="sd">            token_ids: tensor of integers, provides the contet, shape (B, T)</span>
+<span class="sd">            targets: tensor of integers, provides the tokens we are preidcitng, shape (B, T)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">token_ids</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># token_ids and targets are both (B, T) tensor of integers</span>
+        <span class="n">tok_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding_table</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span> <span class="c1"># (B, T, D)</span>
+        <span class="n">pos_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_table</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">))</span> <span class="c1"># (T, D)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tok_emb</span> <span class="o">+</span> <span class="n">pos_emb</span> <span class="c1"># (B, T, D)</span>
+
+        <span class="c1"># TODO: your code below</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">...</span>
+
+        <span class="k">return</span> <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            token_ids: tensor of integers forming the context, shape (B, T)</span>
+<span class="sd">            max_new_tokens: int, max number of tokens to generate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TOOD, your code below</span>
+        <span class="k">return</span> <span class="n">token_ids</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Train your <code class="docutils literal notranslate"><span class="pre">TransformerLM</span></code> for <code class="docutils literal notranslate"><span class="pre">LARGE_ITERS</span></code> iterations and plot the loss curve. You may want to change the learning rate.</p>
+<p>We used a learning rate of <code class="docutils literal notranslate"><span class="pre">1e-4</span></code> and got to a final train loss of around 2.3 in around 25 mins of training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trans</span> <span class="o">=</span> <span class="n">TransformerLM</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">)</span>
+<span class="n">tlm</span> <span class="o">=</span> <span class="n">trans</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="c1"># TODO, your code below</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Generate an unconditional sample of length <code class="docutils literal notranslate"><span class="pre">context_window_size</span></code> from your trained <code class="docutils literal notranslate"><span class="pre">TransformerLM</span></code>, and also prompt it with the two prompts we gave you. How does the output look? Discuss?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># the contexts for the different prompts</span>
+<span class="n">start_context</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;shape is </span><span class="si">{</span><span class="n">start_context</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">context1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">from_code_bert</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_1_text</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># (1, T)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;shape is </span><span class="si">{</span><span class="n">context1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">context2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">from_code_bert</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt_2_text</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;shape is </span><span class="si">{</span><span class="n">context2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># unconditional generate from the transformer model</span>
+<span class="n">uncond_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">tlm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">start_context</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">context_window_size</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">to_code_bert</span><span class="p">(</span><span class="n">uncond_gen</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># conditional generation of newton&#39;s method</span>
+<span class="c1"># TODO, your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># conditional generation of cosine distance</span>
+<span class="c1"># TODO, your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-1-4-3">
+<h4>Question 1.4.3<a class="headerlink" href="#question-1-4-3" title="Link to this heading">#</a></h4>
+<p>The negative log-likelihood we have been using to train our models can be expressed as</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+  L = -\frac{1}{T} \sum_{t = 1}^{T} \log p(s[t] | \text{context})
+\end{equation*}\]</div>
+<p>for some document <span class="math notranslate nohighlight">\(s\)</span>, where <span class="math notranslate nohighlight">\(s[t]\)</span> is the <span class="math notranslate nohighlight">\(t\)</span>th token of the doc. The natural language processing (NLP) community often reports the quantity</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+  \text{perplexity} = \exp(L).
+\end{equation*}\]</div>
+<p>Give an intuitive interpretation of what perpelxity is. Does the reported perplexity of your trained <code class="docutils literal notranslate"><span class="pre">TransformerLM</span></code> model make sense in terms of samples it generates? (be sure to distinguish betwen <code class="docutils literal notranslate"><span class="pre">train</span></code> and <code class="docutils literal notranslate"><span class="pre">validation</span></code> perplexity). (<em>Hint: your answer to Question 1.1.6 may be helpful</em>).</p>
+</section>
+</section>
+</section>
+<section id="part-2-mini-project">
+<h2>Part 2: Mini-Project<a class="headerlink" href="#part-2-mini-project" title="Link to this heading">#</a></h2>
+<p>Quick recap: So far we have</p>
+<ol class="arabic simple">
+<li><p>Preprocessed the python code dataset by encoding text into integer tokens.</p></li>
+<li><p>Implemented single headed attention and then further generalized to multiheaded attention. We further combined multiheaded attention with deep learning to create the transformer architecture.</p></li>
+<li><p>Trained our transformer and generate code output.</p></li>
+</ol>
+<p>Up to this point, the performance of our simple language model has clearly made a lot of progress. We can see that our model has learned to generate in the style of python code syntax, although there are many quirks that suggest it will not make a very practical code assistant in its current state.</p>
+<section id="project-outline">
+<h3>Project Outline<a class="headerlink" href="#project-outline" title="Link to this heading">#</a></h3>
+<p>Find some area of possible improvement.
+We interpret “improvement” quite loosely, but it is up to you to state precisely in what sense your proposed innovation might constitute an improvement and to show convincing evidence that your innovation does or does not constitue an improvement according to your definition.
+For your idea, <strong>formulate a hypothesis</strong> for why this change should result in a better model. <strong>Implement your changes</strong> and <strong>report any findings</strong>.</p>
+<p><em>Notes</em>: As this assignment is being treated as a project, you should expect training to take longer than previous assignments. However, please use your judgement to decide what is reasonable. We will not expect you to run training procedures that take more than 2 hours on the free Google Colab computing resources and we certainly do not expect you to acquire additional compute. The proposed improvements should not solely rely on increased computing demands, but must be based on the goal of improving the model by more efficiently learning from our data.</p>
+<p><em>Hints</em>: There are many aspects to assessing our model. For example, not only is quality of generated text important, it is also of interest to reduce costs associated with training.</p>
+</section>
+<section id="deliverables">
+<h3>Deliverables<a class="headerlink" href="#deliverables" title="Link to this heading">#</a></h3>
+<p>In addition to a pdf of your python notebook, the submission for this project will be a written report no more than 4 pages in length using the <a class="reference external" href="https://neurips.cc/Conferences/2023/PaperInformation/StyleFiles">NeurIPS LaTex template</a>. Your report should include detailed analysis of the hypotheses you chose to test along with any conclusions.</p>
+<p>The page limit for the report does not include bibliography or appendices. Make sure to keep the “ready for submission” option to help us grade anonymously. One of your apprendices should contain a link to any code used to generate the project so that we can grade it (google drive with colab nbs or github repo are both fine). You should have at least one plot in your main text (which is capped at 4 pages).</p>
+</section>
+<section id="data-augmentation">
+<h3>Data augmentation<a class="headerlink" href="#data-augmentation" title="Link to this heading">#</a></h3>
+<p>We got the data for this project from <a class="reference external" href="https://huggingface.co/datasets/bigcode/the-stack-dedup">The Stack</a>. If you’d like, you can definitely train on larger datasets by accessing their dataset of python code (we just scratched the surface). You have to make an account on Hugginface to get a Hugginface access token, but the process is pretty quick.</p>
+</section>
+</section>
+<section id="submission-instructions">
+<h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Link to this heading">#</a></h2>
+<p>You will generate two PDFs: one from parts 0 and 1, which involves completing this colab to create a transformer baseline; and one from the mini-project in part 2, which will be your write-up of no longer than 4 pages.</p>
+<p><strong>Combine the two PDFs into a single PDF and submit on gradescope. Tag your PDF correclty.</strong></p>
+<p>If you work in a group of two, submit one assignment on gradescope. If you complete the assignment individually, submit as usual.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./assignments/hw4"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../hw3/hw3.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">HW3: Hidden Markov Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../lectures/99_references.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-dataset">0.1: Loading the dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#question-0-2-examining-the-tokenizer">Question 0.2: Examining the tokenizer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-our-dataloader">0.3: Building our dataloader</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-language-modeling">Part 1: Language Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-token-prediction-as-multiclass-logistic-regression">1.1: Next token prediction as multiclass logistic regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-1">Question 1.1.1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-2">Question 1.1.2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-3">Question 1.1.3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-4">Question 1.1.4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-5">Question 1.1.5</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-6">Question 1.1.6</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-7-implement-the-bigramlanguagemodel">Question 1.1.7: Implement the BigramLanguageModel</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-8-evaluating-the-initialization">Question 1.1.8: Evaluating the initialization.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-1-9-training-your-bigram-model">Question 1.1.9: Training your bigram model</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#token-embeddings-going-from-discrete-tokens-to-continuous-latent-spaces">1.2: Token Embeddings: going from discrete tokens to continuous latent spaces</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-2-1-implement-bigramwithwordembeddingslm">Question 1.2.1: Implement BigramWithWordEmbeddingsLM</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-relaxing-markovian-assumptions-to-transmit-information-across-the-sequence-length">1.3: Attention: Relaxing Markovian assumptions to transmit information across the sequence length</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-1-averaging-over-word-embeddings">Question 1.3.1: Averaging over word embeddings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#single-headed-scaled-q-k-v-attention">1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-1">Question 1.3.2.1</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-2">Question 1.3.2.2</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-single-headed-scaled-u-q-u-k-v-attention">Question 1.3.2.3: Implement single-headed scaled <span class="math notranslate nohighlight">\((U_q,U_k,V)\)</span>-attention.</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-a-single-headed-attention-language-model">Question 1.3.2.3: Implement a single-headed attention language model</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-attention">1.3.3: Multi-headed attention</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-3-1-implement-multi-headed-attention">Question 1.3.3.1: Implement multi-headed attention</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-3-2-implement-a-multi-headed-attention-lm">Question 1.3.3.2: Implement a multi-headed attention LM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-transformer-architecture-combining-attention-with-deep-learning">1.4: The Transformer Architecture: combining attention with deep learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-4-1-implement-a-transformer-block">Question 1.4.1: Implement a transformer block</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-4-2-implement-your-baseline-transformer-model">Question 1.4.2: Implement your baseline transformer model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-4-3">Question 1.4.3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-mini-project">Part 2: Mini-Project</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#project-outline">Project Outline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-augmentation">Data augmentation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
