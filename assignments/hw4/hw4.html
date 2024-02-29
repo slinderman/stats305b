@@ -786,6 +786,7 @@ document.write(`
 <li><p>Use the attention mechanism to move beyond Markovian models for sequences (we of course pay for this greater expressivity with increased compute, which is made possible in part by using matrix multiplications on acccelerated hardware like GPUs. Reducing the compute burden while maintaining the expressivity needed for good sequence modeling is an active area of research).</p></li>
 <li><p>Combining attention with deep learning in the Transformer architecture.</p></li>
 </ol>
+<p>For various architectures that you have to train, we provide approximate training times and training loss scores for your reference. They are really just for reference so don’t read too much into them, but we are providing them as a warning mechanism in case something is going seriously wrong.</p>
 <section id="next-token-prediction-as-multiclass-logistic-regression">
 <h3>1.1: Next token prediction as multiclass logistic regression<a class="headerlink" href="#next-token-prediction-as-multiclass-logistic-regression" title="Link to this heading">#</a></h3>
 <p>Our first language model will simply be a lookup table. That is, given that we have token with value <span class="math notranslate nohighlight">\(v\)</span>, we will simply “look up” the logits that correspond to our prediction for the next token. This model is often known as a “bigram model” because it can be derived from the relative proportions of different bigrams (ordered pairs of tokens) occurring in a large text corpus.</p>
@@ -1075,8 +1076,8 @@ One way arond this problem is to learn an embedding of the discrete tokens into 
 <h4>1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention<a class="headerlink" href="#single-headed-scaled-q-k-v-attention" title="Link to this heading">#</a></h4>
 <p>A more sophisticated approach than simply averaging over previous word embeddings is single-headed (Query, Key, Value) scaled attention.
 That is, we now summarize the information contained in a length <span class="math notranslate nohighlight">\(T\)</span> sequence of tokens that have been embeded into <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{T \times D}\)</span> according to</p>
-<div class="amsmath math notranslate nohighlight" id="equation-42d1fb34-e9ed-45c7-929d-f1f917f2e65f">
-<span class="eqno">(7)<a class="headerlink" href="#equation-42d1fb34-e9ed-45c7-929d-f1f917f2e65f" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-31dc4efd-a83f-4a48-8efb-1c99de477610">
+<span class="eqno">(7)<a class="headerlink" href="#equation-31dc4efd-a83f-4a48-8efb-1c99de477610" title="Permalink to this equation">#</a></span>\[\begin{equation}
    \mathrm{SoftmaxAcrossRows} \Bigg( \frac{\mathrm{CausalMask}\Big(X U_q^\top U_k X^\top \Big)}{\sqrt{K}} \Bigg) \Big( X V^\top \Big),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(U_q, U_k \in \mathbb{R}^{K \times D}\)</span>, <span class="math notranslate nohighlight">\(V \in \mathbb{R}^{D \times D}\)</span>, and <span class="math notranslate nohighlight">\(K\)</span> is the “head size”.</p>
@@ -1203,7 +1204,7 @@ That is, we now summarize the information contained in a length <span class="mat
 <p>Train your new <code class="docutils literal notranslate"><span class="pre">SingleHeadedAttentionLM</span></code> for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> training iterations and plot the loss curve.
 The <code class="docutils literal notranslate"><span class="pre">head_size</span></code> shouldn’t matter too much, we just use the <code class="docutils literal notranslate"><span class="pre">embedding_size</span></code>.
 Do you seen an improvement compared to your <code class="docutils literal notranslate"><span class="pre">BigramLanguageModel</span></code>? Discuss.</p>
-<p>Note: you may want to modify the learning rate. Training for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> with a learning rate of <code class="docutils literal notranslate"><span class="pre">6e-4</span></code>, we can get to a loss of around 3.3 in around 4 min of training.</p>
+<p>Note: you may want to modify the learning rate. Training for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> with a learning rate of <code class="docutils literal notranslate"><span class="pre">6e-4</span></code>, we can get to a train loss of around 3.4 in around 4 min of training.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">embed_size</span> <span class="o">=</span> <span class="mi">384</span>
@@ -1211,8 +1212,6 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <span class="n">sham</span> <span class="o">=</span> <span class="n">sha_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">6e-4</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">sha_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
-
-<span class="n">eval_interval</span> <span class="o">=</span> <span class="mi">500</span>
 
 <span class="n">loss_list</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1269,7 +1268,7 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <section id="question-1-3-3-2-implement-a-multi-headed-attention-lm">
 <h5>Question 1.3.3.2: Implement a multi-headed attention LM<a class="headerlink" href="#question-1-3-3-2-implement-a-multi-headed-attention-lm" title="Link to this heading">#</a></h5>
 <p>Fill in the code below to create a language model that outputs its logits for next token prediction using multi-headed attention. Train your model for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> training iterations. Compare the results with the single-headed attention model. Do you see an improvement?</p>
-<p>We get to a train loss of around 3 in around 5 mins of training.</p>
+<p>We get to a train loss of around 2.75 in around 5 mins of training.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MultiHeadedAttentionLM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -1352,8 +1351,8 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <li><p>Residual connections.
 In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of the <code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code>, we have made the connections of the residual connection, which of the form</p></li>
 </ol>
-<div class="amsmath math notranslate nohighlight" id="equation-2868c1d4-516e-4f0b-860d-45fc65a705ba">
-<span class="eqno">(8)<a class="headerlink" href="#equation-2868c1d4-516e-4f0b-860d-45fc65a705ba" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-cfe5cc37-be19-442a-975c-62e9d1d165c2">
+<span class="eqno">(8)<a class="headerlink" href="#equation-cfe5cc37-be19-442a-975c-62e9d1d165c2" title="Permalink to this equation">#</a></span>\[\begin{equation}
   x = (I + N)(x),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(I\)</span> stands for the identity transformation and <span class="math notranslate nohighlight">\(N\)</span> stands for some non-linearity. The idea is that every layer is some adjustment of the identity function, which allows gradients to flow through a deep network during back propogation, especially at initialization.</p>
@@ -1460,7 +1459,7 @@ Also in the <code class="docutils literal notranslate"><span class="pre">forward
 </div>
 </div>
 <p>Train your <code class="docutils literal notranslate"><span class="pre">TransformerLM</span></code> for <code class="docutils literal notranslate"><span class="pre">LARGE_ITERS</span></code> iterations and plot the loss curve. You may want to change the learning rate.</p>
-<p>We used a learning rate of <code class="docutils literal notranslate"><span class="pre">1e-4</span></code> and got to a final train loss of around 2.3 in around 25 mins of training.</p>
+<p>We used a learning rate of <code class="docutils literal notranslate"><span class="pre">1e-4</span></code> and got to a final train loss of around 2.4 in around 30 mins of training.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trans</span> <span class="o">=</span> <span class="n">TransformerLM</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">)</span>
