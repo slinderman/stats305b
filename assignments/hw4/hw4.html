@@ -529,7 +529,8 @@ document.write(`
 <p>The dominant mode for preprocessing textual data is to tokenize it, that is, to split the dataset into a finite vocabulary of tokens. Then, we can set up a dictionary where counting numbers map to tokens. Tokens can be characters, or words, or subwords; in fact, the “best” way to tokenize text is an active area of research. For our baseline, we will use a tokenizer that microsoft created for code.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;microsoft/CodeBERT-base&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;microsoft/CodeBERT-base&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1074,8 +1075,8 @@ One way arond this problem is to learn an embedding of the discrete tokens into 
 <h4>1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention<a class="headerlink" href="#single-headed-scaled-q-k-v-attention" title="Link to this heading">#</a></h4>
 <p>A more sophisticated approach than simply averaging over previous word embeddings is single-headed (Query, Key, Value) scaled attention.
 That is, we now summarize the information contained in a length <span class="math notranslate nohighlight">\(T\)</span> sequence of tokens that have been embeded into <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{T \times D}\)</span> according to</p>
-<div class="amsmath math notranslate nohighlight" id="equation-e1673fa6-7063-4bcb-84ce-75991c509918">
-<span class="eqno">(7)<a class="headerlink" href="#equation-e1673fa6-7063-4bcb-84ce-75991c509918" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-42d1fb34-e9ed-45c7-929d-f1f917f2e65f">
+<span class="eqno">(7)<a class="headerlink" href="#equation-42d1fb34-e9ed-45c7-929d-f1f917f2e65f" title="Permalink to this equation">#</a></span>\[\begin{equation}
    \mathrm{SoftmaxAcrossRows} \Bigg( \frac{\mathrm{CausalMask}\Big(X U_q^\top U_k X^\top \Big)}{\sqrt{K}} \Bigg) \Big( X V^\top \Big),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(U_q, U_k \in \mathbb{R}^{K \times D}\)</span>, <span class="math notranslate nohighlight">\(V \in \mathbb{R}^{D \times D}\)</span>, and <span class="math notranslate nohighlight">\(K\)</span> is the “head size”.</p>
@@ -1200,11 +1201,40 @@ That is, we now summarize the information contained in a length <span class="mat
 </div>
 </div>
 <p>Train your new <code class="docutils literal notranslate"><span class="pre">SingleHeadedAttentionLM</span></code> for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> training iterations and plot the loss curve.
+The <code class="docutils literal notranslate"><span class="pre">head_size</span></code> shouldn’t matter too much, we just use the <code class="docutils literal notranslate"><span class="pre">embedding_size</span></code>.
 Do you seen an improvement compared to your <code class="docutils literal notranslate"><span class="pre">BigramLanguageModel</span></code>? Discuss.</p>
 <p>Note: you may want to modify the learning rate. Training for <code class="docutils literal notranslate"><span class="pre">SMALL_ITERS</span></code> with a learning rate of <code class="docutils literal notranslate"><span class="pre">6e-4</span></code>, we can get to a loss of around 3.3 in around 4 min of training.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your code here</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">embed_size</span> <span class="o">=</span> <span class="mi">384</span>
+<span class="n">sha_model</span> <span class="o">=</span> <span class="n">SingleHeadedAttentionLM</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">,</span> <span class="n">embed_size</span><span class="p">)</span>
+<span class="n">sham</span> <span class="o">=</span> <span class="n">sha_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">6e-4</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">sha_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+
+<span class="n">eval_interval</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="n">loss_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">SMALL_ITERS</span><span class="p">)):</span>
+
+    <span class="c1"># every once in a while evaluate the loss on train and val sets</span>
+    <span class="k">if</span> <span class="n">it</span> <span class="o">%</span> <span class="n">eval_interval</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">it</span> <span class="o">==</span> <span class="n">SMALL_ITERS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;iteration </span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">losses</span> <span class="o">=</span> <span class="n">estimate_loss</span><span class="p">(</span><span class="n">sham</span><span class="p">,</span> <span class="n">eval_iters</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;step </span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2">: train loss </span><span class="si">{</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, val loss </span><span class="si">{</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># sample a batch of data</span>
+    <span class="n">xb</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># evaluate the loss</span>
+    <span class="n">logits</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">sham</span><span class="p">(</span><span class="n">xb</span><span class="p">,</span> <span class="n">yb</span><span class="p">)</span>
+    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1322,8 +1352,8 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <li><p>Residual connections.
 In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of the <code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code>, we have made the connections of the residual connection, which of the form</p></li>
 </ol>
-<div class="amsmath math notranslate nohighlight" id="equation-a60d4ba8-69de-4e35-9fc7-6be12b8f4deb">
-<span class="eqno">(8)<a class="headerlink" href="#equation-a60d4ba8-69de-4e35-9fc7-6be12b8f4deb" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-2868c1d4-516e-4f0b-860d-45fc65a705ba">
+<span class="eqno">(8)<a class="headerlink" href="#equation-2868c1d4-516e-4f0b-860d-45fc65a705ba" title="Permalink to this equation">#</a></span>\[\begin{equation}
   x = (I + N)(x),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(I\)</span> stands for the identity transformation and <span class="math notranslate nohighlight">\(N\)</span> stands for some non-linearity. The idea is that every layer is some adjustment of the identity function, which allows gradients to flow through a deep network during back propogation, especially at initialization.</p>
@@ -1527,7 +1557,7 @@ For your idea, <strong>formulate a hypothesis</strong> for why this change shoul
 <section id="submission-instructions">
 <h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Link to this heading">#</a></h2>
 <p>You will generate two PDFs: one from parts 0 and 1, which involves completing this colab to create a transformer baseline; and one from the mini-project in part 2, which will be your write-up of no longer than 4 pages.</p>
-<p><strong>Combine the two PDFs into a single PDF and submit on gradescope. Tag your PDF correclty.</strong></p>
+<p><strong>Combine the two PDFs into a single PDF and submit on gradescope. Tag your PDF correctly.</strong></p>
 <p>If you work in a group of two, submit one assignment on gradescope. If you complete the assignment individually, submit as usual.</p>
 </section>
 </section>
