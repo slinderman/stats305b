@@ -918,7 +918,7 @@ y_{t+1} \mid y_t &amp;= v \sim \mathrm{Cat}(\mathbf{\pi}) \\
 </section>
 <section id="question-1-1-8-evaluating-the-initialization">
 <h4>Question 1.1.8: Evaluating the initialization.<a class="headerlink" href="#question-1-1-8-evaluating-the-initialization" title="Link to this heading">#</a></h4>
-<p>Evaluate the loss of your untrained bigram model on a batch of data. Does this loss make sense in the context of your answer to Question 1.1.6? Discuss.</p>
+<p>Evaluate the loss of your untrained bigram model on a batch of data. Make sure the loss (negative log likelihood) is per-token (i.e. you may need to average over both sequence length and batch). Does this loss make sense in the context of your answer to Question 1.1.6? Discuss.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="n">context_window_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
@@ -1042,8 +1042,8 @@ One way arond this problem is to learn an embedding of the discrete tokens into 
 <p>A major problem with the bigram models of Sections 1.1 and 1.2 was that they were Markovian: the distribution of the next token was determined entirely by the current token! The attention mechanism provides a way to extract information between the previous tokens in the context to provide a better parameterization for the distribution of the next token.</p>
 <section id="question-1-3-1-averaging-over-word-embeddings">
 <h4>Question 1.3.1: Averaging over word embeddings<a class="headerlink" href="#question-1-3-1-averaging-over-word-embeddings" title="Link to this heading">#</a></h4>
-<p>One simple way to pool information from previous tokens would simply be to average the embeddings of all the previous tokens!</p>
-<p>Your TODO: Add comments to the the code snippet below. Write a description here explaining why the code is mathematically equivalent to averaging the embeddings of previous tokens</p>
+<p>One simple way to pool information would simply be to average the embeddings!</p>
+<p>Your TODO: Add comments to the the code snippet below. Write a description here explaining why the code is mathematically equivalent to averaging the embeddings of the previous tokens and the current token.</p>
 <hr class="docutils" />
 <p><em>your answer here</em></p>
 <hr class="docutils" />
@@ -1076,8 +1076,8 @@ One way arond this problem is to learn an embedding of the discrete tokens into 
 <h4>1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention<a class="headerlink" href="#single-headed-scaled-q-k-v-attention" title="Link to this heading">#</a></h4>
 <p>A more sophisticated approach than simply averaging over previous word embeddings is single-headed (Query, Key, Value) scaled attention.
 That is, we now summarize the information contained in a length <span class="math notranslate nohighlight">\(T\)</span> sequence of tokens that have been embeded into <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{T \times D}\)</span> according to</p>
-<div class="amsmath math notranslate nohighlight" id="equation-31dc4efd-a83f-4a48-8efb-1c99de477610">
-<span class="eqno">(7)<a class="headerlink" href="#equation-31dc4efd-a83f-4a48-8efb-1c99de477610" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-52124e2f-0ef1-44fc-927b-08543dacc7dd">
+<span class="eqno">(7)<a class="headerlink" href="#equation-52124e2f-0ef1-44fc-927b-08543dacc7dd" title="Permalink to this equation">#</a></span>\[\begin{equation}
    \mathrm{SoftmaxAcrossRows} \Bigg( \frac{\mathrm{CausalMask}\Big(X U_q^\top U_k X^\top \Big)}{\sqrt{K}} \Bigg) \Big( X V^\top \Big),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(U_q, U_k \in \mathbb{R}^{K \times D}\)</span>, <span class="math notranslate nohighlight">\(V \in \mathbb{R}^{D \times D}\)</span>, and <span class="math notranslate nohighlight">\(K\)</span> is the “head size”.</p>
@@ -1351,8 +1351,8 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <li><p>Residual connections.
 In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of the <code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code>, we have made the connections of the residual connection, which of the form</p></li>
 </ol>
-<div class="amsmath math notranslate nohighlight" id="equation-cfe5cc37-be19-442a-975c-62e9d1d165c2">
-<span class="eqno">(8)<a class="headerlink" href="#equation-cfe5cc37-be19-442a-975c-62e9d1d165c2" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-8e7c042f-09db-4e35-b318-f6ccd1251a3a">
+<span class="eqno">(8)<a class="headerlink" href="#equation-8e7c042f-09db-4e35-b318-f6ccd1251a3a" title="Permalink to this equation">#</a></span>\[\begin{equation}
   x = (I + N)(x),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(I\)</span> stands for the identity transformation and <span class="math notranslate nohighlight">\(N\)</span> stands for some non-linearity. The idea is that every layer is some adjustment of the identity function, which allows gradients to flow through a deep network during back propogation, especially at initialization.</p>
