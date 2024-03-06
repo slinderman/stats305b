@@ -456,7 +456,7 @@ document.write(`
 <blockquote>
 <div><p><strong><u>This Assignment</u></strong></p>
 <p><strong>Model:</strong> You will begin by implementing a baseline using attention and transformers. But, for the mini-project, you will be free to use any model (HMMs, RNNs, transformers, state space layers, diffusion models etc.) that you would like!</p>
-<p><strong>Algorithm:</strong> mini-batched stochatic gradient descent / whatever you’d like! We will be using deep learning models in at least the first half of the assignment, so be sure to <strong>use the GPU on colab</strong> (make sure you switch to GPU in the “Runtime” tab above).</p>
+<p><strong>Algorithm:</strong> mini-batched stochatic gradient descent / whatever you’d like! We will be using deep learning models in at least the first half of the assignment. When you actually go into “production” you should be sure to <strong>use the GPU on colab</strong> (make sure you switch to GPU in the “Runtime” tab above). However, you have limited colab gpu units for free, so when you are “developing,” you may wish to run smaller models with less data for fewer iterations just to get the bugs out / make sure you pipeline is working (see the “prototyping” exercise in HW 0 for more discussion).</p>
 <p><strong>Data</strong>: A large corpus of python code from <a class="reference external" href="https://huggingface.co/datasets/bigcode/the-stack-dedup">the Stack</a>. We have taken a dataset of around 4 million tokens from the stack and stored in a csv file for you for easy access.</p>
 </div></blockquote>
 <section id="setup">
@@ -543,6 +543,12 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Note: if you run the below cell, you might get something like the following warning</p>
+<blockquote>
+<div><p>Token indices sequence length is longer than the specified maximum sequence length for this model. Running this sequence through the model will result in indexing errors</p>
+</div></blockquote>
+<p>You can safely ignore this error for the purpose of the assignment (we did in our solutions).</p>
+<p>But, if  you can figure out this error, or find a fix, let the teaching staff know, and we will give you extra credit.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># should take around 3 min to load in around 4M tokens</span>
@@ -861,7 +867,7 @@ y_{t+1} \mid y_t &amp;= v \sim \mathrm{Cat}(\mathbf{\pi}) \\
 <p>Your TODOs:</p>
 <ul class="simple">
 <li><p>if the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method is provided a target, the loss should be the negative log likelihood of the target (given the context)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">generate</span></code> should take in (batched) contexts and a number of new tokens to generate, and then generate text from your model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generate</span></code> should take in (batched) contexts and a number of new tokens to generate, and then generate text autoregressively from your model. Note that in autoregressive text generation, you iteratively append the tokens you generate to your context.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -972,9 +978,14 @@ y_{t+1} \mid y_t &amp;= v \sim \mathrm{Cat}(\mathbf{\pi}) \\
 </div>
 <hr class="docutils" />
 <p><em>your answer here</em></p>
-</section>
-</section>
 <hr class="docutils" />
+<p>Note that these models can take up a lot of memory on the GPU. As you go through this assignment, you may want to free the models after you train them using code along the lines of</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bm</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
 <section id="token-embeddings-going-from-discrete-tokens-to-continuous-latent-spaces">
 <h3>1.2: Token Embeddings: going from discrete tokens to continuous latent spaces<a class="headerlink" href="#token-embeddings-going-from-discrete-tokens-to-continuous-latent-spaces" title="Link to this heading">#</a></h3>
 <p>In the look up table formulation of the bigram model, we are modelling the logits of the next token didstirbution independently for each token, even if two tokens are extremely similar to each other.
@@ -1076,8 +1087,8 @@ One way arond this problem is to learn an embedding of the discrete tokens into 
 <h4>1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention<a class="headerlink" href="#single-headed-scaled-q-k-v-attention" title="Link to this heading">#</a></h4>
 <p>A more sophisticated approach than simply averaging over previous word embeddings is single-headed (Query, Key, Value) scaled attention.
 That is, we now summarize the information contained in a length <span class="math notranslate nohighlight">\(T\)</span> sequence of tokens that have been embeded into <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{T \times D}\)</span> according to</p>
-<div class="amsmath math notranslate nohighlight" id="equation-52124e2f-0ef1-44fc-927b-08543dacc7dd">
-<span class="eqno">(7)<a class="headerlink" href="#equation-52124e2f-0ef1-44fc-927b-08543dacc7dd" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-304e9dde-4197-4c0b-8f76-06e412bdedc8">
+<span class="eqno">(7)<a class="headerlink" href="#equation-304e9dde-4197-4c0b-8f76-06e412bdedc8" title="Permalink to this equation">#</a></span>\[\begin{equation}
    \mathrm{SoftmaxAcrossRows} \Bigg( \frac{\mathrm{CausalMask}\Big(X U_q^\top U_k X^\top \Big)}{\sqrt{K}} \Bigg) \Big( X V^\top \Big),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(U_q, U_k \in \mathbb{R}^{K \times D}\)</span>, <span class="math notranslate nohighlight">\(V \in \mathbb{R}^{D \times D}\)</span>, and <span class="math notranslate nohighlight">\(K\)</span> is the “head size”.</p>
@@ -1324,7 +1335,7 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># run this cell to initialize this deep learning module that you should use in the code your write later</span>
 <span class="c1"># you don&#39;t need to edit this layer</span>
-<span class="k">class</span> <span class="nc">FeedFoward</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">FeedForward</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; a simple linear layer followed by a non-linearity</span>
 <span class="sd">        Given to you, you don&#39;t need to write any code here!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1351,8 +1362,8 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <li><p>Residual connections.
 In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of the <code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code>, we have made the connections of the residual connection, which of the form</p></li>
 </ol>
-<div class="amsmath math notranslate nohighlight" id="equation-8e7c042f-09db-4e35-b318-f6ccd1251a3a">
-<span class="eqno">(8)<a class="headerlink" href="#equation-8e7c042f-09db-4e35-b318-f6ccd1251a3a" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-feb9e452-443e-494c-a080-76a60b17d1ac">
+<span class="eqno">(8)<a class="headerlink" href="#equation-feb9e452-443e-494c-a080-76a60b17d1ac" title="Permalink to this equation">#</a></span>\[\begin{equation}
   x = (I + N)(x),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(I\)</span> stands for the identity transformation and <span class="math notranslate nohighlight">\(N\)</span> stands for some non-linearity. The idea is that every layer is some adjustment of the identity function, which allows gradients to flow through a deep network during back propogation, especially at initialization.</p>
