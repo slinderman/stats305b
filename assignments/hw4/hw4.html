@@ -410,7 +410,7 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-1">Question 1.3.2.1</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-2">Question 1.3.2.2</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-single-headed-scaled-u-q-u-k-v-attention">Question 1.3.2.3: Implement single-headed scaled <span class="math notranslate nohighlight">\((U_q,U_k,V)\)</span>-attention.</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-a-single-headed-attention-language-model">Question 1.3.2.3: Implement a single-headed attention language model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-4-implement-a-single-headed-attention-language-model">Question 1.3.2.4: Implement a single-headed attention language model</a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-attention">1.3.3: Multi-headed attention</a><ul class="nav section-nav flex-column">
@@ -1087,8 +1087,8 @@ One way arond this problem is to learn an embedding of the discrete tokens into 
 <h4>1.3.2: Single-headed scaled <span class="math notranslate nohighlight">\((Q,K,V)\)</span>-attention<a class="headerlink" href="#single-headed-scaled-q-k-v-attention" title="Link to this heading">#</a></h4>
 <p>A more sophisticated approach than simply averaging over previous word embeddings is single-headed (Query, Key, Value) scaled attention.
 That is, we now summarize the information contained in a length <span class="math notranslate nohighlight">\(T\)</span> sequence of tokens that have been embeded into <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{T \times D}\)</span> according to</p>
-<div class="amsmath math notranslate nohighlight" id="equation-304e9dde-4197-4c0b-8f76-06e412bdedc8">
-<span class="eqno">(7)<a class="headerlink" href="#equation-304e9dde-4197-4c0b-8f76-06e412bdedc8" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-55df0563-a8f9-4ce6-bfb8-241ecb2a9d7e">
+<span class="eqno">(7)<a class="headerlink" href="#equation-55df0563-a8f9-4ce6-bfb8-241ecb2a9d7e" title="Permalink to this equation">#</a></span>\[\begin{equation}
    \mathrm{SoftmaxAcrossRows} \Bigg( \frac{\mathrm{CausalMask}\Big(X U_q^\top U_k X^\top \Big)}{\sqrt{K}} \Bigg) \Big( X V^\top \Big),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(U_q, U_k \in \mathbb{R}^{K \times D}\)</span>, <span class="math notranslate nohighlight">\(V \in \mathbb{R}^{D \times D}\)</span>, and <span class="math notranslate nohighlight">\(K\)</span> is the “head size”.</p>
@@ -1147,8 +1147,8 @@ That is, we now summarize the information contained in a length <span class="mat
 </div>
 </div>
 </section>
-<section id="question-1-3-2-3-implement-a-single-headed-attention-language-model">
-<h5>Question 1.3.2.3: Implement a single-headed attention language model<a class="headerlink" href="#question-1-3-2-3-implement-a-single-headed-attention-language-model" title="Link to this heading">#</a></h5>
+<section id="question-1-3-2-4-implement-a-single-headed-attention-language-model">
+<h5>Question 1.3.2.4: Implement a single-headed attention language model<a class="headerlink" href="#question-1-3-2-4-implement-a-single-headed-attention-language-model" title="Link to this heading">#</a></h5>
 <p>Complete the code below. Note that because the transformer has no idea where tokens are occuring in space, we have also added in position embeddings.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1362,8 +1362,8 @@ Do you seen an improvement compared to your <code class="docutils literal notran
 <li><p>Residual connections.
 In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of the <code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code>, we have made the connections of the residual connection, which of the form</p></li>
 </ol>
-<div class="amsmath math notranslate nohighlight" id="equation-feb9e452-443e-494c-a080-76a60b17d1ac">
-<span class="eqno">(8)<a class="headerlink" href="#equation-feb9e452-443e-494c-a080-76a60b17d1ac" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-4f7c64d9-4938-461b-b4ce-ba5a6c6ae57d">
+<span class="eqno">(8)<a class="headerlink" href="#equation-4f7c64d9-4938-461b-b4ce-ba5a6c6ae57d" title="Permalink to this equation">#</a></span>\[\begin{equation}
   x = (I + N)(x),
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(I\)</span> stands for the identity transformation and <span class="math notranslate nohighlight">\(N\)</span> stands for some non-linearity. The idea is that every layer is some adjustment of the identity function, which allows gradients to flow through a deep network during back propogation, especially at initialization.</p>
@@ -1666,7 +1666,7 @@ For your idea, <strong>formulate a hypothesis</strong> for why this change shoul
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-1">Question 1.3.2.1</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-2">Question 1.3.2.2</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-single-headed-scaled-u-q-u-k-v-attention">Question 1.3.2.3: Implement single-headed scaled <span class="math notranslate nohighlight">\((U_q,U_k,V)\)</span>-attention.</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-3-implement-a-single-headed-attention-language-model">Question 1.3.2.3: Implement a single-headed attention language model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#question-1-3-2-4-implement-a-single-headed-attention-language-model">Question 1.3.2.4: Implement a single-headed attention language model</a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-attention">1.3.3: Multi-headed attention</a><ul class="nav section-nav flex-column">
