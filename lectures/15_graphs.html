@@ -1,0 +1,805 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Random Graphs Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/15_graphs';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Transformers" href="13_transformers.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_sparse_glms.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_hmms.html">Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_vaes.html">Variational Autoencoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_vaes_demo.html">Demo: Neural Networks and VAEs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_rnns.html">Recurrent Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_transformers.html">Transformers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Random Graphs Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw4/hw4.html">HW4: Large Language Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/15_graphs.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Random Graphs Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-and-inference-problems">Prediction and inference problems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-networks">Random networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#erdos-renyi-model">Erdős-Rényi Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-block-model">Stochastic Block Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#posterior-inference-in-the-sbm">Posterior inference in the SBM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latent-space-models">Latent Space Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#posterior-inference-in-the-lsm">Posterior inference in the LSM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latent-position-models">Latent Position Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exchangeabile-random-graphs-and-aldous-hoover">Exchangeabile Random Graphs and Aldous-Hoover</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#de-finetti-and-aldous-hoover">de Finetti and Aldous-Hoover</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-random-graph-models">Sparse Random Graph Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-walk-graph-models">Random Walk Graph Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-random-graph-models">Exponential Random Graph Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-for-ergms">Parameter estimation for ERGMs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-neural-networks">Graph Neural Networks</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="random-graphs-models">
+<h1>Random Graphs Models<a class="headerlink" href="#random-graphs-models" title="Link to this heading">#</a></h1>
+<p>Graphs, a.k.a. <strong>networks</strong>, are useful ways to represent relational data. Perhaps the most intuitive example is a social network. The <strong>nodes</strong> of the network represent users and the <strong>edges</strong> between pairs of nodes represent which users follow one another. Networks come up in many other domains as well. For example, in neuroscience we use networks to model connectivity between neurons. In chemistry, networks are used to represent how atoms bond together to form molecules. There is a rich line of work in statistics, social science, and machine learning on modeling random networks and making predictions from network-valued data.</p>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Link to this heading">#</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\mbX \in \{0,1\}^{n \times n}\)</span> be a binary <strong>adjacency matrix</strong> on <span class="math notranslate nohighlight">\(n\)</span> nodes where <span class="math notranslate nohighlight">\(X_{ij} = 1\)</span> indicates there is an edge from node <span class="math notranslate nohighlight">\(i\)</span> to node <span class="math notranslate nohighlight">\(j\)</span>.</p>
+<ul class="simple">
+<li><p>An <strong>undirected network</strong> is one in which <span class="math notranslate nohighlight">\(X_{ij} = 1 \implies X_{ji} = 1\)</span>. That is, <span class="math notranslate nohighlight">\(\mbX\)</span> is symmetric.</p></li>
+<li><p>A <strong>directed network</strong> may have an asymmetric adjacency matrix.</p></li>
+<li><p>A network has no <strong>self-loops</strong> if <span class="math notranslate nohighlight">\(X_{ii} = 0 \forall i=1,\ldots,n\)</span>.</p></li>
+<li><p>A network is <strong>simple</strong> if it is undirected and has no self loops.</p></li>
+<li><p>A network is <strong>connected</strong> if for for all pairs of nodes <span class="math notranslate nohighlight">\((i,j)\)</span> there exists a path from node <span class="math notranslate nohighlight">\(i\)</span> to node <span class="math notranslate nohighlight">\(j\)</span>.</p></li>
+<li><p>The <strong>degree</strong> of a node is its number of neighbors. In a directed graph, we may distinguish between the in-degree and out-degree.</p></li>
+<li><p>A graph is called <strong>sparse</strong> if the number of edges <span class="math notranslate nohighlight">\(E\)</span> is <span class="math notranslate nohighlight">\(\cO(n)\)</span>. Otherwise it is called <strong>dense.</strong></p></li>
+</ul>
+<p>Sometimes we want to model graphs where the edges come with some metadata, like a weight. We can represent a weighted graph as a matrix $<span class="math notranslate nohighlight">\(\mbX \in \reals^{n \times n}\)</span> where <span class="math notranslate nohighlight">\(X_{ij}\)</span> denotes the weight on an edge from node <span class="math notranslate nohighlight">\(i\)</span> to node <span class="math notranslate nohighlight">\(j\)</span>, with <span class="math notranslate nohighlight">\(X_{ij} = 0\)</span> meaning there is no edge.</p>
+<p>These definitions are just a brief overview of terms from <a class="reference external" href="https://en.wikipedia.org/wiki/Graph_theory"><strong>graph theory</strong></a>. There is an enormous literature in mathematics, computer science, probability, etc. dealing with these objects.</p>
+</section>
+<section id="prediction-and-inference-problems">
+<h2>Prediction and inference problems<a class="headerlink" href="#prediction-and-inference-problems" title="Link to this heading">#</a></h2>
+<p>There are many questions we might like to answer with graphs. We will focus on the following three:</p>
+<ol class="arabic simple">
+<li><p><strong>Edge prediction</strong>: given observations of a subset of the adjacency matrix, predict the missing values of <span class="math notranslate nohighlight">\(\mbX\)</span>.</p></li>
+<li><p><strong>Community discovery</strong>: given an adjacency matrix, assign nodes to clusters based on their connectivity.</p></li>
+<li><p><strong>Feature prediction</strong> (or supervised learning, or simply regression): given an adjacency matrix representing a graph (of possibly varying number of nodes), predict some property of that graph. For example, given a graph representing a molecule, predict whether it will be fluorescent.</p></li>
+</ol>
+<p>One way to answer these questions is by building a generative model for networks. It is not strictly necessary to have a generative model, as we’ll talk about at the end of this lecture, but having one will allow us to answer these kinds of questions and more.</p>
+</section>
+<section id="random-networks">
+<h2>Random networks<a class="headerlink" href="#random-networks" title="Link to this heading">#</a></h2>
+<p>Let’s start by considering a distribution on binary adjacency matrices with <span class="math notranslate nohighlight">\(n\)</span> nodes. If we consider directed graphs with self loops, there are <span class="math notranslate nohighlight">\(2^{n^2}\)</span> possible values that <span class="math notranslate nohighlight">\(\mbX\)</span> can take on.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">How many undirected graphs without self loops are there?</p>
+<p>There are <span class="math notranslate nohighlight">\({n \choose 2} = n(n-1)/2\)</span> pairs of nodes, and each pair is a possible edge. Thus, there are <span class="math notranslate nohighlight">\(2^{{n \choose 2}}\)</span> possible adjacency matrices. We can represent them by a binary adjacency matrix <span class="math notranslate nohighlight">\(\mbX\)</span> that is symmetric and has zeros along the diagonal.</p>
+</div>
+<p>Random network models are distributions over this space. One of the design considerations for such models is balancing</p>
+<ul class="simple">
+<li><p><strong>expressivity</strong>: the need for a model that captures a range of realistic connectivity patterns, with</p></li>
+<li><p><strong>interpretability</strong>: the want for a model to have relatively few parameters that govern its generative process.</p></li>
+</ul>
+</section>
+<section id="erdos-renyi-model">
+<h2>Erdős-Rényi Model<a class="headerlink" href="#erdos-renyi-model" title="Link to this heading">#</a></h2>
+<p>The Erdős-Rényi (ER) model for random graphs is perhaps the simplest non-trivial model. Under this model, each edge is an iid Bernoulli random variable,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_{ij} &amp;\iid\sim \mathrm{Bern}(\rho)
+\end{align*}\]</div>
+<p>with a single parameter <span class="math notranslate nohighlight">\(\rho \in [0,1]\)</span> determining the <strong>sparsity</strong> of the graph. We can consider either directed or undirected versions of the model. Much of the theory of ER graphs concerns the undirected case without self loops.</p>
+<p>The expected number of edges in an undirected model without self loops is <span class="math notranslate nohighlight">\({n \choose 2} p\)</span>. The degree of node <span class="math notranslate nohighlight">\(i\)</span> is binomial distributed,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathrm{deg}(i) &amp;\sim \mathrm{Bin}(n-1, \rho)
+\end{align*}\]</div>
+<p>which is well approximated as <span class="math notranslate nohighlight">\(\mathrm{Po}(n\rho)\)</span> for large graphs.</p>
+<p>For example, Erdős and Rényi showed that <span class="math notranslate nohighlight">\(\rho=\frac{\ln n}{n}\)</span> is a sharp threshold for connectness. Above this threshold the graph will almost surely be connected; below this threshold, there will almost surely be isolated nodes.</p>
+</section>
+<section id="stochastic-block-model">
+<h2>Stochastic Block Model<a class="headerlink" href="#stochastic-block-model" title="Link to this heading">#</a></h2>
+<p>While mathematically attractive, the ER model is a rather simple model of networks. One way to enrich our models is by introducing auxiliary variables.</p>
+<p>In a stochastic block model (SBM), each node <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span> has a community assignment, <span class="math notranslate nohighlight">\(z_i \in \{1,\ldots,K\}\)</span>. Given the community assignments, the edges are conditionally independent,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_{ij} \mid z_i=k, z_j=k' &amp;\sim \mathrm{Bern}(\rho_{k,k'}),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho_{k,k'} \in [0,1]\)</span> for all <span class="math notranslate nohighlight">\(k=1,\ldots,K\)</span> and <span class="math notranslate nohighlight">\(k'=1,\ldots,K\)</span>. Let <span class="math notranslate nohighlight">\(\mbR \in [0,1]^{K \times K}\)</span> denote the matrix of community connection probabilities with entries <span class="math notranslate nohighlight">\(\rho_{k,k'}\)</span>.  Note that we have written this as a model for <strong>directed</strong> graphs.</p>
+<div class="tip admonition">
+<p class="admonition-title">SBM is a generalization of the Erdős-Rényi model</p>
+<p>Note that when <span class="math notranslate nohighlight">\(K=1\)</span>, the SBM reduces to the standard ER model. Thus, we can think of the SBM as a natural generalization from the one community ER model to a heterogeneous network with many communities.</p>
+</div>
+<section id="posterior-inference-in-the-sbm">
+<h3>Posterior inference in the SBM<a class="headerlink" href="#posterior-inference-in-the-sbm" title="Link to this heading">#</a></h3>
+<p>Stochastic block models are like the graph version of a discrete mixture model.
+They are often used for <strong>community discovery</strong> — clustering nodes into groups based on their connectivity patterns.
+In this application, the community assignments are treated as latent variables drawn from a categorical prior,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+z_i &amp;\sim \mathrm{Cat}(\mbpi).
+\end{align*}\]</div>
+<p>We will give the model parameters conjugate priors as well,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\rho_{k,k'} &amp;\iid{\sim} \mathrm{Beta}(\alpha, \beta) &amp;\text{for } k,k'&amp;= 1,\ldots,K \\
+\mbpi &amp;\sim \mathrm{Dir}(\gamma \mbone_K)
+\end{align*}\]</div>
+<p>The goal is to infer the posterior distribution of community assignments and parameters given the observed adjacency matrix.</p>
+<p>One simple way to approch this problem is Gibbs sampling. In this model, the latent variables and parameters are conditionally conjugate.
+The complete conditional distributions of the community assignment variables are,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Pr(z_i = k \mid \mbX, \mbpi, \mbR, \mbz_{\neg i}) 
+&amp;\propto p(z_i = k \mid \mbpi) \prod_{j \neq i} \mathrm{Bern}(X_{ij} \mid \rho_{k,z_j}) \\
+&amp;\propto \pi_k \prod_{j \neq i} \mathrm{Bern}(X_{ij} \mid \rho_{k,z_j}).
+\end{align*}\]</div>
+<p>This is a simple categorical distribution.</p>
+<p>Given the community assignments, the connection probabilities <span class="math notranslate nohighlight">\(\mbR\)</span> and community probabilities <span class="math notranslate nohighlight">\(\mbpi\)</span> are conditionally conjugate too,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\rho_{k,k'} \mid \mbX, \mbz)
+&amp;\propto \mathrm{Beta}(\rho_{k,k'} \mid \alpha, \beta) \prod_{i=1}^n \prod_{j=1}^n \mathrm{Bern}(X_{ij} \mid \rho_{z_i,z_j}) \\
+&amp;= \mathrm{Beta}(\rho_{k,k'} \mid \alpha', \beta'),
+\end{align*}\]</div>
+<p>and,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbpi \mid \mbz) 
+&amp;\propto \mathrm{Dir}(\mbpi \mid \gamma \mbone_K) \prod_{i=1}^n \mathrm{Cat}(z_i \mid \mbpi) \\
+&amp;= \mathrm{Dir}(\mbpi \mid \mbgamma').
+\end{align*}\]</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Derive expressions for <span class="math notranslate nohighlight">\(\alpha'\)</span>, <span class="math notranslate nohighlight">\(\beta'\)</span> and <span class="math notranslate nohighlight">\(\mbgamma'\)</span>.</p>
+</div>
+</section>
+</section>
+<section id="latent-space-models">
+<h2>Latent Space Models<a class="headerlink" href="#latent-space-models" title="Link to this heading">#</a></h2>
+<p>Just as the SBM is analogous to a discrete mixture model, a latent space model (LSM) is analogous to a continuous factor model.
+In an LSM, each node is associated with a continuous latent variable <span class="math notranslate nohighlight">\(\mbz_i \in \reals^K\)</span>, and connection probabilities are determined by the inner product of those variables,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_{ij} \mid \mbZ &amp;\sim \mathrm{Bern}(\sigma(\mbz_i^\top \mbLambda \mbz_j + b)),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(b \in \reals\)</span> is a bias parameter and <span class="math notranslate nohighlight">\(\mbLambda\)</span> is a positive definite mixing matrix.</p>
+<p>Such models are widely used in the analysis of social network data <span id="id1">[<a class="reference internal" href="99_references.html#id22" title="Peter D Hoff, Adrian E Raftery, and Mark S Handcock. Latent space approaches to social network analysis. Journal of the American Statistical Association, 97(460):1090–1098, 2002.">HRH02</a>]</span>. The latent variables <span class="math notranslate nohighlight">\(\mbz_i\)</span> offer a low-dimensional summary of nodes and their relationships.</p>
+<div class="tip admonition">
+<p class="admonition-title">Connection to Mixed Effects Models</p>
+<p>Think back to <a class="reference internal" href="../assignments/hw2/hw2.html"><span class="std std-doc">HW2: Bayesian GLMs</span></a>, where you developed Bayesian generalized linear mixed effects models. We have the same sort of model here, but for graphs!</p>
+</div>
+<section id="posterior-inference-in-the-lsm">
+<h3>Posterior inference in the LSM<a class="headerlink" href="#posterior-inference-in-the-lsm" title="Link to this heading">#</a></h3>
+<p>To complete the generative model, assume a Gaussian prior on the latent variables,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbz_i &amp;\iid\sim \mathrm{N}(\mbzero, \mbI).
+\end{align*}\]</div>
+<p>Unlike the SBM, the conditional distributions are not conjugate in the LSM. Instead,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbz_i \mid \mbX) &amp;\propto \mathrm{N}(\mbz_i \mid \mbzero, \mbI) \prod_{j \neq i} \mathrm{Bern}(\sigma(\mbz_i^\top \mbLambda \mbz_j + b)).
+\end{align*}\]</div>
+<p>One way to approach the posterior inference problem is MCMC. For example, we could use a Metropolis-Hastings algorithm to update the latent variables one at a time. This is what <span id="id2">Hoff <em>et al.</em> [<a class="reference internal" href="99_references.html#id22" title="Peter D Hoff, Adrian E Raftery, and Mark S Handcock. Latent space approaches to social network analysis. Journal of the American Statistical Association, 97(460):1090–1098, 2002.">HRH02</a>]</span> suggest.</p>
+<p>Alternatively, we could use  Pólya-gamma augmentation, like we did in HW2, to render the model conditionally conjugate. In that case, each latent variable would have a Gaussian conditional, holding the others fixed.</p>
+</section>
+</section>
+<section id="latent-position-models">
+<h2>Latent Position Models<a class="headerlink" href="#latent-position-models" title="Link to this heading">#</a></h2>
+<p>Finally, a latent position model (sometimes called a latent distance model) follows a similar form to the LSM above. Let <span class="math notranslate nohighlight">\(\mbz_i \in \reals^K\)</span> denote the position of node <span class="math notranslate nohighlight">\(i\)</span> in some latent space. Connection probabilities depend on distances in this space,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+X_{ij} \mid \mbZ &amp;\sim \mathrm{Bern}(\sigma(-\|\mbz_i - \mbz_j\|_2 + b)),
+\end{align*}\]</div>
+<p><span id="id3">Hoff [<a class="reference internal" href="99_references.html#id23" title="Peter Hoff. Modeling homophily and stochastic equivalence in symmetric relational data. Advances in neural information processing systems, 2007.">Hof07</a>]</span> showed that the LSM weakly generalizes the latent position model, in the sense that an LSM with <span class="math notranslate nohighlight">\(K+1\)</span> dimensional factors can represent the same likelihood as a latent position model with <span class="math notranslate nohighlight">\(K\)</span> dimensional positions. The latent position model is still an attractive model in its own right, since the learned embeddings admit a simple interpretation. It seems easier to reason about distances in a visualization than to think about inner products.</p>
+</section>
+<section id="exchangeabile-random-graphs-and-aldous-hoover">
+<h2>Exchangeabile Random Graphs and Aldous-Hoover<a class="headerlink" href="#exchangeabile-random-graphs-and-aldous-hoover" title="Link to this heading">#</a></h2>
+<p>The models above all assume that the edges <span class="math notranslate nohighlight">\(X_{ij}\)</span> are conditionally independent random variables given the latent variables <span class="math notranslate nohighlight">\(\mbz_i\)</span> and <span class="math notranslate nohighlight">\(\mbz_j\)</span> associated with the corresponding nodes.
+Conditional independence assumptions l;ike these are natural when information is limited.</p>
+<p>Consider modeling a collection of variables <span class="math notranslate nohighlight">\((x_1, \ldots, x_n)\)</span>. If no information is available to order or group the variables, we must assume they are <strong>exchangeable</strong>:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-bb65fae1-df96-4256-aaa2-3ea63ab451f5">
+<span class="eqno">(7)<a class="headerlink" href="#equation-bb65fae1-df96-4256-aaa2-3ea63ab451f5" title="Permalink to this equation">#</a></span>\[\begin{align}
+    p(x_1, \ldots, x_n) = p(x_{\pi(1)}, \ldots, x_{\pi(n)}) 
+\end{align}\]</div>
+<p>for any permutation <span class="math notranslate nohighlight">\(\pi\)</span>.
+The simplest exchangeable distributions assume independent and identically distributed r.v.’s,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-d213c56d-ff2d-4c57-b2ab-efccabfc18bc">
+<span class="eqno">(8)<a class="headerlink" href="#equation-d213c56d-ff2d-4c57-b2ab-efccabfc18bc" title="Permalink to this equation">#</a></span>\[\begin{align}
+    p(x_1, \ldots, x_n) &amp;= \prod_{i=1}^n p(x_n).
+\end{align}\]</div>
+<p>More generally, we may assume the variables are conditionally independent given a parameter <span class="math notranslate nohighlight">\(z\)</span>, which has been marginalized over,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-60b2b16f-533f-4845-b452-00913d94a0ea">
+<span class="eqno">(9)<a class="headerlink" href="#equation-60b2b16f-533f-4845-b452-00913d94a0ea" title="Permalink to this equation">#</a></span>\[\begin{align}
+    p(x_1, \ldots, x_n) &amp;= \int \left[ \prod_{i=1}^n p(x_i \mid z) \right] p(z) \dif z.
+\end{align}\]</div>
+<p>Marginally, <span class="math notranslate nohighlight">\(x_1, \ldots, x_n\)</span> are <strong>not</strong> independent, but they are exchangeable.</p>
+<section id="de-finetti-and-aldous-hoover">
+<h3>de Finetti and Aldous-Hoover<a class="headerlink" href="#de-finetti-and-aldous-hoover" title="Link to this heading">#</a></h3>
+<p>de Finetti’s theorem states that as <span class="math notranslate nohighlight">\(n \to \infty\)</span>, any suitably well-behaved exchangeable distribution on <span class="math notranslate nohighlight">\((x_1, \ldots, x_n)\)</span> can be expressed as a mixture of independent and identical distributions, as above.
+Though the theorem does not hold in the finite case, it is often cited as a motivation for conditional independence assumptions in Bayesian models.</p>
+<p>Extensions of de Finetti’s theorem have been proven for partially exchangeable arrays, like graphs <span id="id4">[<a class="reference internal" href="99_references.html#id24" title="David J Aldous. Representations for partially exchangeable arrays of random variables. Journal of Multivariate Analysis, 11(4):581–598, 1981.">Ald81</a>, <a class="reference internal" href="99_references.html#id25" title="Douglas Hoover. Relations on probability spaces and arrays of random variables. Technical Report, Institute for Advanced Study, Princeton, NJ, 1979.">Hoo79</a>]</span>. A random graph is exchangeable if its distribution is invariant to permutations of the node labels. That is, the distribution of the matrix <span class="math notranslate nohighlight">\(\mbX = (X_{ij})\)</span> is equal to the distribution of <span class="math notranslate nohighlight">\(\mbX\)</span> with its rows and columns simultaneously permuted: <span class="math notranslate nohighlight">\((X_{ij}) \stackrel{d}{=} (X_{\sigma(i)\sigma(j)})\)</span> for any permutation <span class="math notranslate nohighlight">\(\sigma\)</span> of <span class="math notranslate nohighlight">\([n]\)</span>.</p>
+<p>As discussed by <span id="id5">Orbanz and Roy [<a class="reference internal" href="99_references.html#id26" title="P Orbanz and DM Roy. Bayesian models of graphs, arrays, and other exchangeable random structures. arXiv, 37(02):1–25, 2013.">OR13</a>]</span>, a simple graph is exchangeable if and only if there is a random symmetric function <span class="math notranslate nohighlight">\(W: [0,1]^2 \mapsto [0,1]\)</span> such that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+(X_{ij}) \stackrel{d}{=} (\mathrm{Bern}(W(U_i, U_j)))
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(U_i\)</span> are iid uniform random variates, independent of <span class="math notranslate nohighlight">\(W\)</span>. To see that the latent variable models above fall into this framework, we simply have to map the per-node latent variables <span class="math notranslate nohighlight">\(z_i\)</span> to the uniform variables <span class="math notranslate nohighlight">\(U_i\)</span> via the inverse CDF.</p>
+<p>The random function <span class="math notranslate nohighlight">\(W\)</span> is called a <strong>graphon</strong>. This object plays an important role in the theory of graph limits, which are central objects in probability theory for random networks.</p>
+</section>
+</section>
+<section id="sparse-random-graph-models">
+<h2>Sparse Random Graph Models<a class="headerlink" href="#sparse-random-graph-models" title="Link to this heading">#</a></h2>
+<p>While exchangeability and invariance to node relabeling seem intuitive properties of many graphs, they have some unrealistic consequences. For example, <em>exchangeable random graphs are either dense or empty</em> (Fact VII.2 in <span id="id6">[<a class="reference internal" href="99_references.html#id26" title="P Orbanz and DM Roy. Bayesian models of graphs, arrays, and other exchangeable random structures. arXiv, 37(02):1–25, 2013.">OR13</a>]</span>).</p>
+<p>To see why, consider a simple random graph on <span class="math notranslate nohighlight">\(n\)</span> nodes. There are <span class="math notranslate nohighlight">\({n \choose 2} = n(n-1)/2\)</span> possible edges. The expected number of edges is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\bbE\left[\sum_{i=1}^n \sum_{j=1}^{i-1} X_{ij} \right]  
+&amp;= \sum_{i=1}^n \sum_{j=1}^{i-1} \bbE[X_{ij}] \\
+&amp;= \sum_{i=1}^n \sum_{j=1}^{i-1} \bbE[W(U_i, U_j)] \\
+&amp;= \sum_{i=1}^n \sum_{j=1}^{i-1} \bbE[\bbE[W(U_i, U_j) \mid U_i, U_j]] \\
+&amp;= {n \choose 2} \epsilon \\
+\text{where  } \epsilon &amp;= \frac{1}{2} \int_{[0,1]^2} W(u,v) \dif u \dif v.
+\end{align*}\]</div>
+<p>The <span class="math notranslate nohighlight">\(\frac{1}{2}\)</span> factor arises because <span class="math notranslate nohighlight">\(W\)</span> is symmetric in its arguments.</p>
+<p>There are two possibilities:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon = 0\)</span> in which case the graph is empty, or</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon &gt; 0\)</span> in which case the expected number of edges is <span class="math notranslate nohighlight">\({n \choose 2} \epsilon = \Theta(n^2)\)</span>, which implies that the graph is almost surely dense.</p></li>
+</ol>
+<section id="random-walk-graph-models">
+<h3>Random Walk Graph Models<a class="headerlink" href="#random-walk-graph-models" title="Link to this heading">#</a></h3>
+<p>So how can we generate sparse random graphs? One way is to imagine nodes arriving in a sequence. <span id="id7">Bloem-Reddy and Orbanz [<a class="reference internal" href="99_references.html#id27" title="Benjamin Bloem-Reddy and Peter Orbanz. Random-walk models of network formation and sequential Monte Carlo methods for graphs. Journal of the Royal Statistical Society Series B: Statistical Methodology, 80(5):871–898, 2018.">BRO18</a>]</span> propose the following <strong>random walk graph model</strong>,</p>
+<ol class="arabic simple">
+<li><p>Initialize the graph <span class="math notranslate nohighlight">\(G_1\)</span> with a single edge connecting two vertices.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(t=2,\ldots,T\)</span> generate <span class="math notranslate nohighlight">\(G_t\)</span> from <span class="math notranslate nohighlight">\(G_{t-1}\)</span> as follows:
+a. Select a vertex <span class="math notranslate nohighlight">\(V\)</span> from <span class="math notranslate nohighlight">\(G_{t-1}\)</span> at random
+b. With probability <span class="math notranslate nohighlight">\(\alpha\)</span>, attach a new vertex to <span class="math notranslate nohighlight">\(V\)</span>
+c. Else, run a simple random walk, starting at <span class="math notranslate nohighlight">\(V\)</span>, for a Poisson distributed number of time steps. Connect the terminal vertex <span class="math notranslate nohighlight">\(V'\)</span> to <span class="math notranslate nohighlight">\(V\)</span> if they are not already connected; otherwise add a new vertex to <span class="math notranslate nohighlight">\(V\)</span>.</p></li>
+</ol>
+<p>By construction, each step of the algorithm adds one edge and at most one node, so the graph is sparse — total number of edges is <span class="math notranslate nohighlight">\(\Theta(n)\)</span>.</p>
+<p>Unfortunately, inference in this model is considerably more challenging. Typically, we would observe the final graph, but not the order in which the nodes arrived. Thus, we need to perform inference over the underlying permutation of nodes. Methods like sequential Monte Carlo could be used for this purpose, but it is a nontrivial inference problem <span id="id8">[<a class="reference internal" href="99_references.html#id27" title="Benjamin Bloem-Reddy and Peter Orbanz. Random-walk models of network formation and sequential Monte Carlo methods for graphs. Journal of the Royal Statistical Society Series B: Statistical Methodology, 80(5):871–898, 2018.">BRO18</a>]</span>.</p>
+</section>
+</section>
+<section id="exponential-random-graph-models">
+<h2>Exponential Random Graph Models<a class="headerlink" href="#exponential-random-graph-models" title="Link to this heading">#</a></h2>
+<p>The models discussed thus far involve relatively simple generative processes that produce rich distributions over random graphs. The marginal distributions <span class="math notranslate nohighlight">\(p(\mbX)\)</span>, integrating over the latent variables (i.e., the community assignments, latent positions, or node orderings), can be extremely difficult to write in closed form, but still we can use our toolkit of approximate Bayesian inference techniques.</p>
+<p>Another alternative is to directly parameterize a marginal distribution over graphs. Exponential random graph models (ERGMs) assume the marginal distribution belongs to an exponential family,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbX) &amp;= \exp \left\{ \sum_{k=1}^K \eta_k t_k(\mbX) - A(\mbeta) \right\}.
+\end{align*}\]</div>
+<p>The model is defined by sufficient statistics <span class="math notranslate nohighlight">\(t_k(\mbX)\)</span> and parameterized by the natural parameters <span class="math notranslate nohighlight">\(\eta_k\)</span>.</p>
+<p>For example, the sufficient statistic <span class="math notranslate nohighlight">\(t_1(\mbX)\)</span> could be the number of edges, and the sufficient statistic <span class="math notranslate nohighlight">\(t_2(\mbX)\)</span> could count the number of triangles in the graph. (<em>Triadic closure</em> is an important concept in social network analysis, and it captures the tendency for my friends’ friends to be my friends as well.)</p>
+<p>In the machine learning literature, models like these are called <strong>energy based models</strong> because they prescribe the form of the log probability up to an unknown normalizing constant. The challenge is that for ERGMs, the normalizing constant is typically intractable,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+A(\mbeta) &amp;= \log \sum_{\mbX'} \exp \left\{ \sum_{k=1}^K \eta_k t_k(\mbX') \right\}.
+\end{align*}\]</div>
+<p>since the sum ranges over <span class="math notranslate nohighlight">\(2^{n^2}\)</span> possible values of <span class="math notranslate nohighlight">\(\mbX'\)</span>.</p>
+<p>Even generating a sample of an ERGM can be difficult. Typically, we need to resort to approximate methods like MCMC.</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Come up with a Metropolis-Hastings algorithm to draw a sample from an ERGM with <span class="math notranslate nohighlight">\(n\)</span> nodes and parameters <span class="math notranslate nohighlight">\(\mbeta\)</span>.</p>
+</div>
+<section id="parameter-estimation-for-ergms">
+<h3>Parameter estimation for ERGMs<a class="headerlink" href="#parameter-estimation-for-ergms" title="Link to this heading">#</a></h3>
+<p>Learning the parameters of an ERGM is even more challenging. There have been many proposed algorithms. Here, we discuss a method called <strong>persistent contrastive divergence</strong> <span id="id9">[<a class="reference internal" href="99_references.html#id28" title="Tijmen Tieleman. Training restricted Boltzmann machines using approximations to the likelihood gradient. In Proceedings of the 25th international conference on Machine learning, 1064–1071. 2008.">Tie08</a>]</span>, which was originally proposed for training another class of energy based models called restricted Boltzman machines.</p>
+<p>The idea is to maximize the log likelihood using an approximate gradient,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\partial}{\partial \eta_k} \cL(\mbeta) 
+&amp;= \frac{\partial}{\partial \eta_k} \left[\sum_{k=1}^K \eta_k t_k(\mbX) - A(\mbeta) \right] \\
+&amp;= t_k(\mbX) - \frac{\partial}{\partial \eta_k} A(\mbeta) \\
+&amp;= t_k(\mbX) - \bbE[t_k(\mbX')],
+\end{align*}\]</div>
+<p>where we used the fact that gradients of the log normalizer yield expected sufficient statistics.</p>
+<p>Persistent contrastive divergence is stochastic gradient ascent on the marginal likelihood using a simple approximation to the expectation.</p>
+<ol class="arabic">
+<li><p>Initialize an MCMC chain at <span class="math notranslate nohighlight">\(\mbX^{(0)} = \mbX\)</span>, the observed graph. Initialize parameters <span class="math notranslate nohighlight">\(\mbeta^{(0)}\)</span>.</p></li>
+<li><p>For iterations <span class="math notranslate nohighlight">\(i=1,2\ldots\)</span></p>
+<p>a. Update <span class="math notranslate nohighlight">\(\mbX^{(i)}\)</span> by starting at <span class="math notranslate nohighlight">\(\mbX^{(i-1)}\)</span> and applying a Markov transition operator with stationary distribution <span class="math notranslate nohighlight">\(p(\mbX \mid \mbeta^{(i-1)})\)</span>.</p>
+<p>b. Use the sample <span class="math notranslate nohighlight">\(\mbX^{(i)}\)</span> to obtain a one-sample Monte Carlo estimate of the expected sufficient statistics, <span class="math notranslate nohighlight">\(\hat{t}_k^{(i)} = t_k(\mbX^{(i)})\)</span>.</p>
+<p>c. Update the parameters <span class="math notranslate nohighlight">\(\eta_k^{(i)} \leftarrow \eta_k^{(i-1)} + \alpha_i (t_k(\mbX) - \hat{t}_k^{(i)})\)</span></p>
+</li>
+</ol>
+</section>
+</section>
+<section id="graph-neural-networks">
+<h2>Graph Neural Networks<a class="headerlink" href="#graph-neural-networks" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="13_transformers.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Transformers</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-and-inference-problems">Prediction and inference problems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-networks">Random networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#erdos-renyi-model">Erdős-Rényi Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-block-model">Stochastic Block Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#posterior-inference-in-the-sbm">Posterior inference in the SBM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latent-space-models">Latent Space Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#posterior-inference-in-the-lsm">Posterior inference in the LSM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latent-position-models">Latent Position Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exchangeabile-random-graphs-and-aldous-hoover">Exchangeabile Random Graphs and Aldous-Hoover</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#de-finetti-and-aldous-hoover">de Finetti and Aldous-Hoover</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-random-graph-models">Sparse Random Graph Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-walk-graph-models">Random Walk Graph Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-random-graph-models">Exponential Random Graph Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-for-ergms">Parameter estimation for ERGMs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-neural-networks">Graph Neural Networks</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
