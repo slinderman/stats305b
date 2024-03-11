@@ -1,6 +1,6 @@
-# Random Network Models
+# Random Graphs Models
 
-Networks, also called **graphs**, are useful ways to represent relational data. Perhaps the most intuitive example is a social network. The **nodes** of the network represent users and the **edges** between pairs of nodes represent which users follow one another. Networks come up in many other domains as well. For example, in neuroscience we use networks to model connectivity between neurons. In chemistry, networks are used to represent how atoms bond together to form molecules. There is a rich line of work in statistics, social science, and machine learning on modeling random networks and making predictions from network-valued data.
+Graphs, a.k.a. **networks**, are useful ways to represent relational data. Perhaps the most intuitive example is a social network. The **nodes** of the network represent users and the **edges** between pairs of nodes represent which users follow one another. Networks come up in many other domains as well. For example, in neuroscience we use networks to model connectivity between neurons. In chemistry, networks are used to represent how atoms bond together to form molecules. There is a rich line of work in statistics, social science, and machine learning on modeling random networks and making predictions from network-valued data.
 
 ## Definitions
 

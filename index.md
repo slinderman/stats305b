@@ -50,9 +50,9 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Feb 26, 2024 | [Recurrent Neural Networks](lectures/12_rnns.md) | {cite:p}`goodfellow2016deep` Ch. 10 |
 | Feb 28, 2024 | [Tranformers](lectures/13_transformers.md) | {cite:p}`turner2023introduction` |
 | Mar  4, 2024 | State Space Layers (S4, S5, Mamba) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
-| Mar  6, 2024 | [Models for Graph-Structured Data](lectures/15_graphs.md) |         |
-| Mar 11, 2024 | (Discrete) Denoising Diffusion Models  | {cite:p}`turner2024denoising` | 
-| Mar 13, 2024 | Everything Else                        |         |
+| Mar  6, 2024 | [Random Graph Models](lectures/15_graphs.md) |         |
+| Mar 11, 2024 | _Cancelled_ | |
+| Mar 13, 2024 | (Discrete) Denoising Diffusion Models  | {cite:p}`turner2024denoising` | 
 
 ## Assignments
 There will be 5 assignments due roughly every other Friday. They will not be equally weighted. The first one is just a primer to get you up to speed; the last one will be a bit more substantial than the rest.
