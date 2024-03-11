@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Random Network Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+    <title>Random Graphs Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
   
   
@@ -189,7 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="11_vaes_demo.html">Demo: Neural Networks and VAEs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="12_rnns.html">Recurrent Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="13_transformers.html">Transformers</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Random Network Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Random Graphs Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -340,7 +340,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Random Network Models</h1>
+    <h1>Random Graphs Models</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -387,9 +387,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="random-network-models">
-<h1>Random Network Models<a class="headerlink" href="#random-network-models" title="Link to this heading">#</a></h1>
-<p>Networks, also called <strong>graphs</strong>, are useful ways to represent relational data. Perhaps the most intuitive example is a social network. The <strong>nodes</strong> of the network represent users and the <strong>edges</strong> between pairs of nodes represent which users follow one another. Networks come up in many other domains as well. For example, in neuroscience we use networks to model connectivity between neurons. In chemistry, networks are used to represent how atoms bond together to form molecules. There is a rich line of work in statistics, social science, and machine learning on modeling random networks and making predictions from network-valued data.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="random-graphs-models">
+<h1>Random Graphs Models<a class="headerlink" href="#random-graphs-models" title="Link to this heading">#</a></h1>
+<p>Graphs, a.k.a. <strong>networks</strong>, are useful ways to represent relational data. Perhaps the most intuitive example is a social network. The <strong>nodes</strong> of the network represent users and the <strong>edges</strong> between pairs of nodes represent which users follow one another. Networks come up in many other domains as well. For example, in neuroscience we use networks to model connectivity between neurons. In chemistry, networks are used to represent how atoms bond together to form molecules. There is a rich line of work in statistics, social science, and machine learning on modeling random networks and making predictions from network-valued data.</p>
 <section id="definitions">
 <h2>Definitions<a class="headerlink" href="#definitions" title="Link to this heading">#</a></h2>
 <p>Let <span class="math notranslate nohighlight">\(\mbX \in \{0,1\}^{n \times n}\)</span> be a binary <strong>adjacency matrix</strong> on <span class="math notranslate nohighlight">\(n\)</span> nodes where <span class="math notranslate nohighlight">\(X_{ij} = 1\)</span> indicates there is an edge from node <span class="math notranslate nohighlight">\(i\)</span> to node <span class="math notranslate nohighlight">\(j\)</span>.</p>
@@ -546,19 +546,19 @@ X_{ij} \mid \mbZ &amp;\sim \mathrm{Bern}(\sigma(-\|\mbz_i - \mbz_j\|_2 + b)),
 <p>The models above all assume that the edges <span class="math notranslate nohighlight">\(X_{ij}\)</span> are conditionally independent random variables given the latent variables <span class="math notranslate nohighlight">\(\mbz_i\)</span> and <span class="math notranslate nohighlight">\(\mbz_j\)</span> associated with the corresponding nodes.
 Conditional independence assumptions l;ike these are natural when information is limited.</p>
 <p>Consider modeling a collection of variables <span class="math notranslate nohighlight">\((x_1, \ldots, x_n)\)</span>. If no information is available to order or group the variables, we must assume they are <strong>exchangeable</strong>:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-b3b6cc5d-6a13-4a09-acdd-c9ce2961e1aa">
-<span class="eqno">(7)<a class="headerlink" href="#equation-b3b6cc5d-6a13-4a09-acdd-c9ce2961e1aa" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-43e67b6e-4e88-4b50-9c16-3e67031404cb">
+<span class="eqno">(7)<a class="headerlink" href="#equation-43e67b6e-4e88-4b50-9c16-3e67031404cb" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) = p(x_{\pi(1)}, \ldots, x_{\pi(n)}) 
 \end{align}\]</div>
 <p>for any permutation <span class="math notranslate nohighlight">\(\pi\)</span>.
 The simplest exchangeable distributions assume independent and identically distributed r.v.’s,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-72f3cac6-289d-4008-b47e-e911db4d9d77">
-<span class="eqno">(8)<a class="headerlink" href="#equation-72f3cac6-289d-4008-b47e-e911db4d9d77" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-81e50bc1-c69f-45ee-9cf8-df72caa8d33b">
+<span class="eqno">(8)<a class="headerlink" href="#equation-81e50bc1-c69f-45ee-9cf8-df72caa8d33b" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \prod_{i=1}^n p(x_n).
 \end{align}\]</div>
 <p>More generally, we may assume the variables are conditionally independent given a parameter <span class="math notranslate nohighlight">\(z\)</span>, which has been marginalized over,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-3f1b0482-4384-4fbc-b94a-14da2bfebaab">
-<span class="eqno">(9)<a class="headerlink" href="#equation-3f1b0482-4384-4fbc-b94a-14da2bfebaab" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-81a6e210-e4ca-488b-8dca-0acbebf563f7">
+<span class="eqno">(9)<a class="headerlink" href="#equation-81a6e210-e4ca-488b-8dca-0acbebf563f7" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \int \left[ \prod_{i=1}^n p(x_i \mid z) \right] p(z) \dif z.
 \end{align}\]</div>
 <p>Marginally, <span class="math notranslate nohighlight">\(x_1, \ldots, x_n\)</span> are <strong>not</strong> independent, but they are exchangeable.</p>
