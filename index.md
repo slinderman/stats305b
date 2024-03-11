@@ -49,7 +49,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Feb 21, 2024 | [Variational Autoencoders](lectures/11_vaes.md) ([Demo](lectures/11_vaes_demo.ipynb)) | {cite:p}`kingma2019introduction` Ch.1-2 |
 | Feb 26, 2024 | [Recurrent Neural Networks](lectures/12_rnns.md) | {cite:p}`goodfellow2016deep` Ch. 10 |
 | Feb 28, 2024 | [Tranformers](lectures/13_transformers.md) | {cite:p}`turner2023introduction` |
-| Mar  4, 2024 | State Space Layers (S4, S5, Mamba) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
+| Mar  4, 2024 | [State Space Layers (S4, S5, Mamba)](lectures/14_ssm.pdf) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Mar  6, 2024 | [Random Graph Models](lectures/15_graphs.md) |         |
 | Mar 11, 2024 | _Cancelled_ | |
 | Mar 13, 2024 | (Discrete) Denoising Diffusion Models  | {cite:p}`turner2024denoising` | 
