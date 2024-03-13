@@ -117,7 +117,7 @@ p(x_t \mid x_{t+1}; \theta)
 &= 
 \mathrm{N}(x_t \mid \mu_\theta(x_{t+1}, t), \widetilde{\sigma}_t^2)
 \end{align*}
-where $\mu_\theta: \reals^D \times [0,T] \mapsto \reals^D$ is a nonlinear **mean function** that should **denoise** $x_{t+1}$ to obtain the expected value of $x_t$, and $\widetilde{\sigma}_t^2$ is a fixed variance for the generative process.
+where $\mu_\theta: \reals \times [0,T] \mapsto \reals$ is a nonlinear **mean function** that should **denoise** $x_{t+1}$ to obtain the expected value of $x_t$, and $\widetilde{\sigma}_t^2$ is a fixed variance for the generative process.
 
 :::{admonition} Parameter sharing
 Rather than learn a separate function for each time point, it is common to parameterize the mean function as a function of both the state $x_{t+1}$ and the time $t$. For example, $\mu_\theta(\cdot, \cdot)$ can be a neural network that takes in the state and a positional embedding of the time $t$, like the sinusoidal embeddings used in transformers.
@@ -348,7 +348,7 @@ q(x_t)
 &= \frac{1}{n} \sum_{i=1}^n q(x_t \mid x_0^{(i)}) \\
 &= \frac{1}{n} \sum_{i=1}^n \mathrm{N}(x_t \mid \lambda_{t|0} x_0^{(i)}, \sigma_{t|0}^2) 
 \end{align*}
-Specifically, the **Stein score function** of the marginal probability is,
+Specifically, the second term is the **Stein score function** of the marginal probability,
 \begin{align*}
 \nabla_{x} \log q(x_{t+1})
 &= \frac{\nabla_{x} q(x_{t+1})}{q(x_{t+1})}  \\
