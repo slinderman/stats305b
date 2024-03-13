@@ -410,5 +410,5 @@ There's a lot we didn't cover. The Stein score function that appeared in the inv
 
 Another important topic is **conditional generation**. Suppose we want to take in text and spit out images, like DALL-E 2 or Stable Diffusion. One way to do so is using a diffusion model, but to steer the reverse diffusion based on the text prompt. So rather than just following the score function, the reverse process is also biased toward outputs that match the prompt. 
 
-Finally, this class was nominally about models for discrete data, but this lecture has focused on continuous diffusions. There has been recent work on discrete denoising diffusion models, which we'll have to cover another time!
+Finally, this class was nominally about models for discrete data, but this lecture has focused on continuous diffusions. There has been recent work on discrete denoising diffusion models {cite:p}`campbell2022continuous`, which we'll have to cover another time!
 
