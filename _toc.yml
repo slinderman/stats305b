@@ -18,6 +18,7 @@ parts:
     - file: lectures/11_vaes_demo.ipynb
     - file: lectures/12_rnns.md
     - file: lectures/13_transformers.md
+    - file: lectures/15_graphs.md
     
   - caption: Assignments
     chapters:
