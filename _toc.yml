@@ -19,6 +19,7 @@ parts:
     - file: lectures/12_rnns.md
     - file: lectures/13_transformers.md
     - file: lectures/15_graphs.md
+    - file: lectures/16_diffusion.md
     
   - caption: Assignments
     chapters:
