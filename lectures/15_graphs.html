@@ -546,19 +546,19 @@ X_{ij} \mid \mbZ &amp;\sim \mathrm{Bern}(\sigma(-\|\mbz_i - \mbz_j\|_2 + b)),
 <p>The models above all assume that the edges <span class="math notranslate nohighlight">\(X_{ij}\)</span> are conditionally independent random variables given the latent variables <span class="math notranslate nohighlight">\(\mbz_i\)</span> and <span class="math notranslate nohighlight">\(\mbz_j\)</span> associated with the corresponding nodes.
 Conditional independence assumptions l;ike these are natural when information is limited.</p>
 <p>Consider modeling a collection of variables <span class="math notranslate nohighlight">\((x_1, \ldots, x_n)\)</span>. If no information is available to order or group the variables, we must assume they are <strong>exchangeable</strong>:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-43e67b6e-4e88-4b50-9c16-3e67031404cb">
-<span class="eqno">(7)<a class="headerlink" href="#equation-43e67b6e-4e88-4b50-9c16-3e67031404cb" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-b624770c-362f-4f25-890c-89ae249a1815">
+<span class="eqno">(7)<a class="headerlink" href="#equation-b624770c-362f-4f25-890c-89ae249a1815" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) = p(x_{\pi(1)}, \ldots, x_{\pi(n)}) 
 \end{align}\]</div>
 <p>for any permutation <span class="math notranslate nohighlight">\(\pi\)</span>.
 The simplest exchangeable distributions assume independent and identically distributed r.v.’s,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-81e50bc1-c69f-45ee-9cf8-df72caa8d33b">
-<span class="eqno">(8)<a class="headerlink" href="#equation-81e50bc1-c69f-45ee-9cf8-df72caa8d33b" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-a9470697-6bb3-4de6-88ce-9f27e0d38369">
+<span class="eqno">(8)<a class="headerlink" href="#equation-a9470697-6bb3-4de6-88ce-9f27e0d38369" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \prod_{i=1}^n p(x_n).
 \end{align}\]</div>
 <p>More generally, we may assume the variables are conditionally independent given a parameter <span class="math notranslate nohighlight">\(z\)</span>, which has been marginalized over,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-81a6e210-e4ca-488b-8dca-0acbebf563f7">
-<span class="eqno">(9)<a class="headerlink" href="#equation-81a6e210-e4ca-488b-8dca-0acbebf563f7" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-a0df89d6-fc37-4530-b231-83ed8abcd5e8">
+<span class="eqno">(9)<a class="headerlink" href="#equation-a0df89d6-fc37-4530-b231-83ed8abcd5e8" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \int \left[ \prod_{i=1}^n p(x_i \mid z) \right] p(z) \dif z.
 \end{align}\]</div>
 <p>Marginally, <span class="math notranslate nohighlight">\(x_1, \ldots, x_n\)</span> are <strong>not</strong> independent, but they are exchangeable.</p>
