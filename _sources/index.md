@@ -52,7 +52,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Mar  4, 2024 | [State Space Layers (S4, S5, Mamba)](lectures/14_ssm.pdf) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Mar  6, 2024 | [Random Graph Models](lectures/15_graphs.md) |         |
 | Mar 11, 2024 | _Cancelled_ | |
-| Mar 13, 2024 | (Discrete) Denoising Diffusion Models  | {cite:p}`turner2024denoising` | 
+| Mar 13, 2024 |[(Discrete) Denoising Diffusion Models](lectures/16_diffusion.md) | {cite:p}`turner2024denoising` | 
 
 ## Assignments
 There will be 5 assignments due roughly every other Friday. They will not be equally weighted. The first one is just a primer to get you up to speed; the last one will be a bit more substantial than the rest.

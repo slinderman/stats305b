@@ -1,0 +1,939 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Denoising Diffusion Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/16_diffusion';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Random Graphs Models" href="15_graphs.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_sparse_glms.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_hmms.html">Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_vaes.html">Variational Autoencoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_vaes_demo.html">Demo: Neural Networks and VAEs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_rnns.html">Recurrent Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_transformers.html">Transformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_graphs.html">Random Graphs Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Denoising Diffusion Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw4/hw4.html">HW4: Large Language Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/16_diffusion.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Denoising Diffusion Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-ideas">Key Ideas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#noising-process">Noising process</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-noising-process">Gaussian noising process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-preserving-diffusions">Variance preserving diffusions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-process">Generative process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evidence-lower-bound">Evidence Lower Bound</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-generative-process">Gaussian generative process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rao-blackwellization">Rao-Blackwellization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#denoising-mean-function">Denoising mean function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inverting-the-noising-process">Inverting the noising process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-limit">Continuous time limit</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multidimensional-models">Multidimensional models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="denoising-diffusion-models">
+<h1>Denoising Diffusion Models<a class="headerlink" href="#denoising-diffusion-models" title="Link to this heading">#</a></h1>
+<p>Denoising diffusion probabilistic models (DDPMs) <span id="id1">[<a class="reference internal" href="99_references.html#id31" title="Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Advances in neural information processing systems, 33:6840–6851, 2020.">HJA20</a>, <a class="reference internal" href="99_references.html#id32" title="Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan, and Surya Ganguli. Deep unsupervised learning using nonequilibrium thermodynamics. In International conference on machine learning, 2256–2265. PMLR, 2015.">SDWMG15</a>]</span> are the deep generative models underlying image generation tools like DALL-E 2 (from Open AI) and Stable Diffusion (from Stability AI). This lecture will unpack how they work. These notes are partly inspired by <span id="id2">Turner <em>et al.</em> [<a class="reference internal" href="99_references.html#id21" title="Richard E Turner, Cristiana-Diana Diaconu, Stratis Markou, Aliaksandra Shysheya, Andrew YK Foong, and Bruno Mlodozeniec. Denoising diffusion probabilistic models in six simple steps. arXiv preprint arXiv:2402.04384, 2024.">TDM+24</a>]</span>.</p>
+<section id="key-ideas">
+<h2>Key Ideas<a class="headerlink" href="#key-ideas" title="Link to this heading">#</a></h2>
+<p>Diffusion models work by</p>
+<ol class="arabic simple">
+<li><p>Using a fixed (i.e., not learned), user-defined <strong>noising process</strong> to convert data into noise.</p></li>
+<li><p>Learning the inverse this process so that starting from noise, we can generate samples that approximate the data distribution.</p></li>
+</ol>
+<p>We can think of the DDPM as a giant latent variable model, where the latent variables are noisy versions of the data. As with other latent variable models (e.g., <a class="reference internal" href="11_vaes.html"><span class="std std-doc">VAEs</span></a>), once we’ve inferred the latent variables, the problem of learning the mapping from latents to observed data reduces to a supervised regression problem.</p>
+<p>DDPMs were originally proposed for modeling continuous data, <span class="math notranslate nohighlight">\(\mbx \in \reals^{D}\)</span>. For simplicity, we will present the framework for scalar data, <span class="math notranslate nohighlight">\(x \in \reals\)</span>, and then discuss the straightforward generalization to multidimensional data afterward. Finally, we will close with a discussion of recent work on diffusion modeling for discrete data.</p>
+</section>
+<section id="noising-process">
+<h2>Noising process<a class="headerlink" href="#noising-process" title="Link to this heading">#</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(x \equiv x_0\)</span> be our observed data. The noising process is a joint distribution over a sequence of latent variables <span class="math notranslate nohighlight">\(x_{0:T} = (x_0, x_1, \ldots, x_T)\)</span>. We will denote the distribution as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_{0:T}) = q(x_0) \prod_{t=1}^T q(x_t \mid x_{t-1}).
+\end{align*}\]</div>
+<p>At each step, the latents will become increasingly noisy versions of the original data, until at time <span class="math notranslate nohighlight">\(T\)</span> the latent variable <span class="math notranslate nohighlight">\(x_T\)</span> is essentially pure noise.  The generative model will then proceed by sampling pure noise and attemptign to invert the noising process to produce samples that approximate the data generating distribution.</p>
+<section id="gaussian-noising-process">
+<h3>Gaussian noising process<a class="headerlink" href="#gaussian-noising-process" title="Link to this heading">#</a></h3>
+<p>For continuous data, the standard noising process is a first-order Gaussian autoregressive (AR) process,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_t \mid x_{t-1}) &amp;= \mathrm{N}(x_t \mid \lambda_t x_{t-1}, \sigma_{t}^2).
+\end{align*}\]</div>
+<p>The hyperparameters <span class="math notranslate nohighlight">\(\{\lambda_t, \sigma_t^2\}_{t=1}^T\)</span> and the number of steps <span class="math notranslate nohighlight">\(T\)</span> are fixed (not learned). We restrict <span class="math notranslate nohighlight">\(\lambda_t &lt; 1\)</span> so that the process contracts</p>
+<p>Since the noising process has linear Gaussian dynamics, we can compute conditional distributions in closed form.</p>
+<div class="admonition-computing-the-conditional-distributions admonition">
+<p class="admonition-title">Computing the conditional distributions</p>
+<p>Show that the conditional distributions are,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_t \mid x_0) 
+&amp;= \mathrm{N}\left( x_t \mid \lambda_{t|0} x_0, \sigma_{t|0}^2 \right)
+\end{align*}\]</div>
+<p>where the parameters are defined recursively,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\lambda_{t|0} &amp;= \lambda_t \lambda_{t-1|0} = \prod_{s=1}^t \lambda_s \\
+\sigma_{t|0}^2 &amp;= \lambda_t^2 \sigma_{t-1|0}^2 + \sigma_t^2
+\end{align*}\]</div>
+<p>with base case <span class="math notranslate nohighlight">\(\lambda_{1|0}=\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\sigma_{1|0}^2=\sigma_1^2\)</span>.</p>
+<div class="dropdown tip admonition">
+<p class="admonition-title">Solution</p>
+<p>Assume the equality above holds for <span class="math notranslate nohighlight">\(t-1\)</span>, by induction. Then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_{t} \mid x_0) 
+&amp;= \int q(x_{t} \mid x_{t-1}) \, q(x_{t-1} \mid x_0) \dif x_{t-1} \\
+&amp;= \int \mathrm{N}(x_{t} \mid \lambda_{t} x_{t-1}, \sigma_{t}^2) \, \mathrm{N}(x_{t-1} \mid \lambda_{t-1|0} x_0, \, \sigma_{t-1|0}^2) \dif x_{t-1} \\
+&amp;= \mathrm{N}(x_{t} \mid  \lambda_{t} \lambda_{t-1|0} x_0, \lambda_{t}^2 \sigma_{t-1|0}^2 + \sigma_{t}^2) \\
+&amp;= \mathrm{N}\left( x_t \mid \lambda_{t|0} x_0, \sigma_{t|0}^2 \right),
+\end{align*}\]</div>
+<p>as desired.</p>
+<p>The first latent is distributed as <span class="math notranslate nohighlight">\(q(x_1 \mid x_0) = \mathrm{N}(x_1 \mid \lambda_1 x_0, \sigma_1^2)\)</span>, which matches the base case above.</p>
+</div>
+</div>
+</section>
+<section id="variance-preserving-diffusions">
+<h3>Variance preserving diffusions<a class="headerlink" href="#variance-preserving-diffusions" title="Link to this heading">#</a></h3>
+<p>It is common to set,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sigma_t^2 &amp;= 1-\lambda_t^2,
+\end{align*}\]</div>
+<p>in which case the conditional variance simplifies to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sigma_{t|0}^2 = 1 - \prod_{s=1}^t \lambda_s^2 = 1 - \lambda_{t|0}^2.
+\end{align*}\]</div>
+<p>Under this setting, the noising process preserves the variance of the marginal distributions. If <span class="math notranslate nohighlight">\(\bbE[x_0] = 0\)</span> and <span class="math notranslate nohighlight">\(\Var[x_0] = 1\)</span>, then the marginal distribution of <span class="math notranslate nohighlight">\(x_t\)</span> will be zero mean and unit variance as well.</p>
+<p>Consider the following two limits:</p>
+<ol class="arabic simple">
+<li><p>As <span class="math notranslate nohighlight">\(T \to \infty\)</span>, the conditional distribution goes to a standard normal, <span class="math notranslate nohighlight">\(q(x_T \mid x_0) \to \mathrm{N}(0, 1)\)</span>, which makes the marginal distribution <span class="math notranslate nohighlight">\(q(x_T)\)</span> easy to sample from.</p></li>
+<li><p>When <span class="math notranslate nohighlight">\(\lambda_t \to 1\)</span>, the noising process adds infinitesimal noise so that <span class="math notranslate nohighlight">\(x_t \approx x_{t-1}\)</span>, which makes the inverse process easier to learn.</p></li>
+</ol>
+<p>Of course, these two limits are in conflict with one another. If we add a small amount of noise at each time step, the inverse process is easier to learn, but we need to take many time steps to converge to a Gaussian stationary distribution.</p>
+</section>
+</section>
+<section id="generative-process">
+<h2>Generative process<a class="headerlink" href="#generative-process" title="Link to this heading">#</a></h2>
+<p>The generative process is a parameteric model that learns to invert the noise process,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(x_{0:T}; \theta) &amp;= p(x_T) \prod_{t=T-1}^0 p(x_t \mid x_{t+1}; \theta).
+\end{align*}\]</div>
+<p>The initial distribution <span class="math notranslate nohighlight">\(p(x_T)\)</span> has no parameters because it is set to the stationary distribution of the noising process, <span class="math notranslate nohighlight">\(q(x_\infty)\)</span>. E.g., for the Gaussian noising process above, <span class="math notranslate nohighlight">\(p(x_T) = \mathrm{N}(0,1)\)</span>.</p>
+</section>
+<section id="evidence-lower-bound">
+<h2>Evidence Lower Bound<a class="headerlink" href="#evidence-lower-bound" title="Link to this heading">#</a></h2>
+<p>Like the other latent variable models we studied in this course, we will estimate the parameters by maximizing an <strong>evidence lower bound (ELBO)</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\theta) 
+&amp;= \E_{q(x_0)} \E_{q(x_{1:T} \mid x_0)} \left[ \log p(x_{0:T}; \theta) - \log q(x_{1:T} \mid x_0) \right] \\
+&amp;= \E_{q(x_0)} \E_{q(x_{1:T} \mid x_0)} \left[ \log p(x_{0:T}; \theta)  \right] + c,
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(q(x_{1:T} \mid x_0)\)</span> is the conditional distibution of <span class="math notranslate nohighlight">\(x_{1:T}\)</span> under the noising process.
+Since there are no learnable parameters in the noising process, the objective simplifies to <strong>maximizing the expected log likelihood</strong>.</p>
+<p>We can simplify further by expanding the log probability of the generative model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\theta)
+&amp;= \E_{q(x_0)}  \E_{q(x_t, x_{t+1} \mid x_0)} \left[ \sum_{t=0}^{T-1} \log p(x_t \mid x_{t+1}; \theta) \right] \\
+&amp;\propto \E_{q(x_0)} \mathbb{E}_{t \sim \mathrm{Unif}(0,T-1)} \E_{q(x_t, x_{t+1} \mid x_0)} \left[ \log p(x_t \mid x_{t+1}; \theta) \right]
+\end{align*}\]</div>
+<p>which only depends on pairwise conditionals.</p>
+</section>
+<section id="gaussian-generative-process">
+<h2>Gaussian generative process<a class="headerlink" href="#gaussian-generative-process" title="Link to this heading">#</a></h2>
+<p>Since the noising process above adds a small amount of Gaussian noise at each step, it is reasonable to model the generative process as Gaussian as well,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(x_t \mid x_{t+1}; \theta) 
+&amp;= 
+\mathrm{N}(x_t \mid \mu_\theta(x_{t+1}, t), \widetilde{\sigma}_t^2)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu_\theta: \reals^D \times [0,T] \mapsto \reals^D\)</span> is a nonlinear <strong>mean function</strong> that should <strong>denoise</strong> <span class="math notranslate nohighlight">\(x_{t+1}\)</span> to obtain the expected value of <span class="math notranslate nohighlight">\(x_t\)</span>, and <span class="math notranslate nohighlight">\(\widetilde{\sigma}_t^2\)</span> is a fixed variance for the generative process.</p>
+<div class="admonition-parameter-sharing admonition">
+<p class="admonition-title">Parameter sharing</p>
+<p>Rather than learn a separate function for each time point, it is common to parameterize the mean function as a function of both the state <span class="math notranslate nohighlight">\(x_{t+1}\)</span> and the time <span class="math notranslate nohighlight">\(t\)</span>. For example, <span class="math notranslate nohighlight">\(\mu_\theta(\cdot, \cdot)\)</span> can be a neural network that takes in the state and a positional embedding of the time <span class="math notranslate nohighlight">\(t\)</span>, like the sinusoidal embeddings used in transformers.</p>
+</div>
+<div class="admonition-generative-process-variance admonition">
+<p class="admonition-title">Generative process variance</p>
+<p>You could try to learn the generative process variance as a function of <span class="math notranslate nohighlight">\(x_{t+1}\)</span> and <span class="math notranslate nohighlight">\(t\)</span> as well, but the literature suggests this is difficult to make work in practice. Instead, is common to set the variance to either</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\widetilde{\sigma}_t^2 = \sigma_t^2 = 1-\lambda_t^2\)</span>, the conditional variance in the noising process, which tends to <em>overestimate</em> the conditional variance of the true generative process; or</p></li>
+<li><p><span class="math notranslate nohighlight">\(\widetilde{\sigma}_t^2 = \Var_q[x_t \mid x_0, x_{t+1}]\)</span>, the conditional variance of the noising process <em>given</em> the data <span class="math notranslate nohighlight">\(x_0\)</span> and the next state <span class="math notranslate nohighlight">\(x_{t+1}\)</span>. This tends to <em>underestimate</em> the conditional variance of the true generative process.</p></li>
+</ul>
+</div>
+</section>
+<section id="rao-blackwellization">
+<h2>Rao-Blackwellization<a class="headerlink" href="#rao-blackwellization" title="Link to this heading">#</a></h2>
+<p>Under this Gaussian model for the generative process, we can analytically compute one of the expectations in the ELBO. This is called Rao-Blackwellization. It reduces the variance of the objective, which is good for SGD!</p>
+<p>Using the chain rule and the Gaussian generative model, we have,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E_{q(x_t, x_{t+1} \mid x_0)} \left[ \log p(x_t \mid x_{t+1}; \theta) \right] 
+&amp;= \E_{q(x_{t+1} \mid x_0)} \E_{q(x_t \mid x_{t+1}, x_0)} \left[\log \mathrm{N}(x_t \mid \mu_\theta(x_{t+1}, t), \widetilde{\sigma}_t^2) \right]
+\end{align*}\]</div>
+<p>We already computed the conditional distribution <span class="math notranslate nohighlight">\(q(x_{t+1} \mid x_0) = \mathrm{N}(x_{t+1} \mid \lambda_{t+1|0} x_0, \sigma_{t+1|0}^2)\)</span> above. It turns out the second term is Gaussian as well!</p>
+<div class="admonition-conditionals-of-a-gaussian-noising-process admonition">
+<p class="admonition-title">Conditionals of a Gaussian noising process</p>
+<p>Show that</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_t \mid x_{t+1}, x_0) 
+&amp;= \mathrm{N}(x_t \mid \mu_{t|t+1,0}, \sigma_{t|t+1,0}^2)
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mu_{t|t+1,0} &amp;= a_t x_0 + b_t x_{t+1}
+\end{align*}\]</div>
+<p>is a <strong>linear combination</strong> of <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_{t+1}\)</span> with weights,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a_t &amp;= \frac{\sigma_{t|t+1,0}^2 \, \lambda_{t|0} }{\sigma_{t|0}^2}  \\
+b_t &amp;= \frac{\sigma_{t|t+1,0}^2 \, \lambda_{t+1}}{\sigma_{t+1}^2} \\
+\sigma_{t|t+1,0}^2  
+&amp;= \left(\frac{1}{\sigma_{t|0}^2} + \frac{\lambda_{t+1}^2}{\sigma_{t+1}^2} \right)^{-1} 
+\end{align*}\]</div>
+<!-- = \sigma_{t|t+1,0}^2 \frac{\sqrt{1 - \sigma_{t|0}^2}}{\sigma_{t|0}^2}\\
+= \sigma_{t|t+1,0}^2 \frac{\sqrt{1 - \sigma_{t+1}^2}}{\sigma_{t+1}^2} \\ -->
+<div class="dropdown tip admonition">
+<p class="admonition-title">Solution</p>
+<p>By Bayes rule and the Markovian nature of the noising process,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_t \mid x_{t+1}, x_0) 
+&amp;\propto q(x_t \mid x_0) \, q(x_{t+1} \mid x_t) \\
+&amp;= \mathrm{N}(x_t \mid \lambda_{t|0} x_0, \sigma_{t|0}^2) \, \mathrm{N}(x_{t+1} \mid \lambda_{t+1} x_t, \sigma_{t+1}^2) \\
+&amp;= \mathrm{N}(x_t \mid \mu_{t|t+1,0}, \sigma_{t|t+1,0}^2) 
+\end{align*}\]</div>
+<p>where, by completing the square,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sigma_{t|t+1,0}^2 &amp;= \left(\frac{1}{\sigma_{t|0}^2} + \frac{\lambda_{t+1}^2}{\sigma_{t+1}^2} \right)^{-1} \\
+\mu_{t|t+1,0} &amp;= \sigma_{t|t+1,0}^2 \left(\frac{\lambda_{t|0} x_0}{\sigma_{t|0}^2} + \frac{\lambda_{t+1} x_{t+1}}{\sigma_{t+1}^2} \right).
+\end{align*}\]</div>
+<p>The forms for <span class="math notranslate nohighlight">\(a_t\)</span> and <span class="math notranslate nohighlight">\(b_t\)</span> can now be read off.</p>
+</div>
+</div>
+<p>Finally, to simplify the objective we need the Gaussian cross-entropy,</p>
+<div class="admonition-gaussian-cross-entropy admonition">
+<p class="admonition-title">Gaussian cross-entropy</p>
+<p>Let <span class="math notranslate nohighlight">\(q(x) = \mathrm{N}(x \mid \mu_q, \sigma_q^2)\)</span> and <span class="math notranslate nohighlight">\(p(x) = \mathrm{N}(x \mid \mu_p, \sigma_p^2)\)</span>. Show that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E_{q(x)}[\log p(x)] &amp;= \log \mathrm{N}(\mu_q \mid \mu_p, \sigma_p^2) -\frac{1}{2} \frac{\sigma_q^2}{\sigma_p^2}
+\end{align*}\]</div>
+</div>
+<p>Putting it all together,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\theta) 
+&amp;= \E_{q(x_0)} \E_t \E_{q(x_{t+1} \mid x_0)} \E_{q(x_t | x_0, x_{t+1})} \left[ \log p(x_t \mid x_{t+1}; \theta) \right] \\
+&amp;= \E_{q(x_0)} \E_t \E_{q(x_{t+1} \mid x_0)} \left[ \log \mathrm{N}(a_t x_0 + b_t x_{t+1} \mid \mu_\theta(x_{t+1}, t), \widetilde{\sigma}_t^2) -\frac{1}{2} \frac{\sigma_{t|t+1,0}^2}{\widetilde{\sigma}_t^2} \right] \\
+&amp;= \frac{1}{2} \E_{q(x_0)} \E_t \E_{q(x_{t+1} \mid x_0)} \left[ \frac{1}{\widetilde{\sigma}_t^2} \left( a_t x_0 + b_t x_{t+1} - \mu_\theta(x_{t+1}, t) \right)^2 \right] + c
+\end{align*}\]</div>
+<p>where we have absorbed terms that are independent of <span class="math notranslate nohighlight">\(\theta\)</span> into the constant <span class="math notranslate nohighlight">\(c\)</span>.</p>
+</section>
+<section id="denoising-mean-function">
+<h2>Denoising mean function<a class="headerlink" href="#denoising-mean-function" title="Link to this heading">#</a></h2>
+<p>The loss function above suggests a particular form of the mean function,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mu_\theta(x_{t+1}, t) &amp;= a_t \hat{x}_0(x_{t+1}, t; \theta) + b_t x_{t+1},
+\end{align*}\]</div>
+<p>where the only part that is learned is <span class="math notranslate nohighlight">\(\hat{x}_0(x_{t+1}, t; \theta)\)</span>, a function that attempts to <strong>denoise</strong> the current state. Since <span class="math notranslate nohighlight">\(x_{t+1}\)</span> is given and <span class="math notranslate nohighlight">\(a_t\)</span> and <span class="math notranslate nohighlight">\(b_t\)</span> are determined solely by the hyperparameters, we can use them in the mean function.</p>
+<p>Under this parameterization, the loss function reduces to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\theta) 
+&amp;= \frac{1}{2} \E_{q(x_0)} \E_t \E_{q(x_{t+1} \mid x_0)} \left[ \frac{a_t^2}{\widetilde{\sigma}_t^2} \left(x_0 - \hat{x}_0(x_{t+1}, t; \theta) \right)^2 \right] + c
+\end{align*}\]</div>
+<p>One nice thing about this formulation is that the mean function is always outputting “the same thing” — an estimate of the completely denoised data, <span class="math notranslate nohighlight">\(\hat{x}_0\)</span>, regardless of the time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<!-- 
+## _Noise predicting_ mean function
+
+Another way to configure the mean function is to predict the noise in $x_{t+1}$. 
+We can reparameterize the conditional distribution of $x_{t+1}$ as,
+\begin{align*}
+x_{t+1} &= \lambda_{t+1|0} x_{0} + \sigma_{t+1|0} \epsilon_{t+1}, \\
+\epsilon_{t+1} &\sim \mathrm{N}(0, 1)
+\end{align*}
+In terms of $x_0$, 
+\begin{align*}
+x_{0} &= \frac{x_{t+1} - \sigma_{t+1|0} \epsilon_{t+1}}{\lambda_{t+1|0} }.
+\end{align*} 
+
+Now, we can write the conditional mean of $x_t$ as,
+\begin{align*}
+\mu_{t|t+1,0} 
+&= a_t x_0 + b_t x_{t+1} \\
+&= c_t x_{t+1} - d_t \epsilon_{t+1}
+\end{align*}
+where
+\begin{align*}
+c_t &= \frac{a_t}{\lambda_{t+1|0}} + b_t,  &&& 
+d_t &= \frac{\sigma_{t+1|0}}{\lambda_{t+1|0}}.
+\end{align*}
+This suggests yet another parameterization of the mean function,
+\begin{align*}
+\mu_\theta(x_{t+1}, t) 
+&= c_t  x_{t+1} - d_t \hat{\epsilon}(x_{t+1}, t; \theta),
+\end{align*}
+where $\hat{\epsilon}$ is a function that attempts to **predict the noise** that generated $x_{t+1}$ from $x_0$.
+
+Under this parameterization, the loss function reduces to,
+\begin{align*}
+\cL(\theta) 
+&= \frac{1}{2} \E_{q(x_0)} \E_t \E_{q(\epsilon)} \left[ \frac{d_t^2}{\widetilde{\sigma}_t^2} \left(\epsilon - \hat{\epsilon}( \lambda_{t+1|0} x_{0} + \sigma_{t+1|0} \epsilon, t; \theta) \right)^2 \right],
+\end{align*}
+
+This approach has connections to **denoising score matching** (Song and Ermon, 2019), in which a neural network is trained to estimate the (Stein) score of a kernel density estimate of the data distribution. The score function turns out to be linearly related to the noise estimated in this mean parameterization.
+
+:::{admonition} Stein score vs Fisher score
+Some people call the gradient of the log density with respect to the parameters, $\nabla_\theta \log p(x; \theta)$, the _Fisher_ score, and the gradient with respect to the data the _Stein_ score $\nabla_x \log p(x; \theta)$.
+::: -->
+<!-- ### Connection to denoising score matching
+
+Score matching is another approach for density estimation that seeks to estimate the (Stein) score function of an (unnormalized) density, $\nabla_x \log p(x)$. One way of approaching this problem is to train a neural network to output an estimate of the score of a kernel density estimate 
+\begin{align*}
+s_\theta(x) \approx \nabla_x \log q(x)
+\end{align*} -->
+</section>
+<section id="inverting-the-noising-process">
+<h2>Inverting the noising process<a class="headerlink" href="#inverting-the-noising-process" title="Link to this heading">#</a></h2>
+<p>The generative process attempts to invert the noising process, but what is the actual inverse of the process? Since the noising process is a Markov chain, the reverse of the noising process must be Markovian as well. That is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_{0:T}) &amp;= q(x_T) \prod_{t=T-1}^0 q(x_t \mid x_{t+1})
+\end{align*}\]</div>
+<p>for some sequence of transition distributions <span class="math notranslate nohighlight">\(q(x_t \mid x_{t+1})\)</span>. We can obtain those transition distributions by marginalizing and conditioning,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_t \mid x_{t+1}) 
+&amp;= \int q(x_0, x_t \mid x_{t+1}) \dif x_0 \\
+&amp;= \int q(x_t \mid x_0, x_{t+1}) \, q(x_0 \mid x_{t+1}) \dif x_0.
+\end{align*}\]</div>
+<p>Using Bayes’ rule,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_0 \mid x_{t+1}) 
+&amp;= \frac{q(x_0) \, q(x_{t+1} \mid x_0)}{\int q(x_0') q(x_{t+1} \mid x_0') \dif x_0'} 
+\end{align*}\]</div>
+<p>Now recall that <span class="math notranslate nohighlight">\(q(x_0) = \frac{1}{n} \sum_{i=1}^n \delta_{x_0^{(i)}}(x_0)\)</span> is the empirical measure of the data <span class="math notranslate nohighlight">\(\{x_0^{(i)}\}_{i=1}^n\)</span>. Using this fact, the conditional is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_0^{(i)} \mid x_{t+1}) 
+&amp;= \frac{q(x_{t+1} \mid x_0^{(i)})}{\sum_{j=1}^n q(x_{t+1} \mid x_0^{(j)})} 
+\triangleq w_i(x_{t+1}),
+\end{align*}\]</div>
+<p>where we have defined the weights <span class="math notranslate nohighlight">\(w_i(x_{t+1})\)</span> for each data point <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>. They are non-negative and sum to one.</p>
+<p>Finally, we can give a simpler form for the optimal generative process,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_t \mid x_{t+1}) 
+&amp;= \sum_{i=1}^n w_i(x_{t+1}) \, q(x_t \mid x_0^{(i)}, x_{t+1}) \\
+&amp;= \sum_{i=1}^n w_i(x_{t+1}) \, \mathrm{N}(x_t \mid a_t x_0^{(i)} + b_t x_{t+1}, \sigma_{t|t+1,0}^2),
+\end{align*}\]</div>
+<p>which we recognize as a mixture of Gaussians, all with the same variance, with means biased toward each of the <span class="math notranslate nohighlight">\(n\)</span> data points, and weighted by the relative likelihood of <span class="math notranslate nohighlight">\(x_0^{(i)}\)</span> having produced <span class="math notranslate nohighlight">\(x_{t+1}\)</span>.</p>
+<p>For small step sizes, that mixture of Gaussians can be approximated by a single Gaussian with mean equal to the expected value of the mixture,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[x_t \mid x_{t+1}]
+&amp;= \sum_{i=1}^n w_i(x_{t+1}) \, \left(a_t x_0^{(i)} + b_t x_{t+1} \right) 
+\end{align*}\]</div>
+<p>For small steps, this expected value is approximately,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[x_t \mid x_{t+1}]
+&amp;\approx \frac{x_{t+1}}{\lambda_{t+1}} + \sigma_{t+1}^2 \sum_{i=1}^n w_i(x_{t+1}) \left(\frac{ \lambda_{t|0} x_0^{(i)} - x_{t+1}}{\sigma_{t|0}^2} \right)
+\end{align*}\]</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Derivation</p>
+<p>Using the definitions from above,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a_t &amp;= \frac{\sigma_{t|t+1,0}^2 \, \lambda_{t|0} }{\sigma_{t|0}^2}  \\
+b_t &amp;= \frac{\sigma_{t|t+1,0}^2 \, \lambda_{t+1}}{\sigma_{t+1}^2} 
+\end{align*}\]</div>
+<p>we can write</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[x_t \mid x_{t+1}]
+&amp;= \frac{\sigma_{t|t+1,0}^2  \lambda_{t+1}}{\sigma_{t+1}^2} x_{t+1} + \sum_{i=1}^n w_i(x_{t+1}) \frac{\sigma_{t|t+1,0}^2 \lambda_{t|0}}{\sigma_{t|0}^2} x_0^{(i)} 
+\end{align*}\]</div>
+<p>Now add and subtract <span class="math notranslate nohighlight">\(\frac{\sigma_{t|t+1,0}^2 x_{t+1}}{\sigma_{t|0}^2}\)</span>  to obtain,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[x_t \mid x_{t+1}]
+&amp;= \left(\frac{\sigma_{t|t+1,0}^2 \lambda_{t+1}}{\sigma_{t+1}^2} + \frac{\sigma_{t|t+1,0}^2}{\sigma_{t|0}^2}\right) x_{t+1} + \sigma_{t|t+1,0}^2 \sum_{i=1}^n w_i(x_{t+1}) \left(\frac{ \lambda_{t|0} x_0^{(i)} - x_{t+1}}{\sigma_{t|0}^2} \right).
+\end{align*}\]</div>
+<p>In the limit of many small steps where <span class="math notranslate nohighlight">\(\sigma_{t+1} \to 0\)</span> so that <span class="math notranslate nohighlight">\(\sigma^2_{t+1} \ll \sigma^2_{t|0}\)</span>, we have</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\sigma_{t|t+1,0}^2 \lambda_{t+1}}{\sigma_{t+1}^2} + \frac{\sigma_{t|t+1,0}^2}{\sigma_{t|0}^2}
+\approx \frac{1}{\lambda_{t+1}}
+\end{align*}\]</div>
+<p>and</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sigma_{t|t+1,0}^2 \approx \sigma_{t+1}^2.
+\end{align*}\]</div>
+<p>These approximations complete the derivation.</p>
+</div>
+<p>Though it’s not immediately obvious, the second term in the expectation is related to the <strong>marginal probability</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(x_t) 
+&amp;= \frac{1}{n} \sum_{i=1}^n q(x_t \mid x_0^{(i)}) \\
+&amp;= \frac{1}{n} \sum_{i=1}^n \mathrm{N}(x_t \mid \lambda_{t|0} x_0^{(i)}, \sigma_{t|0}^2) 
+\end{align*}\]</div>
+<p>Specifically, the <strong>Stein score function</strong> of the marginal probability is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla_{x} \log q(x_{t+1})
+&amp;= \frac{\nabla_{x} q(x_{t+1})}{q(x_{t+1})}  \\
+&amp;=\frac{\frac{1}{n} \sum_{i=1}^n \mathrm{N}(x_{t+1} \mid \lambda_{t|0} x_0^{(i)}, \sigma_{t|0}^2) \left(-\frac{(x_{t+1} - \lambda_{t|0}x_0^{(i)})}{\sigma_{t|0}^2} \right)}{\frac{1}{n} \sum_{j=1}^n \mathrm{N}(x_{t+1} \mid \lambda_{t|0} x_0^{(j)}, \sigma_{t|0}^2) } \\
+&amp;= \sum_{i=1}^n w_i(x_{t+1}) \left(\frac{\lambda_{t|0}x_0^{(i)} - x_{t+1}}{\sigma_{t|0}^2} \right)
+\end{align*}\]</div>
+<div class="tip admonition">
+<p class="admonition-title">Final form</p>
+<p>Putting it all together, for small steps, the reverse process is approximately Gaussian with mean and variance,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[x_t \mid x_{t+1}]
+&amp;\approx \frac{x_{t+1}}{\lambda_{t+1}} + \sigma_{t+1}^2 \nabla_x \log q_t(x_{t+1})  \\
+\Var[x_t \mid x_{t+1}] &amp;\approx \sigma_{t+1}^2.
+\end{align*}\]</div>
+<p>This has a nice interpretation: to invert the noise process, <strong>first undo the contraction and then take a step in the direction of the Stein score!</strong></p>
+</div>
+</section>
+<section id="continuous-time-limit">
+<h2>Continuous time limit<a class="headerlink" href="#continuous-time-limit" title="Link to this heading">#</a></h2>
+<p>In practice, the best performing diffusion models are based on a continuous-time formulation of the noising process as an SDE <span id="id3">[<a class="reference internal" href="99_references.html#id29" title="Yang Song, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole. Score-based generative modeling through stochastic differential equations. arXiv preprint arXiv:2011.13456, 2020.">SSDK+20</a>]</span>. To motivate this approach, think of the noise process above as a discretization of a continuous process <span class="math notranslate nohighlight">\(x(t)\)</span> for <span class="math notranslate nohighlight">\(t \in [0,1]\)</span> with time steps of size <span class="math notranslate nohighlight">\(\Delta = \tfrac{1}{T}\)</span>. That is, map <span class="math notranslate nohighlight">\(x_i \mapsto x(i/T)\)</span>, <span class="math notranslate nohighlight">\(\lambda_i \mapsto \lambda(i/T)\)</span>, and <span class="math notranslate nohighlight">\(\sigma_i \mapsto \sigma(i/T)\)</span>  for <span class="math notranslate nohighlight">\(i=0,1,\ldots, T\)</span>. Then the discrete model is can be rewritten as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+x(t + \Delta) 
+&amp;\sim \mathrm{N}(\lambda(t) x(t), \sigma(t)^2),
+\end{align*}\]</div>
+<p>or equivalently,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+x(t + \Delta) - x(t) 
+&amp;\sim \mathrm{N}\left(f(x(t), t) \Delta, g(t)^2 \Delta \right)  \\
+f(x, t) &amp;= \frac{1 - \lambda(t)}{\Delta} x \\
+g(t) &amp;= \frac{\sigma(t)}{\Delta}.
+\end{align*}\]</div>
+<p>We can view this as a discretization of the SDE,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\dif X &amp;= f(x, t) \dif t + g(t) \dif W
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(x,t)\)</span> is the <strong>drift</strong> term, <span class="math notranslate nohighlight">\(g(t)\)</span> is the <strong>diffusion</strong> term, and <span class="math notranslate nohighlight">\(\dif W\)</span> is the <strong>Brownian motion</strong>.</p>
+<p>The reverse (generative) process can be cast as an SDE as well! Following our derivation of the inverse process above, we can show that the reverse process is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\dif X = \left[f(x, t) - g(t)^2 \nabla_x \log q_t(x)\right] \dif t + g(t) \dif W
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\dif t\)</span> is a <strong>negative</strong> time increment and <span class="math notranslate nohighlight">\(\dif W\)</span> is Brownian motion run in reverse time.</p>
+</section>
+<section id="multidimensional-models">
+<h2>Multidimensional models<a class="headerlink" href="#multidimensional-models" title="Link to this heading">#</a></h2>
+<p>Very few things need to change in order to apply this idea to multidimensional data <span class="math notranslate nohighlight">\(\mbx_0 \in \reals^D\)</span>. The standard setup is to apply a Gaussian noising process to each coordinate <span class="math notranslate nohighlight">\(x_{0,d}\)</span> independently. Then, in the generative model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbx_t \mid \mbx_{t+1}; \theta)
+&amp;= \prod_{d=1}^D p(x_{t,d} \mid \mbx_{t+1}; \theta) \\
+&amp;= \prod_{d=1}^D \mathrm{N}(x_{t,d} \mid \mu_\theta(\mbx_{t+1}, t, d), \widetilde{\sigma}_t^2). 
+\end{align*}\]</div>
+<p>The generative process still produces a factored distribution, but we need a separate mean function for each coordinate. Moreover, the mean function needs to consider the entire state <span class="math notranslate nohighlight">\(\mbx_{t+1}\)</span>. The reason is that <span class="math notranslate nohighlight">\(x_{t,d}\)</span> is not conditionally independent of <span class="math notranslate nohighlight">\(x_{t+1,d'}\)</span> given <span class="math notranslate nohighlight">\(x_{t+1,d}\)</span>; the coordinates are coupled in the inverse process since all of <span class="math notranslate nohighlight">\(\mbx_{t+1}\)</span> provides information about the <span class="math notranslate nohighlight">\(\mbx_0\)</span> that generated it.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>There’s a lot we didn’t cover. The Stein score function that appeared in the inverse of the noising process allows for connections between denoising score matching <span id="id4">[<a class="reference internal" href="99_references.html#id30" title="Yang Song and Stefano Ermon. Generative modeling by estimating gradients of the data distribution. Advances in neural information processing systems, 2019.">SE19</a>]</span> and denoising diffusion models.</p>
+<p>Another important topic is <strong>conditional generation</strong>. Suppose we want to take in text and spit out images, like DALL-E 2 or Stable Diffusion. One way to do so is using a diffusion model, but to steer the reverse diffusion based on the text prompt. So rather than just following the score function, the reverse process is also biased toward outputs that match the prompt.</p>
+<p>Finally, this class was nominally about models for discrete data, but this lecture has focused on continuous diffusions. There has been recent work on discrete denoising diffusion models, which we’ll have to cover another time!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="15_graphs.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Random Graphs Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-ideas">Key Ideas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#noising-process">Noising process</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-noising-process">Gaussian noising process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-preserving-diffusions">Variance preserving diffusions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-process">Generative process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evidence-lower-bound">Evidence Lower Bound</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-generative-process">Gaussian generative process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rao-blackwellization">Rao-Blackwellization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#denoising-mean-function">Denoising mean function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inverting-the-noising-process">Inverting the noising process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-limit">Continuous time limit</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multidimensional-models">Multidimensional models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

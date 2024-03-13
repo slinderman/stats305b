@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/15_graphs';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="next" title="Denoising Diffusion Models" href="16_diffusion.html" />
     <link rel="prev" title="Transformers" href="13_transformers.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -190,6 +190,7 @@
 <li class="toctree-l1"><a class="reference internal" href="12_rnns.html">Recurrent Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="13_transformers.html">Transformers</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Random Graphs Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_diffusion.html">Denoising Diffusion Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -546,19 +547,19 @@ X_{ij} \mid \mbZ &amp;\sim \mathrm{Bern}(\sigma(-\|\mbz_i - \mbz_j\|_2 + b)),
 <p>The models above all assume that the edges <span class="math notranslate nohighlight">\(X_{ij}\)</span> are conditionally independent random variables given the latent variables <span class="math notranslate nohighlight">\(\mbz_i\)</span> and <span class="math notranslate nohighlight">\(\mbz_j\)</span> associated with the corresponding nodes.
 Conditional independence assumptions l;ike these are natural when information is limited.</p>
 <p>Consider modeling a collection of variables <span class="math notranslate nohighlight">\((x_1, \ldots, x_n)\)</span>. If no information is available to order or group the variables, we must assume they are <strong>exchangeable</strong>:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-b624770c-362f-4f25-890c-89ae249a1815">
-<span class="eqno">(7)<a class="headerlink" href="#equation-b624770c-362f-4f25-890c-89ae249a1815" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-7fc7183c-856c-48de-9845-f21b80e29bcc">
+<span class="eqno">(7)<a class="headerlink" href="#equation-7fc7183c-856c-48de-9845-f21b80e29bcc" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) = p(x_{\pi(1)}, \ldots, x_{\pi(n)}) 
 \end{align}\]</div>
 <p>for any permutation <span class="math notranslate nohighlight">\(\pi\)</span>.
 The simplest exchangeable distributions assume independent and identically distributed r.v.’s,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-a9470697-6bb3-4de6-88ce-9f27e0d38369">
-<span class="eqno">(8)<a class="headerlink" href="#equation-a9470697-6bb3-4de6-88ce-9f27e0d38369" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-65a3ff1f-cbdd-41c6-b06e-b328b9b28913">
+<span class="eqno">(8)<a class="headerlink" href="#equation-65a3ff1f-cbdd-41c6-b06e-b328b9b28913" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \prod_{i=1}^n p(x_n).
 \end{align}\]</div>
 <p>More generally, we may assume the variables are conditionally independent given a parameter <span class="math notranslate nohighlight">\(z\)</span>, which has been marginalized over,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-a0df89d6-fc37-4530-b231-83ed8abcd5e8">
-<span class="eqno">(9)<a class="headerlink" href="#equation-a0df89d6-fc37-4530-b231-83ed8abcd5e8" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-8af40afc-1357-4fea-8ebe-d7615e13cab6">
+<span class="eqno">(9)<a class="headerlink" href="#equation-8af40afc-1357-4fea-8ebe-d7615e13cab6" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \int \left[ \prod_{i=1}^n p(x_i \mid z) \right] p(z) \dif z.
 \end{align}\]</div>
 <p>Marginally, <span class="math notranslate nohighlight">\(x_1, \ldots, x_n\)</span> are <strong>not</strong> independent, but they are exchangeable.</p>
@@ -698,11 +699,11 @@ A(\mbeta) &amp;= \log \sum_{\mbX'} \exp \left\{ \sum_{k=1}^K \eta_k t_k(\mbX') \
       </div>
     </a>
     <a class="right-next"
-       href="../assignments/hw0/hw0.html"
+       href="16_diffusion.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">HW0: PyTorch Primer</p>
+        <p class="prev-next-title">Denoising Diffusion Models</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
