@@ -497,7 +497,7 @@ p(x_t \mid x_{t+1}; \theta)
 &amp;= 
 \mathrm{N}(x_t \mid \mu_\theta(x_{t+1}, t), \widetilde{\sigma}_t^2)
 \end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mu_\theta: \reals^D \times [0,T] \mapsto \reals^D\)</span> is a nonlinear <strong>mean function</strong> that should <strong>denoise</strong> <span class="math notranslate nohighlight">\(x_{t+1}\)</span> to obtain the expected value of <span class="math notranslate nohighlight">\(x_t\)</span>, and <span class="math notranslate nohighlight">\(\widetilde{\sigma}_t^2\)</span> is a fixed variance for the generative process.</p>
+<p>where <span class="math notranslate nohighlight">\(\mu_\theta: \reals \times [0,T] \mapsto \reals\)</span> is a nonlinear <strong>mean function</strong> that should <strong>denoise</strong> <span class="math notranslate nohighlight">\(x_{t+1}\)</span> to obtain the expected value of <span class="math notranslate nohighlight">\(x_t\)</span>, and <span class="math notranslate nohighlight">\(\widetilde{\sigma}_t^2\)</span> is a fixed variance for the generative process.</p>
 <div class="admonition-parameter-sharing admonition">
 <p class="admonition-title">Parameter sharing</p>
 <p>Rather than learn a separate function for each time point, it is common to parameterize the mean function as a function of both the state <span class="math notranslate nohighlight">\(x_{t+1}\)</span> and the time <span class="math notranslate nohighlight">\(t\)</span>. For example, <span class="math notranslate nohighlight">\(\mu_\theta(\cdot, \cdot)\)</span> can be a neural network that takes in the state and a positional embedding of the time <span class="math notranslate nohighlight">\(t\)</span>, like the sinusoidal embeddings used in transformers.</p>
@@ -735,7 +735,7 @@ q(x_t)
 &amp;= \frac{1}{n} \sum_{i=1}^n q(x_t \mid x_0^{(i)}) \\
 &amp;= \frac{1}{n} \sum_{i=1}^n \mathrm{N}(x_t \mid \lambda_{t|0} x_0^{(i)}, \sigma_{t|0}^2) 
 \end{align*}\]</div>
-<p>Specifically, the <strong>Stein score function</strong> of the marginal probability is,</p>
+<p>Specifically, the second term is the <strong>Stein score function</strong> of the marginal probability,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 \nabla_{x} \log q(x_{t+1})
