@@ -64,7 +64,7 @@ Thus, we see that the the hyperbolic tangent is simply a scaled and shifted logi
 
 The "read-out" of a vanilla RNN is typically a simple linear or generalized linear model, depending on the type of observations. For example,
 \begin{align*}
-g(\mbh_t, \mbx_t; \mbtheta) &= \mbC \mbx_t + \mbd,
+g(\mbh_t, \mbx_t; \mbtheta) &= \mbC \mbh_t + \mbd,
 \end{align*}
 where 
 - $\mbC \in \reals^{D \times K}$ are the read-out weights and

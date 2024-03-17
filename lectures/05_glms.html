@@ -548,8 +548,8 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
 <p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
 <p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-e2e0b464-9c46-4ddb-8627-8405917c9228">
-<span class="eqno">(2)<a class="headerlink" href="#equation-e2e0b464-9c46-4ddb-8627-8405917c9228" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-6c3c8ecd-76f0-4483-b4e0-d5cefcabb019">
+<span class="eqno">(2)<a class="headerlink" href="#equation-6c3c8ecd-76f0-4483-b4e0-d5cefcabb019" title="Permalink to this equation">#</a></span>\[\begin{align}
     \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
     \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
 \end{align}\]</div>
