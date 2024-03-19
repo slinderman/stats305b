@@ -208,7 +208,7 @@ $$
         p(z_{t}  \mid \mbx_{1:T})
         &\propto \sum_{z_1=1}^K \cdots \sum_{z_{t-1}=1}^K \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K p(\mbz_{1:T}, \mbx_{1:T}) \\
         &= \nonumber
-        \bigg[ \sum_{z_{t}=1}^K \cdots \sum_{z_{t-1}=1}^K p(z_1) \prod_{s=1}^{t-1} p(\mbx_s  \mid z_s) \, p(z_{s+1}  \mid z_{s}) \bigg]
+        \bigg[ \sum_{z_{1}=1}^K \cdots \sum_{z_{t-1}=1}^K p(z_1) \prod_{s=1}^{t-1} p(\mbx_s  \mid z_s) \, p(z_{s+1}  \mid z_{s}) \bigg]
         \times  p(\mbx_t  \mid z_t)   \\
         &\qquad \times \bigg[ \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+1}^T p(z_{u}  \mid z_{u-1}) \, p(\mbx_u  \mid z_u) \bigg] \\
         &= \alpha_t(z_t) \times p(\mbx_t  \mid z_t) \times \beta_t(z_t)
