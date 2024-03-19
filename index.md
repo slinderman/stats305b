@@ -82,18 +82,18 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
   - You may bring a cheat sheet covering _one side_ of an 8.5x11" piece of paper
 
 - **Final Exam**: Wed, March 20, 2024 from 3:30-6:30pm in Room 530-127
-  - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf).
+  - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf) (solutions are [here](final/practice_solutions.pdf)).
   - You may bring a cheat sheet covering _both sides_ of an 8.5x11" piece of paper
 
 
 ## Grading
 
 Tentatively:
-| Assignment   | Percentage |
-| ------------ | ---------- | 
-| HW 0         | 5%         |
-| HW 1-3       | 15% each   |
-| HW 4         | 20%        |
-| Midterm      | 10%        |
-| Final        | 15%        |
-| Participation | 5%        |
+| Assignment    | Percentage |
+| ------------- | ---------- | 
+| HW 0          | 5%         |
+| HW 1-3        | 15% each   |
+| HW 4          | 20%        |
+| Midterm       | 10%        |
+| Final         | 15%        |
+| Participation | 5%         |
