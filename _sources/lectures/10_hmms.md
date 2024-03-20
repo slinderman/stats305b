@@ -227,8 +227,8 @@ $$
 \begin{aligned}
         \beta_t(z_t)
         &\triangleq \sum_{z_{t+1}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+1}^T p(z_{u}  \mid z_{u-1}) \, p(\mbx_u  \mid z_u) \\
-        &= \sum_{z_{t+1}=1}^K p(z_{t+1}  \mid z_t) \, p(\mbx_{t_1}  \mid z_{t+1}) \left(\sum_{z_{t+2}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+2}^T p(z_{u}  \mid z_{u-1}) \, p(\mbx_u  \mid z_u) \right) \\
-        &= \sum_{z_{t+1}=1}^K p(z_{t+1}  \mid z_t) \, p(\mbx_{t_1}  \mid z_{t+1}) \, \beta_{t+1}(z_{t+1}).
+        &= \sum_{z_{t+1}=1}^K p(z_{t+1}  \mid z_t) \, p(\mbx_{t+1}  \mid z_{t+1}) \left(\sum_{z_{t+2}=1}^K \cdots \sum_{z_T=1}^K \prod_{u=t+2}^T p(z_{u}  \mid z_{u-1}) \, p(\mbx_u  \mid z_u) \right) \\
+        &= \sum_{z_{t+1}=1}^K p(z_{t+1}  \mid z_t) \, p(\mbx_{t+1}  \mid z_{t+1}) \, \beta_{t+1}(z_{t+1}).
     \end{aligned}
 $$
 

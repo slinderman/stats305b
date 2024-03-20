@@ -271,7 +271,7 @@ p(\mbz_{1:T} \mid \mbx_{1:T}; \mbtheta)
     - \log p(\mbx_{1:T}; \mbtheta)
     \right\} \\
 &= \exp \bigg\{ 
-    \sum_{k=1}^K \langle \bbI[z_1 =k], \log \pi_{0,k} \\
+    \sum_{k=1}^K \langle \bbI[z_1 =k], \log \pi_{0,k} \rangle \\
     &\hspace{6em}
     + \sum_{t=2}^T \sum_{i=1}^K \sum_{j=1}^K \langle \bbI[z_{t-1}=i \wedge z_{t} = j],  \log P_{i,j} \rangle \\
     &\hspace{12em}

@@ -403,7 +403,7 @@ document.write(`
 <li><p>The <strong>degree</strong> of a node is its number of neighbors. In a directed graph, we may distinguish between the in-degree and out-degree.</p></li>
 <li><p>A graph is called <strong>sparse</strong> if the number of edges <span class="math notranslate nohighlight">\(E\)</span> is <span class="math notranslate nohighlight">\(\cO(n)\)</span>. Otherwise it is called <strong>dense.</strong></p></li>
 </ul>
-<p>Sometimes we want to model graphs where the edges come with some metadata, like a weight. We can represent a weighted graph as a matrix $<span class="math notranslate nohighlight">\(\mbX \in \reals^{n \times n}\)</span> where <span class="math notranslate nohighlight">\(X_{ij}\)</span> denotes the weight on an edge from node <span class="math notranslate nohighlight">\(i\)</span> to node <span class="math notranslate nohighlight">\(j\)</span>, with <span class="math notranslate nohighlight">\(X_{ij} = 0\)</span> meaning there is no edge.</p>
+<p>Sometimes we want to model graphs where the edges come with some metadata, like a weight. We can represent a weighted graph as a matrix <span class="math notranslate nohighlight">\(\mbX \in \reals^{n \times n}\)</span> where <span class="math notranslate nohighlight">\(X_{ij}\)</span> denotes the weight on an edge from node <span class="math notranslate nohighlight">\(i\)</span> to node <span class="math notranslate nohighlight">\(j\)</span>, with <span class="math notranslate nohighlight">\(X_{ij} = 0\)</span> meaning there is no edge.</p>
 <p>These definitions are just a brief overview of terms from <a class="reference external" href="https://en.wikipedia.org/wiki/Graph_theory"><strong>graph theory</strong></a>. There is an enormous literature in mathematics, computer science, probability, etc. dealing with these objects.</p>
 </section>
 <section id="prediction-and-inference-problems">
@@ -437,7 +437,7 @@ document.write(`
 X_{ij} &amp;\iid\sim \mathrm{Bern}(\rho)
 \end{align*}\]</div>
 <p>with a single parameter <span class="math notranslate nohighlight">\(\rho \in [0,1]\)</span> determining the <strong>sparsity</strong> of the graph. We can consider either directed or undirected versions of the model. Much of the theory of ER graphs concerns the undirected case without self loops.</p>
-<p>The expected number of edges in an undirected model without self loops is <span class="math notranslate nohighlight">\({n \choose 2} p\)</span>. The degree of node <span class="math notranslate nohighlight">\(i\)</span> is binomial distributed,</p>
+<p>The expected number of edges in an undirected model without self loops is <span class="math notranslate nohighlight">\({n \choose 2} \rho\)</span>. The degree of node <span class="math notranslate nohighlight">\(i\)</span> is binomial distributed,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 \mathrm{deg}(i) &amp;\sim \mathrm{Bin}(n-1, \rho)
@@ -545,21 +545,21 @@ X_{ij} \mid \mbZ &amp;\sim \mathrm{Bern}(\sigma(-\|\mbz_i - \mbz_j\|_2 + b)),
 <section id="exchangeabile-random-graphs-and-aldous-hoover">
 <h2>Exchangeabile Random Graphs and Aldous-Hoover<a class="headerlink" href="#exchangeabile-random-graphs-and-aldous-hoover" title="Link to this heading">#</a></h2>
 <p>The models above all assume that the edges <span class="math notranslate nohighlight">\(X_{ij}\)</span> are conditionally independent random variables given the latent variables <span class="math notranslate nohighlight">\(\mbz_i\)</span> and <span class="math notranslate nohighlight">\(\mbz_j\)</span> associated with the corresponding nodes.
-Conditional independence assumptions l;ike these are natural when information is limited.</p>
+Conditional independence assumptions like these are natural when information is limited.</p>
 <p>Consider modeling a collection of variables <span class="math notranslate nohighlight">\((x_1, \ldots, x_n)\)</span>. If no information is available to order or group the variables, we must assume they are <strong>exchangeable</strong>:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-73243a8a-a34e-4f72-979c-473e89e6e58d">
-<span class="eqno">(7)<a class="headerlink" href="#equation-73243a8a-a34e-4f72-979c-473e89e6e58d" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-cdab83e2-07a3-40a5-8aca-2fccc498c296">
+<span class="eqno">(7)<a class="headerlink" href="#equation-cdab83e2-07a3-40a5-8aca-2fccc498c296" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) = p(x_{\pi(1)}, \ldots, x_{\pi(n)}) 
 \end{align}\]</div>
 <p>for any permutation <span class="math notranslate nohighlight">\(\pi\)</span>.
 The simplest exchangeable distributions assume independent and identically distributed r.v.’s,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-5276e30d-29e6-474b-b529-9fb96b824630">
-<span class="eqno">(8)<a class="headerlink" href="#equation-5276e30d-29e6-474b-b529-9fb96b824630" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-9a65681c-8fa8-4325-b251-a8aaad585fbf">
+<span class="eqno">(8)<a class="headerlink" href="#equation-9a65681c-8fa8-4325-b251-a8aaad585fbf" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \prod_{i=1}^n p(x_n).
 \end{align}\]</div>
 <p>More generally, we may assume the variables are conditionally independent given a parameter <span class="math notranslate nohighlight">\(z\)</span>, which has been marginalized over,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-47fd7557-0f61-47fc-9537-8aeef1fdb047">
-<span class="eqno">(9)<a class="headerlink" href="#equation-47fd7557-0f61-47fc-9537-8aeef1fdb047" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-e807d767-ece7-463e-9054-2d226d1214b0">
+<span class="eqno">(9)<a class="headerlink" href="#equation-e807d767-ece7-463e-9054-2d226d1214b0" title="Permalink to this equation">#</a></span>\[\begin{align}
     p(x_1, \ldots, x_n) &amp;= \int \left[ \prod_{i=1}^n p(x_i \mid z) \right] p(z) \dif z.
 \end{align}\]</div>
 <p>Marginally, <span class="math notranslate nohighlight">\(x_1, \ldots, x_n\)</span> are <strong>not</strong> independent, but they are exchangeable.</p>
