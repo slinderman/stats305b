@@ -77,7 +77,7 @@ where
 - the domain is $\Omega = \reals$
 
 ### Categorical distribution
-Finally, take the categorical pmf for $Y \in \{1, \ldots, K\},
+Finally, take the categorical pmf for $Y \in \{1, \ldots, K\}$,
 \begin{align*}
     \mathrm{Cat}(y; \mbpi) 
     &= \prod_{k=1}^K \pi_k^{\bbI[y = k]} \\

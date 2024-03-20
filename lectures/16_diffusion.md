@@ -104,7 +104,7 @@ Since there are no learnable parameters in the noising process, the objective si
 We can simplify further by expanding the log probability of the generative model,
 \begin{align*}
 \cL(\theta)
-&= \E_{q(x_0)}  \E_{q(x_t, x_{t+1} \mid x_0)} \left[ \sum_{t=0}^{T-1} \log p(x_t \mid x_{t+1}; \theta) \right] \\
+&= \E_{q(x_0)} \sum_{t=0}^{T-1} \E_{q(x_t, x_{t+1} \mid x_0)} \left[  \log p(x_t \mid x_{t+1}; \theta) \right] \\
 &\propto \E_{q(x_0)} \mathbb{E}_{t \sim \mathrm{Unif}(0,T-1)} \E_{q(x_t, x_{t+1} \mid x_0)} \left[ \log p(x_t \mid x_{t+1}; \theta) \right]
 \end{align*}
 which only depends on pairwise conditionals.

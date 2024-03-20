@@ -34,13 +34,13 @@ A_{t,s} &\propto \exp \left\{ \mbx_t^\top \mbx_s \right\}
 \end{align*}
 Once normalized,
 \begin{align*}
-A_{t,s} &= \frac{\exp \{ \mbx_t^\top \mbx_s\}}{\sum_{s'=1}^T \exp\{\mbx_t^\top \mbx_s\}}.
+A_{t,s} &= \frac{\exp \{ \mbx_t^\top \mbx_s\}}{\sum_{s'=1}^T \exp\{\mbx_t^\top \mbx_{s'}\}}.
 \end{align*}
 (Note: we have dropped the superscript ${}^{(m)}$ for clarity in this section.)
 
 This approach implies that attention depends equally on all $D$ dimensions of the embedding. In practice, some of those dimensions may convey different kinds of information that may be of greater or lesser relevance for the attention mechanism. One way to allow for this is to project the tokens into a feature space before computing the attention weights,
 \begin{align*}
-A_{t,s} &= \frac{\exp \{ (\mbU \mbx_t)^\top (\mbU \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU \mbx_t)^\top (\mbU \mbx_s) \}}
+A_{t,s} &= \frac{\exp \{ (\mbU \mbx_t)^\top (\mbU \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU \mbx_t)^\top (\mbU \mbx_{s'}) \}}
 \end{align*}
 where $\mbU \in \reals^{K \times D}$ with $K < D$.
 
@@ -48,7 +48,7 @@ Still, the numerator in this attention weight is symmetric. If we think of the a
 
 Transformers use a more general form of attention to address this asymmetry,
 \begin{align*}
-A_{t,s} &= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_s) \}},
+A_{t,s} &= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_{s'}) \}},
 \end{align*}
 where $\mbU_q \mbx_t \in \reals^{K}$ are the **queries** and $\mbU_k \mbx_s \in \reals^{K}$ are the **keys**.
 
@@ -57,7 +57,7 @@ The parameters $\mbU_q \in \reals^{K \times D}$ and $\mbU_k \in \reals^{K \times
 :::{admonition} Causal attention
 To enforce causality in the attention layer, we simply zero out the upper triangular part of the attention matrix and normalize the rows appropriately,
 \begin{align*}
-A_{t,s} &= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\textcolor{red}{\sum_{s'=1}^{t}} \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}} \cdot \bbI[t \geq s].
+A_{t,s} &= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\textcolor{red}{\sum_{s'=1}^{t}} \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_{s'})\}} \cdot \bbI[t \geq s].
 \end{align*}
 
 :::
@@ -78,7 +78,7 @@ Just as in a CNN each layer performs convolutions with a bank of filters in para
 where 
 \begin{align*}
 A_{t,s}^{(m,h)} &= 
-\frac{\exp \{ (\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_s^{(m-1)})\}}{\sum_{s'=1}^T \exp\{(\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_s^{(m-1)}) \}},
+\frac{\exp \{ (\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_s^{(m-1)})\}}{\sum_{s'=1}^T \exp\{(\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_{s'}^{(m-1)}) \}},
 \end{align*}
 is an attention weight at layer $m$ and head $h$ for $h=1,\ldots,H$. (Now you see why we dropped superscripts above &mdash; the notation is a handful!)
 
