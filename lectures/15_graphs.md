@@ -13,7 +13,7 @@ Let $\mbX \in \{0,1\}^{n \times n}$ be a binary **adjacency matrix** on $n$ node
 - The **degree** of a node is its number of neighbors. In a directed graph, we may distinguish between the in-degree and out-degree.
 - A graph is called **sparse** if the number of edges $E$ is $\cO(n)$. Otherwise it is called **dense.**
 
-Sometimes we want to model graphs where the edges come with some metadata, like a weight. We can represent a weighted graph as a matrix $$\mbX \in \reals^{n \times n}$ where $X_{ij}$ denotes the weight on an edge from node $i$ to node $j$, with $X_{ij} = 0$ meaning there is no edge.
+Sometimes we want to model graphs where the edges come with some metadata, like a weight. We can represent a weighted graph as a matrix $\mbX \in \reals^{n \times n}$ where $X_{ij}$ denotes the weight on an edge from node $i$ to node $j$, with $X_{ij} = 0$ meaning there is no edge.
 
 These definitions are just a brief overview of terms from [**graph theory**](https://en.wikipedia.org/wiki/Graph_theory). There is an enormous literature in mathematics, computer science, probability, etc. dealing with these objects.
 
@@ -48,7 +48,7 @@ X_{ij} &\iid\sim \mathrm{Bern}(\rho)
 \end{align*}
 with a single parameter $\rho \in [0,1]$ determining the **sparsity** of the graph. We can consider either directed or undirected versions of the model. Much of the theory of ER graphs concerns the undirected case without self loops.
 
-The expected number of edges in an undirected model without self loops is ${n \choose 2} p$. The degree of node $i$ is binomial distributed,
+The expected number of edges in an undirected model without self loops is ${n \choose 2} \rho$. The degree of node $i$ is binomial distributed,
 \begin{align*}
 \mathrm{deg}(i) &\sim \mathrm{Bin}(n-1, \rho)
 \end{align*}
@@ -153,7 +153,7 @@ X_{ij} \mid \mbZ &\sim \mathrm{Bern}(\sigma(-\|\mbz_i - \mbz_j\|_2 + b)),
 ## Exchangeabile Random Graphs and Aldous-Hoover 
 
 The models above all assume that the edges $X_{ij}$ are conditionally independent random variables given the latent variables $\mbz_i$ and $\mbz_j$ associated with the corresponding nodes.
-Conditional independence assumptions l;ike these are natural when information is limited. 
+Conditional independence assumptions like these are natural when information is limited. 
 
 Consider modeling a collection of variables $(x_1, \ldots, x_n)$. If no information is available to order or group the variables, we must assume they are **exchangeable**:
 \begin{align}

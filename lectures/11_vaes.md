@@ -225,7 +225,7 @@ for some implicit and generally nonlinear function $f^\star$.
 
 VAEs learn an approximation to $f^\star(\mbx_n, \mbtheta)$ with an **inference network**, a.k.a. **recognition network** or **encoder**.
     
-The inference network is (yet another) neural network that takes in a data point $\mbx_n$ and outputs variational parameters $\mbz_n$,
+The inference network is (yet another) neural network that takes in a data point $\mbx_n$ and outputs variational parameters $\mblambda_n$,
 \begin{align*}
     \mblambda_n & \approx f(\mbx_n, \mbphi),
 \end{align*}
