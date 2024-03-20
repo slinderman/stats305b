@@ -350,8 +350,8 @@ q(x_t)
 \end{align*}
 Specifically, the second term is the **Stein score function** of the marginal probability,
 \begin{align*}
-\nabla_{x} \log q(x_{t+1})
-&= \frac{\nabla_{x} q(x_{t+1})}{q(x_{t+1})}  \\
+\nabla_{x} \log q_t(x_{t+1})
+&= \frac{\nabla_{x} q_t(x_{t+1})}{q_t(x_{t+1})}  \\
 &=\frac{\frac{1}{n} \sum_{i=1}^n \mathrm{N}(x_{t+1} \mid \lambda_{t|0} x_0^{(i)}, \sigma_{t|0}^2) \left(-\frac{(x_{t+1} - \lambda_{t|0}x_0^{(i)})}{\sigma_{t|0}^2} \right)}{\frac{1}{n} \sum_{j=1}^n \mathrm{N}(x_{t+1} \mid \lambda_{t|0} x_0^{(j)}, \sigma_{t|0}^2) } \\
 &= \sum_{i=1}^n w_i(x_{t+1}) \left(\frac{\lambda_{t|0}x_0^{(i)} - x_{t+1}}{\sigma_{t|0}^2} \right)
 \end{align*}
