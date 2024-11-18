@@ -14,56 +14,62 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/proof.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Discrete Distributions and the Basics of Statistical Inference" href="lectures/01_distributions.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -71,31 +77,16 @@
 
   
   
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -103,7 +94,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,10 +101,15 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
     </header>
   
 
@@ -125,7 +120,8 @@
       
         
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -140,6 +136,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="#">
   
@@ -153,15 +151,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -217,7 +211,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -226,14 +220,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -309,27 +303,19 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -370,19 +356,18 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h1>
-<p>Welcome to <strong>STATS 305B</strong>! Officially, this course is called <em>Applied Statistics II</em>. Unofficially, I’m calling it <strong><em>Models and Algorithms for Discrete Data</em></strong>, because that’s what it’s really about. We will cover models ranging from generalized linear models to sequential latent variable models, autoregressive models, and transformers. On the algorithm side, we will cover a few techniques for convex optimization, as well as approximate Bayesian inference algorithms like MCMC and variational inference. I think the best way to learn these concepts is to implement them from scratch, so coding will be a big focus of this course. By the end of the course, you’ll have a strong grasp of classical techniques as well as modern methods for modeling discrete data.</p>
+<p>Welcome to <strong>STATS 305B</strong>! Officially, this course is called <em>Applied Statistics II</em>. Unofficially, I call it <strong><em>Models and Algorithms for Discrete Data</em></strong>. We will cover models ranging from generalized linear models to sequential latent variable models, autoregressive models, and transformers. On the algorithm side, we will cover a few techniques for convex optimization, as well as approximate Bayesian inference algorithms like MCMC and variational inference. I think the best way to learn these concepts is to implement them from scratch, so coding will be a big focus of this course. By the end of the course, you’ll have a strong grasp of classical techniques as well as modern methods for modeling discrete data.</p>
 <section id="logistics">
 <h2>Logistics<a class="headerlink" href="#logistics" title="Link to this heading">#</a></h2>
 <p>Instructor: Scott Linderman <br>
-TAs: Xavier Gonzalez and Leda Liang<br>
-Term: Winter 2023-24 <br>
+TAs: Amber Hu<br>
+Term: Winter 2024-25 <br>
 Time: Monday and Wednesday, 1:30-2:50pm <br>
-Location: Room <a class="reference external" href="https://campus-map.stanford.edu/?srch=380-380D">380-380D</a>, Stanford University</p>
+Location: <a class="reference external" href="https://campus-map.stanford.edu/?srch=Sequoia+Hall+200">Sequoia Hall, Room 200</a>, Stanford University</p>
 <p><strong>Office Hours</strong></p>
 <ul class="simple">
-<li><p>Scott: Wednesday 9-10am in the 2nd floor lounge of the Wu Tsai Neurosciences Institute</p></li>
-<li><p>Leda: Thursday 5-7pm in  Sequoia Hall, Room 207 (Bowker)</p></li>
-<li><p>Xavier: Friday 3-5pm in Building 360, Room 361A</p></li>
+<li><p>Scott: TBD</p></li>
+<li><p>Amber: TBD</p></li>
 </ul>
 </section>
 <section id="prerequisites">
@@ -402,7 +387,7 @@ Location: Room <a class="reference external" href="https://campus-map.stanford.e
 <section id="schedule">
 <h2>Schedule<a class="headerlink" href="#schedule" title="Link to this heading">#</a></h2>
 <p><em>Please note that this is a <strong>tentative</strong> schedule. It may change slightly depending on our pace.</em></p>
-<table class="table">
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Date</p></th>
 <th class="head"><p>Topic</p></th>
@@ -410,88 +395,89 @@ Location: Room <a class="reference external" href="https://campus-map.stanford.e
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Jan  8, 2024</p></td>
+<tr class="row-even"><td><p>Jan  6, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/01_distributions.html"><span class="std std-doc">Discrete Distributions and the Basics of Statistical Inference</span></a></p></td>
 <td><p><span id="id1">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 1</p></td>
 </tr>
-<tr class="row-odd"><td><p>Jan 10, 2024</p></td>
+<tr class="row-odd"><td><p>Jan  8, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/02_contingency_tables.html"><span class="std std-doc">Contingency Tables</span></a></p></td>
 <td><p><span id="id2">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 2-3</p></td>
 </tr>
-<tr class="row-even"><td><p>Jan 15, 2024</p></td>
-<td><p><em>MLK Day. No class</em></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p>Jan 17, 2024</p></td>
+<tr class="row-even"><td><p>Jan 13, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/03_logreg.html"><span class="std std-doc">Logistic Regression</span></a></p></td>
 <td><p><span id="id3">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 4-5</p></td>
 </tr>
-<tr class="row-even"><td><p>Jan 22, 2024</p></td>
+<tr class="row-odd"><td><p>Jan 15, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/04_expfam.html"><span class="std std-doc">Exponential Families</span></a></p></td>
 <td><p><span id="id4">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 4-5</p></td>
 </tr>
-<tr class="row-odd"><td><p>Jan 24, 2024</p></td>
+<tr class="row-even"><td><p>Jan 20, 2024</p></td>
+<td><p><em>MLK Day. No class</em></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Jan 22, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/05_glms.html"><span class="std std-doc">Generalized Linear Models</span></a></p></td>
 <td><p><span id="id5">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 6</p></td>
 </tr>
-<tr class="row-even"><td><p>Jan 29, 2024</p></td>
+<tr class="row-even"><td><p>Jan 27, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/06_bayes.html"><span class="std std-doc">Bayesian Inference</span></a></p></td>
 <td><p><span id="id6">[<a class="reference internal" href="lectures/99_references.html#id12" title="Andrew Gelman, John B Carlin, Hal S Stern, Aki Vehtari, and Donald B Rubin. Bayesian Data Analysis. Chapman and Hall/CRC, 1995.">GCS+95</a>]</span> Ch. 1</p></td>
 </tr>
-<tr class="row-odd"><td><p>Jan 31, 2024</p></td>
+<tr class="row-odd"><td><p>Jan 29, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/07_bayes_glms_soln.html"><span class="std std-doc">Bayesian GLMs</span></a></p></td>
 <td><p><span id="id7">[<a class="reference internal" href="lectures/99_references.html#id5" title="James H Albert and Siddhartha Chib. Bayesian analysis of binary and polychotomous response data. Journal of the American statistical Association, pages 669–679, 1993.">AC93</a>]</span></p></td>
 </tr>
-<tr class="row-even"><td><p>Feb 5, 2024</p></td>
+<tr class="row-even"><td><p>Feb  3, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/08_sparse_glms.html"><span class="std std-doc">L1-regularized GLMs</span></a></p></td>
 <td><p><span id="id8">[<a class="reference internal" href="lectures/99_references.html#id7" title="Jerome Friedman, Trevor Hastie, and Rob Tibshirani. Regularization paths for generalized linear models via coordinate descent. Journal of statistical software, 33(1):1, 2010.">FHT10</a>]</span> and <span id="id9">[<a class="reference internal" href="lectures/99_references.html#id8" title="Jason D Lee, Yuekai Sun, and Michael A Saunders. Proximal Newton-type methods for minimizing composite functions. SIAM Journal on Optimization, 24(3):1420–1443, 2014.">LSS14</a>]</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>Feb  7, 2024</p></td>
+<tr class="row-odd"><td><p>Feb  5, 2024</p></td>
 <td><p><strong>Midterm (in class)</strong></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p>Feb 12, 2024</p></td>
+<tr class="row-even"><td><p>Feb 10, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/09_mixtures.html"><span class="std std-doc">Mixture Models and EM</span></a></p></td>
 <td><p><span id="id10">[<a class="reference internal" href="lectures/99_references.html#id15" title="Christopher Bishop. Pattern Recognition and Machine Learning. Springer, 2006.">Bis06</a>]</span> Ch. 9</p></td>
 </tr>
-<tr class="row-odd"><td><p>Feb 14, 2024</p></td>
+<tr class="row-odd"><td><p>Feb 12, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/10_hmms.html"><span class="std std-doc">Hidden Markov Models</span></a></p></td>
 <td><p><span id="id11">[<a class="reference internal" href="lectures/99_references.html#id15" title="Christopher Bishop. Pattern Recognition and Machine Learning. Springer, 2006.">Bis06</a>]</span> Ch. 13</p></td>
 </tr>
-<tr class="row-even"><td><p>Feb 19, 2024</p></td>
+<tr class="row-even"><td><p>Feb 17, 2024</p></td>
 <td><p><em>Presidents’ Day. No class</em></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p>Feb 21, 2024</p></td>
+<tr class="row-odd"><td><p>Feb 19, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/11_vaes.html"><span class="std std-doc">Variational Autoencoders</span></a> (<a class="reference internal" href="lectures/11_vaes_demo.html"><span class="std std-doc">Demo</span></a>)</p></td>
 <td><p><span id="id12">[<a class="reference internal" href="lectures/99_references.html#id16" title="Diederik P Kingma and Max Welling. An introduction to variational autoencoders. Foundations and Trends® in Machine Learning, 12(4):307–392, 2019.">KW19</a>]</span> Ch.1-2</p></td>
 </tr>
-<tr class="row-even"><td><p>Feb 26, 2024</p></td>
+<tr class="row-even"><td><p>Feb 24, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/12_rnns.html"><span class="std std-doc">Recurrent Neural Networks</span></a></p></td>
 <td><p><span id="id13">[<a class="reference internal" href="lectures/99_references.html#id17" title="Ian Goodfellow, Yoshua Bengio, and Aaron Courville. Deep Learning. MIT Press, 2016. http://www.deeplearningbook.org.">GBC16</a>]</span> Ch. 10</p></td>
 </tr>
-<tr class="row-odd"><td><p>Feb 28, 2024</p></td>
+<tr class="row-odd"><td><p>Feb 26, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/13_transformers.html"><span class="std std-doc">Tranformers</span></a></p></td>
 <td><p><span id="id14">[<a class="reference internal" href="lectures/99_references.html#id18" title="Richard E Turner. An introduction to transformers. arXiv preprint arXiv:2304.10557, 2023.">Tur23</a>]</span></p></td>
 </tr>
-<tr class="row-even"><td><p>Mar  4, 2024</p></td>
+<tr class="row-even"><td><p>Mar  3, 2024</p></td>
 <td><p><a class="reference download internal" download="" href="_downloads/6f247cee574a4a6006a07ba0462762e5/14_ssm.pdf"><span class="xref download myst">State Space Layers (S4, S5, Mamba)</span></a> <br> <em>Guest lecture by <a class="reference external" href="https://jimmysmith1919.github.io/">Jimmy Smith</a></em></p></td>
 <td><p><span id="id15">[<a class="reference internal" href="lectures/99_references.html#id19" title="Jimmy T.H. Smith, Andrew Warrington, and Scott Linderman. Simplified state space layers for sequence modeling. In The Eleventh International Conference on Learning Representations. 2023.">SWL23</a>]</span> and <span id="id16">[<a class="reference internal" href="lectures/99_references.html#id20" title="Albert Gu and Tri Dao. Mamba: linear-time sequence modeling with selective state spaces. arXiv preprint arXiv:2312.00752, 2023.">GD23</a>]</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>Mar  6, 2024</p></td>
+<tr class="row-odd"><td><p>Mar  5, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/15_graphs.html"><span class="std std-doc">Random Graph Models</span></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p>Mar 11, 2024</p></td>
-<td><p><em>Cancelled</em></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p>Mar 13, 2024</p></td>
+<tr class="row-even"><td><p>Mar 10, 2024</p></td>
 <td><p><a class="reference internal" href="lectures/16_diffusion.html"><span class="std std-doc">Denoising Diffusion Models</span></a></p></td>
 <td><p><span id="id17">[<a class="reference internal" href="lectures/99_references.html#id21" title="Richard E Turner, Cristiana-Diana Diaconu, Stratis Markou, Aliaksandra Shysheya, Andrew YK Foong, and Bruno Mlodozeniec. Denoising diffusion probabilistic models in six simple steps. arXiv preprint arXiv:2402.04384, 2024.">TDM+24</a>]</span></p></td>
 </tr>
+<tr class="row-odd"><td><p>Mar 12, 2024</p></td>
+<td><p>Wrap Up</p></td>
+<td><p></p></td>
+</tr>
 </tbody>
 </table>
+</div>
 </section>
 <section id="assignments">
 <h2>Assignments<a class="headerlink" href="#assignments" title="Link to this heading">#</a></h2>
@@ -499,47 +485,40 @@ Location: Room <a class="reference external" href="https://campus-map.stanford.e
 <ul class="simple">
 <li><p><a class="reference internal" href="assignments/hw0/hw0.html"><span class="std std-doc"><strong>Homework 0: Python Primer</strong></span></a></p>
 <ul>
-<li><p>Released Mon, Jan 8, 2024</p></li>
-<li><p>Due Fri, Jan 12, 2024 at 11:59pm</p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="assignments/hw1/hw1.html"><span class="std std-doc"><strong>Homework 1: Logistic Regression</strong></span></a></p>
-<ul>
-<li><p>Released Wed, Jan 17, 2024</p></li>
-<li><p>Due Fri, Jan 26, 2024 at 11:59pm</p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="assignments/hw2/hw2.html"><span class="std std-doc"><strong>Homework 2: Bayesian GLMs</strong></span></a></p>
-<ul>
-<li><p>Released Wed, Jan 31, 2024</p></li>
-<li><p>Due Wed, Feb 14, 2024 at 11:59pm</p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="assignments/hw3/hw3.html"><span class="std std-doc"><strong>Homework 3: Hidden Markov Models</strong></span></a></p>
-<ul>
-<li><p>Released Fri, Feb 16, 2024</p></li>
-<li><p>Due Mon, Feb 26, 2024 at 11:59pm</p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="assignments/hw4/hw4.html"><span class="std std-doc"><strong>Homework 4: Large Language Models</strong></span></a></p>
-<ul>
-<li><p>Released Wed, Feb 28, 2024</p></li>
-<li><p>Due Fri, Mar 15, 2024 at 11:59pm</p></li>
+<li><p>Released Mon, Jan 6, 2025</p></li>
+<li><p>Due Fri, Jan 10, 2025 at 11:59pm</p></li>
 </ul>
 </li>
 </ul>
+<!--
+- [**Homework 1: Logistic Regression**](assignments/hw1/hw1.ipynb)
+  - Released Wed, Jan 17, 2024
+  - Due Fri, Jan 26, 2024 at 11:59pm
+
+- [**Homework 2: Bayesian GLMs**](assignments/hw2/hw2.ipynb)
+  - Released Wed, Jan 31, 2024
+  - Due Wed, Feb 14, 2024 at 11:59pm
+
+- [**Homework 3: Hidden Markov Models**](assignments/hw3/hw3.ipynb)
+  - Released Fri, Feb 16, 2024
+  - Due Mon, Feb 26, 2024 at 11:59pm
+
+- [**Homework 4: Large Language Models**](assignments/hw4/hw4.ipynb)
+  - Released Wed, Feb 28, 2024
+  - Due Fri, Mar 15, 2024 at 11:59pm
+-->
 </section>
 <section id="exams">
 <h2>Exams<a class="headerlink" href="#exams" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><strong>Midterm Exam</strong>: In class on Wed, Feb 7, 2024</p>
 <ul>
+<li><p><strong>Midterm Exam</strong>: In class on TBD</p>
+<ul class="simple">
 <li><p>You may bring a cheat sheet covering <em>one side</em> of an 8.5x11” piece of paper</p></li>
 </ul>
 </li>
-<li><p><strong>Final Exam</strong>: Wed, March 20, 2024 from 3:30-6:30pm in Room 530-127</p>
-<ul>
-<li><p>In addition to reviewing the midterm and the lecture notes, you may want to try these <a class="reference download internal" download="" href="_downloads/4579c6dd01dedc652816fab983215728/practice.pdf"><span class="xref download myst">practice problems</span></a> (solutions are <a class="reference download internal" download="" href="_downloads/004d0e86cf739a4069ddcb20c20ff0c2/practice_solutions.pdf"><span class="xref download myst">here</span></a>).</p></li>
+<li><p><strong>Final Exam</strong>: On TBD in Room TBD</p>
+<!-- - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf) (solutions are [here](final/practice_solutions.pdf)). -->
+<ul class="simple">
 <li><p>You may bring a cheat sheet covering <em>both sides</em> of an 8.5x11” piece of paper</p></li>
 </ul>
 </li>
@@ -548,7 +527,7 @@ Location: Room <a class="reference external" href="https://campus-map.stanford.e
 <section id="grading">
 <h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">#</a></h2>
 <p>Tentatively:</p>
-<table class="table">
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Assignment</p></th>
 <th class="head"><p>Percentage</p></th>
@@ -575,6 +554,7 @@ Location: Room <a class="reference external" href="https://campus-map.stanford.e
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -611,7 +591,7 @@ Location: Room <a class="reference external" href="https://campus-map.stanford.e
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="right-next"
@@ -630,7 +610,8 @@ Location: Room <a class="reference external" href="https://campus-map.stanford.e
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -694,8 +675,8 @@ By Scott Linderman
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>
