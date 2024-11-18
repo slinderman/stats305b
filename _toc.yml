@@ -5,29 +5,10 @@ parts:
   - caption: Notes
     chapters:
     - file: lectures/01_distributions.ipynb
-    - file: lectures/02_contingency_tables.md
-    - file: lectures/03_logreg.md
-    - file: lectures/04_expfam.md
-    - file: lectures/05_glms.md
-    - file: lectures/06_bayes.md
-    - file: lectures/07_bayes_glms_soln.ipynb
-    - file: lectures/08_sparse_glms.md
-    - file: lectures/09_mixtures.md
-    - file: lectures/10_hmms.md
-    - file: lectures/11_vaes.md
-    - file: lectures/11_vaes_demo.ipynb
-    - file: lectures/12_rnns.md
-    - file: lectures/13_transformers.md
-    - file: lectures/15_graphs.md
-    - file: lectures/16_diffusion.md
     
   - caption: Assignments
     chapters:
     - file: assignments/hw0/hw0.ipynb
-    - file: assignments/hw1/hw1.ipynb
-    - file: assignments/hw2/hw2.ipynb
-    - file: assignments/hw3/hw3.ipynb
-    - file: assignments/hw4/hw4.ipynb
 
 
   - caption: References
