@@ -1,12 +1,13 @@
 # In _config.yml
 title: "STATS 305B: Models and Algorithms for Discrete Data"
 author: Scott Linderman
-copyright: "2024"
+copyright: "2025"
 execute:
   execute_notebooks: force
   exclude_patterns:
     - 'hw0.ipynb'
     - '01_distributions.ipynb'
+    - '02_contingency_tables_v2.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
     - 'hw2_solutions.ipynb'

@@ -315,7 +315,7 @@ Of course, we don't know $\mbpi$. Plugging in the estimates $\hat{\pi}_{ij} = x_
 \end{align*}
 as shown above.
 
-## Independence Testing in Two-Way Tables
+## Independence Testing in Multi-Way Tables
 Last time, we derived Wald confidence intervals from the acceptance region of a Wald hypothesis test. We could do the reverse here to to test independence in $2 \times 2$ tables using the Wald confidence. Instead, we will derive an independence test that works more generally for $I \times J$ tables. Instead of a Wald test, we'll use a likelihood ratio test.
 
 Let $\cH_0: \pi_{ij} = \pi_{i \bullet} \pi_{\bullet j}$ for all $i,j$ be our null hypothesis of independence. The null hypothesis imposes a constraint on the set of probabilities $\mbPi$. Rather than taking on any value $\mbPi \in \Delta_{IJ - 1}$, they are constrained to the $\Delta_{I-1} \times \Delta_{J-1}$ subset of probabilities that factor into an outer product of marginal probabilities. 
