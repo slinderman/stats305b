@@ -16,8 +16,8 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
+  <!--
+    this give us a css class that will be invisible only if js is disabled
   -->
   <noscript>
     <style>
@@ -27,10 +27,10 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -40,10 +40,10 @@
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
@@ -66,7 +66,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Discrete Distributions and the Basics of Statistical Inference" href="lectures/01_distributions.html" />
+    <link rel="next" title="Basics of Probability and Statistics" href="lectures/01_distributions.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -168,7 +168,8 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="lectures/01_distributions.html">Discrete Distributions and the Basics of Statistical Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lectures/01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lectures/02_contingency_tables_v2.html">Contingency Tables</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -185,9 +186,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -321,7 +327,10 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#books">Books</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schedule">Schedule</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignments">Assignments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignments">Assignments</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#late-policy">Late Policy</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exams">Exams</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grading">Grading</a></li>
 </ul>
@@ -341,14 +350,15 @@
 <section id="logistics">
 <h2>Logistics<a class="headerlink" href="#logistics" title="Link to this heading">#</a></h2>
 <p>Instructor: Scott Linderman <br>
-TAs: Amber Hu<br>
+TAs: Amber Hu and Michael Salerno<br>
 Term: Winter 2024-25 <br>
 Time: Monday and Wednesday, 1:30-2:50pm <br>
 Location: <a class="reference external" href="https://campus-map.stanford.edu/?srch=Sequoia+Hall+200">Sequoia Hall, Room 200</a>, Stanford University</p>
 <p><strong>Office Hours</strong></p>
 <ul class="simple">
-<li><p>Scott: TBD</p></li>
-<li><p>Amber: TBD</p></li>
+<li><p>Scott: Wed 10-11am, Wu Tsai Neurosciences Institute, 2nd Floor in the Theory Center</p></li>
+<li><p>Michael: Thu, 5-7pm, location TBD</p></li>
+<li><p>Amber: Fri 1:30-3:30pm, location TBD</p></li>
 </ul>
 </section>
 <section id="prerequisites">
@@ -372,88 +382,129 @@ Location: <a class="reference external" href="https://campus-map.stanford.edu/?s
 <thead>
 <tr class="row-odd"><th class="head"><p>Date</p></th>
 <th class="head"><p>Topic</p></th>
-<th class="head"><p>Reading</p></th>
+<th class="head"><p>Slides</p></th>
+<th class="head"><p>Additional Reading</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Jan  6, 2024</p></td>
-<td><p><a class="reference internal" href="lectures/01_distributions.html"><span class="std std-doc">Discrete Distributions and the Basics of Statistical Inference</span></a></p></td>
-<td><p><span id="id1">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 1</p></td>
+<tr class="row-even"><td><p>Mon, Jan  6, 2025</p></td>
+<td><p><a class="reference internal" href="lectures/01_distributions.html"><span class="std std-doc">Basics of Probability and Statistics</span></a> and <a class="reference internal" href="lectures/02_contingency_tables_v2.html"><span class="std std-doc">Contingency Tables</span></a> <br> <strong>HW0 Released</strong></p></td>
+<td><p><a class="reference download internal" download="" href="_downloads/9c68b33cb195804fd5d730575822e120/01-basics.pdf"><span class="xref download myst">download</span></a></p></td>
+<td><p><span id="id1">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 1-3</p></td>
 </tr>
-<tr class="row-odd"><td><p>Jan  8, 2024</p></td>
-<td><p><span class="xref myst">Contingency Tables</span></p></td>
-<td><p><span id="id2">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 2-3</p></td>
-</tr>
-<tr class="row-even"><td><p>Jan 13, 2024</p></td>
+<tr class="row-odd"><td><p>Wed, Jan 8, 2025</p></td>
 <td><p><span class="xref myst">Logistic Regression</span></p></td>
+<td><p></p></td>
+<td><p><span id="id2">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 4-5</p></td>
+</tr>
+<tr class="row-even"><td><p>Fri, Jan 10, 2025</p></td>
+<td><p><span style="color:red"><strong>HW0 Due</strong></span></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Mon, Jan 13, 2025</p></td>
+<td><p><span class="xref myst">Exponential Families</span>  <br> <strong>HW1 Released</strong></p></td>
+<td><p></p></td>
 <td><p><span id="id3">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 4-5</p></td>
 </tr>
-<tr class="row-odd"><td><p>Jan 15, 2024</p></td>
-<td><p><span class="xref myst">Exponential Families</span></p></td>
-<td><p><span id="id4">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 4-5</p></td>
+<tr class="row-even"><td><p>Wed, Jan 25, 2025</p></td>
+<td><p><span class="xref myst">Generalized Linear Models</span></p></td>
+<td><p></p></td>
+<td><p><span id="id4">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 6</p></td>
 </tr>
-<tr class="row-even"><td><p>Jan 20, 2024</p></td>
+<tr class="row-odd"><td><p>Mon, Jan 20, 2025</p></td>
 <td><p><em>MLK Day. No class</em></p></td>
 <td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p>Jan 22, 2024</p></td>
-<td><p><span class="xref myst">Generalized Linear Models</span></p></td>
-<td><p><span id="id5">[<a class="reference internal" href="lectures/99_references.html#id2" title="Alan Agresti. Categorical data analysis. Volume 792. John Wiley &amp; Sons, 2002. URL: https://onlinelibrary.wiley.com/doi/book/10.1002/0471249688.">Agr02</a>]</span> Ch. 6</p></td>
-</tr>
-<tr class="row-even"><td><p>Jan 27, 2024</p></td>
-<td><p><span class="xref myst">Bayesian Inference</span></p></td>
-<td><p><span id="id6">[<a class="reference internal" href="lectures/99_references.html#id12" title="Andrew Gelman, John B Carlin, Hal S Stern, Aki Vehtari, and Donald B Rubin. Bayesian Data Analysis. Chapman and Hall/CRC, 1995.">GCS+95</a>]</span> Ch. 1</p></td>
-</tr>
-<tr class="row-odd"><td><p>Jan 29, 2024</p></td>
-<td><p><span class="xref myst">Bayesian GLMs</span></p></td>
-<td><p><span id="id7">[<a class="reference internal" href="lectures/99_references.html#id5" title="James H Albert and Siddhartha Chib. Bayesian analysis of binary and polychotomous response data. Journal of the American statistical Association, pages 669–679, 1993.">AC93</a>]</span></p></td>
-</tr>
-<tr class="row-even"><td><p>Feb  3, 2024</p></td>
-<td><p><span class="xref myst">L1-regularized GLMs</span></p></td>
-<td><p><span id="id8">[<a class="reference internal" href="lectures/99_references.html#id7" title="Jerome Friedman, Trevor Hastie, and Rob Tibshirani. Regularization paths for generalized linear models via coordinate descent. Journal of statistical software, 33(1):1, 2010.">FHT10</a>]</span> and <span id="id9">[<a class="reference internal" href="lectures/99_references.html#id8" title="Jason D Lee, Yuekai Sun, and Michael A Saunders. Proximal Newton-type methods for minimizing composite functions. SIAM Journal on Optimization, 24(3):1420–1443, 2014.">LSS14</a>]</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>Feb  5, 2024</p></td>
-<td><p><strong>Midterm (in class)</strong></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p>Feb 10, 2024</p></td>
-<td><p><span class="xref myst">Mixture Models and EM</span></p></td>
-<td><p><span id="id10">[<a class="reference internal" href="lectures/99_references.html#id15" title="Christopher Bishop. Pattern Recognition and Machine Learning. Springer, 2006.">Bis06</a>]</span> Ch. 9</p></td>
+<tr class="row-even"><td><p>Wed, Feb  22, 2025</p></td>
+<td><p><span class="xref myst">L1-regularized GLMs</span></p></td>
+<td><p></p></td>
+<td><p><span id="id5">[<a class="reference internal" href="lectures/99_references.html#id7" title="Jerome Friedman, Trevor Hastie, and Rob Tibshirani. Regularization paths for generalized linear models via coordinate descent. Journal of statistical software, 33(1):1, 2010.">FHT10</a>]</span> and <span id="id6">[<a class="reference internal" href="lectures/99_references.html#id8" title="Jason D Lee, Yuekai Sun, and Michael A Saunders. Proximal Newton-type methods for minimizing composite functions. SIAM Journal on Optimization, 24(3):1420–1443, 2014.">LSS14</a>]</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>Feb 12, 2024</p></td>
+<tr class="row-odd"><td><p>Fri, Jan 24, 2025</p></td>
+<td><p><span style="color:red"><strong>HW1 Due</strong></span></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Mon, Jan 27, 2025</p></td>
+<td><p><span class="xref myst">Bayesian Inference</span> <br> <strong>HW2 Released</strong></p></td>
+<td><p></p></td>
+<td><p><span id="id7">[<a class="reference internal" href="lectures/99_references.html#id12" title="Andrew Gelman, John B Carlin, Hal S Stern, Aki Vehtari, and Donald B Rubin. Bayesian Data Analysis. Chapman and Hall/CRC, 1995.">GCS+95</a>]</span> Ch. 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wed, Jan 29, 2025</p></td>
+<td><p>Markov Chain Monte Carlo</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Mon, Feb  3, 2025</p></td>
+<td><p>Variational Inference</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Wed, Feb  5, 2025</p></td>
+<td><p><span style="color:red"><strong>Midterm Exam (in class)</strong></span></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Mon, Feb 10, 2025</p></td>
+<td><p><span class="xref myst">Mixture Models and EM</span> <br> <span style="color:red"><strong>HW2 Due</strong></span>; <strong>HW3 Released</strong></p></td>
+<td><p></p></td>
+<td><p><span id="id8">[<a class="reference internal" href="lectures/99_references.html#id15" title="Christopher Bishop. Pattern Recognition and Machine Learning. Springer, 2006.">Bis06</a>]</span> Ch. 9</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wed, Feb 12, 2025</p></td>
 <td><p><span class="xref myst">Hidden Markov Models</span></p></td>
-<td><p><span id="id11">[<a class="reference internal" href="lectures/99_references.html#id15" title="Christopher Bishop. Pattern Recognition and Machine Learning. Springer, 2006.">Bis06</a>]</span> Ch. 13</p></td>
+<td><p></p></td>
+<td><p><span id="id9">[<a class="reference internal" href="lectures/99_references.html#id15" title="Christopher Bishop. Pattern Recognition and Machine Learning. Springer, 2006.">Bis06</a>]</span> Ch. 13</p></td>
 </tr>
-<tr class="row-even"><td><p>Feb 17, 2024</p></td>
+<tr class="row-even"><td><p>Mon, Feb 17, 2025</p></td>
 <td><p><em>Presidents’ Day. No class</em></p></td>
 <td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p>Feb 19, 2024</p></td>
-<td><p><span class="xref myst">Variational Autoencoders</span> (<span class="xref myst">Demo</span>)</p></td>
-<td><p><span id="id12">[<a class="reference internal" href="lectures/99_references.html#id16" title="Diederik P Kingma and Max Welling. An introduction to variational autoencoders. Foundations and Trends® in Machine Learning, 12(4):307–392, 2019.">KW19</a>]</span> Ch.1-2</p></td>
-</tr>
-<tr class="row-even"><td><p>Feb 24, 2024</p></td>
-<td><p><span class="xref myst">Recurrent Neural Networks</span></p></td>
-<td><p><span id="id13">[<a class="reference internal" href="lectures/99_references.html#id17" title="Ian Goodfellow, Yoshua Bengio, and Aaron Courville. Deep Learning. MIT Press, 2016. http://www.deeplearningbook.org.">GBC16</a>]</span> Ch. 10</p></td>
-</tr>
-<tr class="row-odd"><td><p>Feb 26, 2024</p></td>
-<td><p><span class="xref myst">Tranformers</span></p></td>
-<td><p><span id="id14">[<a class="reference internal" href="lectures/99_references.html#id18" title="Richard E Turner. An introduction to transformers. arXiv preprint arXiv:2304.10557, 2023.">Tur23</a>]</span></p></td>
-</tr>
-<tr class="row-even"><td><p>Mar  3, 2024</p></td>
-<td><p><a class="reference download internal" download="" href="_downloads/6f247cee574a4a6006a07ba0462762e5/14_ssm.pdf"><span class="xref download myst">State Space Layers (S4, S5, Mamba)</span></a> <br> <em>Guest lecture by <a class="reference external" href="https://jimmysmith1919.github.io/">Jimmy Smith</a></em></p></td>
-<td><p><span id="id15">[<a class="reference internal" href="lectures/99_references.html#id19" title="Jimmy T.H. Smith, Andrew Warrington, and Scott Linderman. Simplified state space layers for sequence modeling. In The Eleventh International Conference on Learning Representations. 2023.">SWL23</a>]</span> and <span id="id16">[<a class="reference internal" href="lectures/99_references.html#id20" title="Albert Gu and Tri Dao. Mamba: linear-time sequence modeling with selective state spaces. arXiv preprint arXiv:2312.00752, 2023.">GD23</a>]</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>Mar  5, 2024</p></td>
-<td><p><span class="xref myst">Random Graph Models</span></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p>Mar 10, 2024</p></td>
-<td><p><span class="xref myst">Denoising Diffusion Models</span></p></td>
-<td><p><span id="id17">[<a class="reference internal" href="lectures/99_references.html#id21" title="Richard E Turner, Cristiana-Diana Diaconu, Stratis Markou, Aliaksandra Shysheya, Andrew YK Foong, and Bruno Mlodozeniec. Denoising diffusion probabilistic models in six simple steps. arXiv preprint arXiv:2402.04384, 2024.">TDM+24</a>]</span></p></td>
+<tr class="row-odd"><td><p>Wed, Feb 19, 2025</p></td>
+<td><p>Linear Dynamical Systems</p></td>
+<td><p></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p>Mar 12, 2024</p></td>
+<tr class="row-even"><td><p>Fri, Feb 21, 2025</p></td>
+<td><p><span style="color:red"><strong>HW3 Due</strong></span></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Mon, Feb 24, 2025</p></td>
+<td><p><span class="xref myst">Variational Autoencoders</span> <br> <strong>HW4 Released</strong></p></td>
+<td><p></p></td>
+<td><p><span id="id10">[<a class="reference internal" href="lectures/99_references.html#id16" title="Diederik P Kingma and Max Welling. An introduction to variational autoencoders. Foundations and Trends® in Machine Learning, 12(4):307–392, 2019.">KW19</a>]</span> Ch.1-2</p></td>
+</tr>
+<tr class="row-even"><td><p>Wed, Feb 26, 2025</p></td>
+<td><p><span class="xref myst">Tranformers</span></p></td>
+<td><p></p></td>
+<td><p><span id="id11">[<a class="reference internal" href="lectures/99_references.html#id18" title="Richard E Turner. An introduction to transformers. arXiv preprint arXiv:2304.10557, 2023.">Tur23</a>]</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Mon, Mar  3, 2025</p></td>
+<td><p><a class="reference download internal" download="" href="_downloads/6f247cee574a4a6006a07ba0462762e5/14_ssm.pdf"><span class="xref download myst">State Space Layers (S4, S5, Mamba)</span></a></p></td>
+<td><p></p></td>
+<td><p><span id="id12">[<a class="reference internal" href="lectures/99_references.html#id19" title="Jimmy T.H. Smith, Andrew Warrington, and Scott Linderman. Simplified state space layers for sequence modeling. In The Eleventh International Conference on Learning Representations. 2023.">SWL23</a>]</span> and <span id="id13">[<a class="reference internal" href="lectures/99_references.html#id20" title="Albert Gu and Tri Dao. Mamba: linear-time sequence modeling with selective state spaces. arXiv preprint arXiv:2312.00752, 2023.">GD23</a>]</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Wed, Mar  5, 2025</p></td>
+<td><p><span class="xref myst">Denoising Diffusion Models</span></p></td>
+<td><p></p></td>
+<td><p><span id="id14">[<a class="reference internal" href="lectures/99_references.html#id21" title="Richard E Turner, Cristiana-Diana Diaconu, Stratis Markou, Aliaksandra Shysheya, Andrew YK Foong, and Bruno Mlodozeniec. Denoising diffusion probabilistic models in six simple steps. arXiv preprint arXiv:2402.04384, 2024.">TDM+24</a>]</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Mon, Mar 10, 2025</p></td>
+<td><p>Point Processes</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Wed, Mar 12, 2025</p></td>
 <td><p>Wrap Up</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Fri, Mar 14, 2025</p></td>
+<td><p><span style="color:red"><strong>HW4 Due</strong></span></p></td>
+<td><p></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -488,6 +539,10 @@ Location: <a class="reference external" href="https://campus-map.stanford.edu/?s
   - Released Wed, Feb 28, 2024
   - Due Fri, Mar 15, 2024 at 11:59pm
 -->
+<section id="late-policy">
+<h3>Late Policy<a class="headerlink" href="#late-policy" title="Link to this heading">#</a></h3>
+<p>We will allow 5 late days to be used as needed throughout the quarter.</p>
+</section>
 </section>
 <section id="exams">
 <h2>Exams<a class="headerlink" href="#exams" title="Link to this heading">#</a></h2>
@@ -580,7 +635,7 @@ Location: <a class="reference external" href="https://campus-map.stanford.edu/?s
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Discrete Distributions and the Basics of Statistical Inference</p>
+        <p class="prev-next-title">Basics of Probability and Statistics</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -605,7 +660,10 @@ Location: <a class="reference external" href="https://campus-map.stanford.edu/?s
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#books">Books</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schedule">Schedule</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignments">Assignments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignments">Assignments</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#late-policy">Late Policy</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exams">Exams</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grading">Grading</a></li>
 </ul>
@@ -632,7 +690,7 @@ By Scott Linderman
 
   <p class="copyright">
     
-      © Copyright 2024.
+      © Copyright 2025.
       <br/>
     
   </p>
@@ -656,8 +714,8 @@ By Scott Linderman
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

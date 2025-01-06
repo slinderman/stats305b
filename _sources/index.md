@@ -4,14 +4,15 @@ Welcome to **STATS 305B**! Officially, this course is called _Applied Statistics
 
 ## Logistics
 Instructor: Scott Linderman <br>
-TAs: Amber Hu<br>
+TAs: Amber Hu and Michael Salerno<br>
 Term: Winter 2024-25 <br>
 Time: Monday and Wednesday, 1:30-2:50pm <br>
 Location: [Sequoia Hall, Room 200](https://campus-map.stanford.edu/?srch=Sequoia+Hall+200), Stanford University
 
 **Office Hours**
-- Scott: TBD
-- Amber: TBD
+- Scott: Wed 10-11am, Wu Tsai Neurosciences Institute, 2nd Floor in the Theory Center
+- Michael: Thu, 5-7pm, location TBD
+- Amber: Fri 1:30-3:30pm, location TBD
 
 
 ## Prerequisites
@@ -30,28 +31,32 @@ We will also cover material from research papers.
 
 _Please note that this is a **tentative** schedule. It may change slightly depending on our pace._
 
-| Date         | Topic                                  | Reading |
-| ------------ | -------------------------------------- | ------- |
-| Jan  6, 2024 | [Discrete Distributions and the Basics of Statistical Inference](lectures/01_distributions.ipynb) | {cite:p}`agresti2002categorical` Ch. 1 |
-| Jan  8, 2024 | [Contingency Tables](lectures/02_contingency_tables.md) | {cite:p}`agresti2002categorical` Ch. 2-3 |
-| Jan 13, 2024 | [Logistic Regression](lectures/03_logreg.md) | {cite:p}`agresti2002categorical` Ch. 4-5 | 
-| Jan 15, 2024 | [Exponential Families](lectures/04_expfam.md) | {cite:p}`agresti2002categorical` Ch. 4-5 |
-| Jan 20, 2024 | _MLK Day. No class_                    |  | 
-| Jan 22, 2024 | [Generalized Linear Models](lectures/05_glms.md) | {cite:p}`agresti2002categorical` Ch. 6 | 
-| Jan 27, 2024 | [Bayesian Inference](lectures/06_bayes.md) | {cite:p}`gelman1995bayesian` Ch. 1 |
-| Jan 29, 2024 | [Bayesian GLMs](lectures/07_bayes_glms_soln.ipynb) | {cite:p}`albert1993bayesian` |
-| Feb  3, 2024 | [L1-regularized GLMs](lectures/08_sparse_glms.md) | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
-| Feb  5, 2024 | **Midterm (in class)**                 |         |
-| Feb 10, 2024 | [Mixture Models and EM](lectures/09_mixtures.md) | {cite:p}`bishop2006pattern` Ch. 9 |
-| Feb 12, 2024 | [Hidden Markov Models](lectures/10_hmms.md) | {cite:p}`bishop2006pattern` Ch. 13 | 
-| Feb 17, 2024 | _Presidents' Day. No class_            |         |
-| Feb 19, 2024 | [Variational Autoencoders](lectures/11_vaes.md) ([Demo](lectures/11_vaes_demo.ipynb)) | {cite:p}`kingma2019introduction` Ch.1-2 |
-| Feb 24, 2024 | [Recurrent Neural Networks](lectures/12_rnns.md) | {cite:p}`goodfellow2016deep` Ch. 10 |
-| Feb 26, 2024 | [Tranformers](lectures/13_transformers.md) | {cite:p}`turner2023introduction` |
-| Mar  3, 2024 | [State Space Layers (S4, S5, Mamba)](lectures/14_ssm.pdf) <br> _Guest lecture by [Jimmy Smith](https://jimmysmith1919.github.io/)_     | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
-| Mar  5, 2024 | [Random Graph Models](lectures/15_graphs.md) |         |
-| Mar 10, 2024 | [Denoising Diffusion Models](lectures/16_diffusion.md) | {cite:p}`turner2024denoising` | 
-| Mar 12, 2024 | Wrap Up | |
+| Date         | Topic                                  | Slides | Additional Reading |
+| ------------ | -------------------------------------- | ------ | ------------------ |
+| Mon, Jan  6, 2025 | [Basics of Probability and Statistics](lectures/01_distributions.ipynb) and [Contingency Tables](lectures/02_contingency_tables_v2.ipynb) <br> **HW0 Released** | [download](slides/01-basics.pdf)| {cite:p}`agresti2002categorical` Ch. 1-3 |
+| Wed, Jan 8, 2025 | [Logistic Regression](lectures/03_logreg.md) | | {cite:p}`agresti2002categorical` Ch. 4-5 | 
+| Fri, Jan 10, 2025 |<span style="color:red">**HW0 Due**</span> | |
+| Mon, Jan 13, 2025 | [Exponential Families](lectures/04_expfam.md)  <br> **HW1 Released** | | {cite:p}`agresti2002categorical` Ch. 4-5 |
+| Wed, Jan 25, 2025 | [Generalized Linear Models](lectures/05_glms.md) | | {cite:p}`agresti2002categorical` Ch. 6 | 
+| Mon, Jan 20, 2025 | _MLK Day. No class_                    |  |  |
+| Wed, Feb  22, 2025 | [L1-regularized GLMs](lectures/08_sparse_glms.md) | | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
+| Fri, Jan 24, 2025 | <span style="color:red">**HW1 Due**</span> | | 
+| Mon, Jan 27, 2025 | [Bayesian Inference](lectures/06_bayes.md) <br> **HW2 Released** | | {cite:p}`gelman1995bayesian` Ch. 1 |
+| Wed, Jan 29, 2025 | Markov Chain Monte Carlo |  | | 
+| Mon, Feb  3, 2025 | Variational Inference | | | 
+| Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam (in class)**</span> | | |
+| Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/09_mixtures.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 9 |
+| Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) | | {cite:p}`bishop2006pattern` Ch. 13 | 
+| Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
+| Wed, Feb 19, 2025 | Linear Dynamical Systems | | |
+| Fri, Feb 21, 2025 | <span style="color:red">**HW3 Due**</span> | | |
+| Mon, Feb 24, 2025 | [Variational Autoencoders](lectures/11_vaes.md) <br> **HW4 Released**  | | {cite:p}`kingma2019introduction` Ch.1-2 |
+| Wed, Feb 26, 2025 | [Tranformers](lectures/13_transformers.md) | | {cite:p}`turner2023introduction` |
+| Mon, Mar  3, 2025 | [State Space Layers (S4, S5, Mamba)](lectures/14_ssm.pdf)  |  | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
+| Wed, Mar  5, 2025 | [Denoising Diffusion Models](lectures/16_diffusion.md) | | {cite:p}`turner2024denoising` | 
+| Mon, Mar 10, 2025 | Point Processes | | |
+| Wed, Mar 12, 2025 | Wrap Up | | |
+| Fri, Mar 14, 2025 | <span style="color:red">**HW4 Due**</span> | |  |
 
 ## Assignments
 There will be 5 assignments due roughly every other Friday. They will not be equally weighted. The first one is just a primer to get you up to speed; the last one will be a bit more substantial than the rest.
@@ -76,6 +81,9 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
   - Released Wed, Feb 28, 2024
   - Due Fri, Mar 15, 2024 at 11:59pm
 -->
+
+### Late Policy
+We will allow 5 late days to be used as needed throughout the quarter. 
 
 ## Exams
 - **Midterm Exam**: In class on TBD
