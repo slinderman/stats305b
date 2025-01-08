@@ -1,0 +1,1288 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Logistic Regression &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/03_logreg';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Contingency Tables" href="02_contingency_tables_v2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Logistic Regression</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2024/lectures/03_logreg.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/03_logreg.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Logistic Regression</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contingency-tables-with-binary-responses">Contingency Tables with Binary Responses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-two-many">One, Two, Many…</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-regression">Linear Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hacky-parameter-estimation-with-ols">Hacky Parameter Estimation with OLS</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demo">Demo</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Demo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-the-mle">Deriving the MLE</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-gradient">Computing the Gradient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convexity-of-the-log-likelhood">Convexity of the Log Likelhood</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pathologies-in-the-separable-regime">Pathologies in the Separable Regime</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#l-2-regularization"><span class="math notranslate nohighlight">\(L_2\)</span>-Regularization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-hyperparameter">Choosing the Hyperparameter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-perspective">Bayesian Perspective</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-s-method">Newton’s Method</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iteratively-reweighted-least-squares">Iteratively Reweighted Least Squares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-covariance-of-mle">Asymptotic Covariance of MLE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence-rates">Convergence Rates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-gradient-descent">Converge Rate of Gradient Descent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-gradient-descent-with-regularization">Converge Rate of Gradient Descent with Regularization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-newton-s-method">Converge Rate of Newton’s Method</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="logistic-regression">
+<h1>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Link to this heading">#</a></h1>
+<p>We started with basic discrete distributions for single random variables, and then we modeled pairs of categorical variables with continency tables. Here, we build models for predicting categorical responses given several explanatory variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setup</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Normal</span><span class="p">,</span> <span class="n">Bernoulli</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="contingency-tables-with-binary-responses">
+<h2>Contingency Tables with Binary Responses<a class="headerlink" href="#contingency-tables-with-binary-responses" title="Link to this heading">#</a></h2>
+<p>A special case of contingency table analyses is when <span class="math notranslate nohighlight">\(X \in \{1, \ldots, I\}\)</span> corresponds to a categorical feature (e.g., to which of <span class="math notranslate nohighlight">\(I\)</span> groups a data point belongs) and <span class="math notranslate nohighlight">\(Y \in \{0,1\}\)</span> is a binary response.</p>
+<!-- Contingency tables are often used to compare two groups $X \in \{0,1\}$ based on a binary response variables $Y \in \{0,1\}$. The resulting tables are 2x2. 
+The association between $X$ and $Y$ can be summarized with a variety of statistics: the difference of proportions, the relative risk, and the odds ratio. We will focus on the latter.
+
+For a Bernoulli random variable with probability $p$, the odds are defined as 
+\begin{align*}
+\Omega = \frac{p}{1 - p}. 
+\end{align*}
+Inversely, $p = \frac{\Omega}{\Omega + 1}$. -->
+<p>The corresponding tables are <span class="math notranslate nohighlight">\(I \times 2\)</span>. Normalizing each row yields a Bernoulli conditional distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+Y \mid X=i &amp;\sim \mathrm{Bern}(\pi_{1|i}).
+\end{align*}\]</div>
+<p>where, <span class="math notranslate nohighlight">\(\pi_{1|i} = \Pr(Y=1 \mid X=i)\)</span> or, equivalently, <span class="math notranslate nohighlight">\(\pi_{1|i} = \E[Y \mid X=i]\)</span>.</p>
+<p>The conditional distributions are the primary objects of interest when our goal is to make predictions. They can also be used to test for independence by testing the homogeneity of conditionals.</p>
+<!-- 
+To test whether $Y$ is independent of $X$, we can assess whether these conditionals are homogeneous, i.e., the same for all values of $X$. 
+-->
+<!-- \pi_{1|i} = \frac{\pi_{i1}}{\pi_{i0} + \pi_{i1}} = \Pr(Y=1 \mid X=i) \equiv \E[Y \mid X=i]. -->
+<!-- More generally, we can write the conditional distribution for both values of $X$ as,
+\begin{align*}
+Y \mid X=x &\sim \mathrm{Bern}(\pi(x))
+\end{align*}
+where
+\begin{align*}
+\pi(x) 
+&= \pi_{1|1} x + \pi_{1|0} (1-x) \\
+&= (\pi_{1|1} - \pi_{1|0}) x + \pi_{1|0}
+\end{align*}
+
+
+The odds for row $i$ are,
+\begin{align*}
+\Omega_i = \frac{\pi_{1|i}}{1 - \pi_{1|i}} 
+= \frac{\pi_{i1}}{\pi_{i0}}.
+\end{align*}
+The odds are non-negative, $\Omega_i \in [0, \infty)$. 
+
+In practice, it is often more convenient to work with the log odds, $\log \Pr(Y=1 \mid X=i) = \log \Omega_i$, which are real valued.  -->
+</section>
+<section id="one-two-many">
+<h2>One, Two, Many…<a class="headerlink" href="#one-two-many" title="Link to this heading">#</a></h2>
+<p>What if we have more than one feature, <span class="math notranslate nohighlight">\(X_1, \ldots, X_p\)</span>? We could construct a multi-dimensional contingency table to estimate the joint distribution over <span class="math notranslate nohighlight">\((X_1,\ldots, X_p,Y)\)</span>, but we quickly encounter the curse of dimensionality: if each feature takes on <span class="math notranslate nohighlight">\(K\)</span> values, there are <span class="math notranslate nohighlight">\(\cO(K^D)\)</span> cells in the table.</p>
+<p>Moreover, what if the features take on continuous values? Then the notion of a finite table no longer makes sense.</p>
+<p>Instead, let’s try to model the conditional distribution directly. Let <span class="math notranslate nohighlight">\(Y \in \{0,1\}\)</span> denote a binary response and let <span class="math notranslate nohighlight">\(\mbX \in \reals^p\)</span> denote associated covariates. For example, <span class="math notranslate nohighlight">\(Y\)</span> could denote whether or not your favorite football team wins their match, and <span class="math notranslate nohighlight">\(X\)</span> could represent features of the match like whether its a home or away game, who their opponent is, etc. We will model the conditional distribution of <span class="math notranslate nohighlight">\(Y\)</span> given the covariates,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+Y \mid \mbX = \mbx &amp;\sim \mathrm{Bern}(\pi(\mbx))
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi(\mbx) &amp;= \Pr(Y = 1 \mid \mbX=\mbx) = \E[Y \mid \mbX=\mbx].
+\end{align*}\]</div>
+<p>This is a standard regression setup. The modeling problem boils down to choosing the functional form of <span class="math notranslate nohighlight">\(\pi(\mbx)\)</span>.</p>
+</section>
+<section id="linear-regression">
+<h2>Linear Regression<a class="headerlink" href="#linear-regression" title="Link to this heading">#</a></h2>
+<p>If you took STATS 305A, you know pretty much everything there is to know about linear regression with continuous response variables, <span class="math notranslate nohighlight">\(Y \in \reals\)</span>. Why don’t we just apply that same model to binary responses? Specifically, let,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi(\mbx) &amp;= \mbbeta^\top \mbx = \sum_{j=1}^p \beta_j x_j. 
+\end{align*}\]</div>
+<p>The obvious problem is that this linear model produces probabilities or expectations <span class="math notranslate nohighlight">\(\pi(\mbx) \in \reals\)</span> instead of just over the valid range <span class="math notranslate nohighlight">\([0,1]\)</span>, which is clearly misspecified!</p>
+<!-- 
+Then we'll just use ordinary least squares (OLS) to estimate $\hat{\mbbeta}$. What could go wrong? After all, $\{0,1\} \subset \reals$... 
+
+There are a few issues:
+1. The linear model produces probabilities $\pi(\mbx) \in \reals$ instead of just over the valid range $[0,1]$, so the model is necessarily misspecified.
+2. Moreover, the variance of a Bernoulli random variable changes as a function of the probability,
+    \begin{align*}
+    \Var[Y \mid \mbX=\mbx] = \pi(\mbx) (1 - \pi(\mbx)),
+    \end{align*}
+    which violates the homoskedasticity assumption under which OLS is optimal. 
+
+Nevertheless, it's not a totally crazy thing to do. When the estimated probabilities are in an intermediate range (say, 0.3-0.7), the outputs aren't that different from what we obtain with the alternative models below. But we can do better. -->
+</section>
+<section id="id1">
+<h2>Logistic Regression<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>The idea is simple: keep the linear part of linear regression, but apply a <strong>mean (aka inverse link) function</strong>, <span class="math notranslate nohighlight">\(f: \reals \mapsto [0,1]\)</span>, to ensure <span class="math notranslate nohighlight">\(\pi(\mbx)\)</span> returns valid probabilities,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi(\mbx) &amp;= f(\mbbeta^\top \mbx).
+\end{align*}\]</div>
+<p>There are infinitely many squashing nonlinearities that we could choose for <span class="math notranslate nohighlight">\(f\)</span>, but a particularly attractive choice is the <strong>logistic (aka sigmoid) function</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+f(a) = \frac{e^a}{1 + e^a} = \frac{1}{1 + e^{-a}} \triangleq \sigma(a).
+\end{align*}\]</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$a$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\sigma(a)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/8c170be6ce4c2d9d706b7d592ede69f4925e77f366ca58a306ece354ae3a90ff.png" src="../_images/8c170be6ce4c2d9d706b7d592ede69f4925e77f366ca58a306ece354ae3a90ff.png" />
+</div>
+</div>
+<p>One nice feature of the logistic function is that it is monotonically increasing, so increasing in <span class="math notranslate nohighlight">\(\mbbeta^\top \mbx\)</span> yield larger probability estimates. That also means that we can invert the sigmoid function. In doing so, we find that the linear component of the model <span class="math notranslate nohighlight">\(\mbbeta^\top \mbx\)</span> correspond to the <strong>log odds</strong> of the binary response since the inverse of the sigmoid function is the <strong>logit function</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta^\top \mbx = \sigma^{-1}(\pi(\mbx)) &amp;= \log \frac{\pi(\mbx)}{1 - \pi(\mbx)}.
+\end{align*}\]</div>
+<p>Finally, we’ll see that the logistic function leads to some simpler mathematical calculations when it comes to parameter estimation and inference.</p>
+<p>Another common mean function is the Gaussian CDF, and we’ll consider that in a later chapter.</p>
+<!-- 
+## Relationship with Two-Way Contingency Tables
+
+Suppose we have a single, binary covariate $X \in \{0,1\}$. In the last chapter, we constructed 2x2 contingency tables for such settings, and we used the log odds ratio to measure the association between $X$ and $Y$. We could do the same thing with logistic regression.
+
+First, we need to extend the model with an intercept term,
+\begin{align*}
+\pi(x) &= \sigma \left(\beta_0 + \beta_1 x \right),
+\end{align*}
+for $x \in \{0,1\}$.
+
+:::{admonition} Note about intercepts
+:class: warning
+We explicitly separated the intercept term above, but in general we can assume that the covariates include a constant term, $\mbx = (1, x_1, \ldots, x_p)^\top \in \reals^{p+1}$. Then the first coefficient in $\mbbeta = (\beta_0, \beta_1, \ldots, \beta_p)^\top \in \reals^{p+1}$ corresponds to the intercept.
+:::
+
+Under this model, $\beta_1$ specifies the log odds,
+\begin{align*}
+\beta_1 = \sigma^{-1}(\pi(1)) - \sigma^{-1}(\pi(0)) 
+= \log \frac{\pi(1) / (1 - \pi(1))}{\pi(0) / (1 - \pi(0))} 
+= \log \theta.
+\end{align*}
+In other words, the coefficients of the logistic regression model correspond to the log odds in a contingency table. -->
+</section>
+<section id="hacky-parameter-estimation-with-ols">
+<h2>Hacky Parameter Estimation with OLS<a class="headerlink" href="#hacky-parameter-estimation-with-ols" title="Link to this heading">#</a></h2>
+<p>How do we estimate the parameters, <span class="math notranslate nohighlight">\(\hat{\mbbeta}\)</span>? If the model were linear, then our first inclination might be to use ordinary least squares (OLS). Of course, the sigmoidal function above renders the model nonlinear, but what if we just used a Taylor approximation around the origin,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sigma(a) &amp;\approx \sigma(0) + \sigma'(0) a 
+= \frac{1}{2} + \frac{a}{4}
+\end{align*}\]</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\sigma(a)$)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Taylor approx.&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$a$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\sigma(a)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/291cadfc4d88af354b65f9b097c869aa23fdc7d289553a6da4c2032a3dbfb2ed.png" src="../_images/291cadfc4d88af354b65f9b097c869aa23fdc7d289553a6da4c2032a3dbfb2ed.png" />
+</div>
+</div>
+<p>Then under this model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[Y \mid \mbX=\mbx] 
+&amp;\approx \frac{1}{2} + \frac{\mbbeta^\top \mbx}{4} 
+\end{align*}\]</div>
+<p>or equivalently,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[Z \mid \mbX=\mbx] 
+&amp;\approx \mbbeta^\top \mbx
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(Z = 4 (Y - \tfrac{1}{2}) \in \{-2, +2\}\)</span> is an adjusted response variable.</p>
+<p>Given a set of <span class="math notranslate nohighlight">\(n\)</span> observations of features and (adjusted) responses, <span class="math notranslate nohighlight">\(\{\mbx_i, z_i\}_{i=1}^n\)</span>, the OLS estimate is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\mbbeta}_{\textsf{OLS}} &amp;= \left( \sum_{i=1}^n \mbx_i \mbx_i^\top \right)^{-1} \left(\sum_{i=1}^n \mbx_i z_i \right)
+\end{align*}\]</div>
+<section id="demo">
+<h3>Demo<a class="headerlink" href="#demo" title="Link to this heading">#</a></h3>
+<p>Let’s try it out for a simulated dataset with scalar covariates <span class="math notranslate nohighlight">\(X_i \sim \mathrm{N}(0,1)\)</span>. We’ll simulate responses <span class="math notranslate nohighlight">\(Y_i \mid X_i = x_i \sim \mathrm{Bern}(\sigma(\beta^* x_i))\)</span> for a few values of <span class="math notranslate nohighlight">\(\beta^*\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sample_and_fit_ols</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">beta_true</span><span class="p">):</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">n</span><span class="p">,))</span>                   <span class="c1"># covariates</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">X</span> <span class="o">*</span> <span class="n">beta_true</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>    <span class="c1"># binary outcomes</span>
+
+    <span class="c1"># Fit OLS</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Y</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">beta_ols</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X</span> <span class="o">*</span> <span class="n">Z</span><span class="p">)</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">beta_ols</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate, fit, and plot a synthetic dataset</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">305</span><span class="o">+</span><span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">beta_true</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">beta_ols</span> <span class="o">=</span> <span class="n">sample_and_fit_ols</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">beta_true</span><span class="p">)</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="s2">&quot;ko&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$y_i$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">xs</span> <span class="o">*</span> <span class="n">beta_true</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta^*$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">xs</span> <span class="o">*</span> <span class="n">beta_ols</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat{\beta}_{\mathsf</span><span class="si">{OLS}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\mathbb</span><span class="si">{E}</span><span class="s2">[Y \mid X=x; \beta]$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x3379b3dc0&gt;
+</pre></div>
+</div>
+<img alt="../_images/76dff2b434ee599110e6d2dbf5116430f238270d77d0726da25529720ba8f849.png" src="../_images/76dff2b434ee599110e6d2dbf5116430f238270d77d0726da25529720ba8f849.png" />
+</div>
+</div>
+<p>Not too shabby! Let’s try it with a bunch of simulated datasets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">beta_olss</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample_and_fit_ols</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">beta_true</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">beta_olss</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">beta_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta^*$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\hat{\beta}_{\mathsf</span><span class="si">{OLS}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Density&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Density&#39;)
+</pre></div>
+</div>
+<img alt="../_images/673ce93eacba7c82717807753e63dbab3e00b8a121b2648d061b7ab7a665d144.png" src="../_images/673ce93eacba7c82717807753e63dbab3e00b8a121b2648d061b7ab7a665d144.png" />
+</div>
+</div>
+<p>It looks a bit biased, but it’s not terrible.</p>
+<p>What if we try for other values of <span class="math notranslate nohighlight">\(\beta^*\)</span>?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">beta_true</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]):</span>
+    <span class="n">beta_olss</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample_and_fit_ols</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">beta_true</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">beta_olss</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">beta_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta^*$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\hat{\beta}_{\mathsf</span><span class="si">{OLS}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Density&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\beta^* = </span><span class="si">{</span><span class="n">beta_true</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d8cc7683a9c2af3c83f8f4c7c80ed118bd76f31c9572095368e79ea35690187f.png" src="../_images/d8cc7683a9c2af3c83f8f4c7c80ed118bd76f31c9572095368e79ea35690187f.png" />
+</div>
+</div>
+<p>Uh oh… 😬</p>
+<div class="tip admonition">
+<p class="admonition-title">Question</p>
+<p>Why do you think the OLS estimator becomes more biased as <span class="math notranslate nohighlight">\(\beta^*\)</span> grows?</p>
+</div>
+</section>
+</section>
+<section id="maximum-likelihood-estimation">
+<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Link to this heading">#</a></h2>
+<p>Let’s try a more principled approach: maximum likelihood estimation. For standard linear regression with independent Gaussian responses and homoskedastic noise, <span class="math notranslate nohighlight">\(\hat{\mbbeta}_{\mathsf{MLE}} = \hat{\mbbeta}_{\mathsf{OLS}}\)</span>. Unfortunately, for logistic regression, there isn’t a closed form for <span class="math notranslate nohighlight">\(\hat{\mbbeta}_{\mathsf{MLE}}\)</span>. However, we can use standard optimization techniques to compute it.</p>
+<p>There are plenty of standard implementations of maximum likelihood estimation for logistic regression models. Let’s see how scikit-learn’s implementation fares on the simulated datasets above.</p>
+<section id="id2">
+<h3>Demo<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_and_fit_mle</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">beta_true</span><span class="p">):</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">n</span><span class="p">,))</span>                   <span class="c1"># covariates</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">X</span> <span class="o">*</span> <span class="n">beta_true</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>      <span class="c1"># binary outcomes</span>
+
+    <span class="c1"># Fit MLE</span>
+    <span class="n">beta_mle</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">beta_mle</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50</span> 
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">beta_true</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]):</span>
+    <span class="n">beta_mles</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample_and_fit_mle</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">beta_true</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">beta_mles</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">beta_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta^*$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\hat{\beta}_{\mathsf</span><span class="si">{OLS}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Density&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\beta^* = </span><span class="si">{</span><span class="n">beta_true</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2685487e389d510adc73791b3c3902de76673af5fd9e3e11a527a22f2723cfda.png" src="../_images/2685487e389d510adc73791b3c3902de76673af5fd9e3e11a527a22f2723cfda.png" />
+</div>
+</div>
+<p>Much better!</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Try fitting the MLE for different numbers of data points, <span class="math notranslate nohighlight">\(n\)</span>. Is it asymptotically biased?</p>
+</div>
+</section>
+<section id="deriving-the-mle">
+<h3>Deriving the MLE<a class="headerlink" href="#deriving-the-mle" title="Link to this heading">#</a></h3>
+<p>Maximizing the likelihood is equivalent to minimizing the (average) negative log likelihood for a collection of covariates and responses, <span class="math notranslate nohighlight">\(\{\mbx_i, y_i\}_{i=1}^n\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta) 
+&amp;= - \frac{1}{n} \sum_{i=1}^n \log \mathrm{Bern}(y_i; \pi(\mbx_i)) \\
+&amp;= - \frac{1}{n} \sum_{i=1}^n y_i \log \pi(\mbx_i) + (1 - y_i) \log (1 - \pi(\mbx_i)) \\
+&amp;= - \frac{1}{n} \sum_{i=1}^n y_i \log \frac{\pi(\mbx_i)}{1 - \pi(\mbx_i)} + \log (1 - \pi(\mbx_i)).
+\end{align*}\]</div>
+<p>Now let’s plug in the definition of <span class="math notranslate nohighlight">\(\pi(\mbx)\)</span>. The first term is just the log odds, which we already showed is equal to <span class="math notranslate nohighlight">\(\mbbeta^\top \mbx\)</span>, the linear component of the model. The second term simplifies too.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta) 
+&amp;= - \frac{1}{n} \sum_{i=1}^n \left[y_i \mbbeta^\top \mbx_i + \log \left(1 - \frac{e^{\mbbeta^\top \mbx_i}}{1 + e^{\mbbeta^\top \mbx_i}} \right) \right] \\
+&amp;= - \frac{1}{n} \sum_{i=1}^n \left[y_i \mbbeta^\top \mbx_i - \log \left(1 + e^{\mbbeta^\top \mbx_i} \right) \right].
+\end{align*}\]</div>
+</section>
+<section id="computing-the-gradient">
+<h3>Computing the Gradient<a class="headerlink" href="#computing-the-gradient" title="Link to this heading">#</a></h3>
+<p>We want to maximize the log likelihood, which is of course equivalent to minimizing the negative log likelihood, so let’s take the gradient,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla \cL(\mbbeta) 
+&amp;= -\frac{1}{n} \sum_{i=1}^n \left(y_i \mbx_i - \frac{e^{\mbbeta^\top \mbx_i}}{1 + e^{\mbbeta^\top \mbx_i}} \mbx_i \right) \\
+&amp;= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \sigma(\mbbeta^\top \mbx_i) \right) \mbx_i.
+\end{align*}\]</div>
+<p>Thus, the gradient is a weighted sum of the covariates, and the weights are the residuals <span class="math notranslate nohighlight">\(y_i - \sigma(\mbx_i^\top \mbbeta)\)</span>, i.e., the difference between the observed and expected response.</p>
+<p>This is pretty intuitive! Remember that the gradient points in the direction of steepest descent. This tells us that to increase the log likelihood the most (equivalently, decrease <span class="math notranslate nohighlight">\(\cL\)</span> the most), we should move the coefficient in the direction of covariates where the residual is positive (we are underestimating the mean), and we should move opposite the direction of covariates where the residual is negative (where we are overestimating the mean).</p>
+<p>Now that we have a closed-form expression for the gradient, we can implement a simple gradient descent algorithm to minimize the negative log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta_{t+1} &amp;\leftarrow \mbbeta_t - \alpha_t \nabla \cL(\mbbeta_t),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha_t \in \reals_+\)</span> is the step-size at iteration <span class="math notranslate nohighlight">\(i\)</span> of the algorithm. If the step sizes are chosen appropriately and the objective is well behaved, the alorithm converges to at least a local optimum of the log likelihood.</p>
+</section>
+<section id="convexity-of-the-log-likelhood">
+<h3>Convexity of the Log Likelhood<a class="headerlink" href="#convexity-of-the-log-likelhood" title="Link to this heading">#</a></h3>
+<p>If the objective is convex, then all local optima are also global optima, and we can give stronger guarantees on gradient descent. To check the convexity of the log likelihood, we need to compute its Hessian,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla^2 \cL(\mbbeta) 
+&amp;= \frac{1}{n} \sum_{i=1}^n \sigma'(\mbbeta^\top \mbx_i) \mbx_i \mbx_i^\top
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma'(a)\)</span> is the derivative of the logistic function. That is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sigma'(a) 
+&amp;= \frac{\dif}{\dif a}  \sigma(a)\\
+&amp;= \frac{e^a}{(1+e^a)^2} \\
+&amp;= \sigma(a) (1 - \sigma(a)).
+\end{align*}\]</div>
+<p>Plugging this in,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla^2 \cL(\mbbeta) 
+&amp;= \frac{1}{n} \sum_{i=1}^n \sigma(\mbbeta^\top \mbx_i)(1 - \sigma(\mbbeta^\top \mbx_i)) \mbx_i \mbx_i^\top \\
+&amp;= \frac{1}{n} \sum_{i=1}^n w_i \mbx_i \mbx_i^\top,
+\end{align*}\]</div>
+<p>where the weights are, <span class="math notranslate nohighlight">\(w_i = \sigma(\mbbeta^\top \mbx_i)(1 - \sigma(\mbbeta^\top \mbx_i)) = \Var[Y \mid \mbX = \mbx_i]\)</span>.
+In other words, the Hessian is a weighted sum of outer products of covariates where the weights are equal to the conditional variance.
+Since variances are non-negative, so are the weights, which implies that the Hessian is <strong>positive semi-definite</strong>, which implies that the negative log likelihood is convex.</p>
+</section>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
+<p>As an example, let’s plot the negative log likelihood for a scalar covariate example, as above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">305</span><span class="o">+</span><span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">beta_true</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">beta_mle</span> <span class="o">=</span> <span class="n">sample_and_fit_mle</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">beta_true</span><span class="p">)</span>
+
+<span class="n">betas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">nlls</span> <span class="o">=</span> <span class="o">-</span><span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">betas</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">Y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">betas</span><span class="p">,</span> <span class="n">nlls</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">beta_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta^*$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">beta_mle</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat{\beta}_{\mathsf</span><span class="si">{MLE}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\beta$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">betas</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">betas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\mathcal</span><span class="si">{L}</span><span class="s2">(\beta)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c5230924f9ab797fa155b6118056decebf13e08eabd57f67e3607bebfd569b8f.png" src="../_images/c5230924f9ab797fa155b6118056decebf13e08eabd57f67e3607bebfd569b8f.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="regularization">
+<h2>Regularization<a class="headerlink" href="#regularization" title="Link to this heading">#</a></h2>
+<section id="pathologies-in-the-separable-regime">
+<h3>Pathologies in the Separable Regime<a class="headerlink" href="#pathologies-in-the-separable-regime" title="Link to this heading">#</a></h3>
+<p>Suppose the two classes are <em>linearly separable</em>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\exists \mbu \in \bbS_{p-1} \text{ s.t. } 
+\begin{cases}
+\mbu^\top \mbx_i &gt; 0 &amp; \text{ if } y_i = 1 \\
+\mbu^\top \mbx_i &lt; 0 &amp;\text{ if } y_i = 0
+\end{cases}
+\end{align*}\]</div>
+<p>Now let <span class="math notranslate nohighlight">\(\mbbeta = c \mbu\)</span> for any <span class="math notranslate nohighlight">\(c \in \reals_+\)</span>. We have</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\lim_{c \to \infty} \sigma(c \mbu^\top \mbx_i) &amp;= y_i.
+\end{align*}\]</div>
+<p>In this limit, the model is saturated: <span class="math notranslate nohighlight">\(\Pr(y_i \mid \mbx_i) = 1\)</span> for all <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>; the negative log likelihood goes to <span class="math notranslate nohighlight">\(\lim_{c \to \infty} \cL(c \mbu) = 0\)</span>; and the MLE does not exist since <span class="math notranslate nohighlight">\(\mbbeta^\star\)</span> diverges.</p>
+<p>If we run gradient descent in this setting, the magnitude of the estimate <span class="math notranslate nohighlight">\(\hat{\mbbeta}\)</span> will grow without bound, but the objective should converge to zero. Nevertheless, the diverging MLE is problematic for our convergence rate analysis, since it depends on the norm <span class="math notranslate nohighlight">\(\|\mbbeta^\star - \mbbeta_0\|_2^2\)</span>.</p>
+</section>
+<section id="l-2-regularization">
+<h3><span class="math notranslate nohighlight">\(L_2\)</span>-Regularization<a class="headerlink" href="#l-2-regularization" title="Link to this heading">#</a></h3>
+<p>These pathologies can be averted with a little regularization,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta) 
+&amp;= - \frac{1}{n} \sum_{i=1}^n \log \mathrm{Bern}(y_i; \sigma(\mbbeta^\top \mbx_i)) + \textcolor{red}{\frac{\gamma}{2} \|\mbbeta\|_2^2}.
+\end{align*}\]</div>
+<p>The regularizer penalizes larger values of the weights, <span class="math notranslate nohighlight">\(\mbbeta\)</span>, and the <strong>hyperparameter</strong> <span class="math notranslate nohighlight">\(\gamma \in \reals_+\)</span> sets the strength of the penalty. Even in the linearly separable regime, the maximizer is finite.</p>
+<p>Now, the gradient and Hessian are,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla \cL(\mbbeta) 
+&amp;= -\frac{1}{n}  \sum_{i=1}^n \left(y_i - \sigma(\mbx_i^\top \mbbeta) \right) \mbx_i \textcolor{red}{+ \gamma \mbbeta} \\
+\nabla^2 \cL(\mbbeta) 
+&amp;= \frac{1}{n} \sum_{i=1}^n w_i \mbx_i \mbx_i^\top \textcolor{red}{+ \gamma \mbI}. 
+\end{align*}\]</div>
+</section>
+<section id="choosing-the-hyperparameter">
+<h3>Choosing the Hyperparameter<a class="headerlink" href="#choosing-the-hyperparameter" title="Link to this heading">#</a></h3>
+<p>It remains to select a value of <span class="math notranslate nohighlight">\(\gamma\)</span>. There are many ways to do so. One approach is to <em>not</em> choose a single value and instead try to compute the <strong>regularization path</strong>; i.e., the solution <span class="math notranslate nohighlight">\(\hat{\mbbeta}(\gamma)\)</span> for a range of <span class="math notranslate nohighlight">\(\gamma \in [0, \infty)\)</span>.  Another is to hold out a fraction of data and use cross-validation to select the hyperparameter setting that yields the best performance on the held-out data.</p>
+</section>
+<section id="bayesian-perspective">
+<h3>Bayesian Perspective<a class="headerlink" href="#bayesian-perspective" title="Link to this heading">#</a></h3>
+<p>From a Bayesian perspective, we can think of the regularizer as a <strong>prior log probability</strong>. In the case above, the regularizer corresponds to a spherical Gaussian prior,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta &amp;\sim \mathrm{N}(\mbzero, (\gamma n)^{-1} \mbI),
+\end{align*}\]</div>
+<p>where <strong>precision (inverse covariance)</strong> <span class="math notranslate nohighlight">\(\gamma n \mbI\)</span>.  Minimizing the objective above corresponds to doing <strong>maximum a posteriori (MAP)</strong> estimation in the Bayesian model. If you are going to take a Bayesian stance, it’s a bit strange to summarize the entire posterior by its mode, though. We are interested in the posterior distribution as a whole. At the very least, we’d like to know the variance around the mode. We’ll talk more about Bayesian methods in the coming weeks.</p>
+</section>
+</section>
+<section id="newton-s-method">
+<h2>Newton’s Method<a class="headerlink" href="#newton-s-method" title="Link to this heading">#</a></h2>
+<p>Gradient descent leverages the gradient at <span class="math notranslate nohighlight">\(\mbbeta\)</span> to determine the update. Newton’s method uses the Hessian to inform the update as well, and in doing so it can achieve considerably faster convergence.</p>
+<p>The second order Taylor approximation of <span class="math notranslate nohighlight">\(\cL\)</span> around <span class="math notranslate nohighlight">\(\mbbeta\)</span> is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta') \approx \cL(\mbbeta) + \nabla \cL(\mbbeta)^\top (\mbbeta' - \mbbeta) + \frac{1}{2} (\mbbeta' - \mbbeta)^\top \nabla^2 \cL(\mbbeta) (\mbbeta' - \mbbeta) \triangleq \widetilde{\cL}(\mbbeta')
+\end{align*}\]</div>
+<p>The stationary point of <span class="math notranslate nohighlight">\(\widetilde{\cL}(\mbbeta')\)</span> is at</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla \widetilde{\cL}(\mbbeta') &amp;= \nabla \cL(\mbbeta) + \nabla^2 \cL(\mbbeta) (\mbbeta' - \mbbeta) = 0 \\
+\implies \mbbeta' &amp;= \mbbeta - [\nabla^2 \cL(\mbbeta)]^{-1} \nabla \cL(\mbbeta),
+\end{align*}\]</div>
+<p>assuming the Hessian is invertible. When <span class="math notranslate nohighlight">\(\nabla^2 \cL(\mbbeta) \succ 0\)</span> — i.e., when the Hessian is positive definite — the inverse Hessian exists and the stationary point is a minimizer.</p>
+<p>The vanilla Newton’s method applies this update repeatedly until convergence, forming a quadratic approximation and then minimizing it. <em>Damped</em> Newton’s method adds a step size <span class="math notranslate nohighlight">\(\alpha_t &lt; 1\)</span> to improve stability,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta_{t+1} &amp;\leftarrow \mbbeta_t - \alpha_t [\nabla^2 \cL(\mbbeta_t)]^{-1} \nabla \cL(\mbbeta_t),
+\end{align*}\]</div>
+<p>and the step size can be chosen by backtracking line search, for example.</p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Compare the Newton update to that of gradient descent. How do they differ?</p>
+</div>
+</section>
+<section id="iteratively-reweighted-least-squares">
+<h2>Iteratively Reweighted Least Squares<a class="headerlink" href="#iteratively-reweighted-least-squares" title="Link to this heading">#</a></h2>
+<p>Newton’s method solves for the minimum of a quadratic approximation to the loss function at each iteration. What else involves minimizing a quadratic loss function? Least squares. It turns out that Newton’s method can be viewed as iteratively solving a weighted least squares problem. To see this, Let’s first write the gradient and Hessian in matrix form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla \cL(\mbbeta_t) &amp;= -\frac{1}{n} \mbX^\top (\mby - \hat{\mby}_t) \\
+\nabla^2 \cL(\mbbeta_t) &amp;= \frac{1}{n} \mbX^\top \mbW_t \mbX
+\end{align*}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mbX \in \reals^{n \times p}\)</span> is the design matrix with rows <span class="math notranslate nohighlight">\(\mbx_i^\top\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mby \in \{0,1\}^n\)</span> is the vector of binary responses</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{\mby}_t = \sigma(\mbX \mbbeta_t) \in [0,1]^n\)</span> is the vector of predicted response means</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbW_t = \diag([w_{t,1}, \ldots, w_{t,n}])\)</span> with <span class="math notranslate nohighlight">\(w_{t,i} = \sigma(\mbx_i^\top \mbbeta_t) (1- \sigma(\mbx_i^\top \mbbeta_t))\)</span> is the diagonal weight matrix, where the weights are given by the conditional variances.</p></li>
+</ul>
+<p>Then the (undamped) Newton update is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbbeta_{t+1} 
+&amp;= \mbbeta_t - [\nabla^2 \cL(\mbbeta_t)]^{-1} \nabla \cL(\mbbeta_t) \\
+&amp;= \mbbeta_t + [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top (\mby - \hat{\mby}_t) \\
+&amp;= [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top \mbW_t \mbX \mbbeta_t + [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top (\mby - \hat{\mby}_t) \\
+&amp;= [\mbX^\top \mbW_t \mbX]^{-1} \mbX^\top \mbW_t \mbz_t
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbz_t &amp;= \mbX \mbbeta_t + \mbW_t^{-1} (\mby - \hat{\mby}_t).
+\end{align*}\]</div>
+<p>We recognize the update the update above as the solution to a <strong>weighted least squares</strong> problem with <strong>weights</strong> <span class="math notranslate nohighlight">\(w_{t,i}\)</span> and <strong>adjusted (or working) responses</strong> <span class="math notranslate nohighlight">\(z_{t,i}\)</span>.</p>
+<p>How can we interpret the working responses? We can view them as the real responses mapped through a Taylor approximation of the link (inverse mean) function,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\sigma^{-1}(y_i) 
+&amp;\approx \sigma^{-1}(\hat{y}_{t,i}) + (y_i - \hat{y}_{t,i}) [\sigma^{-1}]'(\hat{y}_{t,i}) \\
+&amp;= \mbx_i^\top \mbbeta_t + \frac{(y_i - \hat{y}_{t,i})}{w_{t,i}} \\
+&amp;\triangleq z_{t,i}.
+\end{align*}\]</div>
+</section>
+<section id="asymptotic-covariance-of-mle">
+<h2>Asymptotic Covariance of MLE<a class="headerlink" href="#asymptotic-covariance-of-mle" title="Link to this heading">#</a></h2>
+<p>What other insight can we glean from the Hessian? Recall our discussion of the asymptotic normality of the MLE from <a class="reference internal" href="01_distributions.html"><span class="std std-doc">Lecture 1</span></a>. For iid observations <span class="math notranslate nohighlight">\(Y_i \iid{\sim} p(\cdot; \mbtheta)\)</span> for <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>, the asymptotic covariance is <span class="math notranslate nohighlight">\(\cI(\mbtheta)^{-1} / n\)</span>, where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cI(\mbtheta)= -\E[\nabla_{\mbtheta}^2 \log p(Y; \mbtheta)]
+\end{align*} \]</div>
+<p>is the Fisher information matrix.</p>
+<p>For logistic regression, we have <span class="math notranslate nohighlight">\(n\)</span> independent but <em>not</em> identically distributed observations. In this case, the asymptotic covariance follows the same form. It is given by the inverse of the Fisher information matrix; i.e., the inverse of the negative expected Hessian of the log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cI(\mbbeta) = -\sum_{i=1}^N \E[\nabla_{\mbbeta}^2 \log p(Y_i \mid \mbX_i=\mbx_i; \mbbeta)].
+\end{align*}\]</div>
+<p>(Note that this includes the iid formula as a special case.)</p>
+<p>Substituting the form of the Hessian from above,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cI(\mbbeta)
+&amp;= \sum_{i=1}^n \E[\Var[Y_i \mid \mbX = \mbx_i] \mbx_i \mbx_i^\top] \\
+&amp;= \sum_{i=1}^n w_i \mbx_i \mbx_i^\top 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_i = \sigma(\mbbeta^\top \mbx_i) (1 - \sigma(\mbbeta^\top \mbx_i))\)</span>. Finally, we evaluate the Fisher information the MLE to obtain the asymptotic covariance estimate,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\widehat{\Cov}(\hat{\mbbeta}) &amp;= [\cI(\hat{\mbbeta})]^{-1}.
+\end{align*}\]</div>
+<p>Like before, we can use the asymptotic covariance estimate to derive Wald confidence intervals for the parameters and perform hypothesis tests.</p>
+<div class="warning admonition">
+<p class="admonition-title">Caution</p>
+<p>Remember, Wald confidence intervals are only as good as the asymptotic normality assumption. When the likelihod is not well approximated by a quadratic, the covariance estimate will be poor, and the confidence intervals will be invalid. When might the Gaussian approximation not hold?</p>
+</div>
+<!-- ## Bayesian Inference with the Laplace Approximation
+
+Finally, suppose you wanted to perform Bayesian inference of the weights under a Gaussian prior,
+\begin{align*}
+\mbbeta &\sim \mathrm{N}(\mbzero, \gamma^{-1} \mbI).
+\end{align*}
+Unfortunately, the posterior does not have a closed formation solution. Instead, a common form of approximate posterior inference is the **Laplace approximation**,
+\begin{align*}
+p(\mbbeta \mid \mbX, \mby) &\approx \mathrm{N}(\mbbeta_{\mathsf{MAP}}, \widehat{\mbSigma})
+\end{align*}
+where
+\begin{align*}
+\cL(\mbbeta) 
+&= \log p(\mbbeta) + \sum_{i=1}^n \log p(y_i \mid \mbx_i, \mbbeta) \\
+&= \log \mathrm{N}(\mbbeta; \mbzero, \gamma^{-1} \mbI) + \sum_{i=1}^n \log \mathrm{Bern}(y_i \mid \sigma(\mbx_i^\top \mbbeta))
+\end{align*}
+is the log joint probability (_no longer the same as the loss function above!_),
+\begin{align*}
+\mbbeta_{\mathsf{MAP}} 
+&= \arg \max_{\mbbeta} \cL(\mbbeta)
+\end{align*}
+is the _maximum a posteriori (MAP)_ estimate, and,
+\begin{align}
+\widehat{\mbSigma}
+&= -[\nabla^2 \cL(\mbbeta_{\mathsf{MAP}})]^{-1} = \cI(\mbbeta_{\mathsf{MAP}})^{-1}
+\end{align}
+is an approximation of the posterior covariance.
+
+:::{admonition} Question
+How do posterior credible intervals under the Laplace approximation compare to Wald confidence intervals of the MLE under L2 regularization? 
+:::
+
+### Approximating the model evidence
+
+We can use the Laplace approximate to estimate the log marginal likelihood &mdash; a.k.a., the **model evidence**. Note that,
+\begin{align*}
+\log p(\mby \mid \mbX) 
+&= \log p(\mby, \mbbeta \mid \mbX) - \log p(\mbbeta \mid \mbX, \mby) \\
+&\approx \cL(\mbbeta) - \log \mathrm{N}(\mbbeta \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}).
+\end{align*}
+The first line is just Bayes' rule, and the right hand side holds for all $\mbbeta$. The second line is our Laplace approximation.
+Evaluating at the MAP estimate,
+\begin{align*}
+\log p(\mby \mid \mbX) 
+&\approx \cL(\mbbeta_{\mathsf{MAP}}) - \log \mathrm{N}(\mbbeta_{\mathsf{MAP}} \mid \mbbeta_{\mathsf{MAP}}, \hat{\mbSigma}), \\
+&\approx \cL(\mbbeta_{\mathsf{MAP}}) + \frac{D}{2} \log 2 \pi + \frac{1}{2} \log |\hat{\mbSigma}| 
+\end{align*}
+The marginal likelihood is a natural measure of model complexity, and it is often used for model selection (e.g., determining which features to include in the model). Here, we obtain a simple approximation that incorporates the log probability at the mode along with the "width" of the posterior. We'll revisit this approximation when we talk about model selection next week.  -->
+</section>
+<section id="convergence-rates">
+<h2>Convergence Rates<a class="headerlink" href="#convergence-rates" title="Link to this heading">#</a></h2>
+<p>Gradient descent is pretty simple to implement. Is it worth our time and effort to implement Newton’s method for logistic regression? Often the answer is a resounding yes! As we’ll see, Newton’s method can achieve second order converge rates, whereas gradient descent is only linear.</p>
+<section id="converge-rate-of-gradient-descent">
+<h3>Converge Rate of Gradient Descent<a class="headerlink" href="#converge-rate-of-gradient-descent" title="Link to this heading">#</a></h3>
+<p>To determine when and at what rate gradient descent converges, we need to know more about the eigenvalues of the Hessian.</p>
+<p>If we can bound the maximum eigenvalue of the Hessian by <span class="math notranslate nohighlight">\(L\)</span>, then we can obtain a quadratic upper bound on the negative log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta') &amp;\leq \cL(\mbbeta) + \nabla \cL(\mbbeta)^\top (\mbbeta' - \mbbeta) + \frac{L}{2} (\mbbeta' - \mbbeta)^\top (\mbbeta' - \mbbeta).
+\end{align*}\]</div>
+<p>That means the negative log likelihood is an <span class="math notranslate nohighlight">\(L\)</span>-smooth function.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example: Bounded Covariates</p>
+<p>If the covariates have bounded norm, <span class="math notranslate nohighlight">\(\|\mbx_i\|_2 \leq B\)</span>, then we can bound the maximum eigenvalue of the Hessian by,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\lambda_{\mathsf{max}} 
+&amp;= \max_{\mbu \in \bbS_{p-1}} \mbu^\top \nabla^2 \cL(\mbbeta) \mbu \\
+&amp;= \max_{\mbu \in \bbS_{p-1}} \frac{1}{n} \sum_{i=1}^n w_i \mbu^\top \mbx_i \mbx_i^\top \mbu \\
+&amp;\leq \frac{B^2}{4}
+\end{align*}\]</div>
+<p>since the weights are the conditional variances of Bernoulli random variables, which are at most <span class="math notranslate nohighlight">\(\tfrac{1}{4}\)</span>, and since <span class="math notranslate nohighlight">\(\mbu^\top \mbx_i \leq B\)</span> for all unit vectors <span class="math notranslate nohighlight">\(\mbu \in \bbS_{p-1}\)</span> (the unit sphere embedded in <span class="math notranslate nohighlight">\(\reals^p\)</span>). This isn’t meant to be a tight upper bound.</p>
+</div>
+<p>If we run gradient descent with a constant step size of <span class="math notranslate nohighlight">\(\alpha = 1/L\)</span>, then the algorithm converges at a rate of <span class="math notranslate nohighlight">\(1/t\)</span>, which means that after <span class="math notranslate nohighlight">\(t\)</span> iterations</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta^\star) - \cL(\mbbeta_t) \leq \frac{L}{t} \|\mbbeta^\star - \mbbeta_0\|_2^2,
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbbeta_0\)</span> is the initial setting of the parameters and <span class="math notranslate nohighlight">\(\mbbeta^\star\)</span> is the global optimum.</p>
+<p>Put differently, if we want a gap of at most epsilon, we need to run <span class="math notranslate nohighlight">\(t \sim \cO(1/\epsilon)\)</span> iterations of gradient descent. Put differently, if we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we need to run around 100 times as many iterations. This is called a <strong>sub-linear convergence</strong> rate.</p>
+</section>
+<section id="converge-rate-of-gradient-descent-with-regularization">
+<h3>Converge Rate of Gradient Descent with Regularization<a class="headerlink" href="#converge-rate-of-gradient-descent-with-regularization" title="Link to this heading">#</a></h3>
+<p>With regularization, we can also <strong>lower bound</strong> the objective by a quadratic function,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta') &amp;\geq \cL(\mbbeta) + \nabla \cL(\mbbeta)^\top (\mbbeta' - \mbbeta) + \frac{\mu}{2} (\mbbeta' - \mbbeta)^\top (\mbbeta' - \mbbeta)
+\end{align*}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\mu &gt; 0\)</span>, which means the objective is <span class="math notranslate nohighlight">\(\mu\)</span>-<strong>strongly convex</strong>.</p>
+<p>For twice differentiable objectives, the minimum eigenvalue of Hessian provides such a lower bound, <span class="math notranslate nohighlight">\(\mu = \lambda_{\mathsf{min}}\)</span>. In particular, we know that minimum eigenvalue of <span class="math notranslate nohighlight">\(\nabla^2 \cL(\mbbeta)\)</span> is at least <span class="math notranslate nohighlight">\(\gamma\)</span>. (This bound is achieved when the data are linearly separable, the model is saturated, and the conditional variances are all zero.)</p>
+<p>For a <span class="math notranslate nohighlight">\(L\)</span>-smooth and <span class="math notranslate nohighlight">\(\mu\)</span>-strongly convex function with stepsize <span class="math notranslate nohighlight">\(\alpha = 1/L\)</span>, gradient descent has the following convergence guarantee,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta_{t+1}) - \cL(\mbbeta^\star) &amp;\leq \left(1 - \frac{\mu}{L} \right) (\cL(\mbbeta_t) - \cL(\mbbeta^\star)).
+\end{align*}\]</div>
+<p>Applying this bound recursively yields that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbbeta_t) - \cL(\mbbeta^\star) &amp;\leq \left(1 - \frac{\mu}{L} \right)^t (\cL(\mbbeta_0) - \cL(\mbbeta^\star)).
+\end{align*}\]</div>
+<p>If we want to find the number of iterations <span class="math notranslate nohighlight">\(t\)</span> to bound the gap by at most <span class="math notranslate nohighlight">\(\epsilon\)</span>, we need to solve for <span class="math notranslate nohighlight">\(t\)</span> in</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\left(1 - \frac{\mu}{L}\right)^t ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) \leq \epsilon.
+\end{align*}\]</div>
+<p>This inequality is equivalent to taking the log of both sides</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) + t \log\left(1 - \frac{\mu}{L}\right) \leq \log \epsilon.
+\end{align*}\]</div>
+<p>We can further upper bound the LHS by using the inequality <span class="math notranslate nohighlight">\(\log ( 1 - x) \leq -x\)</span> to get</p>
+<div class="amsmath math notranslate nohighlight" id="equation-44ee576d-fdef-4472-b0ae-ae9af17ebdd7">
+<span class="eqno">(1)<a class="headerlink" href="#equation-44ee576d-fdef-4472-b0ae-ae9af17ebdd7" title="Permalink to this equation">#</a></span>\[\begin{align}
+	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*))  - \frac{\mu t}{L}\leq \log \epsilon.
+\end{align}\]</div>
+<p>So, we need to run <span class="math notranslate nohighlight">\(t \geq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}\)</span> iterations of gradient descent. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 100\)</span> times as many iterations. This is called <strong>linear convergence</strong>.</p>
+</section>
+<section id="converge-rate-of-newton-s-method">
+<h3>Converge Rate of Newton’s Method<a class="headerlink" href="#converge-rate-of-newton-s-method" title="Link to this heading">#</a></h3>
+<p>Under certain conditions — if the objective is strongly convex, the Hessian is Lipschitz continuous, and we start near enough to the global optimum — Newton’s method achieves <strong>second order convergence</strong>, meaning</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\|\mbbeta_{t+1} - \mbbeta^\star\|_2 \leq \left(c \|\mbbeta_t - \mbbeta^\star\|_2\right)^2
+\end{align*}\]</div>
+<p>for some positive constant <span class="math notranslate nohighlight">\(c\)</span>, provided we start with <span class="math notranslate nohighlight">\(\mbbeta_0\)</span> close enough to <span class="math notranslate nohighlight">\(\mbbeta^\star\)</span>.
+Applying this bound recursively yields that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\|\mbbeta_t - \mbbeta^\star\|_2 &amp;\leq \left(c \|\mbbeta_0 - \mbbeta^\star\|_2 \right)^{2^t}.
+\end{align*}\]</div>
+<p>Put differently, if we start with <span class="math notranslate nohighlight">\(\|\mbbeta_0 - \mbbeta^\star\| &lt; c^{-1}\)</span>, then we need <span class="math notranslate nohighlight">\(t \sim \cO(\log \log \frac{1}{\epsilon})\)</span> iterations to obtain an error of <span class="math notranslate nohighlight">\(\epsilon\)</span>. Since the double log grows incredibly slowly, this statement says that we effectively need a constant number of iterations for Newton’s method to converge in this regime.</p>
+<p>For more information on convergence rates of gradient descent and Newton’s method, see <span id="id3">Boyd and Vandenberghe [<a class="reference internal" href="99_references.html#id9" title="Stephen P Boyd and Lieven Vandenberghe. Convex Optimization. Cambridge university press, 2004.">BV04</a>]</span>, ch. 9.</p>
+<!-- 
+:::{admonition} Note
+:class: warning
+Note that here the convergence is in terms of distance to the optimum, rather than in the value of the objective function. We can recast the convergence of gradient descent in similar terms. 
+::: -->
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>One, two, many… with logistic regression, we can begin modeling relationships between binary response variables and (possibly arbitrary-valued) covariates.  Next, we’ll see how to expand from logistic regression to generalized linear models for exponential family responses.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02_contingency_tables_v2.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Contingency Tables</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contingency-tables-with-binary-responses">Contingency Tables with Binary Responses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-two-many">One, Two, Many…</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-regression">Linear Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hacky-parameter-estimation-with-ols">Hacky Parameter Estimation with OLS</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demo">Demo</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Demo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-the-mle">Deriving the MLE</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-gradient">Computing the Gradient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convexity-of-the-log-likelhood">Convexity of the Log Likelhood</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pathologies-in-the-separable-regime">Pathologies in the Separable Regime</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#l-2-regularization"><span class="math notranslate nohighlight">\(L_2\)</span>-Regularization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-hyperparameter">Choosing the Hyperparameter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-perspective">Bayesian Perspective</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-s-method">Newton’s Method</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iteratively-reweighted-least-squares">Iteratively Reweighted Least Squares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asymptotic-covariance-of-mle">Asymptotic Covariance of MLE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence-rates">Convergence Rates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-gradient-descent">Converge Rate of Gradient Descent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-gradient-descent-with-regularization">Converge Rate of Gradient Descent with Regularization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converge-rate-of-newton-s-method">Converge Rate of Newton’s Method</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
