@@ -214,7 +214,7 @@ parse:
 # Information about where the book exists on the web
 repository:
   url                       : https://github.com/slinderman/stats305b  # Online location of your book
-  branch                    : winter2024  # Which branch of the repository should be used when creating links (optional)
+  branch                    : winter2025  # Which branch of the repository should be used when creating links (optional)
 
 launch_buttons:
   binderhub_url: ""
