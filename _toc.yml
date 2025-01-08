@@ -6,6 +6,7 @@ parts:
     chapters:
     - file: lectures/01_distributions.ipynb
     - file: lectures/02_contingency_tables_v2.ipynb
+    - file: lectures/03_logreg.ipynb
     
   - caption: Assignments
     chapters:

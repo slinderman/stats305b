@@ -8,6 +8,7 @@ execute:
     - 'hw0.ipynb'
     - '01_distributions.ipynb'
     - '02_contingency_tables_v2.ipynb'
+    - '03_logreg.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
     - 'hw2_solutions.ipynb'
