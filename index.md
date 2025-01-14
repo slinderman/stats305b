@@ -64,11 +64,12 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
   - Released Mon, Jan 6, 2025
   - Due Fri, Jan 10, 2025 at 11:59pm
 
-<!--
-- [**Homework 1: Logistic Regression**](assignments/hw1/hw1.ipynb)
-  - Released Wed, Jan 17, 2024
-  - Due Fri, Jan 26, 2024 at 11:59pm
 
+- [**Homework 1: Logistic Regression**](assignments/hw1/hw1.ipynb)
+  - Released Mon, Jan 13, 2025
+  - Due Fri, Jan 24, 2025 at 11:59pm
+
+<!--
 - [**Homework 2: Bayesian GLMs**](assignments/hw2/hw2.ipynb)
   - Released Wed, Jan 31, 2024
   - Due Wed, Feb 14, 2024 at 11:59pm
