@@ -8,6 +8,7 @@ parts:
     - file: lectures/02_contingency_tables_v2.ipynb
     - file: lectures/03_logreg.ipynb
     - file: lectures/04_expfam.ipynb
+    - file: lectures/05_glms.ipynb
     
   - caption: Assignments
     chapters:
