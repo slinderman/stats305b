@@ -37,7 +37,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Wed, Jan 8, 2025 | [Logistic Regression](lectures/03_logreg.ipynb) | [download](slides/03_logreg.pdf) | {cite:p}`agresti2002categorical` Ch. 4-5 | 
 | Fri, Jan 10, 2025 |<span style="color:red">**HW0 Due**</span> | |
 | Mon, Jan 13, 2025 | [Exponential Families](lectures/04_expfam.ipynb)  <br> **HW1 Released** | [download](slides/04_expfam.pdf) | {cite:p}`agresti2002categorical` Ch. 4-5 |
-| Wed, Jan 25, 2025 | [Generalized Linear Models](lectures/05_glms.ipynb) | | {cite:p}`agresti2002categorical` Ch. 6 | 
+| Wed, Jan 25, 2025 | [Generalized Linear Models](lectures/05_glms.ipynb) | [download](slides/05_glms.pdf) | {cite:p}`agresti2002categorical` Ch. 6 | 
 | Mon, Jan 20, 2025 | _MLK Day. No class_                    |  |  |
 | Wed, Feb  22, 2025 | [L1-regularized GLMs](lectures/08_sparse_glms.md) | | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Fri, Jan 24, 2025 | <span style="color:red">**HW1 Due**</span> | | 
