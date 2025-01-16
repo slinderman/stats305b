@@ -430,7 +430,7 @@
 <p>Recall that the Poisson distribution can be written in exponential family form as,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\mathm{Po}(y; \lambda) 
+\mathrm{Po}(y; \lambda) 
 &amp;= \frac{1}{y!} \lambda^y e^{-\lambda} \\
 &amp;= \frac{1}{y!} \exp \left\{ y \log \lambda - \lambda  \right\} \\
 &amp;= h(y) \exp \left\{ \langle t(y), \eta \rangle - A(\eta) \right\} 
@@ -958,8 +958,8 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
 <p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
 <p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-b8240c89-aea0-4dc1-a81e-511b0dd11fb7">
-<span class="eqno">(2)<a class="headerlink" href="#equation-b8240c89-aea0-4dc1-a81e-511b0dd11fb7" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-1c343bb0-cd37-46e0-a9d2-d9660b68bf49">
+<span class="eqno">(2)<a class="headerlink" href="#equation-1c343bb0-cd37-46e0-a9d2-d9660b68bf49" title="Permalink to this equation">#</a></span>\[\begin{align}
     \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
     \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
 \end{align}\]</div>
