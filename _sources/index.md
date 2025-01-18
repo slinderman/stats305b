@@ -11,8 +11,8 @@ Location: [Sequoia Hall, Room 200](https://campus-map.stanford.edu/?srch=Sequoia
 
 **Office Hours**
 - Scott: Wed 10-11am, Wu Tsai Neurosciences Institute, 2nd Floor in the Theory Center
-- Michael: Thu, 5-7pm, location TBD
-- Amber: Fri 1:30-3:30pm, Sequoia library (Rm 105), starting 1/17
+- Michael: Thu, 5-7pm, Sequoia library (Rm 105)
+- Amber: Fri 1:30-3:30pm, Sequoia library (Rm 105)
 
 
 ## Prerequisites
