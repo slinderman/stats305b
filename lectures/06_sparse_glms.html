@@ -361,6 +361,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lasso-regression">Lasso Regression</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-descent">Coordinate Descent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-soft-thresholding-operator">The Soft Thresholding Operator</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-ascent-step-for-the-intercept">Coordinate ascent step for the intercept</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weighted-lasso-regression">Weighted Lasso Regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#synthetic-demo">Synthetic Demo</a></li>
@@ -405,7 +406,7 @@
 <h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>jaxtyping
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-qqq<span class="w"> </span>jaxtyping
 </pre></div>
 </div>
 </div>
@@ -476,20 +477,33 @@ The $\cO(1/\epsilon)$ convergence rate we discussed for gradient descent in the 
 \cL(\beta_j; \mbbeta_{\neg j}) 
 &amp;= \frac{1}{2} \frac{(\beta_j - \mu_j)^2}{\sigma_j^2} + \lambda |\beta_j| + c'
 \end{align*}\]</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Solve for <span class="math notranslate nohighlight">\(\mu_j\)</span> and <span class="math notranslate nohighlight">\(\sigma_j^2\)</span>.</p>
+<div class="tip dropdown admonition">
+<p class="admonition-title">Answer</p>
+<p>First, expand the objective as</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\beta_j; \mbbeta_{\neg j}) 
+&amp;= \frac{1}{2} J_j \beta_j^2 - h_j \beta_j + c
+\end{align*}\]</div>
 <p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+J_j &amp;= \frac{1}{n} \sum_{i=1}^n x_{ij}^2 \\
+h_j &amp;= \frac{1}{n} \sum_{i=1}^n \widetilde{y}_{ij} x_{ij}.
+\end{align*}\]</div>
+<p>Then expand <span class="math notranslate nohighlight">\((\beta_j - \mu_j)^2 / \sigma_j^2\)</span> to see that,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 \mu_j &amp;= \frac{h_j}{J_j} \\
 \sigma_j^2 &amp;= \frac{1}{J_j} \\
-J_j &amp;= \frac{1}{n} \sum_{i=1}^n x_{ij}^2 \\
-h_j &amp;= \frac{1}{n} \sum_{i=1}^n \widetilde{y}_{ij} x_{ij}.
 \end{align*}\]</div>
-<p>Since <span class="math notranslate nohighlight">\(\sigma_j^2 &gt; 0\)</span>, minimizing <span class="math notranslate nohighlight">\(\cL\)</span> is the same as minimizing,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\cL(\beta_j; \mbbeta_{\neg j}) 
-&amp;= \frac{1}{2} (\beta_j - \mu_j)^2 + \sigma_j^2 \lambda |\beta_j| + c'
-\end{align*}\]</div>
+</div>
+</div>
+<section id="the-soft-thresholding-operator">
+<h3>The Soft Thresholding Operator<a class="headerlink" href="#the-soft-thresholding-operator" title="Link to this heading">#</a></h3>
 <p>Let’s plot this objective function for a few different values of <span class="math notranslate nohighlight">\(\mu_j\)</span>, assuming <span class="math notranslate nohighlight">\(\sigma_j^2 \lambda = 1\)</span>.</p>
 <!-- 
 Now take the derivative and set equal to zero,
@@ -515,6 +529,9 @@ Now take the derivative and set equal to zero,
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/10f93c410a7a4b2116825b2f9a67dc558af20481c110e61ff27683d36944337a.png" src="../_images/10f93c410a7a4b2116825b2f9a67dc558af20481c110e61ff27683d36944337a.png" />
 </div>
 </div>
 <p>Note that many of the minimizers (denoted by the red lines) are obtained at <span class="math notranslate nohighlight">\(\beta_j = 0\)</span>! With a bit of calculus, we can show that the minimizer is given by the <strong>soft-thresholding operator</strong>,</p>
@@ -556,7 +573,11 @@ S_\alpha(\mu) &amp;= \mathrm{sign}(\mu) \max\{|\mu| - \alpha, 0\}.
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/6329862a132a397def6791c8cc30998eafc6797305ce55c714d47fb6a111fffd.png" src="../_images/6329862a132a397def6791c8cc30998eafc6797305ce55c714d47fb6a111fffd.png" />
 </div>
+</div>
+</section>
 <section id="coordinate-ascent-step-for-the-intercept">
 <h3>Coordinate ascent step for the intercept<a class="headerlink" href="#coordinate-ascent-step-for-the-intercept" title="Link to this heading">#</a></h3>
 <div class="tip admonition">
@@ -591,14 +612,17 @@ y_i &amp;\sim \mathrm{N}(\beta_0 + \mbx_i^\top \mbbeta, w_i^{-1})
 \cL(\beta_j; \mbbeta_{\neg j}) 
 &amp;= \frac{1}{2} \frac{(\beta_j - \mu_j)^2}{\sigma_j^2} + \lambda |\beta_j| + c'
 \end{align*}\]</div>
-<p>where</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Show that</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
+J_j &amp;= \frac{1}{n} \sum_{i=1}^n w_i x_{ij}^2 \\
+h_j &amp;= \frac{1}{n} \sum_{i=1}^n w_i \widetilde{y}_{ij} x_{ij} \\
 \mu_j &amp;= \frac{h_j}{J_j} \\
 \sigma_j^2 &amp;= \frac{1}{J_j} \\
-J_j &amp;= \frac{1}{n} \sum_{i=1}^n w_i x_{ij}^2 \\
-h_j &amp;= \frac{1}{n} \sum_{i=1}^n w_i \widetilde{y}_{ij} x_{ij}.
 \end{align*}\]</div>
+</div>
 <p>Again, the coordinate-wise minimum is obtained at <span class="math notranslate nohighlight">\(\beta_j^\star = S_{\sigma_j^2 \lambda}(\mu_j)\)</span>.</p>
 <p>For the intercept, <span class="math notranslate nohighlight">\(\beta_0^\star = \frac{\sum_{i=1}^n w_i \widetilde{y}_{i0}}{\sum_{i=1}^n w_i}\)</span>.</p>
 </section>
@@ -972,8 +996,8 @@ The idea is to stick as close to vanilla gradient descent as possible, while cor
 <section id="proximal-mapping">
 <h3>Proximal Mapping<a class="headerlink" href="#proximal-mapping" title="Link to this heading">#</a></h3>
 <p>We call the function,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-11dda483-dd81-44f9-a8a8-2142b8b8c3f6">
-<span class="eqno">(3)<a class="headerlink" href="#equation-11dda483-dd81-44f9-a8a8-2142b8b8c3f6" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-1db58430-7d87-4e99-a4b2-1a78225fe6ae">
+<span class="eqno">(3)<a class="headerlink" href="#equation-1db58430-7d87-4e99-a4b2-1a78225fe6ae" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{prox}(\mbu; \alpha_t) 
 &amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \cL_{\mathsf{nd}}(\mbz)
 \end{align}\]</div>
@@ -1191,6 +1215,7 @@ Note that we have explicitly separated out the intercept in the objective since 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lasso-regression">Lasso Regression</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-descent">Coordinate Descent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-soft-thresholding-operator">The Soft Thresholding Operator</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-ascent-step-for-the-intercept">Coordinate ascent step for the intercept</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weighted-lasso-regression">Weighted Lasso Regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#synthetic-demo">Synthetic Demo</a></li>
