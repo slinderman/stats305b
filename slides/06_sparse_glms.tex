@@ -1,0 +1,575 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{simple}
+
+\input{preamble/preamble.tex}
+\input{preamble/preamble_math.tex}
+% \input{preamble/preamble_acronyms.tex}
+
+\title{Lecture 5: Sparse GLMs}
+\subtitle{STATS305B: Applied  Statistics II}
+\author{Scott Linderman}
+\date{\today}
+
+
+\begin{document}
+
+
+\maketitle
+    
+\begin{frame}{Recap}
+
+Last time...
+\begin{itemize}
+    \item Generalized Linear Models (GLMs)
+    \item Canonical form
+    \item Demo: Poisson GLM
+    \item Non-canonical forms
+    \item Model checking and comparison
+\end{itemize}
+    
+\end{frame}
+    
+\begin{frame}{Outline}
+
+    Today...
+    \begin{itemize}
+        \item (Weighted) LASSO Regression
+        \item Synthetic Demo
+        \item The GLMNet Algorithm
+        \item Why it Works: Proximal Methods
+    \end{itemize}
+    
+\end{frame}
+
+    
+\begin{frame}[t,allowframebreaks]{Motivation}\label{sparse-glms}
+
+We like linear and generalized linear models because the parameters are readily interpretable. 
+
+\(\beta_j\) relates changes in covariate \(x_j\) to changes in the natural parameter of the
+response distribution. 
+
+One common application of such models is for \emph{variable selection}, finding a subset of covariates that are most
+predictive of the response. 
+
+For variable selection, we would like our estimates, \(\hat{\mbbeta}\), to be \emph{sparse}. 
+
+When we have a vast number covariates --- as in genome-wide association studies (GWAS) where we aim
+to predict a trait given thousands of single nucleotide polymorphisms
+(SNPs) in the genome --- sparse solutions help focus our attention on
+the most relevant covariates.
+
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Lasso Regression}\label{lasso-regression}
+
+Consider a linear Gaussian model, 
+\begin{align*}
+y_i & \ind{\sim} \mathrm{N}(\beta_0 + \mbx_i^\top \mbbeta, 1) \qquad \text{for } i = 1, \ldots,n,
+\end{align*} where \(\beta_0\) is the intercept
+parameter, \(\mbx_i \in \reals^p\) are the covariates, and
+\(\mbbeta \in \reals^p\) are the weights. We factored out the intercept
+because we typically don't regularize that parameter.
+
+The Lasso yields sparse solutions for linear models like this by
+minimizing the (average) negative log likelihood subject to \(\ell_1\)
+regularization. \begin{align*}
+\cL(\beta_0, \mbbeta) 
+&= -\frac{1}{n} \sum_{n=1}^n \log \mathrm{N}(y_i \mid \beta_0 + \mbx_i^\top \mbbeta, 1) + \lambda \|\mbbeta\|_1 \\
+&= \frac{1}{2n} \sum_{i=1}^n (y_i - \beta_0 - \mbx_i^\top \mbbeta)^2 + \lambda \|\mbbeta\|_1 \\
+&= \frac{1}{2n} \sum_{i=1}^n (y_i - \beta_0 - \mbx_i^\top \mbbeta)^2 + \lambda \sum_{j=1}^p |\beta_j|
+\end{align*} 
+This is still a convex objective function!
+
+It's tempting to just use vanilla gradient ascent to find the optimum,
+\begin{align*}
+\mbbeta^{(t+1)} &\leftarrow \mbbeta^{(t)} - \alpha_t \nabla \cL(\mbbeta^{(t)}),
+\end{align*} 
+
+Unfortunately, the Lasso objective it is not continuously
+differentiable: the \textbf{gradient at \(\beta_j=0\) is discontinuous}
+due to the absolute value in the \(\ell_1\) norm. What can we do
+instead? 
+\begin{itemize}
+    \item You only live once\ldots{} run gradient descent and hope for
+the best! 
+    \item Use \emph{subgradient} descent, taking a step in the
+direction of any subgradient of \(\cL\), but that approach can be much
+slower, with convergence rates of only \(\cO(1/\epsilon^2)\). 
+    \item Use
+\emph{proximal} gradient descent, which amounts to \emph{iterative soft
+thresholding} for the Lasso problem. This has much better convergence
+rates, as we'll discuss below. 
+    \item Use \emph{coordinate descent}, which
+works very well in practice, even if it's harder to prove convergence
+rates.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Coordinate Descent}\label{coordinate-descent}
+
+Fix all parameters except for \(\beta_j\) for some
+\(j \in \{1,\ldots,p\}\). As a function of \(\beta_j\), the average
+negative log likelihood is, \begin{align*}
+\cL(\beta_j; \mbbeta_{\neg j}) 
+&= \frac{1}{2n} \sum_{i=1}^n (\widetilde{y}_{ij} - x_{ij} \beta_j)^2 + \lambda |\beta_j| + c,
+\end{align*} where \begin{align*}
+\widetilde{y}_{ij} &= y_i - \beta_0 - \sum_{k \neq j} x_{ik} \beta_k,
+\end{align*} and where \(c\) is constant with respect to \(\beta_j\).
+
+This is just a scalar minimization problem. Completing the square, we
+can rewrite the objective as, \begin{align*}
+\cL(\beta_j; \mbbeta_{\neg j}) 
+&= \frac{1}{2} \frac{(\beta_j - \mu_j)^2}{\sigma_j^2} + \lambda |\beta_j| + c'
+\end{align*} 
+
+\textbf{Exercise:} Solve for $\mu_j$ and $\sigma_j^2$.
+
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Coordinate Descent}\label{coordinate-descent}
+Let's plot the objective for a few values of $\mu_j$, fixing $\sigma_j^2 \lambda = 1$.
+\begin{center}
+\includegraphics[width=0.95\linewidth]{06_sparse_glms/output_6_0.png}
+\end{center}
+{ \hspace*{\fill} \\}
+    
+    Note that many of the minimizers (denoted by the red lines) are obtained
+at \(\beta_j = 0\)! 
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{The Soft-Thresholding Operator}\label{soft-thresholding}
+
+With a bit of calculus, we can show that the
+minimizer is given by the \textbf{soft-thresholding operator},
+\begin{align*}
+\beta_j^\star 
+&= \begin{cases}
+\mu_j - \sigma_j^2 \lambda & \text{if } \mu_j > \sigma_j^2 \lambda \\
+0 &\text{if } |\mu_j| < \sigma_j^2 \lambda \\
+\mu_j + \sigma_j^2 \lambda &\text{if } u_j < -\sigma_j^2 \lambda
+\end{cases} \\
+&\triangleq S_{\sigma_j^2 \lambda}(\mu_j)
+\end{align*}
+
+We can write the soft-thresholding operator more compactly as,
+\begin{align*}
+S_\alpha(\mu) &= \mathrm{sign}(\mu) \max\{|\mu| - \alpha, 0\}.
+\end{align*} 
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Coordinate ascent step for the
+intercept}\label{coordinate-ascent-step-for-the-intercept}
+
+\textbf{Exercise:} Show that the coordinate update
+for the intercept is, 
+\begin{align*}
+\beta_0^\star &= \frac{1}{n} \sum_{i=1}^n \widetilde{y}_{i0},
+\end{align*} 
+where \(\widetilde{y}_{i0} = y_i - \mbx_i^\top \mbbeta\).
+
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Weighted Lasso
+Regression}\label{weighted-lasso-regression}
+
+Finally, suppose we have heteroskedastic noise, \begin{align*}
+y_i &\sim \mathrm{N}(\beta_0 + \mbx_i^\top \mbbeta, w_i^{-1})
+\end{align*} where \(w_i\) is the inverse variance (precision) of the
+\(i\)-th observation.
+
+Then the objective would become, \begin{align*}
+\cL(\beta_0, \mbbeta) 
+&= -\frac{1}{n} \sum_{n=1}^n \log \mathrm{N}(y_i \mid \beta_0 + \mbx_i^\top \mbbeta, w_i^{-1}) + \lambda \|\mbbeta\|_1 \\
+&= \frac{1}{2n} \sum_{i=1}^n w_i (y_i - \beta_0 - \mbx_i^\top \mbbeta)^2 + \lambda \|\mbbeta\|_1
+\end{align*} Note that the \(w_i\)'s become the \textbf{weights} in the
+objective.
+
+Following the same steps as above, we can write the objective as a
+function of \(\beta_j\), \begin{align*}
+\cL(\beta_j; \mbbeta_{\neg j}) 
+&= \frac{1}{2} \frac{(\beta_j - \mu_j)^2}{\sigma_j^2} + \lambda |\beta_j| + c'
+\end{align*} where \begin{align*}
+\mu_j &= \frac{h_j}{J_j} \\
+\sigma_j^2 &= \frac{1}{J_j} \\
+J_j &= \frac{1}{n} \sum_{i=1}^n w_i x_{ij}^2 \\
+h_j &= \frac{1}{n} \sum_{i=1}^n w_i \widetilde{y}_{ij} x_{ij}.
+\end{align*} Again, the coordinate-wise minimum is obtained at
+\(\beta_j^\star = S_{\sigma_j^2 \lambda}(\mu_j)\).
+
+For the intercept,
+\(\beta_0^\star = \frac{\sum_{i=1}^n w_i \widetilde{y}_{i0}}{\sum_{i=1}^n w_i}\).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Synthetic Demo}\label{synthetic-demo}
+
+\begin{center}
+    See Colab
+\end{center}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Questions}\label{questions}
+    
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Can you identify two was in which the Lasso estimate differs from the
+  OLS estimate?
+\item
+  What estimate do you get if you set \(\lambda = 0\)?
+\item
+  What if you take \(\lambda \to \infty\)? 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Fitting Sparse GLMs}\label{fitting-sparse-glms}
+
+Now let's generalize this approach to fit \(\ell_1\)-regularized GLMs!
+This is exactly what the \texttt{glmnet} package
+(Friedmann et al., 2010) solves.
+
+Suppose we have a GLM with the canonical mean function, \begin{align*}
+\E[Y_i] &= f(\beta_0 + \mbx_i^\top \mbbeta)
+\end{align*} where we have again factored out the intercept.
+
+The regularized objective is, \begin{align*}
+\cL(\beta_0, \mbbeta)
+&= -\frac{1}{n} \sum_{i=1}^n \log p(y_i \mid f(\beta_0 + \mbx_i^\top \mbbeta)) + \lambda \|\mbbeta \|_1.
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Review: Iteratively Reweighted Least
+Squares}\label{review-iteratively-reweighted-least-squares}
+
+Recall that Newton's method for canonical GLMs (without regularization)
+is equivalent to \textbf{iteratively reweighted least squares}. The
+\((t+1)\)-th step of Newton's method is equivalent to solving a weighted
+least squares problem to find the minimum of an objective,
+\begin{align*}
+\widetilde{\cL}(\beta_0, \mbbeta; \beta_0^{(t)}, \mbbeta^{(t)})
+&= \frac{1}{n} \sum_{i=1}^n w_i^{(t)} (z_i^{(t)} - \beta_0 - \mbx_i^\top \mbbeta)^2
+\end{align*} where the working responses are \begin{align*}
+z_i^{(t)} = \beta_0^{(t)} + \mbx_i^\top \mbbeta^{(t)} + \frac{y_i - \hat{y}_i^{(t)}}{w_i^{(t)}},
+\end{align*} the predictions are, \begin{align*}
+\hat{y}_i^{(t)} &= f(\beta_0^{(t)} + \mbx_i^\top \mbbeta^{(t)}),
+\end{align*} and the weights are equal to the conditional variances,
+\begin{align*}
+w_i^{(t)} &= \mathrm{Var}[Y_i \mid \mbx_i, \beta_0^{(t)}, \mbbeta^{(t)}].
+\end{align*}
+
+For example, in a logistic regression, \begin{align*}
+\hat{y}_i^{(t)} &= \sigma(\beta_0^{(t)} + \mbx_i^\top \mbbeta^{(t)}) \\
+w_i &= \hat{y}_i^{(t)} (1 - \hat{y}_i^{(t)}).
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{The Algorithm}\label{the-algorithm}
+
+From here, we can sketch out a pretty straightforward algorithm for
+fitting sparse GLMs. 
+
+Within each Newton iteration, solve a weighted
+least squares problem, \emph{subject to the \(\ell_1\)-regularization
+penalty}, using coordinate descent. 
+
+Once the coordinate descent
+procedure converges, update the working responses and weights, then
+repeat. 
+
+This is essentially the algorithm in \texttt{glmnet}
+(Friedmann et al., 2010)!
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Synthetic Demo}\label{synthetic-demo-2}
+
+\begin{center}
+    See Colab
+\end{center}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Computational Tricks}\label{computational-tricks}
+
+There are several simple tricks to speed it up. 
+
+\begin{itemize}
+    \item Rather than recomputing the residual for each
+coordinate, we can update and downdate the residual after each
+coordinate update. 
+
+    \item You can show that the coordinate updates only
+depend on sufficient statistics \(\sum_{i} w_i x_{ij} x_{ik}\) and
+\(\sum_i w_i z_i x_{ij}\), and these statistics don't change within the
+each outer loop. We can save some time by precomputing these at the
+start of the \texttt{\_glmnet\_step} function. This trick is referred to
+as using \emph{covariance updates}. 
+
+    \item When \(X\) is sparse, we can
+implement the sufficient statistics calculations even more efficiently.
+\end{itemize}
+
+Friedmann et al (2010) describe several other
+implementation-level details for making the code as fast as possible.
+You should also check out James Yang's thesis and his
+\href{https://github.com/JamesYang007/adelie}{amazing \texttt{adelie}
+package for LASSO problems}.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Proximal Methods}\label{proximal-methods}
+
+The \texttt{glmnet} algorithm is intuitive, but \textbf{why the heck
+does it work?!} To gain a deeper theoretical understanding, let's take a
+step back and talk about proximal methods.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Proximal Gradient
+Descent}\label{proximal-gradient-descent}
+
+Proximal gradient descent is an optimization algorithm for convex
+objectives that decompose into a differentiable part and a
+non-differentiable part, \begin{align*}
+\cL(\mbbeta) &= \cL_{\mathsf{d}}(\mbbeta) + \cL_{\mathsf{nd}}(\mbbeta)
+\end{align*} where \(\cL_{\mathsf{d}}\) is convex and
+\emph{differentiable}, whereas \(\cL_{\mathsf{nd}}\) is convex but
+\emph{not differentiable}. The idea is to stick as close to vanilla
+gradient descent as possible, while correcting for the
+non-differentiable part of the objective.
+
+If we just had the differentiable part, \(\cL_{\mathsf{d}}\), we could
+perform gradient descent. One way to think about the gradient descent
+update is as the solution to a quadratic minimization problem,
+\begin{align*}
+\mbbeta^{(t+1)} &\leftarrow 
+\arg \min_{\mbz} \cL_{\mathsf{d}}(\mbbeta^{(t)}) + \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})^\top (\mbz - \mbbeta^{(t)}) + \frac{1}{2 \alpha_t} \| \mbz - \mbbeta^{(t)}\|_2^2
+\end{align*} We can think of the surrogate problem as a second order
+approximation of the objective in which the Hessian is replaced with
+\(\frac{1}{\alpha_t} \mbI\).
+
+\emph{Proximal} gradient descent follows the same logic, but it keeps
+the non-differentiable part, \begin{align*}
+\mbbeta^{(t+1)} &\leftarrow 
+\arg \min_{\mbz} \cL_{\mathsf{d}}(\mbbeta^{(t)}) + \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})^\top (\mbz - \mbbeta^{(t)}) + \frac{1}{2 \alpha_t} \| \mbz - \mbbeta^{(t)}\|_2^2 + \cL_{\mathsf{nd}}(\mbbeta^{(t)}) \\
+&= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - (\mbbeta^{(t)} - \alpha_t \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})) \|_2^2 + \cL_{\mathsf{nd}}(\mbz) \\
+\end{align*} The resulting update balances two parts: 
+\begin{enumerate}
+    \item  Stay close to
+the vanilla gradient descent update,
+\(\mbbeta^{(t)} - \alpha_t \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})\).
+
+    \item Also minimize the non-differentiable part of the objective,
+\(\cL_{\mathsf{nd}}(\mbbeta^{(t)})\).
+\end{enumerate}
+
+As a sanity check, note that we recover vanilla gradient descent with
+\(\cL_{\mathsf{nd}}(\mbbeta^{(t)}) = 0\).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Proximal Mapping}\label{proximal-mapping}
+
+We call the function, \begin{align}
+\mathrm{prox}(\mbu; \alpha_t) 
+&= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \cL_{\mathsf{nd}}(\mbz)
+\end{align} the \textbf{proximal mapping}.
+
+Notes
+\begin{itemize}
+    \item The proximal mapping depends on the form of the non-differentiable part of the objective, even though we
+have suppressed that in the notation. 
+    \item However, it does \emph{not} depend on the form of the continuous part of the objective. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Algorithm}\label{algorithm}
+
+With this definition, the proximal gradient descent algorithm is,
+
+\textit{Proximal Gradient Descent}
+
+\textbf{Input:} Initial parameters \(\mbbeta^{(0)}\), proximal mapping
+\(\mathrm{prox}(\cdot; \cdot)\).
+
+\begin{itemize}
+\item
+  \textbf{For} \(t=1,\ldots, T\)
+
+  \begin{itemize}
+  \item Set
+    \(\mbbeta^{(t)} \leftarrow \mathrm{prox}(\mbbeta^{(t-1)} - \alpha_t \nabla \cL_{\mathsf{d}}(\mbbeta^{(t-1)}); \alpha_t)\).
+  \end{itemize}
+\end{itemize}
+
+\textbf{Return} \(\mbbeta^{(T)}\). 
+
+So far, it's not obvious that this framing is helpful. We still have a
+potentially challenging optimization problem to solve in computing the
+proximal mapping. However, for many problems of interest, the proximal
+mapping has simpled closed solutions.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Proximal Gradient Descent for Lasso
+Regression}\label{proximal-gradient-descent-for-lasso-regression}
+
+Consider the Lasso problem. The objective decomposes into convex
+differentiable and non-differentiable parts, \begin{align*}
+\cL_{\mathsf{d}}(\mbbeta) &= \frac{1}{2} \|\mby - \mbX \mbbeta\|_2^2 \\
+\cL_{\mathsf{nd}}(\mbbeta) &= \lambda \|\mbbeta\|_1.
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Proximal Mapping}\label{proximal-mapping}
+
+The proximal mapping is, \begin{align*}
+\mathrm{prox}(\mbu; \alpha_t) 
+&= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \lambda \|\mbz\|_1 \\
+&= \arg \min_{\mbz} \sum_{j=1}^p  \frac{1}{2 \alpha_t} (z_j - u_j)^2 + \lambda |z_j| 
+\end{align*} It separates into optimization problems for each
+coordinate, and each coordinate has a closed-form solution in terms of
+the soft-thresholding operator! \begin{align*}
+[\mathrm{prox}(\mbu; \alpha_t)]_j 
+&= S_{\alpha_t \lambda}(u_j)
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Iterative Soft-Thresholding
+Algorithm}\label{iterative-soft-thresholding-algorithm}
+
+Now let's plug in the gradient of the differentiable part,
+\begin{align*}
+\nabla \cL_{\mathsf{d}}(\mbbeta) &= \mbX^\top (\mby - \mbX \mbbeta).
+\end{align*} Substituting this into the proximal gradient descent
+algorithm yields what is sometimes called the \textbf{iterative
+soft-thresholding algorithm (ISTA)},
+
+\textit{Iterative Soft-Thresholding}
+
+\textbf{Input:} Initial parameters \(\mbbeta^{(0)}\), covariates
+\(\mbX \in \reals^{n \times p}\), responses \(\mby \in \reals^n\)
+
+\begin{itemize}
+\item
+  \textbf{For} \(t=1,\ldots, T\)
+
+  \begin{itemize}
+  \item Set
+    \(\mbbeta^{(t)} \leftarrow S_{\alpha_t \lambda}(\mbbeta^{(t-1)} - \alpha_t \mbX^\top (\mby - \mbX \mbbeta^{(t-1)}))\).
+  \end{itemize}
+\end{itemize}
+
+\textbf{Return} \(\mbbeta^{(T)}\). 
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Convergence}\label{convergence}
+
+If \(\nabla \cL_{\mathsf{d}}\) is \(L\)-smooth then proximal gradient
+descent with fixed step size \(\alpha_t = 1/L\) then, \begin{align*}
+f(\mbbeta^{(t)}) - f(\mbbeta^\star) \leq \frac{L}{2 t} \|\mbbeta^{(0)} - \mbbeta^\star \|_2^2,
+\end{align*} so it matches the gradient descent convergence rate of
+\(\cO(1/\epsilon)\). (With Nesterov's accelerated gradient techniques,
+you can speed this up to \(\cO(1/\sqrt{\epsilon})\).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Proximal Newton Method}\label{proximal-newton-method}
+
+One great thing about proximal gradient descent is its generality. We
+could easily apply it to \(\ell_1\)-regularized GLMs, substituting the
+gradient of the negative log likelihood, which also has a simple closed
+form expression. The proximal operator remains the same, and we obtain
+the same converge rates as gradient descent on standard GLMs.
+
+However, we saw that Newton's method yielded significantly faster
+convergence rates of \(\cO(\log \log \frac{1}{\epsilon})\). Can we
+obtain similar performance for \(\ell_1\)-regularized GLMs?
+
+To obtain a \textbf{proximal Newton method}, we proceed in the same
+fashion as above, but rather than approximating the second order term
+with \(\alpha_t^{-1} \mbI\), we will use the Hessian of
+\(\cL_{\mathsf{d}}\). That leads to a proximal mapping of the form,
+\begin{align*}
+\mathrm{prox}(\mbu; \mbH_t) 
+&= \arg \min_{\mbz} \frac{1}{2} \| \mbz - \mbu \|_{\mbH_t}^2 + \cL_{\mathsf{nd}}(\mbz)
+\end{align*} where \(\|\mbx \|_{\mbH_t}^2 = \mbx^\top \mbH_t \mbx\) is a
+squared norm induced by the positive definite matrix \(\mbH_t\).
+
+\textit{Note: the proximal mapping for
+proximal gradient descent corresponds to the special case in which
+\(\mbH_t = \frac{1}{\alpha_t} \mbI\).}
+
+Let \(\mbg_t = \nabla \cL_{\mathsf{d}}(\mbbeta^{(t)})\) and
+\(\mbH_t = \nabla^2 \cL_{\mathsf{d}}(\mbbeta^{(t)})\) denote the
+gradient and Hessian, respectively. The \emph{undamped} proximal Newton
+update is, \begin{align*}
+\hat{\mbbeta}^{(t+1)}
+&\leftarrow \arg \min_{\mbz} \cL_{\mathsf{d}}(\mbbeta^{(t)}) + (\mbz - \mbbeta^{(t)})^\top \mbg_t + \frac{1}{2} (\mbz - \mbbeta^{(t)})^\top \mbH_t (\mbz - \mbbeta^{(t)}) + \cL_{\mathsf{nd}}(z) \\
+&= \arg \min_{\mbz} \frac{1}{2} \| \mbz - (\mbbeta^{(t)} -  \mbH_t^{-1} \mbg_t)\|_{\mbH_t}^2 + \cL_{\mathsf{nd}}(\mbz)  \\
+&= \mathrm{prox}(\mbbeta^{(t)} -  \mbH_t^{-1} \mbg_t; \mbH_t)
+\end{align*}
+
+As with Newton's method, however, we often need to use damped updates,
+\begin{align*}
+\mbbeta^{(t+1)} &= \mbbeta^{(t)} + \alpha_t (\hat{\mbbeta}^{(t+1)} - \mbbeta^{(t)}),
+\end{align*} 
+However, solving the proximal Newton
+mapping can be more challenging.
+
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Proximal Newton for Sparse
+GLMs}\label{proximal-newton-for-sparse-glms}
+
+Let's consider the proximal Newton mapping for \(\ell_1\)-regularized
+GLMs, like logistic regression. Here, the non-differentiable part of the
+objective is \(\cL_{\mathsf{nd}}(\mbbeta) = \lambda \|\mbbeta\|_1\).
+Unfortunately, the proximal Newton update no longer has a closed form
+solution because when we introduce the Hessian, the problem no longer
+separates across coordinates since the Hessian is generally not
+diagonal.
+
+However, note that the proximal Newton step minimizes a second-order
+Taylor approximation of the log likelihood plus an
+\(\ell_1\)-regularization penalty, \begin{align*}
+\mathrm{prox}(\mbu; \mbH_t) 
+&= \arg \min_{\mbz} \cL_{\mathsf{d}}(\mbbeta^{(t)}) + (\mbz - \mbbeta^{(t)})^\top \mbg_t + \frac{1}{2} (\mbz - \mbbeta^{(t)})^\top \mbH_t (\mbz - \mbbeta^{(t)}) + \cL_{\mathsf{nd}}(z)
+\end{align*}
+
+This is exactly the same problem in the inner loop of the
+\texttt{glmnet} algorithm! In particular, we can view the second-order
+Taylor approximation of the log likelihood as a weighted least squares
+objective with working responses and weights. We can solve that inner
+problem with coordinate ascent, just like above.
+
+\textbf{TL;DR: the intuitive algorithm we derived above is really a
+proximal Newton algorithm.}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Caveats}\label{caveats}
+
+As with regular Newton's method, proximal Newton exhibits local
+quadratic convergence to obtain error \(\epsilon\) in
+\(\cO(\log \log 1/\epsilon)\) iterations. Though here, each iteration
+requires an inner coordinate descent loop to solve the proximal mapping.
+
+\textbf{Warning:} In practice, you may need to also
+implement a backtracking line search to choose the step size
+\(\alpha_t\), since you may not start in the local quadratic regime.
+Logistic regression with decent initialization is reasonably well
+behaved, but Poisson regression with log link functions can be
+sensitive. 
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Conclusion}\label{conclusion}
+
+The proximal methods disussed today are what run behind the scenes of
+modern packages for sparse linear and logistic regression. 
+
+In
+particular,
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html}{\texttt{sklearn.linear\_model.Lasso}}
+uses a fast coordinate descent algorithm like discussed above, and
+\href{https://glmnet.stanford.edu/articles/glmnet.html}{GLMNet}
+(Friedmann et al., 2010) uses a proximal Newton
+algorithm with coordinate descent for the proximal step.
+
+\end{frame}
+
+    
+    
+\end{document}
