@@ -9,6 +9,7 @@ parts:
     - file: lectures/03_logreg.ipynb
     - file: lectures/04_expfam.ipynb
     - file: lectures/05_glms_solns.ipynb
+    - file: lectures/06_sparse_glms.ipynb
     
   - caption: Assignments
     chapters:
