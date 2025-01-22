@@ -13,6 +13,7 @@ execute:
     - '05_glms.ipynb'
     - '05_glms_solns.ipynb'
     - '06_sparse_glms.ipynb'
+    - '06_sparse_glms_solns.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
     - 'hw2_solutions.ipynb'
