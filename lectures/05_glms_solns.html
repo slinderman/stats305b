@@ -66,7 +66,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/05_glms_solns';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="next" title="Sparse GLMs" href="06_sparse_glms.html" />
     <link rel="prev" title="Exponential Families" href="04_expfam.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -172,6 +172,7 @@
 <li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_sparse_glms.html">Sparse GLMs</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -505,7 +506,7 @@
 <p>This is <strong>iteratively reweighted least squares (IRLS)</strong> with weights <span class="math notranslate nohighlight">\(w_i\)</span> and working responses</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\hat{z}_i = \frac{y_i - \hat{y}_i}{w_i},
+\hat{z}_i = \mbx_i^\top \mbbeta_t + \frac{y_i - \hat{y}_i}{w_i},
 \end{align*} \]</div>
 <p>both of which are functions of the current weights <span class="math notranslate nohighlight">\(\mbbeta\)</span>.</p>
 <p>As in logistic regression, the working responses can be seen as linear approximations to the observed responses mapped back through the link function.</p>
@@ -958,8 +959,8 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
 <p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
 <p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-5f224264-041e-47a0-82ed-da3c526722c7">
-<span class="eqno">(2)<a class="headerlink" href="#equation-5f224264-041e-47a0-82ed-da3c526722c7" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-6d0e8d16-b6b8-4a11-ae14-9e3fc139086a">
+<span class="eqno">(2)<a class="headerlink" href="#equation-6d0e8d16-b6b8-4a11-ae14-9e3fc139086a" title="Permalink to this equation">#</a></span>\[\begin{align}
     \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
     \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
 \end{align}\]</div>
@@ -1015,11 +1016,11 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
       </div>
     </a>
     <a class="right-next"
-       href="../assignments/hw0/hw0.html"
+       href="06_sparse_glms.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">HW0: PyTorch Primer</p>
+        <p class="prev-next-title">Sparse GLMs</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
