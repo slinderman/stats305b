@@ -10,6 +10,7 @@ parts:
     - file: lectures/04_expfam.ipynb
     - file: lectures/05_glms_solns.ipynb
     - file: lectures/06_sparse_glms_solns.ipynb
+    - file: lectures/07_bayes.ipynb
     
   - caption: Assignments
     chapters:
