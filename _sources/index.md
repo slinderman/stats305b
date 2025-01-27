@@ -41,10 +41,10 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Mon, Jan 20, 2025 | _MLK Day. No class_                    |  |  |
 | Wed, Feb  22, 2025 | [Sparse GLMs](lectures/06_sparse_glms_solns.ipynb) | [download](slides/06_sparse_glms.pdf) | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Fri, Jan 24, 2025 | <span style="color:red">**HW1 Due**</span> | | 
-| Mon, Jan 27, 2025 | [Bayesian Inference](lectures/07_bayes.ipynb) <br> **HW2 Released** | | {cite:p}`gelman1995bayesian` Ch. 1 |
+| Mon, Jan 27, 2025 | [Bayesian Inference](lectures/07_bayes.ipynb) <br> **HW2 Released** | [download](slides/07_bayes.pdf) | {cite:p}`gelman1995bayesian` Ch. 1 |
 | Wed, Jan 29, 2025 | Markov Chain Monte Carlo |  | | 
 | Mon, Feb  3, 2025 | Variational Inference | | | 
-| Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam (in class)**</span> | | |
+| Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | | |
 | Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/09_mixtures.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 9 |
 | Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) | | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
