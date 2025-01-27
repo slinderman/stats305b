@@ -41,7 +41,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Mon, Jan 20, 2025 | _MLK Day. No class_                    |  |  |
 | Wed, Feb  22, 2025 | [Sparse GLMs](lectures/06_sparse_glms_solns.ipynb) | [download](slides/06_sparse_glms.pdf) | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Fri, Jan 24, 2025 | <span style="color:red">**HW1 Due**</span> | | 
-| Mon, Jan 27, 2025 | [Bayesian Inference](lectures/06_bayes.md) <br> **HW2 Released** | | {cite:p}`gelman1995bayesian` Ch. 1 |
+| Mon, Jan 27, 2025 | [Bayesian Inference](lectures/07_bayes.ipynb) <br> **HW2 Released** | | {cite:p}`gelman1995bayesian` Ch. 1 |
 | Wed, Jan 29, 2025 | Markov Chain Monte Carlo |  | | 
 | Mon, Feb  3, 2025 | Variational Inference | | | 
 | Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam (in class)**</span> | | |

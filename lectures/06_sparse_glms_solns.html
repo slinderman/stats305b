@@ -66,7 +66,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/06_sparse_glms_solns';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="next" title="Bayesian Inference" href="07_bayes.html" />
     <link rel="prev" title="Generalized Linear Models" href="05_glms_solns.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -173,6 +173,7 @@
 <li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_glms_solns.html">Generalized Linear Models</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes.html">Bayesian Inference</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -1024,8 +1025,8 @@ The idea is to stick as close to vanilla gradient descent as possible, while cor
 <section id="proximal-mapping">
 <h3>Proximal Mapping<a class="headerlink" href="#proximal-mapping" title="Link to this heading">#</a></h3>
 <p>We call the function,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-9128b11c-73b6-4bdf-8a7f-0e61ab12eef7">
-<span class="eqno">(3)<a class="headerlink" href="#equation-9128b11c-73b6-4bdf-8a7f-0e61ab12eef7" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-50b950e9-2689-4724-9a2b-c9026319021f">
+<span class="eqno">(3)<a class="headerlink" href="#equation-50b950e9-2689-4724-9a2b-c9026319021f" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{prox}(\mbu; \alpha_t) 
 &amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \cL_{\mathsf{nd}}(\mbz)
 \end{align}\]</div>
@@ -1215,11 +1216,11 @@ Note that we have explicitly separated out the intercept in the objective since 
       </div>
     </a>
     <a class="right-next"
-       href="../assignments/hw0/hw0.html"
+       href="07_bayes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">HW0: PyTorch Primer</p>
+        <p class="prev-next-title">Bayesian Inference</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
