@@ -1,0 +1,523 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{simple}
+
+\input{preamble/preamble.tex}
+\input{preamble/preamble_math.tex}
+% \input{preamble/preamble_acronyms.tex}
+
+\title{Lecture 8: Markov Chain Monte Carlo}
+\subtitle{STATS305B: Applied  Statistics II}
+\author{Scott Linderman}
+\date{\today}
+
+
+\begin{document}
+
+
+\maketitle
+
+\begin{frame}{Announcements}
+
+    \begin{itemize}
+        \item HW2 posted online. Due Wed, Feb 12.
+        \item \textcolor{red}{\textbf{Midterm next Wednesday in MCCULL 115}} See practice test online.
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Recap}
+
+    Last Time...
+    \begin{itemize}
+        \item Bayesian Inference
+        \item Conjugate Priors
+        \item Laplace Approximation
+        \item Monte Carlo
+        \item Start on MCMC
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Outline}
+
+  Today...
+  \begin{itemize}
+      \item Markov Chains
+      \item Metropolis Hastings Algorithm
+      \item Gradient-based Proposals (MALA and HMC)
+      \item Gibbs Sampling
+      \item Augmentation Schemes (with Demo)
+  \end{itemize}
+  
+\end{frame}
+    
+
+    
+\begin{frame}[t,allowframebreaks]{Approximating Posterior
+Expectations}\label{approximating-posterior-expectations}
+
+Generally, we can't analytically compute posterior expectations. In
+these cases, we need to resort to approximations. For example, we could
+use \emph{quadrature methods} like Simpson's rule or the trapezoid rule
+to numerically approximate the integral over \(\Theta\).
+
+Roughly, \begin{align*}
+\E_{p(\theta | x)}[f(\theta)] \approx \sum_{m=1}^M p(\theta_m \mid x) \, f(\theta_m) \, \Delta_m
+\end{align*} where \(\theta_m \subset \Theta\) is a grid of points and
+\(\Delta_m\) is a volume around that point.
+
+This works for low-dimensional problems (say, up to \(5\) dimensions),
+but the number of points (\(M\)) needed to get a good estimate grows
+exponentially with the parameter dimension.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Monte Carlo
+Approximations}\label{monte-carlo-approximations}
+
+\textbf{Idea:} approximate the expectation via sampling,
+
+\begin{align*}
+\E_{p(\theta | x)}[f(\theta)] \approx \frac{1}{M} \sum_{m=1}^M f(\theta_m) \quad \text{where} \quad \theta_m \sim p(\theta \mid x).
+\end{align*}
+
+Let \(\hat{f} = \frac{1}{M} \sum_{m=1}^M f(\theta_m)\) denote the Monte
+Carlo estimate. It is a random variable, since it's a function of random
+samples \(\theta_m\). As such, we can reason about its mean and
+variance.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Unbiasedness}\label{unbiasedness}
+
+Clearly,
+
+\begin{align*}
+\E[\hat{f}] = \frac{1}{M} \sum_{m=1}^M \E_{p(\theta | x)}[f(\theta)] = \E_{p(\theta | x)}[f(\theta)].
+\end{align*}
+
+Thus, \(\hat{f}\) is an \emph{unbiased} estimate of the desired
+expectation.
+\end{frame}
+
+
+\begin{frame}[t,allowframebreaks]{Monte Carlo Variance}\label{monte-carlo-variance}
+
+What about its variance? \begin{align*}
+\Var[\hat{f}] = \Var \left(\frac{1}{M} \sum_{m=1}^M f(\theta_m) \right) = \frac{1}{M^2} \left( \sum_{m=1}^M \Var[f(\theta)] + 2 \sum_{1 \leq m < m' \leq M} \mathrm{Cov} [f(\theta_m), f(\theta_{m'})] \right)
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Comparison to Numerical
+Quadrature}\label{comparison-to-numerical-quadrature}
+
+\begin{itemize}
+\item
+  If the samples are not only identically distributed but also
+  \emph{uncorrelated}, then
+  \(\Var[\hat{f}] = \frac{1}{M} \Var[f(\theta)]\).
+\item
+  In this case, the \emph{root mean squared error} (RMSE) of the
+  estimate is \(\sqrt{\Var[\hat{f}]} = O(M^{-\frac{1}{2}})\).
+\item
+  Compare this to Simpson's rule, which for smooth 1D problems has an
+  error rate of \(O(M^{-4})\). That's roughly 8 times better than Monte
+  Carlo!
+\item
+  However, for multidimensional problems, Simpson's rule is
+  \(O(M^{-\frac{4}{D}})\), whereas the \textbf{error rate of Monte Carlo
+  does not depend on the dimensionality!}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{The Catch}\label{the-catch}
+
+So far so good: we'll just draw a lot of samples to drive down our Monte
+Carlo error. \textbf{Here's the catch!} How do you draw samples from the
+posterior \(p(\theta \mid x)\)? We're interested in Monte Carlo for
+cases where the posterior does not admit a simple closed form! In
+general, sampling the posterior is as hard as computing the marginal
+likelihood.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Markov Chains}\label{markov-chains}
+
+A \emph{Markov chain} is a joint distribution of a sequence of
+variables, \(\pi(\theta_1, \theta_2, \ldots, \theta_M)\). (To avoid
+confusion with the model \(p\), we denote the densities associated with
+the Markov chain by \(\pi\).) The Markov chain factorizes so that each
+variable is drawn conditional on the previous variable, \begin{align*}
+\pi(\theta_1, \theta_2, \ldots, \theta_M) = \pi_{1}(\theta_1) \prod_{m=2}^M \pi(\theta_m \mid \theta_{m-1}).
+\end{align*} This is called the \emph{Markov property}.
+
+\begin{itemize}
+\item
+  The distribution \(\pi_1(\theta_1)\) is called the \emph{initial
+  distribution}.
+\item
+  The distribution \(\pi(\theta_m \mid \theta_{m-1})\) is called the
+  \emph{transition distribution}. If the transition distribution is the
+  same for each \(m\), the Markov chain is \emph{homogeneous}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Stationary distributions}\label{stationary-distributions}
+
+Let \(\pi_m(\theta_m)\) denote the marginal distribution of sample
+\(\theta_m\). It can be obtained recursively as, \begin{align*}
+\pi_m(\theta_m) = \int \pi_{m-1}(\theta_{m-1}) \, \pi(\theta_m \mid \theta_{m-1}) \dif \theta_{m-1}.
+\end{align*} We are interested in the asymptotic behavior of the
+marginal distributions as \(m \to \infty\).
+
+A distribution \(\pi^\star(\theta)\) is a \textbf{stationary
+distribution} if, \begin{align*}
+\pi^\star(\theta) = \int \pi^\star(\theta') \, \pi(\theta \mid \theta') \dif \theta'.
+\end{align*} That is, suppose the marginal of sample \(\theta'\) is
+\(\pi^\star(\theta)\). Then the marginal of the next time point is also
+\(\pi^\star(\theta)\).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Detailed balance}\label{detailed-balance}
+
+How can we relate transition distributions and stationary distributions?
+A sufficient (but not necessary) condition for \(\pi^\star(\theta)\) to
+be a stationary distribution is that it satisfies \emph{detailed
+balance}, \begin{align*}
+\pi^\star(\theta') \pi(\theta \mid \theta') = \pi^\star(\theta) \pi(\theta' \mid \theta).
+\end{align*} In words, the probability of starting at \(\theta'\) and
+moving to \(\theta\) is the same as that of starting at \(\theta\) and
+moving to \(\theta'\), if you draw the starting point from the
+stationary distribution.
+
+To see that detailed balance is sufficient, integrate both sides to get,
+\begin{align*}
+\int \pi^\star(\theta') \pi(\theta \mid \theta') \dif \theta' = \int \pi^\star(\theta) \pi(\theta' \mid \theta) \dif \theta' = \pi^\star(\theta).
+\end{align*} Thus, \(\pi^\star(\theta)\) is a stationary distribution of
+the Markov chain with transitions \(\pi(\theta \mid \theta')\).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Ergodicity}\label{ergodicity}
+
+Detailed balance can be used to show that \(\pi^\star(\theta)\) is
+\emph{a} stationary distribution, but not that it is \emph{the unique}
+one. This is where \emph{ergodicity} comes in. A Markov chain is ergodic
+if \(\pi_m(\theta_m) \to \pi^\star(\theta)\) regardless of
+\(\pi_1(\theta_1)\). An ergodic chain has only one stationary
+distribution, \(\pi^\star(\theta)\).
+
+The easiest way to prove ergodicity is to show that it is possible to
+reach any \(\theta'\) from any other \(\theta\). E.g. this is trivially
+so if \(\pi(\theta' \mid \theta) > 0\).
+
+\textit{Note:} A more technical definition is that all pairs of
+sets \emph{communicate}, in which case the chain is \emph{irreducible},
+and that each state is \emph{aperiodic}. The definitions can be a bit
+overwhelming. 
+\end{frame}
+
+
+\begin{frame}[t,allowframebreaks]{Markov Chain Monte Carlo
+(MCMC)}\label{markov-chain-monte-carlo-mcmc}
+
+Finally, we come to our \textbf{main objective}: designing a Markov
+chain for which \emph{the posterior is the unique stationary
+distribution.} That is, we want
+\(\pi^\star(\theta) = p(\theta \mid x)\).
+
+Recall our \textbf{constraint}: we can only compute the joint
+probability (the numerator in Bayes' rule), not the marginal likelihood
+(the denominator). Fortunately, that still allows us to compute ratios
+of posterior densities! We have, \begin{align*}
+\frac{p(\theta \mid x)}{p(\theta' \mid x)} = \frac{p(\theta, x)}{p(x)} \frac{p(x)}{p(\theta', x)} = \frac{p(\theta, x)}{p(\theta', x)}.
+\end{align*} Now rearrange the detailed balance condition to relate
+ratios of transition probabilities to ratios of joint probabilities,
+\begin{align*}
+\frac{\pi(\theta \mid \theta')}{\pi(\theta' \mid \theta)} = \frac{\pi^\star(\theta)}{\pi^\star(\theta')} 
+= \frac{p(\theta \mid x)}{p(\theta' \mid x)} = \frac{p(\theta, x)}{p(\theta', x)}
+\end{align*}
+
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{The Metropolis-Hastings
+algorithm}\label{the-metropolis-hastings-algorithm}
+
+To construct such a transition distribution
+\(\pi(\theta \mid \theta')\), break it down into two steps.
+
+\begin{enumerate}
+\item
+  Sample a proposal \(\theta\) from a \emph{proposal distribution}
+  \(q(\theta \mid \theta')\),
+\item
+  Accept the proposal with \emph{acceptance probability}
+  \(a(\theta' \to \theta)\). (Otherwise, set \(\theta = \theta'\).)
+\end{enumerate}
+
+Thus, \begin{align*}
+\pi(\theta \mid \theta') = 
+\begin{cases}
+q(\theta \mid \theta') \, a(\theta' \to \theta) & \text{if } \theta' \neq \theta \\
+\int q(\theta'' \mid \theta') \, (1 - a(\theta' \to \theta'')) \dif \theta'' & \text{if } \theta' = \theta
+\end{cases}
+\end{align*}
+
+Detailed balance is trivially satisfied when \(\theta = \theta'\). When
+\(\theta \neq \theta'\), we need \begin{align*}
+\frac{\pi(\theta \mid \theta')}{\pi(\theta' \mid \theta)} = \frac{q(\theta \mid \theta') \, a(\theta' \to \theta)}{q(\theta' \mid \theta) \, a(\theta \to \theta')} = \frac{p(\theta, x)}{p(\theta', x)} \Rightarrow \frac{a(\theta' \to \theta)}{a(\theta \to \theta')} = \underbrace{\frac{p(\theta, x) \, q(\theta' \mid \theta)}{p(\theta', x) \, q(\theta \mid \theta')}}_{\triangleq A(\theta' \to \theta)}
+\end{align*}
+
+WLOG, assume $A(\theta' \to \theta) \leq 1$. (If it's not, its
+inverse \(A(\theta \to \theta')\) must be.) A simple way to ensure
+detailed balance is to set
+\(a(\theta' \to \theta) = A(\theta' \to \theta)\) and
+\(a(\theta \to \theta') = 1\).
+
+We can succinctly capture both cases with, \begin{align*}
+a(\theta' \to \theta) = \min \left\{1, \, A(\theta' \to \theta) \right \} = \min \left\{1, \, \frac{p(\theta, x) \, q(\theta' \mid \theta)}{p(\theta', x) \, q(\theta \mid \theta')} \right \}.
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{The Metropolis algorithm}\label{the-metropolis-algorithm}
+
+Now consider the special case in which the proposal distribution is
+symmetric; i.e.~\(q(\theta \mid \theta') = q(\theta' \mid \theta)\).
+Then the proposal densities cancel in the acceptance probability and,
+\begin{align*}
+a(\theta' \to \theta) = \min \left\{1, \, \frac{p(\theta, x)}{p(\theta', x)} \right \}.
+\end{align*} In other words, you accept any proposal that moves
+``uphill,'' and only accept ``downhill'' moves with some probability.
+
+This is called the \emph{Metropolis algorithm} and it has close
+connections to \emph{simulated annealing}.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Smarter Proposals with
+Gradients}\label{smarter-proposals-with-gradients}
+
+\begin{itemize}
+\item
+  Metropolis-Hastings with a symmetric Gaussian proposal behaves (kind
+  of) like a random walk.
+\item
+  Neal (2012) argues that in \(D\) dimensions, random
+  walk MH needs \(O(D^2)\) iterations to get an independent sample.
+\item
+  Can we develop more efficient transition distributions? \textbf{Yes!}
+  If we have more information about the log probability.
+\item
+  For example, suppose that the log probability \(\log p(\theta)\) is
+  differentiable. We can use the gradient to make proposals that move
+  farther and are more likely to be accepted.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Metropolis-Adjusted Langevin Algorithm
+(MALA)}\label{metropolis-adjusted-langevin-algorithm-mala}
+
+The \emph{Metropolis-Adjusted Langevin Algorithm} uses the gradient of
+the log probability to make asymmetric proposals, \begin{align*}
+    q(\mbtheta' \mid \mbtheta) &= \cN(\mbtheta + \tau \nabla_{\mbtheta} \log p(\mbtheta, \mbX), \, 2\tau^2 \mbI) 
+\end{align*}
+
+\emph{Note:}
+\(q(\mbtheta' \mid \mbtheta) \neq q(\mbtheta \mid \mbtheta')\)! To
+calculate the acceptance probability, you need the gradient at both
+points.
+
+MALA can be motivated as a discrete-time approximation to the
+\emph{Langevin} diffusion, a continuous-time stochastic differential
+equation for modeling molecular dynamics.
+
+In high dimensions, the extra information provided by the gradient can
+lead to much more efficient chains. Neal argues that MALA needs
+\(O(D^{4/3})\) computation to produce an independent sample.
+
+But why stop at one gradient step?
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Hamiltonian Monte Carlo
+(HMC)}\label{hamiltonian-monte-carlo-hmc}
+
+\textbf{Idea:} Think of negative log probability as an \emph{energy
+landscape}. Now imagine a puck sliding around on this bumpy surface.
+Give it random kicks; it will tend to slide downhill toward points of
+low potential energy (high probability). Each kick can displace the puck
+by a large amount. Done properly, the puck will visit points with
+probability proportional to the posterior probability.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Notation}\label{notation}
+
+Following Neal (2012), let
+
+\begin{itemize}
+\item
+  \(\mbq \in \reals^D\) denote the \emph{position}; i.e.~the current
+  parameters (previously \(\theta\))
+\item
+  \(\mbp \in \reals^D\) denote the \emph{momentum}; auxiliary variables
+  that we don't care about, but which are necessary for HMC.
+\item
+  \(\mbz = [\mbq, \mbp]^\top \in \reals^{2D}\) denote the combined
+  \emph{state of the system}.
+\item
+  \(\mbM\) denote the \emph{mass matrix}, another artificial construct.
+  Typically, this will be \(m \mbI\)
+\item
+  \(U(\mbq)\) denote the \emph{potential energy}
+\item
+  \(K(\mbp) = \frac{1}{2} \mbp^\top \mbM^{-1} \mbp\) denote the
+  \emph{kinetic energy}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[t,allowframebreaks]{Hamiltonian Dynamics}\label{hamiltonian-dynamics}
+
+The \emph{Hamiltonian} is the sum of the potential
+\(H(\mbq, \mbp) = U(\mbq) + K(\mbp) = U(\mbq) + \frac{1}{2} \mbp^\top \mbM^{-1} \mbp\).
+
+The partial derivatives determine how the state evolves over time,
+\begin{align*}
+    \frac{\dif q_d}{\dif t} &= \frac{\partial H}{\partial p_d} = [\mbM^{-1} \mbp]_d \\
+    \frac{\dif p_d}{\dif t} &= -\frac{\partial H}{\partial q_d} = -\frac{\partial  U}{\partial q_d}
+\end{align*} for \(d=1,\ldots, D\).
+
+Compactly, \begin{align*}
+    \frac{\dif \mbz}{\dif t} &= \mbJ \nabla H(z)
+    \qquad\text{ where } \qquad
+    \mbJ = \begin{bmatrix} \mbzero, \mbI \\ -\mbI, \mbzero
+    \end{bmatrix}
+\end{align*} 
+\end{frame}
+
+    
+
+\begin{frame}[t,allowframebreaks]{Using Hamiltonian Dynamics for Posterior
+Inference}\label{using-hamiltonian-dynamics-for-posterior-inference}
+
+Define a joint distribution on positions and momenta as, \begin{align*}
+    p(\mbq, \mbp) &\propto \exp \left \{-H(\mbq, \mbp) \right \} \propto 
+    \exp \left \{-U(\mbq) - K(\mbp)\right \}.
+\end{align*}
+
+Now let \(U(\mbq) = -\log p(\mbtheta = \mbq, \mbX)\) be the
+\emph{negative} log joint probability. Then, \begin{align*}
+    p(\mbq, \mbp) &= p(\mbtheta = \mbq \mid \mbX) \times p(\mbp)
+\end{align*} Samples of \(\mbq\) will be marginally distributed
+according to the posterior \(p(\mbtheta = \mbq \mid \mbX)\).
+
+Samples of \(\mbp\) will be marginally distributed
+\(p(\mbp) = \frac{\exp \{ -K(\mbp)\}}{\int_{\reals^D} \exp \{-K(\mbp)\} \dif \mbp}\).
+These are \emph{auxiliary variables} that we don't really care
+about---they're just there to help us construct MH proposals.
+
+We choose \(K(\mbp)\) so \(p(\mbp)\) is convenient; e.g.~if
+\(K(\mbp) = \frac{1}{2} \mbp^\top \mbM^{-1} \mbp\) then \begin{align*}
+    p(\mbp) &= \cN(\mbp \mid \mbzero, \mbM).
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Algorithm}\label{algorithm}
+
+\textbf{Hamiltonian Monte Carlo (HMC)} is Metropolis-Hastings on the
+joint distribution of \((\mbq, \mbp)\) with proposals based on
+Hamiltonian dynamics.
+
+Starting at point \((\mbq', \mbp')\), sample the proposal distribution:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Throw away \(\mbp'\) and sample new momenta from their marginal
+  distribution \(\mbp \sim \cN(\mbzero, \mbM)\).
+\item
+  Approximate Hamiltonian dynamics for \(\Delta t\) time to get to a new
+  point \((\mbq, \mbp)\). (Use \(L = \Delta t/\epsilon\) Leapfrog
+  integration steps each of size \(\epsilon\).)
+\item
+  Flip the momentum \(\mbp \leftarrow -\mbp\) to make the proposal
+  symmetric.
+\end{enumerate}
+
+Then accept the proposed point \((\mbq, \mbp)\) with probability,
+\begin{align*}
+    a((\mbq', \mbp') \to (\mbq, \mbp)) &= 
+    \min \left\{1, \, \frac{\exp\{-H(\mbq, \mbp)\} \, q(\mbq', \mbp' \mid \mbq, \mbp)}{\exp\{-H(\mbq', \mbp')\} q(\mbq, \mbp \mid \mbq', \mbp')} \right \} \\
+    &=
+    \min \left\{1, \, \frac{\exp\{-H(\mbq, \mbp)\}}{\exp \{-H(\mbq', \mbp')\}} \right \}.
+\end{align*} If the Hamiltonian dynamics were simulated exactly, HMC
+would always accept. In practice, differences arise from numerical
+integration errors.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Gibbs Sampling}\label{gibbs-sampling}
+
+Gibbs is a special case of MH with proposals that always accept. Gibbs
+sampling updates one ``coordinate'' of \(\theta \in \reals^D\) at a time
+by sampling from its conditional distribution. The algorithm is:
+
+\textbf{Gibbs Sampling:}
+
+\textbf{Input:} Initial parameters \(\theta^{(0)}\), observations \(x\)
+
+\begin{itemize}
+\item
+  \textbf{For} \(t=1,\ldots, T\)
+
+  \begin{itemize}
+  \item
+    \textbf{For} \(d=1,\ldots, D\)
+
+    \begin{itemize}
+    \item
+      Sample
+      \(\theta_d^{(t)} \sim p(\theta_d \mid \theta_{1}^{(t)}, \ldots, \theta_{d-}^{(t)}, \theta_{d+1}^{(t-1)}, \ldots, \theta_D^{(t-1)}, x)\)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\textbf{Return} samples \(\{\theta^{(t)}\}_{t=1}^T\) ```
+
+You can think of Gibbs as cycling through \(D\) Metropolis-Hastings
+proposals, one for each coordinate \(d \in 1,\ldots,D\), \begin{align*}
+q_d(\theta \mid \theta') = p(\theta_d \mid \theta'_{\neg d}, x) \, \delta_{\theta'_{\neg d}}(\theta_{\neg d}),
+\end{align*} where
+\(\theta_{\neg d} = (\theta_1, \ldots, \theta_{d-1}, \theta_{d+1}, \ldots, \theta_D)\)
+denotes all parameters except \(\theta_d\).
+
+In other words, the proposal distribution \(q_d\) samples \(\theta_d\)
+from its conditional distribution and leaves all the other parameters
+unchanged.
+
+What is the probability of accepting this proposal? \begin{align*}
+a_d(\theta' \to \theta) 
+&= \min \left\{ 1, \, \frac{p(\theta, x) q_d(\theta' \mid \theta)}{p(\theta', x) q_d(\theta \mid \theta')} \right\} \\
+&= \min \left\{ 1, \, \frac{p(\theta, x) p(\theta_d' \mid \theta_{\neg d}, x) \delta_{\theta_{\neg d}}(\theta'_{\neg d})}{p(\theta', x) p(\theta_d \mid \theta'_{\neg d}, x) \delta_{\theta'_{\neg d}}(\theta_{\neg d})} \right\} \\
+&= \min \left\{ 1, \, \frac{p(\theta_{\neg d}, x) p(\theta_d \mid \theta_{\neg d}, x) p(\theta_d' \mid \theta_{\neg d}, x) \delta_{\theta_{\neg d}}(\theta'_{\neg d})}{p(\theta'_{\neg d}, x) p(\theta'_d \mid \theta'_{\neg d}, x) p(\theta_d \mid \theta'_{\neg d}, x) \delta_{\theta'_{\neg d}}(\theta_{\neg d})} \right\} \\
+&= \min \left\{1, 1 \right\} = 1
+\end{align*} for all \(\theta, \theta'\) that differ only in their
+\(d\)-th coordinate.
+
+\textit{The Gibbs proposal is an offer you cannot refuse.}
+
+Of course, if we only update one coordinate, the chain can't be ergodic.
+However, if we cycle through coordinates it generally will be.
+
+\textbf{Question:} If Gibbs sampling always accepts, is it strictly
+better than other Metropolis-Hastings algorithms? :::
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Conclusion}\label{conclusion}
+
+This was obviously a whirlwind of an introduction to Bayesian inference!
+There's plenty more to be said about Bayesian statistics --- choosing a
+prior, subjective vs objective vs empirical Bayesian approaches, the
+role of the marginal likelihood in Bayesian model comparison, varieties
+of MCMC, and other approaches to approximate Bayesian inference. We'll
+dig into some of these topics as the course goes on, but for now, we
+have some valuable tools for developing Bayesian modeling and inference
+with discrete data!
+\end{frame}
+
+    
+    
+\end{document}

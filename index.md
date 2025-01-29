@@ -42,7 +42,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Wed, Feb  22, 2025 | [Sparse GLMs](lectures/06_sparse_glms_solns.ipynb) | [download](slides/06_sparse_glms.pdf) | {cite:p}`friedman2010regularization` and {cite:p}`lee2014proximal`|
 | Fri, Jan 24, 2025 | <span style="color:red">**HW1 Due**</span> | | 
 | Mon, Jan 27, 2025 | [Bayesian Inference](lectures/07_bayes.ipynb) <br> **HW2 Released** | [download](slides/07_bayes.pdf) | {cite:p}`gelman1995bayesian` Ch. 1 |
-| Wed, Jan 29, 2025 | [Markov Chain Monte Carlo](lectures/08_mcmc.ipynb) and [Bayesian GLM Demo](lectures/08_bayes_glms_soln.ipynb) |  | | 
+| Wed, Jan 29, 2025 | [Markov Chain Monte Carlo](lectures/08_mcmc.ipynb) and [Bayesian GLM Demo](lectures/08_bayes_glms_soln.ipynb) | [download](slides/08_mcmc.pdf) | | 
 | Mon, Feb  3, 2025 | Variational Inference | | | 
 | Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | [download](midterm/midterm_2024.pdf) | |
 | Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/09_mixtures.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 9 |
