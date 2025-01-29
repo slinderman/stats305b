@@ -1,0 +1,902 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Markov Chain Monte Carlo &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/08_mcmc';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bayesian GLMs" href="08_bayes_glms_soln.html" />
+    <link rel="prev" title="Bayesian Inference" href="07_bayes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Markov Chain Monte Carlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_bayes_glms_soln.html">Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/lectures/08_mcmc.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/08_mcmc.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Markov Chain Monte Carlo</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-posterior-expectations">Approximating Posterior Expectations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-approximations">Monte Carlo Approximations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unbiasedness">Unbiasedness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-variance">Monte Carlo Variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-to-numerical-quadrature">Comparison to Numerical Quadrature</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-catch">The Catch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chains">Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-distributions">Stationary distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detailed-balance">Detailed balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity">Ergodicity</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-hastings-algorithm">The Metropolis-Hastings algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-algorithm">The Metropolis algorithm</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smarter-proposals-with-gradients">Smarter Proposals with Gradients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metropolis-adjusted-langevin-algorithm-mala">Metropolis-Adjusted Langevin Algorithm (MALA)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hamiltonian-monte-carlo-hmc">Hamiltonian Monte Carlo (HMC)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#notation">Notation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hamiltonian-dynamics">Hamiltonian Dynamics</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-hamiltonian-dynamics-for-posterior-inference">Using Hamiltonian Dynamics for Posterior Inference</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm">Algorithm</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibbs-sampling">Gibbs Sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="markov-chain-monte-carlo">
+<h1>Markov Chain Monte Carlo<a class="headerlink" href="#markov-chain-monte-carlo" title="Link to this heading">#</a></h1>
+<p>Markov chain Monte Carlo (MCMC) methods are algorithms for approximately sampling from an intractable distribution. They are widely used in Bayesian statistics to sample from intractable <em>posterior</em> distributions. Once we have samples, we can use them to approximate posterior expectations, which are of central importance.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.autograd.functional</span><span class="w"> </span><span class="kn">import</span> <span class="n">hessian</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bernoulli</span><span class="p">,</span> <span class="n">Beta</span><span class="p">,</span> <span class="n">Binomial</span><span class="p">,</span> <span class="n">MultivariateNormal</span><span class="p">,</span> <span class="n">Normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="approximating-posterior-expectations">
+<h2>Approximating Posterior Expectations<a class="headerlink" href="#approximating-posterior-expectations" title="Link to this heading">#</a></h2>
+<p>Generally, we can’t analytically compute posterior expectations. In these cases, we need to resort to approximations. For example, we could use <em>quadrature methods</em> like Simpson’s rule or the trapezoid rule to numerically approximate the integral over <span class="math notranslate nohighlight">\(\Theta\)</span>.</p>
+<p>Roughly,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E_{p(\theta | x)}[f(\theta)] \approx \sum_{m=1}^M p(\theta_m \mid x) \, f(\theta_m) \, \Delta_m
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_m \subset \Theta\)</span> is a grid of points and <span class="math notranslate nohighlight">\(\Delta_m\)</span> is a volume around that point.</p>
+<p>This works for low-dimensional problems (say, up to <span class="math notranslate nohighlight">\(5\)</span> dimensions), but the number of points (<span class="math notranslate nohighlight">\(M\)</span>) needed to get a good estimate grows exponentially with the parameter dimension.</p>
+</section>
+<section id="monte-carlo-approximations">
+<h2>Monte Carlo Approximations<a class="headerlink" href="#monte-carlo-approximations" title="Link to this heading">#</a></h2>
+<p><strong>Idea:</strong> approximate the expectation via sampling,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E_{p(\theta | x)}[f(\theta)] \approx \frac{1}{M} \sum_{m=1}^M f(\theta_m) \quad \text{where} \quad \theta_m \sim p(\theta \mid x).
+\end{align*}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\hat{f} = \frac{1}{M} \sum_{m=1}^M f(\theta_m)\)</span> denote the Monte Carlo estimate. It is a random variable, since it’s a function of random samples <span class="math notranslate nohighlight">\(\theta_m\)</span>. As such, we can reason about its mean and variance.</p>
+<section id="unbiasedness">
+<h3>Unbiasedness<a class="headerlink" href="#unbiasedness" title="Link to this heading">#</a></h3>
+<p>Clearly,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\E[\hat{f}] = \frac{1}{M} \sum_{m=1}^M \E_{p(\theta | x)}[f(\theta)] = \E_{p(\theta | x)}[f(\theta)].
+\end{align*}\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(\hat{f}\)</span> is an <em>unbiased</em> estimate of the desired expectation.</p>
+</section>
+<section id="monte-carlo-variance">
+<h3>Monte Carlo Variance<a class="headerlink" href="#monte-carlo-variance" title="Link to this heading">#</a></h3>
+<p>What about its variance?</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Var[\hat{f}] = \Var \left(\frac{1}{M} \sum_{m=1}^M f(\theta_m) \right) = \frac{1}{M^2} \left( \sum_{m=1}^M \Var[f(\theta)] + 2 \sum_{1 \leq m &lt; m' \leq M} \mathrm{Cov} [f(\theta_m), f(\theta_{m'})] \right)
+\end{align*}\]</div>
+</section>
+<section id="comparison-to-numerical-quadrature">
+<h3>Comparison to Numerical Quadrature<a class="headerlink" href="#comparison-to-numerical-quadrature" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>If the samples are not only identically distributed but also <em>uncorrelated</em>, then <span class="math notranslate nohighlight">\(\Var[\hat{f}] = \frac{1}{M} \Var[f(\theta)]\)</span>.</p></li>
+<li><p>In this case, the <em>root mean squared error</em> (RMSE) of the estimate is <span class="math notranslate nohighlight">\(\sqrt{\Var[\hat{f}]} = O(M^{-\frac{1}{2}})\)</span>.</p></li>
+<li><p>Compare this to Simpson’s rule, which for smooth 1D problems has an error rate of <span class="math notranslate nohighlight">\(O(M^{-4})\)</span>. That’s roughly 8 times better than Monte Carlo!</p></li>
+<li><p>However, for multidimensional problems, Simpson’s rule is <span class="math notranslate nohighlight">\(O(M^{-\frac{4}{D}})\)</span>, whereas the <strong>error rate of Monte Carlo does not depend on the dimensionality!</strong></p></li>
+</ul>
+</section>
+<section id="the-catch">
+<h3>The Catch<a class="headerlink" href="#the-catch" title="Link to this heading">#</a></h3>
+<p>So far so good: we’ll just draw a lot of samples to drive down our Monte Carlo error. <strong>Here’s the catch!</strong> How do you draw samples from the posterior <span class="math notranslate nohighlight">\(p(\theta \mid x)\)</span>?
+We’re interested in Monte Carlo for cases where the posterior does not admit a simple closed form!
+In general, sampling the posterior is as hard as computing the marginal likelihood.</p>
+</section>
+</section>
+<section id="markov-chains">
+<h2>Markov Chains<a class="headerlink" href="#markov-chains" title="Link to this heading">#</a></h2>
+<p>A <em>Markov chain</em> is a joint distribution of a sequence of variables, <span class="math notranslate nohighlight">\(\pi(\theta_1, \theta_2, \ldots, \theta_M)\)</span>. (To avoid confusion with the model <span class="math notranslate nohighlight">\(p\)</span>, we denote the densities associated with the Markov chain by <span class="math notranslate nohighlight">\(\pi\)</span>.) The Markov chain factorizes so that each variable is drawn conditional on the previous variable,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi(\theta_1, \theta_2, \ldots, \theta_M) = \pi_{1}(\theta_1) \prod_{m=2}^M \pi(\theta_m \mid \theta_{m-1}).
+\end{align*}\]</div>
+<p>This is called the <em>Markov property</em>.</p>
+<ul class="simple">
+<li><p>The distribution <span class="math notranslate nohighlight">\(\pi_1(\theta_1)\)</span> is called the <em>initial distribution</em>.</p></li>
+<li><p>The distribution <span class="math notranslate nohighlight">\(\pi(\theta_m \mid \theta_{m-1})\)</span> is called the <em>transition distribution</em>. If the transition distribution is the same for each <span class="math notranslate nohighlight">\(m\)</span>, the Markov chain is <em>homogeneous</em>.</p></li>
+</ul>
+<section id="stationary-distributions">
+<h3>Stationary distributions<a class="headerlink" href="#stationary-distributions" title="Link to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\pi_m(\theta_m)\)</span> denote the marginal distribution of sample <span class="math notranslate nohighlight">\(\theta_m\)</span>. It can be obtained recursively as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi_m(\theta_m) = \int \pi_{m-1}(\theta_{m-1}) \, \pi(\theta_m \mid \theta_{m-1}) \dif \theta_{m-1}.
+\end{align*}\]</div>
+<p>We are interested in the asymptotic behavior of the marginal distributions as <span class="math notranslate nohighlight">\(m \to \infty\)</span>.</p>
+<p>A distribution <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> is a <strong>stationary distribution</strong> if,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi^\star(\theta) = \int \pi^\star(\theta') \, \pi(\theta \mid \theta') \dif \theta'.
+\end{align*}\]</div>
+<p>That is, suppose the marginal of sample <span class="math notranslate nohighlight">\(\theta'\)</span> is <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span>. Then the marginal of the next time point is also <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span>.</p>
+</section>
+<section id="detailed-balance">
+<h3>Detailed balance<a class="headerlink" href="#detailed-balance" title="Link to this heading">#</a></h3>
+<p>How can we relate transition distributions and stationary distributions? A sufficient (but not necessary) condition for <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> to be a stationary distribution is that it satisfies <em>detailed balance</em>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi^\star(\theta') \pi(\theta \mid \theta') = \pi^\star(\theta) \pi(\theta' \mid \theta).
+\end{align*}\]</div>
+<p>In words, the probability of starting at <span class="math notranslate nohighlight">\(\theta'\)</span> and moving to <span class="math notranslate nohighlight">\(\theta\)</span> is the same as that of starting at <span class="math notranslate nohighlight">\(\theta\)</span> and moving to <span class="math notranslate nohighlight">\(\theta'\)</span>, if you draw the starting point from the stationary distribution.</p>
+<p>To see that detailed balance is sufficient, integrate both sides to get,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\int \pi^\star(\theta') \pi(\theta \mid \theta') \dif \theta' = \int \pi^\star(\theta) \pi(\theta' \mid \theta) \dif \theta' = \pi^\star(\theta).
+\end{align*}\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> is a stationary distribution of the Markov chain with transitions <span class="math notranslate nohighlight">\(\pi(\theta \mid \theta')\)</span>.</p>
+</section>
+<section id="ergodicity">
+<h3>Ergodicity<a class="headerlink" href="#ergodicity" title="Link to this heading">#</a></h3>
+<p>Detailed balance can be used to show that <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span> is <em>a</em> stationary distribution, but not that it is <em>the unique</em> one. This is where <em>ergodicity</em> comes in. A Markov chain is ergodic if <span class="math notranslate nohighlight">\(\pi_m(\theta_m) \to \pi^\star(\theta)\)</span> regardless of <span class="math notranslate nohighlight">\(\pi_1(\theta_1)\)</span>. An ergodic chain has only one stationary distribution, <span class="math notranslate nohighlight">\(\pi^\star(\theta)\)</span>.</p>
+<p>The easiest way to prove ergodicity is to show that it is possible to reach any <span class="math notranslate nohighlight">\(\theta'\)</span> from any other <span class="math notranslate nohighlight">\(\theta\)</span>. E.g. this is trivially so if <span class="math notranslate nohighlight">\(\pi(\theta' \mid \theta) &gt; 0\)</span>.</p>
+<div class="admonition-note admonition">
+<p class="admonition-title">Note</p>
+<p>A more technical definition is that all pairs of sets <em>communicate</em>, in which case the chain is <em>irreducible</em>, and that each state is <em>aperiodic</em>. The definitions can be a bit overwhelming.</p>
+</div>
+</section>
+</section>
+<section id="markov-chain-monte-carlo-mcmc">
+<h2>Markov Chain Monte Carlo (MCMC)<a class="headerlink" href="#markov-chain-monte-carlo-mcmc" title="Link to this heading">#</a></h2>
+<p>Finally, we come to our <strong>main objective</strong>: designing a Markov chain for which <em>the posterior is the unique stationary distribution.</em> That is, we want <span class="math notranslate nohighlight">\(\pi^\star(\theta) = p(\theta \mid x)\)</span>.</p>
+<p>Recall our <strong>constraint</strong>: we can only compute the joint probability (the numerator in Bayes’ rule), not the marginal likelihood (the denominator). Fortunately, that still allows us to compute ratios of posterior densities! We have,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{p(\theta \mid x)}{p(\theta' \mid x)} = \frac{p(\theta, x)}{p(x)} \frac{p(x)}{p(\theta', x)} = \frac{p(\theta, x)}{p(\theta', x)}.
+\end{align*}\]</div>
+<p>Now rearrange the detailed balance condition to relate ratios of transition probabilities to ratios of joint probabilities,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\pi(\theta \mid \theta')}{\pi(\theta' \mid \theta)} = \frac{\pi^\star(\theta)}{\pi^\star(\theta')} 
+= \frac{p(\theta \mid x)}{p(\theta' \mid x)} = \frac{p(\theta, x)}{p(\theta', x)}
+\end{align*}\]</div>
+<section id="the-metropolis-hastings-algorithm">
+<h3>The Metropolis-Hastings algorithm<a class="headerlink" href="#the-metropolis-hastings-algorithm" title="Link to this heading">#</a></h3>
+<p>To construct such a transition distribution <span class="math notranslate nohighlight">\(\pi(\theta \mid \theta')\)</span>, break it down into two steps.</p>
+<ol class="arabic simple">
+<li><p>Sample a proposal <span class="math notranslate nohighlight">\(\theta\)</span> from a <em>proposal distribution</em> <span class="math notranslate nohighlight">\(q(\theta \mid \theta')\)</span>,</p></li>
+<li><p>Accept the proposal with <em>acceptance probability</em> <span class="math notranslate nohighlight">\(a(\theta' \to \theta)\)</span>. (Otherwise, set <span class="math notranslate nohighlight">\(\theta = \theta'\)</span>.)</p></li>
+</ol>
+<p>Thus,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\pi(\theta \mid \theta') = 
+\begin{cases}
+q(\theta \mid \theta') \, a(\theta' \to \theta) &amp; \text{if } \theta' \neq \theta \\
+\int q(\theta'' \mid \theta') \, (1 - a(\theta' \to \theta'')) \dif \theta'' &amp; \text{if } \theta' = \theta
+\end{cases}
+\end{align*}\]</div>
+<p>Detailed balance is trivially satisfied when <span class="math notranslate nohighlight">\(\theta = \theta'\)</span>. When <span class="math notranslate nohighlight">\(\theta \neq \theta'\)</span>, we need</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{\pi(\theta \mid \theta')}{\pi(\theta' \mid \theta)} = \frac{q(\theta \mid \theta') \, a(\theta' \to \theta)}{q(\theta' \mid \theta) \, a(\theta \to \theta')} = \frac{p(\theta, x)}{p(\theta', x)} \Rightarrow \frac{a(\theta' \to \theta)}{a(\theta \to \theta')} = \underbrace{\frac{p(\theta, x) \, q(\theta' \mid \theta)}{p(\theta', x) \, q(\theta \mid \theta')}}_{\triangleq A(\theta' \to \theta)}
+\end{align*}\]</div>
+<p>WLOG, assume <span class="math notranslate nohighlight">\( A(\theta' \to \theta) \leq 1\)</span>. (If it’s not, its inverse <span class="math notranslate nohighlight">\(A(\theta \to \theta')\)</span> must be.) A simple way to ensure detailed balance is to set <span class="math notranslate nohighlight">\(a(\theta' \to \theta) = A(\theta' \to \theta)\)</span> and <span class="math notranslate nohighlight">\(a(\theta \to \theta') = 1\)</span>.</p>
+<p>We can succinctly capture both cases with,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a(\theta' \to \theta) = \min \left\{1, \, A(\theta' \to \theta) \right \} = \min \left\{1, \, \frac{p(\theta, x) \, q(\theta' \mid \theta)}{p(\theta', x) \, q(\theta \mid \theta')} \right \}.
+\end{align*}\]</div>
+</section>
+<section id="the-metropolis-algorithm">
+<h3>The Metropolis algorithm<a class="headerlink" href="#the-metropolis-algorithm" title="Link to this heading">#</a></h3>
+<p>Now consider the special case in which the proposal distribution is symmetric; i.e. <span class="math notranslate nohighlight">\(q(\theta \mid \theta') = q(\theta' \mid \theta)\)</span>. Then the proposal densities cancel in the acceptance probability and,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a(\theta' \to \theta) = \min \left\{1, \, \frac{p(\theta, x)}{p(\theta', x)} \right \}.
+\end{align*}\]</div>
+<p>In other words, you accept any proposal that moves “uphill,” and only accept “downhill” moves with some probability.</p>
+<p>This is called the <em>Metropolis algorithm</em> and it has close connections to <em>simulated annealing</em>.</p>
+</section>
+</section>
+<section id="smarter-proposals-with-gradients">
+<h2>Smarter Proposals with Gradients<a class="headerlink" href="#smarter-proposals-with-gradients" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Metropolis-Hastings with a symmetric Gaussian proposal behaves (kind of) like a random walk.</p></li>
+<li><p><span id="id1"></span> argues that in <span class="math notranslate nohighlight">\(D\)</span> dimensions, random walk MH needs <span class="math notranslate nohighlight">\(O(D^2)\)</span> iterations to get an independent sample.</p></li>
+<li><p>Can we develop more efficient transition distributions? <strong>Yes!</strong> If we have more information about the log probability.</p></li>
+<li><p>For example, suppose that the log probability <span class="math notranslate nohighlight">\(\log p(\theta)\)</span> is differentiable. We can use the gradient to make proposals that move farther and are more likely to be accepted.</p></li>
+</ul>
+<section id="metropolis-adjusted-langevin-algorithm-mala">
+<h3>Metropolis-Adjusted Langevin Algorithm (MALA)<a class="headerlink" href="#metropolis-adjusted-langevin-algorithm-mala" title="Link to this heading">#</a></h3>
+<p>The <em>Metropolis-Adjusted Langevin Algorithm</em> uses the gradient of the log probability to make asymmetric proposals,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    q(\mbtheta' \mid \mbtheta) &amp;= \cN(\mbtheta + \tau \nabla_{\mbtheta} \log p(\mbtheta, \mbX), \, 2\tau^2 \mbI) 
+\end{align*}\]</div>
+<p><em>Note:</em> <span class="math notranslate nohighlight">\(q(\mbtheta' \mid \mbtheta) \neq q(\mbtheta \mid \mbtheta')\)</span>! To calculate the acceptance probability, you need the gradient at both points.</p>
+<p>MALA can be motivated as a discrete-time approximation to the <em>Langevin</em> diffusion, a continuous-time stochastic differential equation for modeling molecular dynamics.</p>
+<p>In high dimensions, the extra information provided by the gradient can lead to much more efficient chains. Neal argues that MALA needs <span class="math notranslate nohighlight">\(O(D^{4/3})\)</span> computation to produce an independent sample.</p>
+<p>But why stop at one gradient step?</p>
+</section>
+<section id="hamiltonian-monte-carlo-hmc">
+<h3>Hamiltonian Monte Carlo (HMC)<a class="headerlink" href="#hamiltonian-monte-carlo-hmc" title="Link to this heading">#</a></h3>
+<p><strong>Idea:</strong> Think of negative log probability as an <em>energy landscape</em>. Now imagine a puck sliding around on this bumpy surface. Give it random kicks; it will tend to slide downhill toward points of low potential energy (high probability). Each kick can displace the puck by a large amount. Done properly, the puck will visit points with probability proportional to the posterior probability.</p>
+<section id="notation">
+<h4>Notation<a class="headerlink" href="#notation" title="Link to this heading">#</a></h4>
+<p>Following <span id="id2"></span>, let</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mbq \in \reals^D\)</span> denote the <em>position</em>; i.e. the current parameters (previously <span class="math notranslate nohighlight">\(\theta\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbp \in \reals^D\)</span> denote the <em>momentum</em>; auxiliary variables that we don’t care about, but which are necessary for HMC.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbz = [\mbq, \mbp]^\top \in \reals^{2D}\)</span> denote the combined <em>state of the system</em>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbM\)</span> denote the <em>mass matrix</em>, another artificial construct. Typically, this will be <span class="math notranslate nohighlight">\(m \mbI\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(U(\mbq)\)</span> denote the <em>potential energy</em></p></li>
+<li><p><span class="math notranslate nohighlight">\(K(\mbp) = \frac{1}{2} \mbp^\top \mbM^{-1} \mbp\)</span> denote the <em>kinetic energy</em></p></li>
+</ul>
+</section>
+<section id="hamiltonian-dynamics">
+<h4>Hamiltonian Dynamics<a class="headerlink" href="#hamiltonian-dynamics" title="Link to this heading">#</a></h4>
+<p>The <em>Hamiltonian</em> is the sum of the potential <span class="math notranslate nohighlight">\(H(\mbq, \mbp) = U(\mbq) + K(\mbp) = U(\mbq) + \frac{1}{2} \mbp^\top \mbM^{-1} \mbp\)</span>.</p>
+<p>The partial derivatives determine how the state evolves over time,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \frac{\dif q_d}{\dif t} &amp;= \frac{\partial H}{\partial p_d} = [\mbM^{-1} \mbp]_d \\
+    \frac{\dif p_d}{\dif t} &amp;= -\frac{\partial H}{\partial q_d} = -\frac{\partial  U}{\partial q_d}
+\end{align*}\]</div>
+<p>for <span class="math notranslate nohighlight">\(d=1,\ldots, D\)</span>.</p>
+<p>Compactly,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \frac{\dif \mbz}{\dif t} &amp;= \mbJ \nabla H(z)
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbJ &amp;= \begin{bmatrix} \mbzero, \mbI \\ -\mbI, \mbzero
+    \end{bmatrix}
+\end{align*}\]</div>
+<!-- 
+#### Properties
+
+1. **Reversibility:** The mapping from $z(t) \to z(t+ \Delta t)$ is one-to-one and invertible. To go from $z(t + \Delta t)$ to $z(t)$, negate $p(t + \Delta t)$, apply the the Hamiltonian dynamics for $\Delta t$ time, and negate the momentum again.
+    
+2. **Conservation of energy:** The Hamiltonian (which is the total energy in a closed system) is conserved,
+    
+\begin{align*}
+    \frac{\dif H}{\dif t} &= \sum_{d=1}^D \frac{\dif q_d}{\dif t} \frac{\partial H}{\partial q_d} + \frac{\dif p_d}{\dif t} \frac{\partial H}{\partial p_d} \\
+    &= \sum_{d=1}^D \frac{\partial H}{\partial p_d} \frac{\partial H}{\partial q_d} - \frac{\partial H}{\dif q_d} \frac{\partial H}{\partial p_d} = 0.
+\end{align*} --></section>
+<section id="using-hamiltonian-dynamics-for-posterior-inference">
+<h4>Using Hamiltonian Dynamics for Posterior Inference<a class="headerlink" href="#using-hamiltonian-dynamics-for-posterior-inference" title="Link to this heading">#</a></h4>
+<p>Define a joint distribution on positions and momenta as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbq, \mbp) &amp;\propto \exp \left \{-H(\mbq, \mbp) \right \} \propto 
+    \exp \left \{-U(\mbq) - K(\mbp)\right \}.
+\end{align*}\]</div>
+<p>Now let <span class="math notranslate nohighlight">\(U(\mbq) = -\log p(\mbtheta = \mbq, \mbX)\)</span> be the <em>negative</em> log joint probability. Then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbq, \mbp) &amp;= p(\mbtheta = \mbq \mid \mbX) \times p(\mbp)
+\end{align*}\]</div>
+<p>Samples of <span class="math notranslate nohighlight">\(\mbq\)</span> will be marginally distributed according to the posterior <span class="math notranslate nohighlight">\(p(\mbtheta = \mbq \mid \mbX)\)</span>.</p>
+<p>Samples of <span class="math notranslate nohighlight">\(\mbp\)</span> will be marginally distributed <span class="math notranslate nohighlight">\(p(\mbp) = \frac{\exp \{ -K(\mbp)\}}{\int_{\reals^D} \exp \{-K(\mbp)\} \dif \mbp}\)</span>. These are <em>auxiliary variables</em> that we don’t really care about—they’re just there to help us construct MH proposals.</p>
+<p>We choose <span class="math notranslate nohighlight">\(K(\mbp)\)</span> so <span class="math notranslate nohighlight">\(p(\mbp)\)</span> is convenient; e.g. if <span class="math notranslate nohighlight">\(K(\mbp) = \frac{1}{2} \mbp^\top \mbM^{-1} \mbp\)</span> then</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbp) &amp;= \cN(\mbp \mid \mbzero, \mbM).
+\end{align*}\]</div>
+</section>
+<section id="algorithm">
+<h4>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading">#</a></h4>
+<p><strong>Hamiltonian Monte Carlo (HMC)</strong> is Metropolis-Hastings on the joint distribution of <span class="math notranslate nohighlight">\((\mbq, \mbp)\)</span> with proposals based on Hamiltonian dynamics.</p>
+<p>Starting at point <span class="math notranslate nohighlight">\((\mbq', \mbp')\)</span>, sample the proposal distribution:</p>
+<ol class="arabic simple">
+<li><p>Throw away <span class="math notranslate nohighlight">\(\mbp'\)</span> and sample new momenta from their marginal distribution <span class="math notranslate nohighlight">\(\mbp \sim \cN(\mbzero, \mbM)\)</span>.</p></li>
+<li><p>Approximate Hamiltonian dynamics for <span class="math notranslate nohighlight">\(\Delta t\)</span> time to get to a new point <span class="math notranslate nohighlight">\((\mbq, \mbp)\)</span>. (Use <span class="math notranslate nohighlight">\(L = \Delta t/\epsilon\)</span> Leapfrog integration steps each of size <span class="math notranslate nohighlight">\(\epsilon\)</span>.)</p></li>
+<li><p>Flip the momentum <span class="math notranslate nohighlight">\(\mbp \leftarrow -\mbp\)</span> to make the proposal symmetric.</p></li>
+</ol>
+<p>Then accept the proposed point <span class="math notranslate nohighlight">\((\mbq, \mbp)\)</span> with probability,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    a((\mbq', \mbp') \to (\mbq, \mbp)) &amp;= 
+    \min \left\{1, \, \frac{\exp\{-H(\mbq, \mbp)\} \, q(\mbq', \mbp' \mid \mbq, \mbp)}{\exp\{-H(\mbq', \mbp')\} q(\mbq, \mbp \mid \mbq', \mbp')} \right \} \\
+    &amp;=
+    \min \left\{1, \, \frac{\exp\{-H(\mbq, \mbp)\}}{\exp \{-H(\mbq', \mbp')\}} \right \}.
+\end{align*}\]</div>
+<p>If the Hamiltonian dynamics were simulated exactly, HMC would always accept. In practice, differences arise from numerical integration errors.</p>
+</section>
+</section>
+</section>
+<section id="gibbs-sampling">
+<h2>Gibbs Sampling<a class="headerlink" href="#gibbs-sampling" title="Link to this heading">#</a></h2>
+<p>Gibbs is a special case of MH with proposals that always accept. Gibbs sampling updates one “coordinate” of <span class="math notranslate nohighlight">\(\theta \in \reals^D\)</span> at a time by sampling from its conditional distribution. The algorithm is:</p>
+<div class="proof algorithm admonition" id="gibbs_sampling">
+<p class="admonition-title"><span class="caption-number">Algorithm 4 </span> (Gibbs Sampling)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Input:</strong> Initial parameters <span class="math notranslate nohighlight">\(\theta^{(0)}\)</span>, observations <span class="math notranslate nohighlight">\(x\)</span></p>
+<ul class="simple">
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(t=1,\ldots, T\)</span></p>
+<ul>
+<li><p><strong>For</strong> <span class="math notranslate nohighlight">\(d=1,\ldots, D\)</span></p>
+<ul>
+<li><p>Sample <span class="math notranslate nohighlight">\(\theta_d^{(t)} \sim p(\theta_d \mid \theta_{1}^{(t)}, \ldots, \theta_{d-}^{(t)}, \theta_{d+1}^{(t-1)}, \ldots, \theta_D^{(t-1)}, x)\)</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Return</strong> samples <span class="math notranslate nohighlight">\(\{\theta^{(t)}\}_{t=1}^T\)</span></p>
+</section>
+</div><p>You can think of Gibbs as cycling through <span class="math notranslate nohighlight">\(D\)</span> Metropolis-Hastings proposals, one for each coordinate <span class="math notranslate nohighlight">\(d \in 1,\ldots,D\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q_d(\theta \mid \theta') = p(\theta_d \mid \theta'_{\neg d}, x) \, \delta_{\theta'_{\neg d}}(\theta_{\neg d}),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_{\neg d} = (\theta_1, \ldots, \theta_{d-1}, \theta_{d+1}, \ldots, \theta_D)\)</span> denotes all parameters except <span class="math notranslate nohighlight">\(\theta_d\)</span>.</p>
+<p>In other words, the proposal distribution <span class="math notranslate nohighlight">\(q_d\)</span> samples <span class="math notranslate nohighlight">\(\theta_d\)</span> from its conditional distribution and leaves all the other parameters unchanged.</p>
+<p>What is the probability of accepting this proposal?</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+a_d(\theta' \to \theta) 
+&amp;= \min \left\{ 1, \, \frac{p(\theta, x) q_d(\theta' \mid \theta)}{p(\theta', x) q_d(\theta \mid \theta')} \right\} \\
+&amp;= \min \left\{ 1, \, \frac{p(\theta, x) p(\theta_d' \mid \theta_{\neg d}, x) \delta_{\theta_{\neg d}}(\theta'_{\neg d})}{p(\theta', x) p(\theta_d \mid \theta'_{\neg d}, x) \delta_{\theta'_{\neg d}}(\theta_{\neg d})} \right\} \\
+&amp;= \min \left\{ 1, \, \frac{p(\theta_{\neg d}, x) p(\theta_d \mid \theta_{\neg d}, x) p(\theta_d' \mid \theta_{\neg d}, x) \delta_{\theta_{\neg d}}(\theta'_{\neg d})}{p(\theta'_{\neg d}, x) p(\theta'_d \mid \theta'_{\neg d}, x) p(\theta_d \mid \theta'_{\neg d}, x) \delta_{\theta'_{\neg d}}(\theta_{\neg d})} \right\} \\
+&amp;= \min \left\{1, 1 \right\} = 1
+\end{align*}\]</div>
+<p>for all <span class="math notranslate nohighlight">\(\theta, \theta'\)</span> that differ only in their <span class="math notranslate nohighlight">\(d\)</span>-th coordinate.</p>
+<div class="tip admonition">
+<p class="admonition-title">The Godfather</p>
+<center>The Gibbs proposal is <i>an offer you cannot refuse</i>.</center>
+</div>
+<p>Of course, if we only update one coordinate, the chain can’t be ergodic. However, if we cycle through coordinates it generally will be.</p>
+<div class="admonition-questions admonition">
+<p class="admonition-title">Questions</p>
+<ol class="arabic simple">
+<li><p>Does the order in which we update coordinates matter?</p></li>
+<li><p>If Gibbs sampling always accepts, is it strictly better than other Metropolis-Hastings algorithms?</p></li>
+</ol>
+</div>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>This was obviously a whirlwind of an introduction to Bayesian inference! There’s plenty more to be said about Bayesian statistics — choosing a prior, subjective vs objective vs empirical Bayesian approaches, the role of the marginal likelihood in Bayesian model comparison, varieties of MCMC, and other approaches to approximate Bayesian inference. We’ll dig into some of these topics as the course goes on, but for now, we have some valuable tools for developing Bayesian modeling and inference with discrete data!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="07_bayes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bayesian Inference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="08_bayes_glms_soln.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bayesian GLMs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-posterior-expectations">Approximating Posterior Expectations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-approximations">Monte Carlo Approximations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unbiasedness">Unbiasedness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-variance">Monte Carlo Variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-to-numerical-quadrature">Comparison to Numerical Quadrature</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-catch">The Catch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chains">Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-distributions">Stationary distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detailed-balance">Detailed balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity">Ergodicity</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-hastings-algorithm">The Metropolis-Hastings algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-metropolis-algorithm">The Metropolis algorithm</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smarter-proposals-with-gradients">Smarter Proposals with Gradients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metropolis-adjusted-langevin-algorithm-mala">Metropolis-Adjusted Langevin Algorithm (MALA)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hamiltonian-monte-carlo-hmc">Hamiltonian Monte Carlo (HMC)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#notation">Notation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hamiltonian-dynamics">Hamiltonian Dynamics</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-hamiltonian-dynamics-for-posterior-inference">Using Hamiltonian Dynamics for Posterior Inference</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm">Algorithm</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibbs-sampling">Gibbs Sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
