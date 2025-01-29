@@ -44,7 +44,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Mon, Jan 27, 2025 | [Bayesian Inference](lectures/07_bayes.ipynb) <br> **HW2 Released** | [download](slides/07_bayes.pdf) | {cite:p}`gelman1995bayesian` Ch. 1 |
 | Wed, Jan 29, 2025 | Markov Chain Monte Carlo |  | | 
 | Mon, Feb  3, 2025 | Variational Inference | | | 
-| Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | | |
+| Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | [download](midterm/midterm_2024.pdf) | |
 | Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/09_mixtures.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 9 |
 | Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) | | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
@@ -64,16 +64,15 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
   - Released Mon, Jan 6, 2025
   - Due Fri, Jan 10, 2025 at 11:59pm
 
-
 - [**Homework 1: Logistic Regression**](assignments/hw1/hw1.ipynb)
   - Released Mon, Jan 13, 2025
   - Due Fri, Jan 24, 2025 at 11:59pm
 
-<!--
 - [**Homework 2: Bayesian GLMs**](assignments/hw2/hw2.ipynb)
-  - Released Wed, Jan 31, 2024
-  - Due Wed, Feb 14, 2024 at 11:59pm
+  - Released Wed, Jan 29, 2024
+  - Due Wed, Feb 12, 2024 at 11:59pm
 
+<!--
 - [**Homework 3: Hidden Markov Models**](assignments/hw3/hw3.ipynb)
   - Released Fri, Feb 16, 2024
   - Due Mon, Feb 26, 2024 at 11:59pm
@@ -89,6 +88,8 @@ We will allow 5 late days to be used as needed throughout the quarter.
 ## Exams
 - **Midterm Exam**: In class on TBD
   - You may bring a cheat sheet covering _one side_ of an 8.5x11" piece of paper
+  - Practice Exam: [download](midterm/midterm_2024.pdf)
+  - Practice Exam Solutions: Coming soon
 
 - **Final Exam**: On TBD in Room TBD
   <!-- - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf) (solutions are [here](final/practice_solutions.pdf)). -->

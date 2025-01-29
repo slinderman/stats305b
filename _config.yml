@@ -5,7 +5,6 @@ copyright: "2025"
 execute:
   execute_notebooks: force
   exclude_patterns:
-    - 'hw0.ipynb'
     - '01_distributions.ipynb'
     - '02_contingency_tables_v2.ipynb'
     - '03_logreg.ipynb'
@@ -15,6 +14,7 @@ execute:
     - '06_sparse_glms.ipynb'
     - '06_sparse_glms_solns.ipynb'
     - '07_bayes.ipynb'
+    - 'hw0.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
     - 'hw2_solutions.ipynb'
