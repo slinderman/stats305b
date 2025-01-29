@@ -14,14 +14,15 @@ execute:
     - '06_sparse_glms.ipynb'
     - '06_sparse_glms_solns.ipynb'
     - '07_bayes.ipynb'
+    - '08_mcmc.ipynb'
+    - '08_bayes_glms.ipynb'
+    - '08_bayes_glms_soln.ipynb'
     - 'hw0.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
     - 'hw2_solutions.ipynb'
     - 'hw3.ipynb'
     - 'hw4.ipynb'
-    - '07_bayes_glms.ipynb'
-    - '07_bayes_glms_soln.ipynb'
     - '11_vaes_demo.ipynb'
 only_build_toc_files: true
 
