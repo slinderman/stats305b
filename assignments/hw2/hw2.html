@@ -1,0 +1,2272 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>HW2: Bayesian GLMs &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'assignments/hw2/hw2';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="References" href="../../lectures/99_references.html" />
+    <link rel="prev" title="HW1: Logistic Regression" href="../hw1/hw1.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/07_bayes.html">Bayesian Inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">HW2: Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/assignments/hw2/hw2.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/assignments/hw2/hw2.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>HW2: Bayesian GLMs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-vote-data">Load the vote data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-demographic-data">Load the demographic data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-plotting">Helper function for plotting</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0a-one-hot-encodings">Problem 0a: One-hot encodings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0b-other-covariates">Problem 0b: Other covariates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0c-interpreting-the-intercept">Problem 0c: Interpreting the intercept</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation">Part 1: Bayesian Inference in a Binomial GLM via Polya-gamma augmentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-bayesian-binomial-glm">Model: Bayesian Binomial GLM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-gibbs-sampling-with-polya-gamma-augmentation">Algorithm: Gibbs sampling with Polya-gamma Augmentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a">Problem 1a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b">Problem 1b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c">Problem 1c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d">Problem 1d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1e-posterior-analysis">Problem 1e: Posterior analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-the-cells-below">Complete the cells below</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-model-checking">Part 2: Model Checking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-residual-analysis">Problem 2a: Residual analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-hierarchical-bayesian-modeling">Part 3: Hierarchical Bayesian Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3a">Problem 3a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3b">Problem 3b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3c">Problem 3c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3d">Problem 3d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3e">Problem 3e</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Complete the cells below</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3f">Problem 3f</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3g">Problem 3g</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3h">Problem 3h</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-the-needle">Part 4: The “Needle”</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing">Preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4a">Problem 4a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4b">Problem 4b</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-reflection">Part 5: Reflection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5a">Problem 5a</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw2-bayesian-glms">
+<h1>HW2: Bayesian GLMs<a class="headerlink" href="#hw2-bayesian-glms" title="Link to this heading">#</a></h1>
+<p>In this assignment, you will develop Bayesian inference algorithms for (hierarchical) generalized linear models (GLMs). We’ll put down football and focus on another timely subject: US presidential elections. We have downloaded data from the <a class="reference external" href="https://electionlab.mit.edu/data">MIT Election Data Science Lab</a> consisting of presidential votes for each county in the US from 2000-2020 <span class="math notranslate nohighlight">\({}^*\)</span>. We have also downloaded demographic covariates from 2018 for each county <span class="math notranslate nohighlight">\({}^\dagger\)</span>. In this assignment, you will develop models to predict county-level votes given demographic data.</p>
+<p><span class="math notranslate nohighlight">\({}^*\)</span> Unfortunately, the county-level results for 2024 are not yet available from the website above.</p>
+<p><span class="math notranslate nohighlight">\({}^\dagger\)</span> Note that we could not find demographic data for Alaska, so unfortunately we will only work with the other 49 states and the District of Columbia.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">jaxtyping</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">kaleido</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastprogress</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress_bar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Int</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Binomial</span><span class="p">,</span> <span class="n">Gamma</span><span class="p">,</span> <span class="n">MultivariateNormal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.request</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlopen</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scott/anaconda3/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="load-the-vote-data">
+<h3>Load the vote data<a class="headerlink" href="#load-the-vote-data" title="Link to this heading">#</a></h3>
+<p><em>Note: we did a little preprocessing of the raw data from the MIT Election Data Science Lab to extract counties that have both election and demographic data.</em></p>
+<p>The vote data consists of votes per candidate for each county in the US for presidential elections from 2000 to 2020. Each county is identified by its <a class="reference external" href="https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt">FIPS code</a>. The FIPS code is a five digit integer representing the state and county within the state. We represent the FIPS code as a string since some codes start with zero.</p>
+<p><strong>Note</strong>: Broomfield County CO (FIPS code 08014) did not exist in 2000</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">votes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/assignments/hw2/votes.csv&quot;</span><span class="p">)</span>
+<span class="n">votes</span><span class="o">.</span><span class="n">fips</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">votes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>state</th>
+      <th>state_po</th>
+      <th>county_name</th>
+      <th>fips</th>
+      <th>candidate</th>
+      <th>party</th>
+      <th>totalvotes</th>
+      <th>candidatevotes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>AL GORE</td>
+      <td>DEMOCRAT</td>
+      <td>17208</td>
+      <td>4942</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>GEORGE W. BUSH</td>
+      <td>REPUBLICAN</td>
+      <td>17208</td>
+      <td>11993</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>OTHER</td>
+      <td>OTHER</td>
+      <td>17208</td>
+      <td>113</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>AUTAUGA</td>
+      <td>01001</td>
+      <td>RALPH NADER</td>
+      <td>GREEN</td>
+      <td>17208</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2000</td>
+      <td>ALABAMA</td>
+      <td>AL</td>
+      <td>BALDWIN</td>
+      <td>01003</td>
+      <td>AL GORE</td>
+      <td>DEMOCRAT</td>
+      <td>56480</td>
+      <td>13997</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>63206</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WASHAKIE</td>
+      <td>56043</td>
+      <td>OTHER</td>
+      <td>OTHER</td>
+      <td>4032</td>
+      <td>71</td>
+    </tr>
+    <tr>
+      <th>63207</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>DONALD J TRUMP</td>
+      <td>REPUBLICAN</td>
+      <td>3560</td>
+      <td>3107</td>
+    </tr>
+    <tr>
+      <th>63208</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>JO JORGENSEN</td>
+      <td>LIBERTARIAN</td>
+      <td>3560</td>
+      <td>46</td>
+    </tr>
+    <tr>
+      <th>63209</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>JOSEPH R BIDEN JR</td>
+      <td>DEMOCRAT</td>
+      <td>3560</td>
+      <td>360</td>
+    </tr>
+    <tr>
+      <th>63210</th>
+      <td>2020</td>
+      <td>WYOMING</td>
+      <td>WY</td>
+      <td>WESTON</td>
+      <td>56045</td>
+      <td>OTHER</td>
+      <td>OTHER</td>
+      <td>3560</td>
+      <td>47</td>
+    </tr>
+  </tbody>
+</table>
+<p>63211 rows × 9 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only Alaska is missing</span>
+<span class="n">votes</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;ALABAMA&#39;, &#39;ARIZONA&#39;, &#39;ARKANSAS&#39;, &#39;CALIFORNIA&#39;, &#39;COLORADO&#39;,
+       &#39;CONNECTICUT&#39;, &#39;DELAWARE&#39;, &#39;DISTRICT OF COLUMBIA&#39;, &#39;FLORIDA&#39;,
+       &#39;GEORGIA&#39;, &#39;HAWAII&#39;, &#39;IDAHO&#39;, &#39;ILLINOIS&#39;, &#39;INDIANA&#39;, &#39;IOWA&#39;,
+       &#39;KANSAS&#39;, &#39;KENTUCKY&#39;, &#39;LOUISIANA&#39;, &#39;MAINE&#39;, &#39;MARYLAND&#39;,
+       &#39;MASSACHUSETTS&#39;, &#39;MICHIGAN&#39;, &#39;MINNESOTA&#39;, &#39;MISSISSIPPI&#39;,
+       &#39;MISSOURI&#39;, &#39;MONTANA&#39;, &#39;NEBRASKA&#39;, &#39;NEVADA&#39;, &#39;NEW HAMPSHIRE&#39;,
+       &#39;NEW JERSEY&#39;, &#39;NEW MEXICO&#39;, &#39;NEW YORK&#39;, &#39;NORTH CAROLINA&#39;,
+       &#39;NORTH DAKOTA&#39;, &#39;OHIO&#39;, &#39;OKLAHOMA&#39;, &#39;OREGON&#39;, &#39;PENNSYLVANIA&#39;,
+       &#39;RHODE ISLAND&#39;, &#39;SOUTH CAROLINA&#39;, &#39;SOUTH DAKOTA&#39;, &#39;TENNESSEE&#39;,
+       &#39;TEXAS&#39;, &#39;UTAH&#39;, &#39;VERMONT&#39;, &#39;VIRGINIA&#39;, &#39;WASHINGTON&#39;,
+       &#39;WEST VIRGINIA&#39;, &#39;WISCONSIN&#39;, &#39;WYOMING&#39;], dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-the-demographic-data">
+<h3>Load the demographic data<a class="headerlink" href="#load-the-demographic-data" title="Link to this heading">#</a></h3>
+<p>We also have county-level demographic data for all counties except those in Alaska. The data was collected in 2018. The fields of the table are described <a class="reference external" href="https://github.com/MEDSL/2018-elections-unoffical/blob/master/election-context-2018.md">here</a>. Note that each county has a matching FIPS code, again represented as a five digit string.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/slinderman/stats305b/winter2024/assignments/hw2/demographics.csv&quot;</span><span class="p">)</span>
+<span class="n">demo</span><span class="o">.</span><span class="n">fips</span> <span class="o">=</span> <span class="n">demo</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">demo</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state</th>
+      <th>county</th>
+      <th>trump16</th>
+      <th>clinton16</th>
+      <th>otherpres16</th>
+      <th>romney12</th>
+      <th>obama12</th>
+      <th>otherpres12</th>
+      <th>demsen16</th>
+      <th>repsen16</th>
+      <th>...</th>
+      <th>age65andolder_pct</th>
+      <th>median_hh_inc</th>
+      <th>clf_unemploy_pct</th>
+      <th>lesshs_pct</th>
+      <th>lesscollege_pct</th>
+      <th>lesshs_whites_pct</th>
+      <th>lesscollege_whites_pct</th>
+      <th>rural_pct</th>
+      <th>ruralurban_cc</th>
+      <th>fips</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Alabama</td>
+      <td>Autauga</td>
+      <td>18172</td>
+      <td>5936</td>
+      <td>865</td>
+      <td>17379</td>
+      <td>6363</td>
+      <td>190</td>
+      <td>6331.0</td>
+      <td>18220.0</td>
+      <td>...</td>
+      <td>13.978456</td>
+      <td>53099.0</td>
+      <td>5.591657</td>
+      <td>12.417046</td>
+      <td>75.407229</td>
+      <td>10.002112</td>
+      <td>74.065601</td>
+      <td>42.002162</td>
+      <td>2.0</td>
+      <td>01001</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Alabama</td>
+      <td>Baldwin</td>
+      <td>72883</td>
+      <td>18458</td>
+      <td>3874</td>
+      <td>66016</td>
+      <td>18424</td>
+      <td>898</td>
+      <td>19145.0</td>
+      <td>74021.0</td>
+      <td>...</td>
+      <td>18.714851</td>
+      <td>51365.0</td>
+      <td>6.286843</td>
+      <td>9.972418</td>
+      <td>70.452889</td>
+      <td>7.842227</td>
+      <td>68.405607</td>
+      <td>42.279099</td>
+      <td>3.0</td>
+      <td>01003</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Alabama</td>
+      <td>Barbour</td>
+      <td>5454</td>
+      <td>4871</td>
+      <td>144</td>
+      <td>5550</td>
+      <td>5912</td>
+      <td>47</td>
+      <td>4777.0</td>
+      <td>5436.0</td>
+      <td>...</td>
+      <td>16.528895</td>
+      <td>33956.0</td>
+      <td>12.824738</td>
+      <td>26.235928</td>
+      <td>87.132213</td>
+      <td>19.579752</td>
+      <td>81.364746</td>
+      <td>67.789635</td>
+      <td>6.0</td>
+      <td>01005</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Alabama</td>
+      <td>Bibb</td>
+      <td>6738</td>
+      <td>1874</td>
+      <td>207</td>
+      <td>6132</td>
+      <td>2202</td>
+      <td>86</td>
+      <td>2082.0</td>
+      <td>6612.0</td>
+      <td>...</td>
+      <td>14.885699</td>
+      <td>39776.0</td>
+      <td>7.146827</td>
+      <td>19.301587</td>
+      <td>88.000000</td>
+      <td>15.020490</td>
+      <td>87.471774</td>
+      <td>68.352607</td>
+      <td>1.0</td>
+      <td>01007</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Alabama</td>
+      <td>Blount</td>
+      <td>22859</td>
+      <td>2156</td>
+      <td>573</td>
+      <td>20757</td>
+      <td>2970</td>
+      <td>279</td>
+      <td>2980.0</td>
+      <td>22169.0</td>
+      <td>...</td>
+      <td>17.192916</td>
+      <td>46212.0</td>
+      <td>5.953833</td>
+      <td>19.968585</td>
+      <td>86.950243</td>
+      <td>16.643368</td>
+      <td>86.163610</td>
+      <td>89.951502</td>
+      <td>1.0</td>
+      <td>01009</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3106</th>
+      <td>Wyoming</td>
+      <td>Sweetwater</td>
+      <td>12154</td>
+      <td>3231</td>
+      <td>1745</td>
+      <td>11428</td>
+      <td>4774</td>
+      <td>693</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>9.417120</td>
+      <td>68233.0</td>
+      <td>5.072255</td>
+      <td>9.314606</td>
+      <td>78.628507</td>
+      <td>6.238463</td>
+      <td>76.606813</td>
+      <td>10.916313</td>
+      <td>5.0</td>
+      <td>56037</td>
+    </tr>
+    <tr>
+      <th>3107</th>
+      <td>Wyoming</td>
+      <td>Teton</td>
+      <td>3921</td>
+      <td>7314</td>
+      <td>1392</td>
+      <td>4858</td>
+      <td>6213</td>
+      <td>393</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>11.837510</td>
+      <td>75594.0</td>
+      <td>2.123447</td>
+      <td>4.633570</td>
+      <td>46.211584</td>
+      <td>1.526877</td>
+      <td>41.769504</td>
+      <td>46.430920</td>
+      <td>7.0</td>
+      <td>56039</td>
+    </tr>
+    <tr>
+      <th>3108</th>
+      <td>Wyoming</td>
+      <td>Uinta</td>
+      <td>6154</td>
+      <td>1202</td>
+      <td>1114</td>
+      <td>6615</td>
+      <td>1628</td>
+      <td>296</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>10.678218</td>
+      <td>53323.0</td>
+      <td>6.390755</td>
+      <td>10.361224</td>
+      <td>81.793082</td>
+      <td>8.806312</td>
+      <td>81.080852</td>
+      <td>43.095937</td>
+      <td>7.0</td>
+      <td>56041</td>
+    </tr>
+    <tr>
+      <th>3109</th>
+      <td>Wyoming</td>
+      <td>Washakie</td>
+      <td>2911</td>
+      <td>532</td>
+      <td>371</td>
+      <td>3014</td>
+      <td>794</td>
+      <td>136</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>19.650341</td>
+      <td>46212.0</td>
+      <td>7.441860</td>
+      <td>12.577108</td>
+      <td>78.923920</td>
+      <td>10.299738</td>
+      <td>75.980688</td>
+      <td>35.954529</td>
+      <td>7.0</td>
+      <td>56043</td>
+    </tr>
+    <tr>
+      <th>3110</th>
+      <td>Wyoming</td>
+      <td>Weston</td>
+      <td>3033</td>
+      <td>299</td>
+      <td>194</td>
+      <td>2821</td>
+      <td>422</td>
+      <td>116</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>18.355401</td>
+      <td>55640.0</td>
+      <td>3.610949</td>
+      <td>8.592392</td>
+      <td>81.193281</td>
+      <td>7.342144</td>
+      <td>81.141179</td>
+      <td>54.536626</td>
+      <td>7.0</td>
+      <td>56045</td>
+    </tr>
+  </tbody>
+</table>
+<p>3111 rows × 39 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;state&#39;, &#39;county&#39;, &#39;trump16&#39;, &#39;clinton16&#39;, &#39;otherpres16&#39;, &#39;romney12&#39;,
+       &#39;obama12&#39;, &#39;otherpres12&#39;, &#39;demsen16&#39;, &#39;repsen16&#39;, &#39;othersen16&#39;,
+       &#39;demhouse16&#39;, &#39;rephouse16&#39;, &#39;otherhouse16&#39;, &#39;demgov16&#39;, &#39;repgov16&#39;,
+       &#39;othergov16&#39;, &#39;repgov14&#39;, &#39;demgov14&#39;, &#39;othergov14&#39;, &#39;total_population&#39;,
+       &#39;cvap&#39;, &#39;white_pct&#39;, &#39;black_pct&#39;, &#39;hispanic_pct&#39;, &#39;nonwhite_pct&#39;,
+       &#39;foreignborn_pct&#39;, &#39;female_pct&#39;, &#39;age29andunder_pct&#39;,
+       &#39;age65andolder_pct&#39;, &#39;median_hh_inc&#39;, &#39;clf_unemploy_pct&#39;, &#39;lesshs_pct&#39;,
+       &#39;lesscollege_pct&#39;, &#39;lesshs_whites_pct&#39;, &#39;lesscollege_whites_pct&#39;,
+       &#39;rural_pct&#39;, &#39;ruralurban_cc&#39;, &#39;fips&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="helper-function-for-plotting">
+<h3>Helper function for plotting<a class="headerlink" href="#helper-function-for-plotting" title="Link to this heading">#</a></h3>
+<p>We provide a simple function to plot values associated with each county.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">urlopen</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+    <span class="n">geojson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_counties</span><span class="p">(</span><span class="n">fips</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu&quot;</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">choropleth</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">fips</span><span class="o">=</span><span class="n">fips</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)),</span>
+                        <span class="n">geojson</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span>
+                        <span class="n">locations</span><span class="o">=</span><span class="s2">&quot;fips&quot;</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;values&quot;</span><span class="p">,</span>
+                        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                        <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;usa&quot;</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;values&quot;</span><span class="p">:</span><span class="n">label</span><span class="p">})</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">margin</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">interactive</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fig</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">to_image</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">2.0</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Demo of how to plot.</span>
+<span class="c1"># Note: you can use interactive plots in Colab. I turned off interactive mode</span>
+<span class="c1">#   because the interactive plots don&#39;t render in the online book.</span>
+<span class="n">plot_counties</span><span class="p">(</span><span class="n">demo</span><span class="o">.</span><span class="n">fips</span><span class="p">,</span>
+              <span class="n">demo</span><span class="o">.</span><span class="n">median_hh_inc</span><span class="p">,</span>
+              <span class="n">label</span><span class="o">=</span><span class="s2">&quot;median_hh_inc&quot;</span><span class="p">,</span>
+              <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu&quot;</span><span class="p">,</span>
+              <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b72f08f97e1745123034e3aa134c02d21e61c93dc9d36a2687a1f2806a066a4a.png" src="../../_images/b72f08f97e1745123034e3aa134c02d21e61c93dc9d36a2687a1f2806a066a4a.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="part-0-preprocessing">
+<h2>Part 0: Preprocessing<a class="headerlink" href="#part-0-preprocessing" title="Link to this heading">#</a></h2>
+<p>We have votes from <span class="math notranslate nohighlight">\(n=3111\)</span> counties over six presidential elections in this dataset.</p>
+<p>We will use the following covariates:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">white_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">black_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hispanic_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">foreignborn_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">female_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">age29andunder_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">age65andolder_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">median_hh_inc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf_unemploy_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesshs_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesscollege_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesshs_whites_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lesscollege_whites_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rural_pct</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ruralurban_cc</span></code></p></li>
+</ul>
+<p>The functions below extract pandas DataFrames for thse covariates and responses. They are given for you.</p>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>We include a bias term, <span class="math notranslate nohighlight">\(x_{i,1} = 1\)</span> for all <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>, in order to allow for an intercept.</p></li>
+<li><p>We ensure real-valued covariates are standardized to be mean-zero, unit standard deviation across counties.</p></li>
+<li><p>We use a one-hot encoding for categorical covariates, omitting the first category. For example, if a covariate <span class="math notranslate nohighlight">\(X\)</span> takes on discrete values <span class="math notranslate nohighlight">\(\{1, \ldots, C\}\)</span>, encode it as a vector <span class="math notranslate nohighlight">\(v\)</span> of length <span class="math notranslate nohighlight">\(C-1\)</span> where <span class="math notranslate nohighlight">\(v_j = \mathbb{I}[X=j+1]\)</span>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">preprocess_covariates</span><span class="p">(</span><span class="n">demo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Preprocess the demographic data to extract the covariates for the regression,</span>
+<span class="sd">    as described above.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Sort the demographic data by FIPS code</span>
+    <span class="n">demo</span> <span class="o">=</span> <span class="n">demo</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;fips&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract the scalar features and standardize them</span>
+    <span class="n">scalar_feat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;white_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;black_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;hispanic_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;foreignborn_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;female_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;age29andunder_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;age65andolder_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;median_hh_inc&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;clf_unemploy_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;lesshs_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;lesscollege_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;lesshs_whites_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;lesscollege_whites_pct&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;rural_pct&quot;</span><span class="p">]</span>
+
+    <span class="n">X_scalar</span> <span class="o">=</span> <span class="n">demo</span><span class="p">[</span><span class="n">scalar_feat_names</span><span class="p">]</span>
+    <span class="n">X_scalar</span> <span class="o">-=</span> <span class="n">X_scalar</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">X_scalar</span> <span class="o">/=</span> <span class="n">X_scalar</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Extract the categorical features and one-hot encode them</span>
+    <span class="n">cat_feat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ruralurban_cc&quot;</span><span class="p">]</span>
+    <span class="n">X_cat</span> <span class="o">=</span> <span class="n">demo</span><span class="p">[</span><span class="n">cat_feat_names</span><span class="p">]</span>
+    <span class="n">X_cat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">X_cat</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cat_feat_names</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Combine the features and add a bias term</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">X_scalar</span><span class="p">,</span> <span class="n">X_cat</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">X</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;intercept&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">X</span>
+
+<span class="n">covariates</span> <span class="o">=</span> <span class="n">preprocess_covariates</span><span class="p">(</span><span class="n">demo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">extract_responses</span><span class="p">(</span><span class="n">votes</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the responses for a given year from the votes dataframe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract the democratic and republican votes for the given year</span>
+    <span class="n">dem_votes</span> <span class="o">=</span> <span class="n">votes</span><span class="p">[(</span><span class="n">votes</span><span class="p">[</span><span class="s2">&quot;party&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DEMOCRAT&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">votes</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">year</span><span class="p">)]</span>
+    <span class="n">rep_votes</span> <span class="o">=</span> <span class="n">votes</span><span class="p">[(</span><span class="n">votes</span><span class="p">[</span><span class="s2">&quot;party&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;REPUBLICAN&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">votes</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">year</span><span class="p">)]</span>
+
+    <span class="c1"># Sort by fips codes</span>
+    <span class="n">dem_votes</span> <span class="o">=</span> <span class="n">dem_votes</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;fips&quot;</span><span class="p">)</span>
+    <span class="n">rep_votes</span> <span class="o">=</span> <span class="n">rep_votes</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;fips&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">rep_votes</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">dem_votes</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="c1"># Extract the states and code them as integers</span>
+    <span class="n">state_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dem_votes</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dem_votes</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="n">state_names</span><span class="p">)</span><span class="o">.</span><span class="n">codes</span>
+
+    <span class="c1"># Make a dataframe of responses</span>
+    <span class="n">responses</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s2">&quot;fips&quot;</span><span class="p">:</span> <span class="n">dem_votes</span><span class="o">.</span><span class="n">fips</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">dem_votes</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">dem_votes</span><span class="o">.</span><span class="n">candidatevotes</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="n">dem_votes</span><span class="o">.</span><span class="n">candidatevotes</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">rep_votes</span><span class="o">.</span><span class="n">candidatevotes</span><span class="o">.</span><span class="n">values</span>
+        <span class="c1"># &quot;N&quot;: dem_votes.totalvotes.values</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">responses</span><span class="p">,</span> <span class="n">state_names</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract the responses for 2016</span>
+<span class="c1"># Note: you may use this function </span>
+<span class="n">responses</span><span class="p">,</span> <span class="n">state_names</span> <span class="o">=</span> <span class="n">extract_responses</span><span class="p">(</span><span class="n">votes</span><span class="p">,</span> <span class="mi">2016</span><span class="p">)</span>
+<span class="n">responses</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fips</th>
+      <th>state</th>
+      <th>s</th>
+      <th>y</th>
+      <th>N</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>01001</td>
+      <td>ALABAMA</td>
+      <td>0</td>
+      <td>5936</td>
+      <td>24108</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>01003</td>
+      <td>ALABAMA</td>
+      <td>0</td>
+      <td>18458</td>
+      <td>91341</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>01005</td>
+      <td>ALABAMA</td>
+      <td>0</td>
+      <td>4871</td>
+      <td>10325</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>01007</td>
+      <td>ALABAMA</td>
+      <td>0</td>
+      <td>1874</td>
+      <td>8612</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01009</td>
+      <td>ALABAMA</td>
+      <td>0</td>
+      <td>2156</td>
+      <td>25015</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3106</th>
+      <td>56037</td>
+      <td>WYOMING</td>
+      <td>49</td>
+      <td>3231</td>
+      <td>15385</td>
+    </tr>
+    <tr>
+      <th>3107</th>
+      <td>56039</td>
+      <td>WYOMING</td>
+      <td>49</td>
+      <td>7314</td>
+      <td>11235</td>
+    </tr>
+    <tr>
+      <th>3108</th>
+      <td>56041</td>
+      <td>WYOMING</td>
+      <td>49</td>
+      <td>1202</td>
+      <td>7356</td>
+    </tr>
+    <tr>
+      <th>3109</th>
+      <td>56043</td>
+      <td>WYOMING</td>
+      <td>49</td>
+      <td>532</td>
+      <td>3443</td>
+    </tr>
+    <tr>
+      <th>3110</th>
+      <td>56045</td>
+      <td>WYOMING</td>
+      <td>49</td>
+      <td>299</td>
+      <td>3332</td>
+    </tr>
+  </tbody>
+</table>
+<p>3111 rows × 5 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check that the responses and demographic data are aligned</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">responses</span><span class="o">.</span><span class="n">fips</span> <span class="o">==</span> <span class="n">demo</span><span class="o">.</span><span class="n">fips</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_counties</span><span class="p">(</span><span class="n">responses</span><span class="o">.</span><span class="n">fips</span><span class="p">,</span> 
+              <span class="n">responses</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="n">responses</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> 
+              <span class="n">label</span><span class="o">=</span><span class="s2">&quot;D vote 2016&quot;</span><span class="p">,</span> 
+              <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/a057cc39adc5d8d033febb635ad7c1e031d35bce3b114b0d7b2844cc23bbcc1a.png" src="../../_images/a057cc39adc5d8d033febb635ad7c1e031d35bce3b114b0d7b2844cc23bbcc1a.png" />
+</div>
+</div>
+<section id="problem-0a-one-hot-encodings">
+<h3>Problem 0a: One-hot encodings<a class="headerlink" href="#problem-0a-one-hot-encodings" title="Link to this heading">#</a></h3>
+<p>Explain why we omitted the first category in the encoding of categorical covariates.</p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-0b-other-covariates">
+<h3>Problem 0b: Other covariates<a class="headerlink" href="#problem-0b-other-covariates" title="Link to this heading">#</a></h3>
+<p>Explain why we didn’t include <code class="docutils literal notranslate"><span class="pre">nonwhite_pct</span></code> in our set of covariates.</p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-0c-interpreting-the-intercept">
+<h3>Problem 0c: Interpreting the intercept<a class="headerlink" href="#problem-0c-interpreting-the-intercept" title="Link to this heading">#</a></h3>
+<p>How does your answer to Problem 0b affect your interpretation of the intercept term?</p>
+</section>
+</section>
+<section id="part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation">
+<h2>Part 1: Bayesian Inference in a Binomial GLM via Polya-gamma augmentation<a class="headerlink" href="#part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation" title="Link to this heading">#</a></h2>
+<p>Let’s start by modeling the results from election year 2016. You may choose to use the other years in Part 5, if you like.</p>
+<p>Let</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(y_{i} \in \mathbb{N}\)</span> denote the number of votes for the <strong>Democratic Party candidate</strong> in county <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span> in <strong>election year 2016</strong>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(N_{i} \in \mathbb{N}\)</span> denote the <strong>total number of votes for the Democrat and Republican candidates</strong> cast in county <span class="math notranslate nohighlight">\(i\)</span> in <strong>election year 2016</strong>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(s_i \in \{1,\ldots, S\}\)</span> denote which state (including the District of Columbia) county <span class="math notranslate nohighlight">\(i\)</span> belongs to, encoded as an integer. Remember that since Alaska is missing and DC is included, we only have <span class="math notranslate nohighlight">\(S=50\)</span> unique values.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}_i \in \mathbb{R}^p\)</span> denote the vector of demographic covariates for county <span class="math notranslate nohighlight">\(i\)</span>, as extracted above.</p></li>
+</ul>
+<section id="model-bayesian-binomial-glm">
+<h3>Model: Bayesian Binomial GLM<a class="headerlink" href="#model-bayesian-binomial-glm" title="Link to this heading">#</a></h3>
+<p>Start with a simple baseline model. Remember we’re only modeling the data from 2016 right now. Fit a binomial GLM,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+y_{i} &amp;\sim \mathrm{Bin}(N_{i}, \, \sigma(\mathbf{x}_i^\top \boldsymbol{\beta}))
+&amp; \text{for } &amp;i=1,\ldots,n\\
+\boldsymbol{\beta} &amp;\sim \mathrm{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma\)</span> is the logistic function, <span class="math notranslate nohighlight">\(\boldsymbol{\beta}\)</span> are the weights, and <span class="math notranslate nohighlight">\((\boldsymbol{\mu}, \boldsymbol{\Sigma})\)</span> are the prior mean and covariance.</p>
+</section>
+<section id="algorithm-gibbs-sampling-with-polya-gamma-augmentation">
+<h3>Algorithm: Gibbs sampling with Polya-gamma Augmentation<a class="headerlink" href="#algorithm-gibbs-sampling-with-polya-gamma-augmentation" title="Link to this heading">#</a></h3>
+<p>The Polya-gamma (PG) augmentation trick <span id="id1">[<a class="reference internal" href="../../lectures/99_references.html#id6" title="Nicholas G Polson, James G Scott, and Jesse Windle. Bayesian inference for logistic models using Pólya–gamma latent variables. Journal of the American statistical Association, 108(504):1339–1349, 2013.">PSW13</a>]</span> is based on the following identity,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{(e^u)^y}{(1 + e^u)^N} = 2^{-N} e^{(y - \frac{N}{2}) u} \int e^{-\frac{1}{2} \omega u^2} \, \mathrm{PG}(\omega; N, 0) \, \mathrm{d} \omega,
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{PG}(\omega; b, c)\)</span> denotes the Polya-gamma density. The PG distribution has support on the non-negative reals, and it parameterized by a <em>shape</em> <span class="math notranslate nohighlight">\(b \geq 0\)</span> and a <em>tilt</em> <span class="math notranslate nohighlight">\(c \in \mathbb{R}\)</span>.</p>
+<p>The PG distribution isn’t exactly textbook, but it has many nice properties. For instance, PG random variables are equal in distribution to a weighted sum of gamma random variables. If <span class="math notranslate nohighlight">\(\omega \sim \mathrm{PG}(b, c)\)</span> then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\omega \overset{d}{=} \frac{1}{2 \pi^2} \sum_{k=1}^\infty \frac{g_k}{(k - \tfrac{1}{2})^2 + \tfrac{c^2}{4 \pi^2}}
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(g_k \overset{\mathrm{iid}}{\sim} \mathrm{Ga}(b, 1)\)</span>. Since the coefficients in this sum are decreasing with <span class="math notranslate nohighlight">\(k\)</span>, we can draw an approximate sample from a PG distribution by truncating the sum. Since the PG distribution doesn’t exist in PyTorch, we have provided a helper function below to draw samples from the PG distribution.</p>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>As <span class="math notranslate nohighlight">\(b \to 0\)</span>, the PG density converges to a delta function at zero. This is useful when you have missing data.</p></li>
+<li><p>There are more efficient ways to sample PG random variables. See <span id="id2">Windle <em>et al.</em> [<a class="reference internal" href="../../lectures/99_references.html#id13" title="Jesse Windle, Nicholas G Polson, and James G Scott. Sampling pólya-gamma random variates: alternate and approximate techniques. arXiv preprint arXiv:1405.0506, 2014.">WPS14</a>]</span> and <a class="github reference external" href="https://github.com/slinderman/pypolyagamma">slinderman/pypolyagamma</a>. The naive sampling code below should work for this assignment though.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sample_pg</span><span class="p">(</span><span class="n">b</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span>
+              <span class="n">c</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span>
+              <span class="n">trunc</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span> <span class="o">-&gt;</span> \
+              <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sample X ~ PG(b, c) the naive way using a weighted sum of gammas.</span>
+<span class="sd">    Note: there are much more efficient sampling methods. See</span>
+
+<span class="sd">    Windle, Jesse, Nicholas G. Polson, and James G. Scott. &quot;Sampling</span>
+<span class="sd">        Pólya-gamma random variates: alternate and approximate techniques.&quot;</span>
+<span class="sd">        arXiv preprint arXiv:1405.0506 (2014).</span>
+<span class="sd">        https://arxiv.org/abs/1405.0506</span>
+
+<span class="sd">    and https://github.com/slinderman/pypolyagamma</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    b: tensor of arbitrary shape specifying the &quot;shape&quot; argument of</span>
+<span class="sd">        the PG distribution.</span>
+
+<span class="sd">    c: tensor of arbitrary shape specifying the &quot;tilt&quot; argument of</span>
+<span class="sd">        the PG distribution. Must broadcast with b.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tensor of independent draws of PG(b, c) matching the shapes of b and c.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># make sure the parameters are float tensors and broadcast compatible</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">broadcast_tensors</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># Draw the PG random variates</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">Gamma</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">trunc</span><span class="p">,))</span>                          <span class="c1"># (trunc, b.shape)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>                                       <span class="c1"># (b.shape, trunc)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">trunc</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">((</span><span class="n">k</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>        <span class="c1"># (c.shape, trunc)</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">g</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>           <span class="c1"># (b.shape,)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">omegas</span> <span class="o">=</span> <span class="n">sample_pg</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10000</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10000</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\omega$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$p(\omega)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;samples of PG(1,0) distribution&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;samples of PG(1,0) distribution&#39;)
+</pre></div>
+</div>
+<img alt="../../_images/c304b3ecd20550948ce5c49d93deb60a9b8d6d35a3e99cc34035b3ba10d1be73.png" src="../../_images/c304b3ecd20550948ce5c49d93deb60a9b8d6d35a3e99cc34035b3ba10d1be73.png" />
+</div>
+</div>
+</section>
+<section id="problem-1a">
+<h3>Problem 1a<a class="headerlink" href="#problem-1a" title="Link to this heading">#</a></h3>
+<p>Use the integral identity above to write the distribution <span class="math notranslate nohighlight">\(p(y, \beta \mid X)\)</span> as a marginal of a distribution over an augmented space, <span class="math notranslate nohighlight">\(p(y, \beta, \omega \mid X)\)</span>.</p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-1b">
+<h3>Problem 1b<a class="headerlink" href="#problem-1b" title="Link to this heading">#</a></h3>
+<p>The nice thing about this augmented distribution is that it has simple conditional distributions, which allows for a simple Gibbs sampling algorithm to approximate the posterior distribution.</p>
+<p>Derive the conditional distribution, <span class="math notranslate nohighlight">\(p(\beta \mid y, X, \omega)\)</span>.</p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-1c">
+<h3>Problem 1c<a class="headerlink" href="#problem-1c" title="Link to this heading">#</a></h3>
+<p>One nice property of the Polya-gamma distribution is that it is closed under exponential tilting,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+e^{-\frac{1}{2} \omega c^2} \mathrm{PG}(\omega; b, 0) &amp;\propto \mathrm{PG}(\omega; b, c).
+\end{align*}\]</div>
+<p>(Again, <span class="math notranslate nohighlight">\(\mathrm{PG}(\omega; b, c)\)</span> denotes the Polya-gamma pdf.)</p>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(\omega \mid y, X, \beta)\)</span>.</p>
+</section>
+<section id="problem-1d">
+<h3>Problem 1d<a class="headerlink" href="#problem-1d" title="Link to this heading">#</a></h3>
+<p>Implement a Gibbs sampling algorithm to sample the posterior distribution of the augmented model, <span class="math notranslate nohighlight">\(p(\beta, \omega \mid y, X)\)</span>. As described in the course notes, Gibbs sampling is a type of MCMC algorithm in which we iteratively draw samples from the conditional distributions. Here, the algorithm is,</p>
+<blockquote>
+<div><p><strong>Input:</strong> Initial weights <span class="math notranslate nohighlight">\(\beta^{(0)}\)</span>, responses <span class="math notranslate nohighlight">\(y\)</span>, and covariates <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p><strong>For</strong> iteration <span class="math notranslate nohighlight">\(m=1,\ldots, M\)</span></p>
+<ol class="arabic simple">
+<li><p>Sample <span class="math notranslate nohighlight">\(\omega^{(m)} \sim p(\omega \mid \beta^{(m-1)}, y, X)\)</span></p></li>
+<li><p>Sample <span class="math notranslate nohighlight">\(\beta^{(m)} \sim p(\beta \mid y, X, \omega^{(m)})\)</span></p></li>
+<li><p>Compute log probability <span class="math notranslate nohighlight">\(\ell^{(m)} = \log p(y, \beta^{(m)} \mid X)\)</span></p></li>
+</ol>
+<p><strong>Return</strong> samples <span class="math notranslate nohighlight">\(\{\beta^{(m)}\}_{m=1}^M\)</span> and log probabilities <span class="math notranslate nohighlight">\(\{\ell^{(m)}\}_{m=1}^M\)</span>.</p>
+</div></blockquote>
+<p>Implement that algorithm by completing the code below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BinomialGLM</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of a binomial GLM with PG augmentation.</span>
+
+<span class="sd">    Let y = [y_1, ..., y_n] be a vector of responses, </span>
+<span class="sd">    and X = [x_1, ..., x_n] be a matrix of covariates.</span>
+<span class="sd">    </span>
+<span class="sd">    The likelihood is given by,</span>
+
+<span class="sd">        p(y | X, beta) = \prod_i Binomial(y_i | N_i, sigmoid(x_i^T beta))</span>
+
+<span class="sd">    where N_i is the number of trials for the i-th and beta is the</span>
+<span class="sd">    vector of regression coefficients. The prior on beta is a multivariate</span>
+<span class="sd">    normal. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">]</span>
+    <span class="n">prior_cov</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features num_features&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">prior_mean</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">],</span>
+                 <span class="n">prior_cov</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features num_features&quot;</span><span class="p">])</span> \
+                 <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior_mean</span> <span class="o">=</span> <span class="n">prior_mean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior_cov</span> <span class="o">=</span> <span class="n">prior_cov</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">y</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                 <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoitns&quot;</span><span class="p">],</span> 
+                 <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span> 
+                 <span class="n">beta</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">])</span> \
+                 <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the log joint probability of the parameters and responses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">lp</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gibbs_update_beta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                           <span class="n">y</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                           <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                           <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span>
+                           <span class="n">omegas</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">])</span> \
+                           <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample the conditional distribution of beta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">betas</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">betas</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gibbs_update_omegas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                             <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                             <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span> 
+                             <span class="n">betas</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">])</span> \
+                             <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample the PG conditional.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">omegas</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">omegas</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">gibbs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+              <span class="n">y</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+              <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoitns&quot;</span><span class="p">],</span> 
+              <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span>
+              <span class="n">init_beta</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">],</span>
+              <span class="n">num_iters</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> \
+              <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_iters num_features&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run a Gibbs sampler to sample from the posterior.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">betas</span> <span class="o">=</span> <span class="n">init_beta</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">betas</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">betas</span><span class="o">=</span><span class="n">betas</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">itr</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_iters</span><span class="p">)):</span>
+            <span class="n">omegas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gibbs_update_omegas</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">betas</span><span class="p">)</span>
+            <span class="n">betas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gibbs_update_beta</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">omegas</span><span class="p">)</span>
+            <span class="n">lp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">betas</span><span class="p">)</span>
+            <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">betas</span><span class="o">=</span><span class="n">betas</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">))</span>
+
+        <span class="c1"># Combine the samples</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]))</span>
+                       <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">samples</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-1e-posterior-analysis">
+<h3>Problem 1e: Posterior analysis<a class="headerlink" href="#problem-1e-posterior-analysis" title="Link to this heading">#</a></h3>
+<p>Set the prior hyperparameters to <span class="math notranslate nohighlight">\(\boldsymbol{\mu} = \mathbf{0}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma} = \mathbf{I}\)</span>..</p>
+<p>Run the Gibbs sampler to draw approximate posterior samples of <span class="math notranslate nohighlight">\(\beta\)</span>. It’s up to you to determine the number of Gibbs iterations.</p>
+<p><strong>Make the following plots</strong>:</p>
+<ol class="arabic simple">
+<li><p>A trace of the log joint probability <span class="math notranslate nohighlight">\(\ell^{(m)} = \log p(y, \beta^{(m)} \mid X)\)</span> across MCMC iterations (i.e., across samples of <span class="math notranslate nohighlight">\(\beta\)</span>).</p></li>
+<li><p>A trace of the sampled values of <span class="math notranslate nohighlight">\(\beta_{j}^{(m)}\)</span> across MCMC iterations. You can plot all the line plots for <span class="math notranslate nohighlight">\(j=1,\ldots,p\)</span> on one plot, rather than making a bunch of subplots.</p></li>
+<li><p>A box-and-whiskers plot of sampled values of <span class="math notranslate nohighlight">\(\{\beta_{j}^{(m)}\}_{m=1}^M\)</span> for the covariates <span class="math notranslate nohighlight">\(j=1,\ldots,p\)</span>.</p></li>
+<li><p>Discard the first 20 samples of your MCMC algorithm and use the remaining samples to approximate the posterior expectation <span class="math notranslate nohighlight">\(\mathbb{E}[\sigma(x_i^\top \beta)]\)</span> for each county <span class="math notranslate nohighlight">\(i\)</span>. Plot the predictions using the <code class="docutils literal notranslate"><span class="pre">plot_counties</span></code> function given above.</p></li>
+</ol>
+<p>Remember to label your axes!</p>
+<p><strong>Discuss</strong>:</p>
+<ol class="arabic simple">
+<li><p>How much posterior uncertainty do you find in <span class="math notranslate nohighlight">\(\beta\)</span>? Why does your result make sense?</p></li>
+<li><p>If Trump and Clinton roughly split the popular vote in 2016 (in fact, Clinton won the popular vote by a bit!), why is the intercept <span class="math notranslate nohighlight">\(\beta_0\)</span> negative?</p></li>
+</ol>
+<p>We’ve provided code to run the Gibbs sampler below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_features</span> <span class="o">=</span> <span class="n">covariates</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">prior_mean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">)</span>
+<span class="n">prior_cov</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">num_features</span><span class="p">)</span>
+<span class="n">glm</span> <span class="o">=</span> <span class="n">BinomialGLM</span><span class="p">(</span><span class="n">prior_mean</span><span class="p">,</span> <span class="n">prior_cov</span><span class="p">)</span>
+
+<span class="c1"># Make tensors for the responses and covariates</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">responses</span><span class="o">.</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">responses</span><span class="o">.</span><span class="n">N</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">covariates</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+<span class="n">glm_samples</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">gibbs</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span>
+                        <span class="n">init_beta</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">),</span> 
+                        <span class="n">num_iters</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="complete-the-cells-below">
+<h4>Complete the cells below<a class="headerlink" href="#complete-the-cells-below" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot log probs</span>
+<span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a trace of the samples</span>
+<span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the distribution of samples as a boxplot</span>
+<span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the predicted probabilities of D votes across counties</span>
+<span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="part-2-model-checking">
+<h2>Part 2: Model Checking<a class="headerlink" href="#part-2-model-checking" title="Link to this heading">#</a></h2>
+<p>Buildining model and running an inference algorithm are just the first steps of an applied statistical analysis. Now we need to check the model and see if it offers a good fit to the data. With exponential family GLMs like this one, it’s a good idea to check the deviance residuals</p>
+<section id="problem-2a-residual-analysis">
+<h3>Problem 2a: Residual analysis<a class="headerlink" href="#problem-2a-residual-analysis" title="Link to this heading">#</a></h3>
+<p>Using the posterior mean estimate, <span class="math notranslate nohighlight">\(\hat{\beta} = \frac{1}{M} \sum_m \beta^{(m)}\)</span> using samples of your Markov chain, compute the deviance residuals between the observed vote counts and the expected counts.</p>
+<ol class="arabic simple">
+<li><p><strong>Plot:</strong> Plot the deviance residuals across counties using the <code class="docutils literal notranslate"><span class="pre">plot_counties</span></code> function. (You might want to clamp the values to see more clearly.)</p></li>
+<li><p><strong>Discuss:</strong> Do you see spatial correlations in the residuals? Why might that be?</p></li>
+</ol>
+<p><em>Note: When computing the mean, you might want to discard the early samples of the chain during the “burn in” period.</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-3-hierarchical-bayesian-modeling">
+<h2>Part 3: Hierarchical Bayesian Modeling<a class="headerlink" href="#part-3-hierarchical-bayesian-modeling" title="Link to this heading">#</a></h2>
+<p>The spatial correlations in the deviance residuals could arise for many reasons. One possibility is that the relationship between covariates and responses may not be the same in all parts of the country. To allow for this possibility, we could fit a separate GLM for each state. However, we would run into issues because some states only have a handful of counties, so we can’t fit independent GLMs with <span class="math notranslate nohighlight">\(p=23\)</span> features. (For example, DC only has one “county”!).</p>
+<p><strong>Hierarchical Bayesian models</strong> allow us to fit separate models to each state, while sharing statistical strength across states. Consider the following model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\boldsymbol{\beta}_0 &amp;\sim \mathrm{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma}) \\
+\boldsymbol{\beta}_s &amp;\sim \mathrm{N}(\boldsymbol{\beta}_0, \nu^2 \mathbf{I}) &amp; \text{for } s &amp;=1,\ldots, S \\
+y_i &amp;\sim \mathrm{Bin}(N_i, \sigma(x_i^\top \beta_{s_i}))
+\end{align*}\]</div>
+<p>where again, <span class="math notranslate nohighlight">\(s_i \in \{1,\ldots,S\}\)</span> denotes the state to which county <span class="math notranslate nohighlight">\(i\)</span> belongs.</p>
+<p>Here, the <em>global weights</em> <span class="math notranslate nohighlight">\(\beta_0\)</span> captures the average weights across all states, and the <em>local weights</em> <span class="math notranslate nohighlight">\(\beta_s\)</span> capture the weights in state <span class="math notranslate nohighlight">\(s\)</span>. The hyperparameter <span class="math notranslate nohighlight">\(\nu\)</span> determines the <em>dispersion</em>: how strongly the local weights are tied to the global weights.</p>
+<p>As above, we can use Polya-gamma augmentation to implement a Gibbs sampler for this model.</p>
+<section id="problem-3a">
+<h3>Problem 3a<a class="headerlink" href="#problem-3a" title="Link to this heading">#</a></h3>
+<p>What does the hierarchical model reduce to in the limit where <span class="math notranslate nohighlight">\(\nu \to 0\)</span>? What about in the limit where <span class="math notranslate nohighlight">\(\nu \to \infty\)</span>?</p>
+</section>
+<section id="problem-3b">
+<h3>Problem 3b<a class="headerlink" href="#problem-3b" title="Link to this heading">#</a></h3>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(\beta_s \mid y, X, \beta_0, \omega, \nu)\)</span> where <span class="math notranslate nohighlight">\(\omega\)</span> are PG augmentation variables.</p>
+</section>
+<section id="problem-3c">
+<h3>Problem 3c<a class="headerlink" href="#problem-3c" title="Link to this heading">#</a></h3>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(\beta_0 \mid \{\beta_s\}_{s=1}^S; \mu, \Sigma, \nu)\)</span>.</p>
+</section>
+<section id="problem-3d">
+<h3>Problem 3d<a class="headerlink" href="#problem-3d" title="Link to this heading">#</a></h3>
+<p>Derive the conditional distribution <span class="math notranslate nohighlight">\(p(\omega_i \mid y_i, x_i, s_i, \{\beta_s\}_{s=1}^S)\)</span></p>
+</section>
+<section id="problem-3e">
+<h3>Problem 3e<a class="headerlink" href="#problem-3e" title="Link to this heading">#</a></h3>
+<p>Implement a Gibbs sampler for this hierarchical binomial GLM using PG augmentation. Run the sampler and make the following plots:</p>
+<ol class="arabic simple">
+<li><p>A trace of the log joint probability</p></li>
+<li><p>A trace of the samples of <span class="math notranslate nohighlight">\(\beta_0\)</span>.</p></li>
+<li><p>A trace of the samples of <span class="math notranslate nohighlight">\(\beta_s\)</span> for California, Delaware, and Florida</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">HierarchicalBinomialGLM</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of a *hierarchical* binomial GLM with PG augmentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_states</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">]</span>                   <span class="c1"># \mu</span>
+    <span class="n">prior_cov</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features num_features&quot;</span><span class="p">]</span>       <span class="c1"># \Sigma</span>
+    <span class="n">dispersion</span><span class="p">:</span> <span class="nb">float</span>                                           <span class="c1"># \nu</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">num_states</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">prior_mean</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">],</span>
+                 <span class="n">prior_cov</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features num_features&quot;</span><span class="p">],</span>
+                 <span class="n">dispersion</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
+                 <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_states</span> <span class="o">=</span> <span class="n">num_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior_mean</span> <span class="o">=</span> <span class="n">prior_mean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior_cov</span> <span class="o">=</span> <span class="n">prior_cov</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dispersion</span> <span class="o">=</span> <span class="n">dispersion</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">s</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                 <span class="n">y</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                 <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoitns&quot;</span><span class="p">],</span> 
+                 <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span> 
+                 <span class="n">local_betas</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_features&quot;</span><span class="p">],</span>
+                 <span class="n">global_beta</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">])</span> \
+                 <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the log joint probability of the parameters and responses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">lp</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gibbs_update_global_beta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                                  <span class="n">local_betas</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_features&quot;</span><span class="p">])</span> \
+                                  <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample the conditional distribution of \beta_0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">global_beta</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">global_beta</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gibbs_update_local_betas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                                  <span class="n">s</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                                  <span class="n">y</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                                  <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                                  <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span>
+                                  <span class="n">omegas</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span>
+                                  <span class="n">global_beta</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">])</span> \
+                                  <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_features&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample the conditional distribution of \beta_s for all s</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">local_betas</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">local_betas</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gibbs_update_omegas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                             <span class="n">s</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                             <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+                             <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span> 
+                             <span class="n">local_betas</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_features&quot;</span><span class="p">])</span> \
+                             <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample the PG conditional.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">omegas</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">omegas</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">gibbs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+              <span class="n">s</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+              <span class="n">y</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints&quot;</span><span class="p">],</span> 
+              <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoitns&quot;</span><span class="p">],</span> 
+              <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span>
+              <span class="n">init_beta</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">],</span>
+              <span class="n">num_iters</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+              <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> \
+              <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_iters num_features&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run a Gibbs sampler to sample from the posterior.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">global_beta</span> <span class="o">=</span> <span class="n">init_beta</span>
+        <span class="n">local_betas</span> <span class="o">=</span> <span class="n">global_beta</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_states</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">local_betas</span><span class="p">,</span> <span class="n">global_beta</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">global_beta</span><span class="o">=</span><span class="n">global_beta</span><span class="p">,</span> <span class="n">local_betas</span><span class="o">=</span><span class="n">local_betas</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">)]</span>
+
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">progress_bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_iters</span><span class="p">))</span> <span class="k">if</span> <span class="n">verbose</span> <span class="k">else</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">omegas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gibbs_update_omegas</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">local_betas</span><span class="p">)</span>
+            <span class="n">local_betas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gibbs_update_local_betas</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">omegas</span><span class="p">,</span> <span class="n">global_beta</span><span class="p">)</span>
+            <span class="n">global_beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gibbs_update_global_beta</span><span class="p">(</span><span class="n">local_betas</span><span class="p">)</span>
+            <span class="n">lp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">local_betas</span><span class="p">,</span> <span class="n">global_beta</span><span class="p">)</span>
+            <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">global_beta</span><span class="o">=</span><span class="n">global_beta</span><span class="p">,</span> <span class="n">local_betas</span><span class="o">=</span><span class="n">local_betas</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">))</span>
+
+        <span class="c1"># Combine the samples</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]))</span>
+                       <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">samples</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ve provided code for you to run your Gibbs sampler for the hierarchical GLM</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_features</span> <span class="o">=</span> <span class="n">covariates</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">num_states</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">prior_mean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">)</span>
+<span class="n">prior_cov</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">num_features</span><span class="p">)</span>
+<span class="n">dispersion</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="c1"># Extract tensors for each of the responses</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">responses</span><span class="o">.</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">responses</span><span class="o">.</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">responses</span><span class="o">.</span><span class="n">N</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">covariates</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+<span class="c1"># Construct and fit the hierarchical GLM</span>
+<span class="n">hglm</span> <span class="o">=</span> <span class="n">HierarchicalBinomialGLM</span><span class="p">(</span><span class="n">num_states</span><span class="p">,</span> <span class="n">prior_mean</span><span class="p">,</span> <span class="n">prior_cov</span><span class="p">,</span> <span class="n">dispersion</span><span class="p">)</span>
+<span class="n">hglm_samples</span> <span class="o">=</span> <span class="n">hglm</span><span class="o">.</span><span class="n">gibbs</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> 
+                          <span class="n">init_beta</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">),</span> 
+                          <span class="n">num_iters</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id3">
+<h4>Complete the cells below<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot log probs</span>
+<span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a trace of the global beta samples</span>
+<span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a trace of the local beta samples for CA, DE, and FL</span>
+<span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="problem-3f">
+<h3>Problem 3f<a class="headerlink" href="#problem-3f" title="Link to this heading">#</a></h3>
+<p>Explain why the traces of <span class="math notranslate nohighlight">\(\beta_s\)</span> look so different across these three states.</p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-3g">
+<h3>Problem 3g<a class="headerlink" href="#problem-3g" title="Link to this heading">#</a></h3>
+<p>Plot the deviance residuals like you did in Problem 2b, now the posterior mean of local weights, <span class="math notranslate nohighlight">\(\beta_s\)</span>. Compared to your results from Problem 2b, is the model improving?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-3h">
+<h3>Problem 3h<a class="headerlink" href="#problem-3h" title="Link to this heading">#</a></h3>
+<p>Visualize the estimated probabilities <span class="math notranslate nohighlight">\(\sigma(x_i^\top \hat{\beta}_{s_i})\)</span> using the posterior mean as your estimate. Use the <code class="docutils literal notranslate"><span class="pre">plot_counties</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-4-the-needle">
+<h2>Part 4: The “Needle”<a class="headerlink" href="#part-4-the-needle" title="Link to this heading">#</a></h2>
+<p>If you follow US politics and elections, you may be familiar with the New York Times’ election forecast called the <a class="reference external" href="https://www.nytimes.com/interactive/2020/11/03/us/elections/forecast-president.html">“Needle”</a>. As results roll in on the night of the election, the Needle is updated with a forecasted probability of each candidate winning the election. The Needle doesn’t get a lot of love — especially when it steadily progresses in favor of the candidate you don’t want to win. In the last part of this assignment, we’ll try making a needle of our own, and I think we’ll find that it’s more difficult to make accurate forecasts than you might think!</p>
+<section id="id4">
+<h3>Setup<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>Pretend we’re forecasting the 2020 election. Let’s start with some simplifying assumptions:</p>
+<ul class="simple">
+<li><p>Suppose results roll in one state at a time, in the order given below. (We won’t worry about finer timescales, like county- or precint-level results arriving in batches). Each time we receive another state’s results, we’ll call that a <strong>time stamp</strong>. There will be <span class="math notranslate nohighlight">\(T=50\)</span> time stamps in total.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(\beta_s^{(t,m)}\)</span> denote the <span class="math notranslate nohighlight">\(m\)</span>-th sample of the local weights, <span class="math notranslate nohighlight">\(\beta_s\)</span>, from the model fit at time stamp <span class="math notranslate nohighlight">\(t\)</span>. For each time stamp <span class="math notranslate nohighlight">\(t\)</span>, we will fit a model to the “training” data</p></li>
+</ul>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathcal{D}_t \triangleq \{(x_i, y_i): s_i \text{ is observed at time stamp } t\}
+\end{align*}\]</div>
+<ul class="simple">
+<li><p>Suppose each state is worth a fixed number of electors, given below, and the electors are all allotted to whichever party gets the most votes (we won’t worry about weird states like Nebraska and Maine)</p></li>
+</ul>
+<p>Finally, note that a candidate needs at least 270 electors to win the election.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">state_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;INDIANA&quot;</span><span class="p">,</span> <span class="s2">&quot;KENTUCKY&quot;</span><span class="p">,</span> <span class="s2">&quot;VERMONT&quot;</span><span class="p">,</span> <span class="s2">&quot;WEST VIRGINIA&quot;</span><span class="p">,</span> <span class="s2">&quot;ALABAMA&quot;</span><span class="p">,</span> <span class="s2">&quot;MISSISSIPPI&quot;</span><span class="p">,</span> <span class="s2">&quot;OKLAHOMA&quot;</span><span class="p">,</span> <span class="s2">&quot;TENNESSEE&quot;</span><span class="p">,</span> <span class="s2">&quot;CONNECTICUT&quot;</span><span class="p">,</span> <span class="s2">&quot;MARYLAND&quot;</span><span class="p">,</span> <span class="s2">&quot;MASSACHUSETTS&quot;</span><span class="p">,</span> <span class="s2">&quot;RHODE ISLAND&quot;</span><span class="p">,</span> <span class="s2">&quot;FLORIDA&quot;</span><span class="p">,</span> <span class="s2">&quot;SOUTH CAROLINA&quot;</span><span class="p">,</span> <span class="s2">&quot;ARKANSAS&quot;</span><span class="p">,</span> <span class="s2">&quot;NEW JERSEY&quot;</span><span class="p">,</span> <span class="s2">&quot;DELAWARE&quot;</span><span class="p">,</span> <span class="s2">&quot;ILLINOIS&quot;</span><span class="p">,</span> <span class="s2">&quot;LOUISIANA&quot;</span><span class="p">,</span> <span class="s2">&quot;NEBRASKA&quot;</span><span class="p">,</span> <span class="s2">&quot;NORTH DAKOTA&quot;</span><span class="p">,</span> <span class="s2">&quot;SOUTH DAKOTA&quot;</span><span class="p">,</span> <span class="s2">&quot;WYOMING&quot;</span><span class="p">,</span> <span class="s2">&quot;NEW YORK&quot;</span><span class="p">,</span> <span class="s2">&quot;OHIO&quot;</span><span class="p">,</span> <span class="s2">&quot;TEXAS&quot;</span><span class="p">,</span> <span class="s2">&quot;MISSOURI&quot;</span><span class="p">,</span> <span class="s2">&quot;MONTANA&quot;</span><span class="p">,</span> <span class="s2">&quot;UTAH&quot;</span><span class="p">,</span> <span class="s2">&quot;COLORADO&quot;</span><span class="p">,</span> <span class="s2">&quot;DISTRICT OF COLUMBIA&quot;</span><span class="p">,</span> <span class="s2">&quot;KANSAS&quot;</span><span class="p">,</span> <span class="s2">&quot;IOWA&quot;</span><span class="p">,</span> <span class="s2">&quot;MAINE&quot;</span><span class="p">,</span> <span class="s2">&quot;IDAHO&quot;</span><span class="p">,</span> <span class="s2">&quot;CALIFORNIA&quot;</span><span class="p">,</span> <span class="s2">&quot;WASHINGTON&quot;</span><span class="p">,</span> <span class="s2">&quot;NORTH CAROLINA&quot;</span><span class="p">,</span> <span class="s2">&quot;OREGON&quot;</span><span class="p">,</span> <span class="s2">&quot;NEW MEXICO&quot;</span><span class="p">,</span> <span class="s2">&quot;VIRGINIA&quot;</span><span class="p">,</span> <span class="s2">&quot;HAWAII&quot;</span><span class="p">,</span> <span class="s2">&quot;GEORGIA&quot;</span><span class="p">,</span> <span class="s2">&quot;NEW HAMPSHIRE&quot;</span><span class="p">,</span> <span class="s2">&quot;PENNSYLVANIA&quot;</span><span class="p">,</span> <span class="s2">&quot;MINNESOTA&quot;</span><span class="p">,</span> <span class="s2">&quot;WISCONSIN&quot;</span><span class="p">,</span> <span class="s2">&quot;MICHIGAN&quot;</span><span class="p">,</span> <span class="s2">&quot;NEVADA&quot;</span><span class="p">,</span> <span class="s2">&quot;ARIZONA&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">electors_per_state</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+    <span class="s2">&quot;ALABAMA&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s2">&quot;ARIZONA&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="s2">&quot;ARKANSAS&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;CALIFORNIA&quot;</span><span class="p">:</span> <span class="mi">55</span><span class="p">,</span>
+    <span class="s2">&quot;COLORADO&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s2">&quot;CONNECTICUT&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="s2">&quot;DELAWARE&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;DISTRICT OF COLUMBIA&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;FLORIDA&quot;</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+    <span class="s2">&quot;GEORGIA&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="s2">&quot;HAWAII&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;IDAHO&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;ILLINOIS&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="s2">&quot;INDIANA&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="s2">&quot;IOWA&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;KANSAS&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;KENTUCKY&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;LOUISIANA&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;MAINE&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;MARYLAND&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;MASSACHUSETTS&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="s2">&quot;MICHIGAN&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="s2">&quot;MINNESOTA&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;MISSISSIPPI&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;MISSOURI&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;MONTANA&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;NEBRASKA&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;NEVADA&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;NEW HAMPSHIRE&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;NEW JERSEY&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="s2">&quot;NEW MEXICO&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;NEW YORK&quot;</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+    <span class="s2">&quot;NORTH CAROLINA&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="s2">&quot;NORTH DAKOTA&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;OHIO&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="s2">&quot;OKLAHOMA&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="s2">&quot;OREGON&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="s2">&quot;PENNSYLVANIA&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="s2">&quot;RHODE ISLAND&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;SOUTH CAROLINA&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s2">&quot;SOUTH DAKOTA&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;TENNESSEE&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="s2">&quot;TEXAS&quot;</span><span class="p">:</span> <span class="mi">38</span><span class="p">,</span>
+    <span class="s2">&quot;UTAH&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;VERMONT&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;VIRGINIA&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="s2">&quot;WASHINGTON&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="s2">&quot;WEST VIRGINIA&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;WISCONSIN&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;WYOMING&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">},</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;electors&quot;</span><span class="p">])</span>
+
+<span class="c1"># Check that the states are in the correct order</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">electors_per_state</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="n">state_names</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is a data frame indexed by state names. E.g.,</span>
+<span class="n">electors_per_state</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;ALABAMA&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="preprocessing">
+<h3>Preprocessing<a class="headerlink" href="#preprocessing" title="Link to this heading">#</a></h3>
+<p>First we will extract training responses and covariates <span class="math notranslate nohighlight">\(\mathcal{D}_t\)</span> for each time stamp <span class="math notranslate nohighlight">\(t=1,\ldots,50\)</span>. We also extract the “test” responses and covariates for states that haven’t been released by that time stamp, which we will use below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First extract all responses for 2020</span>
+<span class="n">responses_2020</span><span class="p">,</span> <span class="n">_state_names</span> <span class="o">=</span> <span class="n">extract_responses</span><span class="p">(</span><span class="n">votes</span><span class="p">,</span> <span class="mi">2020</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">_state_names</span> <span class="o">==</span> <span class="n">state_names</span>
+
+<span class="c1"># Now extract subsets for each timestamp</span>
+<span class="n">train_responses_per_timestamp</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">train_covariates_per_timestamp</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">test_responses_per_timestamp</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">test_covariates_per_timestamp</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_states</span><span class="p">):</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="n">responses_2020</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">state_order</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">train_responses_per_timestamp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">responses_2020</span><span class="p">[</span><span class="n">train</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">train_covariates_per_timestamp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">covariates</span><span class="p">[</span><span class="n">train</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="n">test</span> <span class="o">=</span> <span class="o">~</span><span class="n">responses_2020</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">state_order</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">test_responses_per_timestamp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">responses_2020</span><span class="p">[</span><span class="n">test</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">test_covariates_per_timestamp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">covariates</span><span class="p">[</span><span class="n">test</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="c1"># Plot the cumulative number of counties released by each timestamp</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">train_responses_per_timestamp</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time stamp (all states to left have been seen)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_states</span><span class="p">),</span> <span class="n">state_order</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;number of counties released&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-4a">
+<h3>Problem 4a<a class="headerlink" href="#problem-4a" title="Link to this heading">#</a></h3>
+<p>We will use a hierarchical binomial GLM as above, but set <span class="math notranslate nohighlight">\(\mu\)</span> to the posterior mean of <span class="math notranslate nohighlight">\(\beta_0\)</span> that you estimated from the 2016 election results. Set <span class="math notranslate nohighlight">\(\Sigma = \sigma^2 I\)</span> with <span class="math notranslate nohighlight">\(\sigma=0.25\)</span>, and set <span class="math notranslate nohighlight">\(\nu=0.1\)</span> as above. (Note: I chose these scales somewhat arbitrarily.)</p>
+<p>Fit a hierarchical GLM to the 2020 votes for each timestamp. You should end up with <span class="math notranslate nohighlight">\(T=50\)</span> sets of posterior samples.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-4b">
+<h3>Problem 4b<a class="headerlink" href="#problem-4b" title="Link to this heading">#</a></h3>
+<p>You should now have several samples of the model parameters for each time stamp. For each time stamp and parameter sample:</p>
+<ol class="arabic simple">
+<li><p>Draw a sample of the Democratic vote count for each county that hasn’t been released yet.
+\begin{align*}
+\hat{y}<em>i^{(t,m)} &amp;\sim \mathrm{Bin}(N_i, \sigma(\langle x_i, \beta</em>{s_i}^{(t,m)} \rangle))
+\end{align*}</p></li>
+<li><p>For each time stamp and sample, sum released and sampled votes to determine whether the Democratic Party would win each state. You should end up with a binary tensor of shape <span class="math notranslate nohighlight">\(T \times M \times S\)</span>.</p></li>
+<li><p>Compute the total number of electors each party would win, and hence who would win the election. You should end up with a count tensor of shape <span class="math notranslate nohighlight">\(T \times M\)</span> representing the number of votes the Democrats would win for each time stamp and sample, and a binary tensor of the same shape representing whether the Democrats would win the election.</p></li>
+</ol>
+<p>Then make the following plots:</p>
+<ol class="arabic simple">
+<li><p>Plot the 95% Bayesian credible interval for number of electors the Democrats will receive, as of each time stamp. (Estimate the interval using the samples you generated above.)</p></li>
+<li><p>The probability that the Democrats will win at each time stamp, based on your simulations.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-5-reflection">
+<h2>Part 5: Reflection<a class="headerlink" href="#part-5-reflection" title="Link to this heading">#</a></h2>
+<p>You just went through two iterations of what some call <em>Box’s Loop</em> <span id="id5">[<a class="reference internal" href="../../lectures/99_references.html#id14" title="David M Blei. Build, compute, critique, repeat: Data analysis with latent variable models. Annual Review of Statistics and Its Application, 1:203–232, 2014.">Ble14</a>]</span>:</p>
+<ul class="simple">
+<li><p>You extracted relevant features from a real world dataset,</p></li>
+<li><p>You built an initial model (a GLM),</p></li>
+<li><p>You implemented and ran a Bayesian inference algorithm (Gibbs with PG augmentation),</p></li>
+<li><p>You inspected the posterior (via deviance residuals),</p></li>
+<li><p>You critiqued the model and revised it (to a <em>hierarchical</em> GLM),</p></li>
+<li><p>Finally, you used the revised model to draw real-world inferences: The Needle!</p></li>
+</ul>
+<p>In applied statistics problems, we often repeat this process many times as we hone our models and improve our algorithms. In the final question, we ask you to consider what you would do given another iteration of Box’s Loop.</p>
+<section id="problem-5a">
+<h3>Problem 5a<a class="headerlink" href="#problem-5a" title="Link to this heading">#</a></h3>
+<p>Would you trust your Needle?  If you were to further refine the model, what change would you make next? Why? How do you hypothesize it would alter your results?</p>
+<p><strong>You do not need to implement your proposed change. Just explain your reasoning.</strong> (Of course, if you really want to improve the Needle, by all means go ahead! But it’s not required for this question.)</p>
+<p><em>Your answer here</em></p>
+</section>
+</section>
+<section id="submission-instructions">
+<h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Link to this heading">#</a></h2>
+<p><strong>Formatting:</strong> check that your code does not exceed 80 characters in line width. You can set <em>Tools → Settings → Editor → Vertical ruler column</em> to 80 to see when you’ve exceeded the limit.</p>
+<p><strong>Converting to PDF</strong> The simplest way to convert to PDF is to use the “Print to PDF” option in your browser. Just make sure that your code and plots aren’t cut off, as it may not wrap lines.</p>
+<p><strong>Alternatively</strong> You can download your notebook in .ipynb format and use the following commands to convert it to PDF.  Then run the following command to convert to a PDF:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">nbconvert</span> <span class="o">--</span><span class="n">to</span> <span class="n">pdf</span> <span class="o">&lt;</span><span class="n">yourlastname</span><span class="o">&gt;</span><span class="n">_hw</span><span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;.</span><span class="n">ipynb</span>
+</pre></div>
+</div>
+<p>(Note that for the above code to work, you need to rename your file <code class="docutils literal notranslate"><span class="pre">&lt;yourlastname&gt;_hw&lt;number&gt;.ipynb</span></code>)</p>
+<p><strong>Installing nbconvert:</strong></p>
+<p>If you’re using Anaconda for package management,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">anaconda</span> <span class="n">nbconvert</span>
+</pre></div>
+</div>
+<p><strong>Upload</strong> your .pdf file to Gradescope. Please tag your questions correctly! I.e., for each question, all of and only the relevant sections are tagged.</p>
+<p>Please post on Ed or come to OH if there are any other problems submitting the HW.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./assignments/hw2"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../hw1/hw1.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">HW1: Logistic Regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../lectures/99_references.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-vote-data">Load the vote data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-demographic-data">Load the demographic data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-plotting">Helper function for plotting</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-preprocessing">Part 0: Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0a-one-hot-encodings">Problem 0a: One-hot encodings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0b-other-covariates">Problem 0b: Other covariates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0c-interpreting-the-intercept">Problem 0c: Interpreting the intercept</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-bayesian-inference-in-a-binomial-glm-via-polya-gamma-augmentation">Part 1: Bayesian Inference in a Binomial GLM via Polya-gamma augmentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-bayesian-binomial-glm">Model: Bayesian Binomial GLM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-gibbs-sampling-with-polya-gamma-augmentation">Algorithm: Gibbs sampling with Polya-gamma Augmentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a">Problem 1a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b">Problem 1b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c">Problem 1c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d">Problem 1d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1e-posterior-analysis">Problem 1e: Posterior analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-the-cells-below">Complete the cells below</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-model-checking">Part 2: Model Checking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-residual-analysis">Problem 2a: Residual analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-hierarchical-bayesian-modeling">Part 3: Hierarchical Bayesian Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3a">Problem 3a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3b">Problem 3b</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3c">Problem 3c</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3d">Problem 3d</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3e">Problem 3e</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Complete the cells below</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3f">Problem 3f</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3g">Problem 3g</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3h">Problem 3h</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-the-needle">Part 4: The “Needle”</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing">Preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4a">Problem 4a</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-4b">Problem 4b</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-reflection">Part 5: Reflection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-5a">Problem 5a</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
