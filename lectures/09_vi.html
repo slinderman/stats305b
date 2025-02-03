@@ -1,0 +1,1126 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Variational Inference &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/09_vi';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Bayesian GLMs" href="08_bayes_glms_soln.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_mcmc.html">Markov Chain Monte Carlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Variational Inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/lectures/09_vi.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/09_vi.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Variational Inference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-variational-inference">Why Variational Inference?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notation">Notation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-view-of-variational-inference">A view of variational inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-key-questions">Three Key Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-ascent-variational-inference-cavi">Coordinate Ascent Variational Inference (CAVI)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-based-variational-inference">Gradient-based Variational Inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound-elbo">The Evidence Lower Bound (ELBO)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kullback-leibler-kl-divergence">Kullback-Leibler (KL) divergence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound-elbo-from-another-angle">The evidence lower bound (ELBO) from another angle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#viewer-discretion-advised">Viewer discretion advised…</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-elbo">Optimizing the ELBO</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-statement">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-elbo-with-coordinate-ascent">Optimizing the ELBO with Coordinate Ascent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-elbo-with-stochastic-gradient-ascent">Optimizing the ELBO with stochastic gradient ascent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-gradient-estimation">Monte Carlo gradient estimation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-score-function-gradient-estimator">The score function gradient estimator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#control-variates">Control variates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pathwise-gradient-estimator">The pathwise gradient estimator</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synthetic-demo">Synthetic Demo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-details">More Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#empirically-comparing-estimator-variances">Empirically comparing estimator variances</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-mini-batches-of-data">Working with mini-batches of data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sgd-convergence-and-extensions">SGD convergence and extensions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="variational-inference">
+<h1>Variational Inference<a class="headerlink" href="#variational-inference" title="Link to this heading">#</a></h1>
+<p>The key idea in variational inference (VI) is to approximate the posterior with the closest member of a parametric family. This frames posterior inference as an optimization problem rather than a sampling problem.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.autograd.functional</span><span class="w"> </span><span class="kn">import</span> <span class="n">hessian</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bernoulli</span><span class="p">,</span> <span class="n">Beta</span><span class="p">,</span> <span class="n">Binomial</span><span class="p">,</span> <span class="n">MultivariateNormal</span><span class="p">,</span> <span class="n">Normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scott/anaconda3/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<section id="why-variational-inference">
+<h3>Why Variational Inference?<a class="headerlink" href="#why-variational-inference" title="Link to this heading">#</a></h3>
+<p>MCMC methods are asymptotically unbiased (though for finite samples there is a transient bias that shrinks as <span class="math notranslate nohighlight">\(O(M^{-1})\)</span>). The real issue is variance: it only shrinks as <span class="math notranslate nohighlight">\(O(M^{-1/2})\)</span>.</p>
+<p><strong>Motivation:</strong> With finite computation, can we get better posterior estimates by trading asymptotic bias for smaller variance?</p>
+<p><strong>Idea:</strong> approximate the posterior by with a simple, parametric form (though not strictly a Gaussian on the mode!). Optimize to find the approximation that is as “close” as possible to the posterior.</p>
+</section>
+<section id="notation">
+<h3>Notation<a class="headerlink" href="#notation" title="Link to this heading">#</a></h3>
+<p>This notation could be a bit confusing. Let,</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mbtheta \in \reals^D\)</span> denote \textbf{all of latent variables and parameters} we wish to infer.</p></li>
+<li><p><span class="math notranslate nohighlight">\(p(\mbtheta \mid \mbx)\)</span> denote the true posterior distribution we want to approximate.</p></li>
+<li><p><span class="math notranslate nohighlight">\(q(\mbtheta; \mblambda)\)</span> denote a parametric variational approximation to the posterior where…</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mblambda\)</span> denotes the variational parameters that we will optimize.</p></li>
+<li><p><span class="math notranslate nohighlight">\(D(q \, \| \, p)\)</span> denote a divergence measure that takes in two distributions <span class="math notranslate nohighlight">\(q\)</span> and <span class="math notranslate nohighlight">\(p\)</span> and returns a measure of how similar they are.</p></li>
+</ul>
+</section>
+<section id="a-view-of-variational-inference">
+<h3>A view of variational inference<a class="headerlink" href="#a-view-of-variational-inference" title="Link to this heading">#</a></h3>
+<p><img alt="Variational Inference" src="../_images/vi.png" /></p>
+</section>
+</section>
+<section id="three-key-questions">
+<h2>Three Key Questions<a class="headerlink" href="#three-key-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>What parametric family should we use?</p></li>
+<li><p>How should we measure closeness?</p></li>
+<li><p>How do we find the closest distribution in that family?</p></li>
+</ol>
+<p>Different flavors of VI answer these questions differently</p>
+<section id="coordinate-ascent-variational-inference-cavi">
+<h3>Coordinate Ascent Variational Inference (CAVI)<a class="headerlink" href="#coordinate-ascent-variational-inference-cavi" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>What parametric family should we use?</p></li>
+</ol>
+<ul class="simple">
+<li><p>The <strong>mean-field family</strong></p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>How should we measure closeness?</p></li>
+</ol>
+<ul class="simple">
+<li><p>The <strong>Kullback-Leibler (KL)</strong> divergence.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>How do we find the closest distribution in that family?</p></li>
+</ol>
+<ul class="simple">
+<li><p><strong>Coordinate ascent</strong>, assuming we have a conditionally conjugate model.</p></li>
+</ul>
+</section>
+<section id="gradient-based-variational-inference">
+<h3>Gradient-based Variational Inference<a class="headerlink" href="#gradient-based-variational-inference" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>What parametric family should we use?</p></li>
+</ol>
+<ul class="simple">
+<li><p>Pretty much any <span class="math notranslate nohighlight">\(q\)</span>, as long as we can sample from it and evaluate the log density.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>How should we measure closeness?</p></li>
+</ol>
+<ul class="simple">
+<li><p>The <strong>Kullback-Leibler (KL)</strong> divergence.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>How do we find the closest distribution in that family?</p></li>
+</ol>
+<ul class="simple">
+<li><p><strong>Stochastic gradient ascent</strong> using Monte Carlo estimates of the ELBO and its gradient.</p></li>
+</ul>
+<p>Gradient-based VI methods go under a few different names: black-box VI (BBVI), automatic differentiation VI (ADVI), fixed-form VI…</p>
+<p>We’ll focus on gradient-based methods in these notes.</p>
+</section>
+</section>
+<section id="the-evidence-lower-bound-elbo">
+<h2>The Evidence Lower Bound (ELBO)<a class="headerlink" href="#the-evidence-lower-bound-elbo" title="Link to this heading">#</a></h2>
+<section id="kullback-leibler-kl-divergence">
+<h3>Kullback-Leibler (KL) divergence<a class="headerlink" href="#kullback-leibler-kl-divergence" title="Link to this heading">#</a></h3>
+<p>The KL divergence is a measure of closeness between two distributions. It is defined as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \KL{q(\mbtheta; \mblambda)}{p(\mbtheta \mid \mbx} &amp;= \E_{q(\mbtheta; \mblambda)} \left[ \log \frac{q(\mbtheta; \mblambda)}{p(\mbtheta \mid \mbx)} \right] \\
+    &amp;= \E_{q(\mbtheta; \mblambda)} \left[ \log q(\mbtheta; \mblambda) \right] 
+    - \E_{q(\mbtheta; \mblambda)} \left[ \log p(\mbtheta \mid \mbx) \right] 
+    % \\
+    % &amp;= \underbrace{\bbH[q(\mbtheta; \mblambda), p(\mbtheta \mid \mbx)]}_{\text{cross entropy}} - \underbrace{\bbH[q(\mbtheta; \mblambda)]}_{\text{entropy}}
+\end{align*}\]</div>
+<p>It has some nice properties:</p>
+<ul class="simple">
+<li><p>It is non-negative.</p></li>
+<li><p>It is zero iff <span class="math notranslate nohighlight">\(q(\mbtheta; \mblambda) \equiv p(\mbtheta \mid \mbx)\)</span>.</p></li>
+<li><p>It is defined in terms of expectations wrt <span class="math notranslate nohighlight">\(q\)</span>.</p></li>
+</ul>
+<p>But it’s also a bit weird…</p>
+<ul class="simple">
+<li><p>It’s asymmetric (<span class="math notranslate nohighlight">\(\KL{q}{p} \neq \KL{p}{q}\)</span>).</p></li>
+</ul>
+</section>
+<section id="the-evidence-lower-bound-elbo-from-another-angle">
+<h3>The evidence lower bound (ELBO) from another angle<a class="headerlink" href="#the-evidence-lower-bound-elbo-from-another-angle" title="Link to this heading">#</a></h3>
+<p>More concerning, the KL divergence involves the posterior <span class="math notranslate nohighlight">\(p(\mbtheta \mid \mbx)\)</span>, which we cannot compute!</p>
+<p>But notice that…</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \KL{q(\mbtheta; \mblambda)}{p(\mbtheta \mid \mbx}
+    &amp;= \E_{q(\mbtheta; \mblambda)} \left[ \log q(\mbtheta; \mblambda) \right] 
+    - \E_{q(\mbtheta; \mblambda)} \left[ \log p(\mbtheta \mid \mbx) \right] \\
+    &amp;= \E_{q(\mbtheta; \mblambda)} \left[ \log q(\mbtheta; \mblambda) \right] 
+    - \E_{q(\mbtheta; \mblambda)} \left[ \log p(\mbtheta, \mbx) \right] 
+    + \E_{q(\mbtheta; \mblambda)}\left[ \log p(\mbx)\right] \\
+    &amp;= \underbrace{\E_{q(\mbtheta; \mblambda)} \left[ \log q(\mbtheta; \mblambda) \right] 
+    - \E_{q(\mbtheta; \mblambda)} \left[ \log p(\mbtheta, \mbx) \right]}_{\text{negative ELBO}, -\cL(\mblambda)}
+    + \underbrace{\log p(\mbx)}_{\text{evidence}}
+\end{align*}\]</div>
+<p>The first term involves the log joint, which we can compute, and the last term is independent of the variational parameters!</p>
+<p>Rearranging, we see that <span class="math notranslate nohighlight">\(\cL(\mblambda)\)</span> is a lower bound on the marginal likelihood, aka the evidence,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mblambda) &amp;= \log p(\mbx) - \KL{q(\mbtheta; \mblambda)}{p(\mbtheta \mid \mbx} 
+\leq \log p(\mbx).
+\end{align*}\]</div>
+<p>That’s why we call it the <strong>evidence lower bound (ELBO)</strong>.</p>
+</section>
+<section id="viewer-discretion-advised">
+<h3>Viewer discretion advised…<a class="headerlink" href="#viewer-discretion-advised" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=jugUBL4rEIM">You have been warned…</a></p>
+</section>
+</section>
+<section id="optimizing-the-elbo">
+<h2>Optimizing the ELBO<a class="headerlink" href="#optimizing-the-elbo" title="Link to this heading">#</a></h2>
+<section id="problem-statement">
+<h3>Problem Statement<a class="headerlink" href="#problem-statement" title="Link to this heading">#</a></h3>
+<p>The optimal approximation is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    q^\star(\mbtheta; \mblambda) 
+    &amp;= \mathrm{argmin}_{q \in \cQ} \KL{q(\mbtheta; \mblambda)}{p(\mbtheta \mid \mbX)}
+\end{align*}\]</div>
+<p>or equivalently</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mblambda^\star
+    &amp;= \mathrm{argmin}_{\mblambda \in \mbLambda} \KL{q(\mbtheta; \mblambda)}{p(\mbtheta \mid \mbX)} \\
+    &amp;= \mathrm{argmax}_{\mblambda \in \mbLambda} \cL(\mblambda)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\cL(\mblambda)\)</span> denotes the <strong>evidence lower bound (ELBO)</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mblambda) &amp;= \E_{q(\mbtheta; \mblambda)} \left[\log p(\mbX, \mbtheta) - \log q(\mbtheta; \mblambda) \right]
+\end{align*}\]</div>
+</section>
+<section id="optimizing-the-elbo-with-coordinate-ascent">
+<h3>Optimizing the ELBO with Coordinate Ascent<a class="headerlink" href="#optimizing-the-elbo-with-coordinate-ascent" title="Link to this heading">#</a></h3>
+<p>We want to find the variational parameters <span class="math notranslate nohighlight">\(\mblambda\)</span> that minimize the KL divergence or, equivalently, maximize the ELBO.</p>
+<p>For the mean-field family, the variational posterior factors over dimensions.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(\theta; \lambda) &amp;= \prod_{d=1}^D q(\theta_d; \lambda_d)
+\end{align*}\]</div>
+<p>Often, this factorization alloows for optimization via coordinate ascent. Consider optimizing the parameters for one factor <span class="math notranslate nohighlight">\(q(\theta_d; \lambda_d)\)</span>. As a function of <span class="math notranslate nohighlight">\(\lambda_d\)</span>, the ELBO is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mblambda) 
+    &amp;= 
+    \E_{q(\theta_d; \lambda_d)}\left[ \E_{q(\mbtheta_{\neg d}; \mblambda_{\neg d})} \left[ \log p(\mbtheta, \mbx) \right] \right] -
+    \E_{q(\theta_d; \lambda_d)}[\log q(\theta_d; \lambda_d)] + c \\
+    &amp;= 
+    \E_{q(\theta_d; \lambda_d)}\left[ \E_{q(\mbtheta_{\neg d}; \mblambda_{\neg d})} \left[ \log p(\theta_d \mid \mbtheta_{\neg_d}, \mbx) \right] \right] -
+    \E_{q(\theta_d; \lambda_d)}[\log q(\theta_d; \lambda_d)] + c' \\
+    &amp;= -\KL{q(\theta_d; \lambda_d)}{\tilde{p}(\theta_d)} + c''
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \label{eq:cavi_form}
+    \tilde{p}(\theta_d) &amp;\propto
+    \exp \left\{ \E_{q(\mbtheta_{\neg d}; \mblambda_{\neg d})} \left[ \log p(\theta_d \mid \mbtheta_{\neg d}, \mbx) \right] \right\}
+\end{align*}\]</div>
+<p>The ELBO is maximized wrt <span class="math notranslate nohighlight">\(\lambda_d\)</span> when this KL is minimized; i.e. when <span class="math notranslate nohighlight">\(q(\theta_d ; \lambda_d) = \tilde{p}(\theta_d)\)</span>, the exponentiated expected log conditional probability, holding all other factors fixed.</p>
+</section>
+<section id="optimizing-the-elbo-with-stochastic-gradient-ascent">
+<h3>Optimizing the ELBO with stochastic gradient ascent<a class="headerlink" href="#optimizing-the-elbo-with-stochastic-gradient-ascent" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Idea:</strong> Assume the variational parameters <span class="math notranslate nohighlight">\(\mbLambda\)</span> are unconstrained (i.e., <span class="math notranslate nohighlight">\(\mbLambda = \mathbb{R}^Q\)</span>), then perform (stochastic) gradient ascent.</p></li>
+<li><p>If the parameters are unconstrained and the ELBO is differentiable, we can use gradient ascent.
+Repeat:
+\begin{align*}
+\mblambda &amp;\leftarrow \mblambda + \alpha \nabla_{\mblambda} \cL(\mblambda)
+\end{align*}
+with step size <span class="math notranslate nohighlight">\(\alpha\)</span>. Typically, you decrease the step size over iterations so that <span class="math notranslate nohighlight">\(\alpha_1 \geq \alpha_2 \geq \ldots\)</span></p></li>
+<li><p>More generally, we can use <em>stochastic</em> gradient ascent with an estimate of the gradient, <span class="math notranslate nohighlight">\(\widehat{\nabla}_{\mblambda} \cL(\mblambda)\)</span>, as long as it is unbiased,
+\begin{align*}
+\E[\widehat{\nabla}<em>{\mblambda} \cL(\mblambda)] = \nabla</em>{\mblambda} \cL(\mblambda).
+\end{align*}</p></li>
+</ul>
+</section>
+<section id="monte-carlo-gradient-estimation">
+<h3>Monte Carlo gradient estimation<a class="headerlink" href="#monte-carlo-gradient-estimation" title="Link to this heading">#</a></h3>
+<p>No problem! We’ll just use ordinary Monte Carlo to estimate the gradient. But we run into a problem…</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla_{\mblambda} \cL(\mblambda) 
+&amp;= \nabla_{\mblambda} \E_{q(\mbtheta; \mblambda)} \left[ \log p(\mbx, \mbtheta) - \log q(\mbtheta; \mblambda) \right] \\
+&amp;\textcolor{red}{\neq} \;  \E_{q(\mbtheta; \mblambda)} \left[ \nabla_{\mblambda} \left(\log p(\mbx, \mbtheta) - \log q(\mbtheta; \mblambda)\right) \right].
+\end{align*}\]</div>
+<p><strong>Problem:</strong> Why can’t we simply bring the gradient inside the expectation?</p>
+</section>
+<section id="the-score-function-gradient-estimator">
+<h3>The score function gradient estimator<a class="headerlink" href="#the-score-function-gradient-estimator" title="Link to this heading">#</a></h3>
+<p>The basic problem is that the variational parameters <span class="math notranslate nohighlight">\(\mblambda\)</span> determine the distribution we are taking an expectation under.  However, there are a few ways to obtain unbiased estimates of the gradient.</p>
+<p>One approach is called the <strong>score function gradient estimator</strong> or the <strong>REINFORCE estimator</strong>. It is based on the following identity,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \nabla_{\mblambda} \log q(\mbtheta; \mblambda) &amp;= \frac{\nabla_{\mblambda} q(\mbtheta; \mblambda)}{q(\mbtheta; \mblambda)}
+\end{align*}\]</div>
+<p>where the l.h.s. is called the score function of distribution <span class="math notranslate nohighlight">\(q\)</span>.</p>
+<p>We can use this identity to obtain an unbiased estimate of the gradient of an expectation,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \nabla_{\mblambda} \E_{q(\mbtheta; \mblambda)} \left[ h(\mbtheta) \right] 
+    &amp;= \nabla_{\mblambda} \int q(\mbtheta; \mblambda) \, h(\mbtheta) \dif \mbtheta \\
+    &amp;= \int \left(\nabla_{\mblambda} q(\mbtheta; \mblambda)\right) h(\mbtheta) \dif \mbtheta \\
+    &amp;= \int \left(q(\mbtheta; \mblambda) \nabla_{\mblambda} \log q(\mbtheta; \mblambda)\right) h(\mbtheta)  \dif \mbtheta \\
+    &amp;= \E_{q(\mbtheta; \mblambda)} \left[ \left(\nabla_{\mblambda} \log q(\mbtheta; \mblambda)\right) h(\mbtheta) \right]
+\end{align*}\]</div>
+<p>From this identity, we can obtain an unbiased Monte Carlo estimate,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \widehat{\nabla}_{\mblambda} \E_{q(\mbtheta; \mblambda)}[h(\mbtheta)] &amp;= \frac{1}{M} \sum_{m=1}^M \left[ \nabla_{\mblambda} \log q(\mbtheta^{(m)}; \mblambda) \, h(\mbtheta^{(m)}) \right]; 
+    \qquad \mbtheta^{(m)} \iid{\sim} q(\mbtheta; \mblambda)
+\end{align*}\]</div>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p>The exchange of the gradient and the integral is allowed as long as the dominated convergence theorem holds, and it usually does for ML applications.</p></li>
+<li><p>The score function gradient estimator is broadly applicable; e.g. it works for discrete and continuous latent variables <span class="math notranslate nohighlight">\(\mbtheta\)</span>. We just need the log density to be continuously differentiable wrt <span class="math notranslate nohighlight">\(\mblambda\)</span> and to be able to sample from <span class="math notranslate nohighlight">\(q\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(h\)</span> is a function of both <span class="math notranslate nohighlight">\(\mbtheta\)</span> and <span class="math notranslate nohighlight">\(\mblambda\)</span>, you need to apply the product rule. This gives another term,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla_{\mblambda} \E_{q(\mbtheta; \mblambda)} \left[ h(\mbtheta, \mblambda) \right] 
+&amp;= \E_{q(\mbtheta; \mblambda)} \left[ \left(\nabla_{\mblambda} \log q(\mbtheta; \mblambda)\right) h(\mbtheta, \mblambda) \right]
++ \E_{q(\mbtheta; \mblambda)} \left[ \nabla_{\mblambda} h(\mbtheta, \mblambda) \right]
+\end{align*}\]</div>
+</li>
+</ol>
+</section>
+<section id="control-variates">
+<h3>Control variates<a class="headerlink" href="#control-variates" title="Link to this heading">#</a></h3>
+<p>Though broadly applicable, the score function estimator is often too high variance to be useful. This problem can often be mitigated with control variates.</p>
+<p>Recall that the expectation of the score is zero,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \E_{q(\mbtheta; \mblambda)} \left[ \nabla_{\mblambda} \log q(\mbtheta; \mblambda)\right] 
+    &amp;= \int q(\mbtheta; \mblambda) \nabla_{\mblambda} \log q(\mbtheta; \mblambda) \dif \mbtheta \\
+    &amp;= \int \nabla_{\mblambda} q(\mbtheta; \mblambda) \dif \mbtheta \\
+    &amp;= \nabla_{\mblambda} \int q(\mbtheta; \mblambda) \dif \mbtheta \\
+    &amp;= \nabla_{\mblambda} 1 = 0.
+\end{align*}\]</div>
+<p>Thus, we can subtract off any <strong>baseline</strong> from the function of interest without changing the expectation, but potentially reducing variance substantially,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \E_{q(\mbtheta; \mblambda)} \left[ h(\mbtheta)  \nabla_{\mblambda} \log q(\mbtheta; \mblambda)\right] 
+    &amp;= \E_{q(\mbtheta; \mblambda)} \left[ (h(\mbtheta) - b)  \nabla_{\mblambda} \log q(\mbtheta; \mblambda)\right].
+\end{align*}\]</div>
+</section>
+<section id="the-pathwise-gradient-estimator">
+<h3>The pathwise gradient estimator<a class="headerlink" href="#the-pathwise-gradient-estimator" title="Link to this heading">#</a></h3>
+<p>The pathwise gradient estimator has more requirements, but often performs better. Suppose <span class="math notranslate nohighlight">\(q(\mbtheta; \mblambda) = \cN(\mbtheta; \mbmu, \diag(\mbsigma^2))\)</span>, where <span class="math notranslate nohighlight">\(\mblambda = (\mbmu, \log \mbsigma^2)\)</span> are the (unconstrained) variational parameters. Then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbtheta \sim q(\mbtheta; \mblambda) \quad \iff \quad
+    \mbtheta &amp;= r(\mblambda, \mbepsilon), \quad \mbepsilon \sim \cN(\mbzero, \mbI) 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(r(\mblambda, \mbepsilon) = \mbmu + \mbsigma \mbepsilon\)</span> is a <strong>reparameterization</strong> of <span class="math notranslate nohighlight">\(\mbtheta\)</span> in terms of parameters <span class="math notranslate nohighlight">\(\mblambda\)</span> and ``noise’’ <span class="math notranslate nohighlight">\(\mbepsilon\)</span>.</p>
+<p>We can use the <strong>law of the unconscious statistician</strong> to rewrite the expectations as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \E_{q(\mbtheta; \mblambda)} \left[h(\mbtheta, \mblambda) \right]
+    &amp;= \E_{\mbepsilon \sim \cN(\mbzero, \mbI)} \left[h(r(\mblambda, \mbepsilon), \mblambda) \right]
+\end{align*}\]</div>
+<p>The distribution that the expectation is taken under no longer depends on the parameters <span class="math notranslate nohighlight">\(\mblambda\)</span>, so we can simply take the gradient inside the expectation,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \nabla_{\mblambda} \E_{q(\mbtheta; \mblambda)} \left[h(\mbtheta, \mblambda) \right]
+    &amp;=  \E_{\mbepsilon \sim \cN(\mbzero, \mbI)} \left[\nabla_{\mblambda} h(r(\mblambda, \mbepsilon), \mblambda) \right]
+\end{align*}\]</div>
+<p>Now we can use Monte Carlo to obtain an unbiased estimate of the final expectation.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \widehat{\nabla}_{\mblambda} \E_{q(\mbtheta; \mblambda)} \left[h(\mbtheta, \mblambda) \right]
+    &amp;= \frac{1}{M} \sum_{m=1}^M \nabla_{\mblambda} h(r(\mblambda, \mbepsilon_m), \mblambda); &amp; \epsilon_m \iid{\sim} \cN(\mbzero, \mbI)
+\end{align*}\]</div>
+</section>
+</section>
+<section id="synthetic-demo">
+<h2>Synthetic Demo<a class="headerlink" href="#synthetic-demo" title="Link to this heading">#</a></h2>
+<p>Let’s use VI to approximate the posterior in the logistic regression example from previous lectures.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sample random covariates and data</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">305</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">))</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Fix true weights and variance</span>
+<span class="n">true_beta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">X</span> <span class="o">@</span> <span class="n">true_beta</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+<span class="c1"># Plot the data</span>
+<span class="n">x1s</span><span class="p">,</span> <span class="n">x2s</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="n">x1x2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">x1s</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">x2s</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">x1x2</span> <span class="o">@</span> <span class="n">true_beta</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x1s</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> 
+           <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">y</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;rx&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$y_i=0$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">y</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;wo&#39;</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$y_i=1$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_{i,1}$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_{i,2}$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scott/anaconda3/lib/python3.10/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_62dm4livko/croot/pytorch_1675190252673/work/aten/src/ATen/native/TensorShape.cpp:2895.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+</pre></div>
+</div>
+<img alt="../_images/af6ae5df2450502821799732d7990cdfd968bc66cb0b9b6f16c68832ae9bd422.png" src="../_images/af6ae5df2450502821799732d7990cdfd968bc66cb0b9b6f16c68832ae9bd422.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the prior </span>
+<span class="n">sigmasq</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="c1"># Define the log joint</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_joint</span><span class="p">(</span><span class="n">betas</span><span class="p">):</span>
+    <span class="c1"># Add a batch dimension if necessary</span>
+    <span class="k">if</span> <span class="n">betas</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="n">betas</span> <span class="o">=</span> <span class="n">betas</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="c1"># The log joint is the log likelihood plus the log prior</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;np,mp-&gt;mn&#39;</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">betas</span><span class="p">))</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">lp</span> <span class="o">+=</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">sigmasq</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">betas</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s approximate the posterior with a Gaussian distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+q(\beta; \lambda) &amp;= \mathrm{N}(\beta \mid m, V)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lambda = (m,V)\)</span> are the variational parameters corresponding to the mean and covariance.</p>
+<div class="admonition-unconstrained-parameterization admonition">
+<p class="admonition-title">Unconstrained parameterization</p>
+<p>To optimize the variational parameters with SGD, we want them to be unconstrained. However, here <span class="math notranslate nohighlight">\(V\)</span> is a positive semidefinite matrix. To turn this into an unconstrained problem, we’ll parameterize the covariance in terms of a square root, <span class="math notranslate nohighlight">\(V = LL^\top\)</span> for <span class="math notranslate nohighlight">\(L \in \mathbb{R}^{2 \times 2}\)</span>. (We won’t go so far as to constrain <span class="math notranslate nohighlight">\(L\)</span> to be a lower triangular matrix with non-negative diagonals, but that would ensure a bijective mapping between <span class="math notranslate nohighlight">\(V\)</span> and <span class="math notranslate nohighlight">\(L\)</span>.)</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">kl_divergence</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">VariationalPosterior</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">t</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">elbo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the variational posterior distribution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span>
+
+        <span class="c1"># Sample from the variational distribution</span>
+        <span class="n">beta_samples</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">rsample</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,))</span>
+        
+        <span class="c1"># Compute the log joint and log variational</span>
+        <span class="n">elbo</span> <span class="o">=</span> <span class="n">log_joint</span><span class="p">(</span><span class="n">beta_samples</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">elbo</span> <span class="o">-=</span> <span class="n">kl_divergence</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">sigmasq</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">elbo</span>
+
+
+<span class="c1"># Initialize the variational posterior</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">VariationalPosterior</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="n">elbos</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">itr</span> <span class="ow">in</span> <span class="n">trange</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1"># Compute the ELBO</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">q</span><span class="o">.</span><span class="n">elbo</span><span class="p">()</span>
+    <span class="n">elbos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+    
+    <span class="c1"># Update the variational parameters</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+<span class="n">elbos</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">elbos</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/1000 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1000/1000 [00:01&lt;00:00, 728.13it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">elbos</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;iteration&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;ELBO&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;ELBO&#39;)
+</pre></div>
+</div>
+<img alt="../_images/37e4b570a1cc94ece527ac848ccfae4146c30ed155a95f03cf86bfde301c5d75.png" src="../_images/37e4b570a1cc94ece527ac848ccfae4146c30ed155a95f03cf86bfde301c5d75.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the log joint</span>
+<span class="n">beta1s</span><span class="p">,</span> <span class="n">beta2s</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="n">beta12s</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">beta1s</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">beta2s</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
+<span class="c1"># w_slice = torch.linspace(-4, 4)</span>
+<span class="n">lp</span> <span class="o">=</span> <span class="n">log_joint</span><span class="p">(</span><span class="n">beta12s</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">beta1s</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Plot the true log joint and the contours of the variational posterior</span>
+<span class="n">lp_q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">posterior</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">beta12s</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">beta1s</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">beta1s</span><span class="p">,</span> <span class="n">beta2s</span><span class="p">,</span> <span class="n">lp_q</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">beta1s</span><span class="p">,</span> <span class="n">beta2s</span><span class="p">,</span> <span class="n">lp</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_beta</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">true_beta</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r*&#39;</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta^\star$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\beta_1$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\beta_2$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;log joint and variational posterior&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\log p(\beta, y \mid X; \sigma^2)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d1/fsjj9s5n5sdfzt5nrbrkq30m0000gn/T/ipykernel_19841/1482504668.py:9: UserWarning: The following kwargs were not used by contour: &#39;label&#39;
+  plt.contour(beta1s, beta2s, lp_q, 25, colors=&#39;k&#39;, label=&#39;q&#39;)
+</pre></div>
+</div>
+<img alt="../_images/0adda9df256d8f758e0ad47cd7f0ea0059607fafb7263c72f671a0c766efd659.png" src="../_images/0adda9df256d8f758e0ad47cd7f0ea0059607fafb7263c72f671a0c766efd659.png" />
+</div>
+</div>
+<section id="exercises">
+<h3>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h3>
+<p><strong>Exercise:</strong> Come up with a reparameterization of an exponential distribution, <span class="math notranslate nohighlight">\(q(\theta; \lambda) = \mathrm{Exp}(\theta; \lambda)\)</span></p>
+<p><strong>Question:</strong> Can you use the pathwise gradient estimator for a Bernoulli posterior, <span class="math notranslate nohighlight">\(q(\theta; \lambda) = \mathrm{Bern}(\theta; \lambda)\)</span>?</p>
+</section>
+</section>
+<section id="more-details">
+<h2>More Details<a class="headerlink" href="#more-details" title="Link to this heading">#</a></h2>
+<section id="empirically-comparing-estimator-variances">
+<h3>Empirically comparing estimator variances<a class="headerlink" href="#empirically-comparing-estimator-variances" title="Link to this heading">#</a></h3>
+<p><img alt="Monte Carlo Gradient Estimation" src="../_images/mc_gradient.png" />
+Empirical comparisons from <span id="id1">Mohamed <em>et al.</em> [<a class="reference internal" href="99_references.html#id37" title="Shakir Mohamed, Mihaela Rosca, Michael Figurnov, and Andriy Mnih. Monte Carlo gradient estimation in machine learning. Journal of Machine Learning Research, 21(132):1–62, 2020.">MRFM20</a>]</span>.</p>
+</section>
+<section id="working-with-mini-batches-of-data">
+<h3>Working with mini-batches of data<a class="headerlink" href="#working-with-mini-batches-of-data" title="Link to this heading">#</a></h3>
+<p>Often, the ELBO involves a sum over data points,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mblambda) &amp;= \E_q [\log p(\mbX, \mbtheta) - \log q(\mbtheta; \mblambda] \\
+    &amp;= \E_{q(\mbtheta; \mblambda)} \left[\sum_{n=1}^N \log p(\mbx_n \mid \mbtheta) + \log p(\mbtheta) - \log q(\mbtheta; \mblambda) \right]
+    \\
+    &amp;= \sum_{n=1}^N \E_{q(\mbtheta; \mblambda)}[\log p(\mbx_n \mid \mbtheta)] - \KL{q(\mbtheta; \mblambda)}{p(\mbtheta)}
+\end{align*}\]</div>
+<p>We can view the sum as an expectation over data indices,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \sum_{n=1}^N \E_{q(\mbtheta; \mblambda)}[\log p(\mbx_n \mid \mbtheta)] &amp;= N \, \E_{n \sim \mathrm{Unif}(1,N)}[\E_{q(\mbtheta; \mblambda)}[\log p(\mbx_n \mid \mbtheta)]],
+\end{align*}\]</div>
+<p>and we can use Monte Carlo to approximate both expectations! (The same is true for Monte Carlo estimators of the gradient of the ELBO.)</p>
+</section>
+<section id="sgd-convergence-and-extensions">
+<h3>SGD convergence and extensions<a class="headerlink" href="#sgd-convergence-and-extensions" title="Link to this heading">#</a></h3>
+<p>When does SGD work? This is a well studied problem in stochastic optimization <span id="id2">[<a class="reference internal" href="99_references.html#id34" title="Léon Bottou and others. Online learning and stochastic approximations. On-line learning in neural networks, 17(9):142, 1998.">B+98</a>, <a class="reference internal" href="99_references.html#id35" title="Herbert Robbins and David Siegmund. A convergence theorem for non negative almost supermartingales and some applications. In Optimizing methods in statistics, pages 233–257. Elsevier, 1971.">RS71</a>]</span>.</p>
+<p>Under relatively mild conditions, SGD converges to a <strong>local minimum</strong> if the step sizes obey the <strong>Robbins-Monro condtions</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \sum_{i=0}^\infty \alpha_i &amp;= \infty \qquad \text{and} \qquad
+    \sum_{i=0}^\infty \alpha_i^2 &lt; \infty
+\end{align*}\]</div>
+<p>There have been dozens of extensions to basic SGD including,</p>
+<ul class="simple">
+<li><p>SGD with momentum</p></li>
+<li><p>AdaGrad <span id="id3">[<a class="reference internal" href="99_references.html#id38" title="John Duchi, Elad Hazan, and Yoram Singer. Adaptive subgradient methods for online learning and stochastic optimization. Journal of machine learning research, 2011.">DHS11</a>]</span></p></li>
+<li><p>RMSProp</p></li>
+<li><p>Adam <span id="id4">[<a class="reference internal" href="99_references.html#id39" title="Diederik P Kingma and Jimmy Ba. Adam: a method for stochastic optimization. arXiv preprint arXiv:1412.6980, 2014.">KB14</a>]</span></p></li>
+</ul>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="08_bayes_glms_soln.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bayesian GLMs</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-variational-inference">Why Variational Inference?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notation">Notation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-view-of-variational-inference">A view of variational inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-key-questions">Three Key Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-ascent-variational-inference-cavi">Coordinate Ascent Variational Inference (CAVI)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-based-variational-inference">Gradient-based Variational Inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound-elbo">The Evidence Lower Bound (ELBO)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kullback-leibler-kl-divergence">Kullback-Leibler (KL) divergence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound-elbo-from-another-angle">The evidence lower bound (ELBO) from another angle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#viewer-discretion-advised">Viewer discretion advised…</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-elbo">Optimizing the ELBO</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-statement">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-elbo-with-coordinate-ascent">Optimizing the ELBO with Coordinate Ascent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-elbo-with-stochastic-gradient-ascent">Optimizing the ELBO with stochastic gradient ascent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monte-carlo-gradient-estimation">Monte Carlo gradient estimation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-score-function-gradient-estimator">The score function gradient estimator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#control-variates">Control variates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pathwise-gradient-estimator">The pathwise gradient estimator</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synthetic-demo">Synthetic Demo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-details">More Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#empirically-comparing-estimator-variances">Empirically comparing estimator variances</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-mini-batches-of-data">Working with mini-batches of data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sgd-convergence-and-extensions">SGD convergence and extensions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
