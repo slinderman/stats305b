@@ -10,10 +10,10 @@ Time: Monday and Wednesday, 1:30-2:50pm <br>
 Location: [Sequoia Hall, Room 200](https://campus-map.stanford.edu/?srch=Sequoia+Hall+200), Stanford University
 
 **Office Hours**
-- Scott: Wed 10-11am, Wu Tsai Neurosciences Institute, 2nd Floor in the Theory Center
-- Michael: Thu, 5-7pm, Sequoia library (Rm 105)
-- Amber: Fri 1:30-3:30pm, Sequoia library (Rm 105)
-
+* Scott: Wed 10-11am, Wu Tsai Neurosciences Institute, 2nd Floor in the Theory Center
+* Michael: Thu, 5-7pm, Sequoia library (Rm 105)
+* Amber: Fri 1:30-3:30pm, Sequoia library (Rm 105) [except Feb 7 and 14]
+    * [Feb 3 and 10 only] Mon 10am-12pm, Wu Tsai Neurosciences Institute, 2nd Floor in the Theory Center
 
 ## Prerequisites
 Students should be comfortable with undergraduate probability and statistics as well as multivariate calculus and linear algebra. This course will emphasize implementing models and algorithms, so coding proficiency with Python is required. (HW0: Python Primer will help you get up to speed.)
