@@ -13,6 +13,7 @@ parts:
     - file: lectures/07_bayes.ipynb
     - file: lectures/08_mcmc.ipynb
     - file: lectures/08_bayes_glms_soln.ipynb
+    - file: lectures/09_vi.ipynb
     
   - caption: Assignments
     chapters:
