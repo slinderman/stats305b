@@ -44,7 +44,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Mon, Jan 27, 2025 | [Bayesian Inference](lectures/07_bayes.ipynb) <br> **HW2 Released** | [download](slides/07_bayes.pdf) | {cite:p}`gelman1995bayesian` Ch. 1 |
 | Wed, Jan 29, 2025 | [Markov Chain Monte Carlo](lectures/08_mcmc.ipynb) and [Bayesian GLM Demo](lectures/08_bayes_glms_soln.ipynb) | [download](slides/08_mcmc.pdf) | | 
 | Mon, Feb  3, 2025 | Variational Inference | | | 
-| Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | [download](midterm/midterm_2024.pdf) | |
+| Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | [download](midterm/midterm_2024.pdf) <br> [download](midterm/midterm_2024_solns.pdf) | |
 | Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/09_mixtures.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 9 |
 | Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) | | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
@@ -89,7 +89,7 @@ We will allow 5 late days to be used as needed throughout the quarter.
 - **Midterm Exam**: In class on TBD
   - You may bring a cheat sheet covering _one side_ of an 8.5x11" piece of paper
   - Practice Exam: [download](midterm/midterm_2024.pdf)
-  - Practice Exam Solutions: Coming soon
+  - Practice Exam Solutions: [download](midterm/midterm_2024_solns.pdf)
 
 - **Final Exam**: On TBD in Room TBD
   <!-- - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf) (solutions are [here](final/practice_solutions.pdf)). -->
