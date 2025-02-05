@@ -45,8 +45,8 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Wed, Jan 29, 2025 | [Markov Chain Monte Carlo](lectures/08_mcmc.ipynb) and [Bayesian GLM Demo](lectures/08_bayes_glms_soln.ipynb) | [download](slides/08_mcmc.pdf) | | 
 | Mon, Feb  3, 2025 | [Variational Inference](lectures/09_vi.ipynb) | [download](slides/09_vi.pdf) | {cite:p}`blei2017variational` | 
 | Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | [download](midterm/midterm_2024.pdf) <br> [download](midterm/midterm_2024_solns.pdf) | |
-| Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/09_mixtures.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 9 |
-| Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) | | {cite:p}`bishop2006pattern` Ch. 13 | 
+| Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/09_mixtures.md) | | {cite:p}`bishop2006pattern` Ch. 9 |
+| Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
 | Wed, Feb 19, 2025 | Linear Dynamical Systems | | |
 | Fri, Feb 21, 2025 | <span style="color:red">**HW3 Due**</span> | | |
