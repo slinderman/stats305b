@@ -86,10 +86,11 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
 We will allow 5 late days to be used as needed throughout the quarter. 
 
 ## Exams
-- **Midterm Exam**: In class on TBD
+- **Midterm Exam**: Wed, Feb. 5 from 1:30-2:50pm in MCCULL 115
   - You may bring a cheat sheet covering _one side_ of an 8.5x11" piece of paper
   - Practice Exam: [download](midterm/midterm_2024.pdf)
   - Practice Exam Solutions: [download](midterm/midterm_2024_solns.pdf)
+  - We will provide a reference of common distributions: [download](midterm/distributions.pdf)
 
 - **Final Exam**: On TBD in Room TBD
   <!-- - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf) (solutions are [here](final/practice_solutions.pdf)). -->
