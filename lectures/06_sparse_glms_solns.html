@@ -177,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="08_mcmc.html">Markov Chain Monte Carlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08_bayes_glms_soln.html">Bayesian GLMs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09_vi.html">Variational Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_mixtures.html">Mixture Models and EM</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -1029,8 +1030,8 @@ The idea is to stick as close to vanilla gradient descent as possible, while cor
 <section id="proximal-mapping">
 <h3>Proximal Mapping<a class="headerlink" href="#proximal-mapping" title="Link to this heading">#</a></h3>
 <p>We call the function,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-49ce2d3d-cc45-4f6b-8083-50a7f5c21326">
-<span class="eqno">(3)<a class="headerlink" href="#equation-49ce2d3d-cc45-4f6b-8083-50a7f5c21326" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-ab4ca0cf-3d54-4668-86b6-d5f6acafe40e">
+<span class="eqno">(3)<a class="headerlink" href="#equation-ab4ca0cf-3d54-4668-86b6-d5f6acafe40e" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{prox}(\mbu; \alpha_t) 
 &amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \cL_{\mathsf{nd}}(\mbz)
 \end{align}\]</div>

@@ -1,0 +1,935 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mixture Models and EM &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/10_mixtures';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Variational Inference" href="09_vi.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_mcmc.html">Markov Chain Monte Carlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_vi.html">Variational Inference</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Mixture Models and EM</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/lectures/10_mixtures.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/10_mixtures.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Mixture Models and EM</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mixture-models">Mixture Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#joint-distribution">Joint distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-family-mixture-models">Exponential family mixture models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-inference-algorithms">Two Inference Algorithms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#map-inference-and-k-means">MAP Inference and K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation-via-em">Maximum Likelihood Estimation via EM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-motivation">Theoretical Motivation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evidence-lower-bound-elbo">Evidence Lower Bound (ELBO)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-gaussian-case">M-step: Gaussian case</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-gaussian-case">E-step: Gaussian case</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-elbo-is-tight-after-the-e-step">The ELBO is tight after the E-step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-general-case">M-step: General Case</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-general-case">E-step: General Case</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="mixture-models-and-em">
+<h1>Mixture Models and EM<a class="headerlink" href="#mixture-models-and-em" title="Link to this heading">#</a></h1>
+<p>We have a lot of tools in our toolkit now. We learned about exponential family distributions, which form the building blocks of more complex models. We learned about Bayesian inference algorithms, like MCMC and VI, which allow us to infer the posterior distribution of parameters in complex models. In this section of the course, we’ll put those tools to use developing <strong>latent variable models</strong> for complex datasets. We’ll start with the simplest latent variable model — <strong>mixture models</strong>.</p>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Why do we use mixture models? Sometimes it is reasonable to model our data as a superposition of distinct clusters. For example, when working with single cell RNA sequencing data, different cell types may give rise to different patterns of gene expression.</p>
+<p><img alt="Single Cell RNA Sequencing" src="lectures/figures/scrnaseq.jpg" /></p>
+<p><em>From <span id="id1">Kiselev <em>et al.</em> [<a class="reference internal" href="99_references.html#id40" title="Vladimir Yu Kiselev, Tallulah S Andrews, and Martin Hemberg. Challenges in unsupervised clustering of single-cell RNA-seq data. Nat. Rev. Genet., 20(5):273–282, May 2019.">KAH19</a>]</span>.</em></p>
+<p>Or in a computer vision application, perhaps pixels can be assigned to foreground and background.</p>
+<p><img alt="Foreground/background segmentation" src="lectures/figures/segmentation.png" /></p>
+<p><em>From <a class="reference external" href="https://ai.stanford.edu/~syyeung/cvweb/tutorials.html">https://ai.stanford.edu/~syyeung/cvweb/tutorial3.html</a></em></p>
+<p>Sometimes we just want to model a complex, multimodal distribution. Kernel density estimates are essentially mixture models for this type of task!</p>
+<p><img alt="Kernel density estimate" src="lectures/figures/kde.png" /></p>
+<p><em>From <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_species_kde.html">Scikit-learn KDE Demo</a>.</em></p>
+<p>This chapter is about models and algorithms for fitting mixture models like these.</p>
+</section>
+<section id="mixture-models">
+<h2>Mixture Models<a class="headerlink" href="#mixture-models" title="Link to this heading">#</a></h2>
+<p>Let,</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N\)</span> denote the number of data points</p></li>
+<li><p><span class="math notranslate nohighlight">\(K\)</span> denote the number of mixture components (i.e., clusters)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbx_n \in \reals^D\)</span> denote the <span class="math notranslate nohighlight">\(n\)</span>-th data point</p></li>
+<li><p><span class="math notranslate nohighlight">\(z_n \in \{1, \ldots, K\}\)</span> be a latent variable denoting the cluster assignment of the <span class="math notranslate nohighlight">\(n\)</span>-th data point</p></li>
+</ul>
+<p>The model is parameterized by,</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mbtheta_k\)</span> be natural parameters of cluster <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mbpi \in \Delta_{K-1}\)</span> be cluster proportions (probabilities).</p></li>
+</ul>
+<!-- - $\mbphi, \nu$ be hyperparameters of the prior on $\mbtheta$. -->
+<!-- - $\mbalpha \in \reals_+^{K}$ be the concentration of the prior on $\mbpi$. -->
+<p>The generative model is as follows</p>
+<!-- > 1. Sample the proportions from a Dirichlet prior:
+>     \begin{align*}
+          \mbpi &\sim \mathrm{Dir}(\mbalpha)
+      \end{align*}
+> 
+> 2. Sample the parameters for each component:
+>     \begin{align*}
+          \mbtheta_k &\iid{\sim} p(\mbtheta) \quad \text{for } k = 1, \ldots, K
+      \end{align*}
+> 
+> 3. Sample the assignment of each data point:
+>     \begin{align*}
+          z_n &\iid{\sim} \mbpi \quad \text{for } n = 1, \ldots, N
+      \end{align*}
+> 
+> 4. Sample data points given their assignments:
+>     \begin{align*}
+          \mbx_n &\sim p(\mbx \mid \mbtheta_{z_n}) \quad \text{for } n = 1, \ldots, N
+      \end{align*} -->
+<blockquote>
+<div><ol class="arabic">
+<li><p>Sample the assignment of each data point:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+      z_n &amp;\iid{\sim} \mathrm{Cat}(\mbpi) \quad \text{for } n = 1, \ldots, N
+  \end{align*}\]</div>
+</li>
+<li><p>Sample data points given their assignments:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+      \mbx_n &amp;\sim p(\mbx \mid \mbtheta_{z_n}) \quad \text{for } n = 1, \ldots, N
+  \end{align*} \]</div>
+</li>
+</ol>
+</div></blockquote>
+<section id="joint-distribution">
+<h3>Joint distribution<a class="headerlink" href="#joint-distribution" title="Link to this heading">#</a></h3>
+<p>The joint distribution of the data and latent variables is,</p>
+<!-- \begin{align*}
+    p(\mbpi, \{\mbtheta_k\}_{k=1}^K, \{(z_n, \mbx_n)\}_{n=1}^N \mid \mbalpha) 
+    &\propto 
+    p(\mbpi \mid \mbalpha) \prod_{k=1}^K p(\mbtheta_k) \prod_{n=1}^N \prod_{k=1}^K \left[ \pi_k \, p(\mbx_n \mid \mbtheta_k) \right]^{\bbI[z_n = k]}
+\end{align*} -->
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\{(z_n, \mbx_n)\}_{n=1}^N) 
+    &amp;= \prod_{n=1}^N \mathrm{Cat}(z_n \mid \pi) \, p(\mbx_n \mid z_n) \\
+    &amp;= \prod_{n=1}^N \prod_{k=1}^K \left[ \pi_k \, p(\mbx_n \mid \mbtheta_k) \right]^{\bbI[z_n = k]}
+\end{align*}\]</div>
+</section>
+<section id="exponential-family-mixture-models">
+<h3>Exponential family mixture models<a class="headerlink" href="#exponential-family-mixture-models" title="Link to this heading">#</a></h3>
+<p>Assume an exponential family likelihood of the form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbx \mid \mbeta) &amp;= h(\mbx_n) \exp \left \{\langle t(\mbx_n), \mbeta \rangle - A(\mbeta) \right \}
+\end{align*}\]</div>
+<!-- And a conjugate prior of the form,
+\begin{align*}
+    p(\mbeta \mid \mbphi, \nu) &\propto \exp \left \{ \langle \mbphi, \mbeta \rangle - \nu A(\mbeta) \right \}
+\end{align*} -->
+<div class="admonition-example-gaussian-mixture-model-gmm admonition">
+<p class="admonition-title">Example: Gaussian Mixture Model (GMM)</p>
+<p>Assume the conditional distribution of <span class="math notranslate nohighlight">\(\mbx_n\)</span> is a Gaussian with mean <span class="math notranslate nohighlight">\(\mbtheta_k \in \reals^D\)</span> and identity covariance:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbx_n \mid \mbtheta_k) &amp;= \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI)
+\end{align*}\]</div>
+<!-- The conjugate prior is a Gaussian prior on the mean:
+\begin{align*}
+    p(\mbtheta_k) &= \mathrm{N}(\mbmu_0, \sigma_0^{2} \mbI) \nonumber \\
+    &\propto \exp \left\{-\tfrac{1}{2 \sigma_0^2} (\mbtheta_k - \mbmu_0)^\top (\mbtheta_k - \mbmu_0) \right\}
+\end{align*} -->
+<!-- In exponential family form, the prior precision is $\nu = 1/\sigma_0^2$ and the prior precision-weighted mean is $\mbphi = \mbmu_0 / \sigma_0^2$.  -->
+<p>In exponential family form, the sufficient statistics of the Gaussian are <span class="math notranslate nohighlight">\(t(\mbx) = \mbx\)</span>. Since we are assuming identity covariance for now, the natural parameters are simply <span class="math notranslate nohighlight">\(\mbeta_k = \mbtheta_k\)</span>.</p>
+</div>
+</section>
+</section>
+<section id="two-inference-algorithms">
+<h2>Two Inference Algorithms<a class="headerlink" href="#two-inference-algorithms" title="Link to this heading">#</a></h2>
+<p>Let’s stick with the Gaussian mixture model for now. Suppose we observe data points <span class="math notranslate nohighlight">\(\{\mbx_n\}_{n=1}^N\)</span> and want to infer the assignments <span class="math notranslate nohighlight">\(\{z_n\}_{n=1}^N\)</span> and estimate the means <span class="math notranslate nohighlight">\(\{\mbtheta_k\}_{k=1}^K\)</span>. Here are two intuitive algorithms.</p>
+<section id="map-inference-and-k-means">
+<h3>MAP Inference and K-Means<a class="headerlink" href="#map-inference-and-k-means" title="Link to this heading">#</a></h3>
+<p>Suppose we knew the cluster assignments, <span class="math notranslate nohighlight">\(z_n\)</span>. Then it would be straightforward to estimate the cluster means: we could simply use the maximum likelihood estimate, <span class="math notranslate nohighlight">\(\hat{\mbtheta}_{\mathsf{MLE}} = \frac{1}{N_k} \sum_{n: z_n=k} \mbx_n\)</span>, where <span class="math notranslate nohighlight">\(N_k = \sum_n \mathbb{I}[z_n =k]\)</span> is the number of data poitns in cluster <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>Likewise, if we knew the cluster means, it would be straightforward to compute the <em>maximum a posteriori</em> (MAP) estimate of <span class="math notranslate nohighlight">\(z_n\)</span>: we would assign each data point to the nearest cluster. If we alternate these two steps, we obtain the <strong>K-Means algorithm</strong>:</p>
+<div class="proof algorithm admonition" id="algorithm-0">
+<p class="admonition-title"><span class="caption-number">Algorithm 4 </span> (K-Means)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Repeat</strong> until convergence:</p>
+<ol class="arabic">
+<li><p>For each <span class="math notranslate nohighlight">\(n=1,\ldots, N\)</span>, fix the means <span class="math notranslate nohighlight">\(\mbtheta\)</span> and set,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    z_n &amp;= \hat{z}_{n,\mathsf{MAP}} \\
+    &amp;= \arg \max_{k \in \{1,\ldots,K\}} \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) \\
+    &amp;= \arg \min_{k \in \{1,\ldots, K\}} \|\mbx_n - \mbtheta_k\|_2
+\end{align*}\]</div>
+</li>
+<li><p>For each <span class="math notranslate nohighlight">\(k=1,\ldots,K\)</span>, fix all assignments <span class="math notranslate nohighlight">\(\mbz\)</span> and set,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbtheta_k &amp;= \hat{\mbtheta}_{\mathsf{MLE}} \\
+    &amp;= \frac{1}{N_k} \sum_{n=1}^K \bbI[z_n=k] \mbx_n
+\end{align*}\]</div>
+</li>
+</ol>
+</section>
+</div><div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What does this algorithm implicitly assume about the cluster probabilities <span class="math notranslate nohighlight">\(\mbpi\)</span>? How would you modify this algorithm to incorporate and estimate <span class="math notranslate nohighlight">\(\mbpi\)</span>?</p>
+</div>
+<div class="admonition-connection-between-k-means-and-map-estimation admonition">
+<p class="admonition-title">Connection between K-Means and MAP estimation</p>
+<p>Note that if we put an improper uniform prior on <span class="math notranslate nohighlight">\(\mbtheta_k\)</span>, we could think of this entire algorithm as MAP estimation of <span class="math notranslate nohighlight">\(\mbtheta\)</span> and <span class="math notranslate nohighlight">\(\mbz\)</span> via <strong>coordinate ascent</strong>!</p>
+</div>
+</section>
+<section id="maximum-likelihood-estimation-via-em">
+<h3>Maximum Likelihood Estimation via EM<a class="headerlink" href="#maximum-likelihood-estimation-via-em" title="Link to this heading">#</a></h3>
+<p>K-Means made <strong>hard assignments</strong> of data points to clusters in each iteration. That sounds a little extreme — do you really want to attribute a datapoint to a single class when it is right in the middle of two clusters? What if we used <strong>soft assignments</strong> instead?</p>
+<div class="proof algorithm admonition" id="algorithm-1">
+<p class="admonition-title"><span class="caption-number">Algorithm 5 </span> (EM for a GMM)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Repeat</strong> until convergence:</p>
+<ol class="arabic">
+<li><p>For each data point <span class="math notranslate nohighlight">\(n\)</span> and component <span class="math notranslate nohighlight">\(k\)</span>, compute the <strong>responsibility</strong>:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \omega_{nk} = \frac{\pi_k \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI)}{\sum_{j=1}^K \pi_j \mathrm{N}(\mbx_n \mid \mbtheta_j, \mbI)}
+\end{align*}\]</div>
+</li>
+<li><p>For each component <span class="math notranslate nohighlight">\(k\)</span>, update the mean:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbtheta_k^\star &amp;= \frac{1}{N_k} \sum_{n=1}^K \omega_{nk} \mbx_n
+\end{align*}\]</div>
+</li>
+</ol>
+</section>
+</div><p>This is the <strong>Expectation-Maximization (EM) algorithm</strong>. As we will show, EM yields an estimate that maximizes the <em>marginal</em> likelihood of the data.</p>
+</section>
+</section>
+<section id="theoretical-motivation">
+<h2>Theoretical Motivation<a class="headerlink" href="#theoretical-motivation" title="Link to this heading">#</a></h2>
+<p>Rather than maximizing the <strong>joint probability</strong>, EM is maximizing the <strong>marginal probability</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \log p(\{\mbx_n\}_{n=1}^N; \mbtheta) 
+    &amp;= \log \sum_{z_1=1}^K \cdots \sum_{z_N=1}^K p(\{\mbx_n, z_n\}_{n=1}^N ; \mbtheta) \\
+    &amp;= \log \prod_{n=1}^N \sum_{z_n=1}^K p(\mbx_n, z_n ; \mbtheta) \\
+    &amp;= \sum_{n=1}^N  \log \sum_{z_n=1}^K p(\mbx_n, z_n ; \mbtheta) 
+\end{align*}\]</div>
+<p>For discrete mixtures (with small enough <span class="math notranslate nohighlight">\(K\)</span>) we can evaluate the log marginal probability.  We can usually evaluate its gradient too, so we could just do gradient ascent to find <span class="math notranslate nohighlight">\(\mbtheta^*\)</span>. However, EM typically obtains faster convergence rates.</p>
+<section id="evidence-lower-bound-elbo">
+<h3>Evidence Lower Bound (ELBO)<a class="headerlink" href="#evidence-lower-bound-elbo" title="Link to this heading">#</a></h3>
+<p>The key idea is to obtain a lower bound on the marginal probability,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \log p(\{\mbx_n\}_{n=1}^N; \mbtheta) 
+    &amp;= \sum_{n=1}^N  \log \sum_{z_n} p(\mbx_n, z_n; \mbtheta) \\
+    &amp;= \sum_{n=1}^N  \log \sum_{z_n} q(z_n) \frac{p(\mbx_n, z_n; \mbtheta)}{q(z_n)} \\
+    &amp;= \sum_{n=1}^N  \log \E_{q(z_n)} \left[\frac{p(\mbx_n, z_n; \mbtheta)}{q(z_n)} \right]
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(q(z_n)\)</span> is any distribution on <span class="math notranslate nohighlight">\(z_n \in \{1,\ldots,K\}\)</span> such that <span class="math notranslate nohighlight">\(q(z_n)\)</span> is <strong>absolutely continuous</strong> w.r.t. <span class="math notranslate nohighlight">\(p(\mbx_n, z_n; \mbtheta)\)</span>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Jensen’s Inequality</p>
+<p>Jensen’s inequality states that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    f(\E[Y]) \geq \E\left[ f(Y) \right]
+\end{align*}\]</div>
+<p>if <span class="math notranslate nohighlight">\(f\)</span> is a <strong>concave function</strong>, with equality iff <span class="math notranslate nohighlight">\(f\)</span> is linear.</p>
+</div>
+<p>Applied to the log marginal probability, Jensen’s inequality yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \log p(\{\mbx_n\}_{n=1}^N; \mbtheta) 
+    &amp;= \sum_{n=1}^N  \log \E_{q_n} \left[\frac{p(\mbx_n, z_n; \mbtheta)}{q_n(z_n)} \right] \\
+    &amp;\geq \sum_{n=1}^N  \E_{q_n} \left[\log p(\mbx_n, z_n; \mbtheta) - \log q_n(z_n) \right] \\
+    &amp;\triangleq \cL[\mbtheta, \mbq]
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbq = (q_1, \ldots, q_N)\)</span> is a tuple of distributions, one for each latent variable <span class="math notranslate nohighlight">\(z_n\)</span>.</p>
+<p>This is called the <strong>evidence lower bound</strong>, or <strong>ELBO</strong> for short.  It is a function of <span class="math notranslate nohighlight">\(\mbtheta\)</span> and a <em>functional</em> of <span class="math notranslate nohighlight">\(\mbq\)</span>, since each <span class="math notranslate nohighlight">\(q_n\)</span> is a probability density function. We can think of <em>EM as coordinate ascent on the ELBO</em>, alternating between updating the parameters <span class="math notranslate nohighlight">\(\mbtheta\)</span> and the posteriors $q.</p>
+</section>
+<section id="m-step-gaussian-case">
+<h3>M-step: Gaussian case<a class="headerlink" href="#m-step-gaussian-case" title="Link to this heading">#</a></h3>
+<p>Suppose we fix <span class="math notranslate nohighlight">\(\mbq\)</span>. Since each <span class="math notranslate nohighlight">\(z_n\)</span> is a discrete latent variable, <span class="math notranslate nohighlight">\(q_n\)</span> must be a probability mass function. Let it be denoted by,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    q_n &amp;= [\omega_{n1}, \ldots, \omega_{nK}]^\top.
+\end{align*}\]</div>
+<p>(These will be the <strong>responsibilities</strong> from before.)</p>
+<p>Now, recall our basic model, <span class="math notranslate nohighlight">\(\mbx_n \sim \mathrm{N}(\mbtheta_{z_n}, \mbI)\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= \sum_{n=1}^N \E_{q_n} [\log p(\mbx_n, z_n ; \mbtheta)] + c \\
+    &amp;= \sum_{n=1}^N \E_{q_n} [\bbI[z_n = k] \log p(\mbx_n, \mbtheta_k)] + c \\
+    &amp;= \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \log p(\mbx_n, \mbtheta_k) + c \\
+    &amp;= \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \left[ \mbx_n^\top \mbtheta_k - \tfrac{1}{2} \mbtheta_k^\top \mbtheta_k \right] + c
+\end{align*}\]</div>
+<p>Zooming in on just <span class="math notranslate nohighlight">\(\mbtheta_k\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= {\mbh}_{k}^\top \mbtheta_k - \tfrac{1}{2} \mbtheta_k^\top \mbJ_k \mbtheta_k
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    {\mbh}_{k} &amp;= \sum_{n=1}^N \omega_{nk} \mbx_n
+    \qquad
+    {\mbJ}_{k} = \sum_{n=1}^N \omega_{nk} \mbI
+\end{align*}\]</div>
+<p>Taking derivatives and setting to zero yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbtheta_k^\star &amp;=  \mbJ_k^{-1} \mbh_k 
+    = \frac{\sum_{n=1}^N \omega_{nk} \mbx_n}{\sum_{n=1}^N \omega_{nk}}.
+\end{align*}\]</div>
+<p>These are the same as the EM updates shown above!</p>
+</section>
+<section id="e-step-gaussian-case">
+<h3>E-step: Gaussian case<a class="headerlink" href="#e-step-gaussian-case" title="Link to this heading">#</a></h3>
+<p>As a function of <span class="math notranslate nohighlight">\(q_n\)</span>, for discrete Gaussian mixtures with identity covariance,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= \E_{q_n}\left[ \log p(\mbx_n, z_n; \mbtheta) - \log q_n(z_n)\right] + c \\
+    &amp;= \sum_{k=1}^K \omega_{nk} \left[ \log \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) + \log \pi_k - \log \omega_{nk} \right] + c
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbpi = [\pi_1, \ldots, \pi_K]^\top\)</span> is the vector of prior cluster probabilities.</p>
+<p>We also have two constraints: <span class="math notranslate nohighlight">\(\omega_{nk} \geq 0\)</span> and <span class="math notranslate nohighlight">\(\sum_k \omega_{nk} = 1\)</span>. Let’s ignore the non-negative constraint for now (it will automatically be satisfied anyway) and write the Lagrangian with the simplex constraint,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cJ(\mbomega_n, \lambda) &amp;= \sum_{k=1}^K \omega_{nk} \left[ \log \mathrm{N}(\mbx_n \mid \theta_k, \mbI) + \log \pi_k - \log \omega_{nk} \right] - \lambda \left( 1 - \sum_{k=1}^K \omega_{nk} \right)
+\end{align*}\]</div>
+<p>Taking the partial derivative wrt <span class="math notranslate nohighlight">\(\omega_{nk}\)</span> and setting to zero yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \frac{\partial}{\partial \omega_{nk}} \cJ(\mbomega_n, \lambda) 
+    &amp;= \log \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) + \log \pi_k - \log \omega_{nk} - 1 + \lambda = 0 \\
+    \Rightarrow \log \omega_{nk}^\star &amp;= \log \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) + \log \pi_k + \lambda - 1 \\
+    \Rightarrow \omega_{nk}^\star &amp;\propto \pi_k \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) 
+\end{align*}\]</div>
+<p>Enforcing the simplex constraint yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \omega_{nk}^\star &amp;= \frac{\pi_k \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI)}{\sum_{j=1}^K \pi_j \mathrm{N}(\mbx_n \mid \mbtheta_j, \mbI)},
+\end{align*}\]</div>
+<p>just like above.</p>
+<p>Note that</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \omega_{nk}^\star &amp;\propto p(z_n=k) \, p(\mbx_n \mid z_n=k, \mbtheta) = p(z_n = k \mid \mbx_n, \mbtheta) .
+\end{align*}\]</div>
+<p>That is, the responsibilities equal the posterior probabilities!</p>
+</section>
+<section id="the-elbo-is-tight-after-the-e-step">
+<h3>The ELBO is tight after the E-step<a class="headerlink" href="#the-elbo-is-tight-after-the-e-step" title="Link to this heading">#</a></h3>
+<p>Equivalently, <span class="math notranslate nohighlight">\(q_n\)</span> equals the posterior, <span class="math notranslate nohighlight">\(p(z_n \mid \mbx_n, \mbtheta)\)</span>.
+At that point, the ELBO simplifies to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= \sum_{n=1}^N  \E_{q_n} \left[\log p(\mbx_n, z_n ; \mbtheta) - \log q_n(z_n) \right] \\
+    &amp;= \sum_{n=1}^N  \E_{p(z_n \mid \mbx_n, \mbtheta)} \left[\log p(\mbx_n, z_n ; \mbtheta) - \log p(z_n \mid \mbx_n; \mbtheta) \right] \\
+    &amp;= \sum_{n=1}^N  \E_{p(z_n \mid \mbx_n; \mbtheta)} \left[\log p(\mbx_n ; \mbtheta) \right] \\
+    &amp;= \sum_{n=1}^N \log p(\mbx_n ; \mbtheta) \\
+    &amp;= \log p(\{\mbx_n\}_{n=1}^N, \mbtheta)
+\end{align*}\]</div>
+<div class="tip admonition">
+<p class="admonition-title">EM as a minorize-maximize (MM) algorithm</p>
+<p>Note that the <b>The ELBO is tight after the E-step!</b>.</p>
+<p>We can view the EM algorihtm as a <strong>minorize-maximize (MM)</strong> algorithm where we iteratively lower bound the ELBO and and then maximize the lower bound.</p>
+</div>
+<!--
+### EM as a minorize-maximize (MM) algorithm
+ \begin{figure}
+    \centering
+    \includegraphics[width=3.5in]{figures/lecture7/em.png}
+    \caption{Bishop, Figure 9.14: EM alternates between constructing a lower bound (minorizing) and finding new parameters that maximize it.}
+    \label{fig:em_mm}
+\end{figure} -->
+</section>
+<section id="m-step-general-case">
+<h3>M-step: General Case<a class="headerlink" href="#m-step-general-case" title="Link to this heading">#</a></h3>
+<p>Now let’s consider the general Bayesian mixture with exponential family likelihoods.</p>
+<p>While we’re at it, let’s also add conjugate priors <span class="math notranslate nohighlight">\(p(\mbtheta)\)</span> with pseudo-counts <span class="math notranslate nohighlight">\(\nu\)</span> and pseudo-observations <span class="math notranslate nohighlight">\(\mbchi\)</span>. As a function of <span class="math notranslate nohighlight">\(\mbtheta\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= \log p(\mbtheta) + 
+    \sum_{n=1}^N \E_{q_n} [\log p(\mbx_n, z_n \mid \mbtheta)] + \mathrm{c} \\
+    &amp;= \log p(\mbtheta) + 
+    \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \log p(\mbx_n \mid \mbtheta_k) + \mathrm{c} \\
+    &amp;= \sum_{k=1}^K \left[\mbchi^\top \mbtheta_k - \nu A(\mbtheta_k)\right] +
+    \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \left[ t(\mbx_n)^\top \mbtheta_k - A(\mbtheta_k) \right] + \mathrm{c} 
+\end{align*}\]</div>
+<p>Zooming in on just <span class="math notranslate nohighlight">\(\mbtheta_k\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= \mbchi_k'^\top \mbtheta_k - \nu_k' A(\mbtheta_k)
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbchi_k' &amp;= \mbchi + \sum_{n=1}^N \omega_{nk} t(\mbx_n)
+    \qquad
+    \nu_k' = \nu + \sum_{n=1}^N \omega_{nk}
+\end{align*}\]</div>
+<p>Taking derivatives and setting to zero yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \label{eq:gen_mstep}
+    \mbtheta_k^* &amp;= \left[\nabla A \right]^{-1} \left(\frac{\mbchi_k'}{\nu_k'}\right)
+\end{align*}\]</div>
+<p>Recall that <span class="math notranslate nohighlight">\(\nabla A^{-1}: \cM \mapsto \Omega\)</span> is a mapping from mean parameters to natural parameters (and the inverse exists for minimal exponential families). Thus, the generic M-step above amounts to finding the natural parameters <span class="math notranslate nohighlight">\(\mbtheta_k^*\)</span> that yield the expected sufficient statistics <span class="math notranslate nohighlight">\(\mbchi_{k}' / \nu_k'\)</span> by inverting the gradient mapping.</p>
+</section>
+<section id="e-step-general-case">
+<h3>E-step: General Case<a class="headerlink" href="#e-step-general-case" title="Link to this heading">#</a></h3>
+<p>In our first pass, we assumed <span class="math notranslate nohighlight">\(q_n\)</span> was a finite pmf. More generally, <span class="math notranslate nohighlight">\(q_n\)</span> will be a probability density function, and optimizing over functions usually requires the <em>calculus of variations</em>. (Ugh!)</p>
+<p>However, note that we can write the ELBO in a slightly different form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= \log p(\mbtheta) + \sum_{n=1}^N  \E_{q_n} \left[\log p(\mbx_n, z_n \mid \mbtheta) - \log q_n(z_n) \right] \\
+    &amp;= \log p(\mbtheta) + \sum_{n=1}^N  \E_{q_n} \left[\log p(z_n \mid \mbx_n, \mbtheta) + \log p(\mbx_n \mid \mbtheta) - \log q_n(z_n) \right] \\
+    &amp;= \log p(\mbtheta) + \sum_{n=1}^N  \left[\log p(\mbx_n \mid \mbtheta) -\KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)} \right] \\
+    &amp;= \log p(\{\mbx_n\}_{n=1}^N, \mbtheta) - \sum_{n=1}^N  \KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)}
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\KL{\cdot}{\cdot}\)</span> denote the <strong>Kullback-Leibler divergence</strong>. (Note that we included the prior on <span class="math notranslate nohighlight">\(\mbtheta\)</span> since we are treating it as a random variable with a prior in this general case.)</p>
+<p>Recall, the KL divergence is defined as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \KL{q(z)}{p(z)} &amp;= \int q(z) \log \frac{q(z)}{p(z)} \dif z.
+\end{align*}\]</div>
+<p>It gives a notion of how similar two distributions are, but it is <em>not a metric!</em> (It is not symmetric.) Still, it has some intuitive properties:</p>
+<ol class="arabic simple">
+<li><p>It is non-negative, <span class="math notranslate nohighlight">\(\KL{q(z)}{p(z)} \geq 0\)</span>.</p></li>
+<li><p>It equals zero iff the distributions are the same, <span class="math notranslate nohighlight">\(\KL{q(z)}{p(z)} = 0 \iff q(z) = p(z)\)</span> almost everywhere.</p></li>
+</ol>
+<p>Maximizing the ELBO wrt <span class="math notranslate nohighlight">\(q_n\)</span> amounts to minimizing the KL divergence to the posterior <span class="math notranslate nohighlight">\(p(z_n \mid \mbx_n, \mbtheta)\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &amp;= \log p(\mbtheta) + \sum_{n=1}^N  \left[\log p(\mbx_n \mid \mbtheta) -\KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)} \right] \\
+    &amp;= -\KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)} + c
+\end{align*}\]</div>
+<p>As we said, the KL is minimized when <span class="math notranslate nohighlight">\(q_n(z_n) = p(z_n \mid \mbx_n, \mbtheta)\)</span>, so the optimal update is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    q_n^\star(z_n) &amp;= p(z_n \mid \mbx_n, \mbtheta),
+\end{align*}\]</div>
+<p>just like we found above.</p>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>Mixture models are basic building blocks of statistics, and our first encounter with <strong>discrete latent variable models (LVMs)</strong>.  (Where have we seen continuous LVMs so far?) Mixture models have widespread uses in both density estimation (e.g., kernel density estimators) and data science (e.g., clustering). Next, we’ll talk about how to extend mixture models to cases where the cluster assignments are correlated in time.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="09_vi.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Variational Inference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mixture-models">Mixture Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#joint-distribution">Joint distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-family-mixture-models">Exponential family mixture models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-inference-algorithms">Two Inference Algorithms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#map-inference-and-k-means">MAP Inference and K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation-via-em">Maximum Likelihood Estimation via EM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-motivation">Theoretical Motivation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evidence-lower-bound-elbo">Evidence Lower Bound (ELBO)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-gaussian-case">M-step: Gaussian case</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-gaussian-case">E-step: Gaussian case</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-elbo-is-tight-after-the-e-step">The ELBO is tight after the E-step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-general-case">M-step: General Case</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-general-case">E-step: General Case</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
