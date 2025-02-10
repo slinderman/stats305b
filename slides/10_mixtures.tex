@@ -1,0 +1,448 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{simple}
+
+\input{preamble/preamble.tex}
+\input{preamble/preamble_math.tex}
+% \input{preamble/preamble_acronyms.tex}
+
+\title{Mixture Models and EM}
+\subtitle{STATS 305B: Applied Statistics II}
+\author{Scott Linderman}
+\date{\today}
+
+
+
+\begin{document}
+
+\maketitle
+
+
+\begin{frame}{Recap}
+
+We have a lot of tools in our toolkit now! We learned about exponential family distributions, which form the building blocks of more complex models. 
+    
+We also learned about Bayesian inference algorithms, like MCMC and VI, to infer posterior distributions of more complex models
+
+Today we'll start learning about \textbf{latent variable models} for complex datasets. We'll start with the simplest latent variable model --- \textbf{mixture models}.
+
+\end{frame}
+
+
+\begin{frame}{Outline}
+
+    
+\begin{itemize}
+    \item Specifying a mixture model
+    \item K-Means and MAP estimation
+    \item Expectation Maximization (EM) and MLE
+    \item Connecting EM and VI
+\end{itemize}
+
+\end{frame}
+
+    
+
+
+
+\begin{frame}[allowframebreaks]{Motivation}\label{motivation}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.65\textwidth]{../lectures/figures/scrnaseq.jpg}
+        \caption{Single Cell RNA Sequencing. \emph{From \{cite:t\}\texttt{Kiselev2019-bt}.}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Motivation}\label{motivation}
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{../lectures/figures/segmentation.png}
+\caption{Foreground/background segmentation. \emph{From
+\href{https://ai.stanford.edu/~syyeung/cvweb/tutorials.html}{https://ai.stanford.edu/\textasciitilde syyeung/cvweb/tutorial3.html}}}
+\end{figure}
+
+
+\end{frame}
+
+\begin{frame}{Motivation}\label{motivation}
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{../lectures/figures/kde.png}
+\caption{Kernel density estimate. \emph{From
+\href{https://scikit-learn.org/stable/auto_examples/neighbors/plot_species_kde.html}{Scikit-learn
+KDE Demo}.}}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[t, allowframebreaks]{Mixture Models}\label{mixture-models}
+
+Let, 
+\begin{itemize}
+    \item \(N\) denote the number of data points 
+    \item \(K\) denote the number of mixture components (i.e., clusters) 
+    \item \(\mbx_n \in \reals^D\) denote the \(n\)-th data point 
+    \item \(z_n \in \{1, \ldots, K\}\) be a latent variable denoting the cluster assignment of the \(n\)-th data point
+\end{itemize}
+
+The model is parameterized by, 
+\begin{itemize}
+    \item \(\mbtheta_k\), the natural parameters of
+cluster \(k\). 
+    \item \(\mbpi \in \Delta_{K-1}\), the cluster proportions (probabilities).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{Mixture Models}\label{mixture-models}
+The generative model is as follows:
+
+\begin{enumerate}
+\item
+  Sample the assignment of each data point: \begin{align*}
+  z_n &\iid{\sim} \mathrm{Cat}(\mbpi) \quad \text{for } n = 1, \ldots, N
+  \end{align*}
+\item
+  Sample data points given their assignments: \begin{align*}
+  \mbx_n &\sim p(\mbx \mid \mbtheta_{z_n}) \quad \text{for } n = 1, \ldots, N
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{Joint distribution}\label{joint-distribution}
+
+The joint distribution of the data and latent variables is,
+
+\begin{align*}
+    p(\{(z_n, \mbx_n)\}_{n=1}^N) 
+    &= \prod_{n=1}^N \mathrm{Cat}(z_n \mid \pi) \, p(\mbx_n \mid z_n) \\
+    &= \prod_{n=1}^N \prod_{k=1}^K \left[ \pi_k \, p(\mbx_n \mid \mbtheta_k) \right]^{\bbI[z_n = k]}
+\end{align*}
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{Exponential family mixture
+models}\label{exponential-family-mixture-models}
+
+Assume an exponential family likelihood of the form, \begin{align*}
+    p(\mbx \mid \mbeta_k) &= h(\mbx_n) \exp \left \{\langle t(\mbx_n), \mbeta_k \rangle - A(\mbeta_k) \right \}
+\end{align*}
+
+\textbf{Example:} Gaussian Mixture Model (GMM)
+
+Assume the conditional distribution of \(\mbx_n\) is a Gaussian with
+mean \(\mbtheta_k \in \reals^D\) and identity covariance: \begin{align*}
+    p(\mbx_n \mid \mbtheta_k) &= \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI)
+\end{align*}
+
+Since we are assuming identity covariance, the sufficient statistics of the Gaussian
+are \(t(\mbx) = \mbx\) and the natural parameters are simply \(\mbeta_k = \mbtheta_k\).
+\end{frame}
+
+
+\begin{frame}[t, allowframebreaks]{Two Inference Algorithms}\label{two-inference-algorithms}
+
+Let's stick with the Gaussian mixture model for now. Suppose we observe
+data points \(\{\mbx_n\}_{n=1}^N\) and want to infer the assignments
+\(\{z_n\}_{n=1}^N\) and estimate the means \(\{\mbtheta_k\}_{k=1}^K\).
+Here are two intuitive algorithms.
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{K-Means}\label{map-inference-and-k-means}
+
+Suppose we knew the cluster assignments, \(z_n\). Then it would be
+straightforward to estimate the cluster means: we could simply use the
+maximum likelihood estimate,
+\(\hat{\mbtheta}_{\mathsf{MLE}} = \frac{1}{N_k} \sum_{n: z_n=k} \mbx_n\),
+where \(N_k = \sum_n \mathbb{I}[z_n =k]\) is the number of data poitns
+in cluster \(k\).
+
+Likewise, if we knew the cluster means, it would be straightforward to
+compute the \emph{maximum a posteriori} (MAP) estimate of \(z_n\): we
+would assign each data point to the nearest cluster. If we alternate
+these two steps, we obtain the \textbf{K-Means algorithm}:
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{K-Means}\label{map-inference-and-k-means}
+\textbf{Repeat} until convergence: 
+
+\begin{enumerate}
+    \item For each \(n=1,\ldots, N\), fix the means \(\mbtheta\) and set,
+    \begin{align*}
+        z_n &= \hat{z}_{n,\mathsf{MAP}} \\
+        &= \arg \max_{k \in \{1,\ldots,K\}} \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) \\
+        &= \arg \min_{k \in \{1,\ldots, K\}} \|\mbx_n - \mbtheta_k\|_2
+    \end{align*}
+    
+    \item For each \(k=1,\ldots,K\), fix all assignments \(\mbz\) and set,
+    \begin{align*}
+       \mbtheta_k &= \hat{\mbtheta}_{\mathsf{MLE}} \\
+       &= \frac{1}{N_k} \sum_{n=1}^K \bbI[z_n=k] \mbx_n
+    \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[t]{Comments on K-Means}
+
+\begin{itemize}    
+    \item \textbf{Question:} What does this algorithm implicitly assume
+about the cluster probabilities \(\mbpi\)? How would you modify this
+algorithm to incorporate and estimate \(\mbpi\)?
+
+\item \textbf{Connection between K-Means and MAP estimation} 
+Note that if we put an improper uniform prior on \(\mbtheta_k\), we could
+think of this entire algorithm as MAP estimation of \(\mbtheta\) and
+\(\mbz\) via \textbf{coordinate ascent}! 
+
+\item K-Means made \textbf{hard assignments} of data points to clusters in
+each iteration. That sounds a little extreme --- do you really want to
+attribute a datapoint to a single class when it is right in the middle
+of two clusters? What could we do instead?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{Expectation Maximization (EM) for a GMM}\label{maximum-likelihood-estimation-via-em}
+\textbf{Repeat} until convergence: 
+\begin{enumerate}
+    \item For each data point \(n\) and component \(k\), compute the
+    \textbf{responsibility}: 
+    \begin{align*}
+        \omega_{nk} = \frac{\pi_k \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI)}{\sum_{j=1}^K \pi_j \mathrm{N}(\mbx_n \mid \mbtheta_j, \mbI)}
+    \end{align*}
+
+    \item
+    For each component \(k\), update the mean: \begin{align*}
+       \mbtheta_k^\star &= \frac{1}{N_k} \sum_{n=1}^K \omega_{nk} \mbx_n
+    \end{align*}
+\end{enumerate}
+
+This is the \textbf{Expectation-Maximization (EM) algorithm}. As we will
+show, EM yields an estimate that maximizes the \emph{marginal}
+likelihood of the data.
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{Theoretical Motivation for EM}\label{theoretical-motivation}
+
+Rather than maximizing the \textbf{joint probability}, EM is maximizing
+the \textbf{marginal probability}, \begin{align*}
+    \log p(\{\mbx_n\}_{n=1}^N; \mbtheta) 
+    &= \log \sum_{z_1=1}^K \cdots \sum_{z_N=1}^K p(\{\mbx_n, z_n\}_{n=1}^N ; \mbtheta) \\
+    &= \log \prod_{n=1}^N \sum_{z_n=1}^K p(\mbx_n, z_n ; \mbtheta) \\
+    &= \sum_{n=1}^N  \log \sum_{z_n=1}^K p(\mbx_n, z_n ; \mbtheta) 
+\end{align*} For discrete mixtures (with small enough \(K\)) we can
+evaluate the log marginal probability. We can usually evaluate its
+gradient too, so we could just do gradient ascent to find
+\(\mbtheta^*\). However, EM typically obtains faster convergence rates.
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{The ELBO from another angle}\label{evidence-lower-bound-elbo}
+
+The key idea is to obtain a lower bound on the marginal probability,
+\begin{align*}
+    \log p(\{\mbx_n\}_{n=1}^N; \mbtheta) 
+    &= \sum_{n=1}^N  \log \sum_{z_n} p(\mbx_n, z_n; \mbtheta) \\
+    &= \sum_{n=1}^N  \log \sum_{z_n} q(z_n) \frac{p(\mbx_n, z_n; \mbtheta)}{q(z_n)} \\
+    &= \sum_{n=1}^N  \log \E_{q(z_n)} \left[\frac{p(\mbx_n, z_n; \mbtheta)}{q(z_n)} \right]
+\end{align*} where \(q(z_n)\) is any distribution on
+\(z_n \in \{1,\ldots,K\}\) such that \(q(z_n)\) is \textbf{absolutely
+continuous} w.r.t. \(p(\mbx_n, z_n; \mbtheta)\).
+
+\textbf{Jensen's Inequality:} states that, 
+\begin{align*}
+    f(\E[Y]) \geq \E\left[ f(Y) \right]
+\end{align*} if \(f\) is a \textbf{concave function}, with equality iff
+\(f\) is linear.
+
+Applied to the log marginal probability, Jensen's inequality yields,
+\begin{align*}
+    \log p(\{\mbx_n\}_{n=1}^N; \mbtheta) 
+    &= \sum_{n=1}^N  \log \E_{q_n} \left[\frac{p(\mbx_n, z_n; \mbtheta)}{q_n(z_n)} \right] \\
+    &\geq \sum_{n=1}^N  \E_{q_n} \left[\log p(\mbx_n, z_n; \mbtheta) - \log q_n(z_n) \right] \\
+    &\triangleq \cL[\mbtheta, \mbq]
+\end{align*} where \(\mbq = (q_1, \ldots, q_N)\) is a tuple of
+distributions, one for each latent variable \(z_n\).
+
+This is called the \textbf{evidence lower bound}, or \textbf{ELBO} for
+short. It is a function of \(\mbtheta\) and a \emph{functional} of
+\(\mbq\), since each \(q_n\) is a probability density function. We can
+think of \emph{EM as coordinate ascent on the ELBO}, alternating between
+updating the parameters \(\mbtheta\) and the posteriors \$q.
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{M-step: Gaussian case}\label{m-step-gaussian-case}
+
+Suppose we fix \(\mbq\). Since each \(z_n\) is a discrete latent
+variable, \(q_n\) must be a probability mass function. Let it be denoted
+by, \begin{align*}
+    q_n &= [\omega_{n1}, \ldots, \omega_{nK}]^\top.
+\end{align*} (These will be the \textbf{responsibilities} from before.)
+
+Note that $q_n(k) = \Pr(z_n = k) = \mathbb{E}[\bbI[z_n=k]] = \omega_{nk}$ is the probability that the $n$-th data point belongs to cluster $k$.
+
+Now, recall our basic model,
+\(\mbx_n \sim \mathrm{N}(\mbtheta_{z_n}, \mbI)\), \begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= \sum_{n=1}^N \E_{q_n} [\log p(\mbx_n, z_n ; \mbtheta)] + c \\
+    &= \sum_{n=1}^N \E_{q_n} [\bbI[z_n = k] \log p(\mbx_n, \mbtheta_k)] + c \\
+    &= \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \log p(\mbx_n, \mbtheta_k) + c \\
+    &= \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \left[ \mbx_n^\top \mbtheta_k - \tfrac{1}{2} \mbtheta_k^\top \mbtheta_k \right] + c
+\end{align*}
+
+Zooming in on just \(\mbtheta_k\), \begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= {\mbh}_{k}^\top \mbtheta_k - \tfrac{1}{2} \mbtheta_k^\top \mbJ_k \mbtheta_k
+\end{align*} where \begin{align*}
+    {\mbh}_{k} &= \sum_{n=1}^N \omega_{nk} \mbx_n
+    \qquad
+    {\mbJ}_{k} = \sum_{n=1}^N \omega_{nk} \mbI
+\end{align*} Taking derivatives and setting to zero yields,
+\begin{align*}
+    \mbtheta_k^\star &=  \mbJ_k^{-1} \mbh_k 
+    = \frac{\sum_{n=1}^N \omega_{nk} \mbx_n}{\sum_{n=1}^N \omega_{nk}}.
+\end{align*} These are the same as the EM updates shown above!
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{E-step: Gaussian case}\label{e-step-gaussian-case}
+
+As a function of \(q_n\), for discrete Gaussian mixtures with identity
+covariance, \begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= \E_{q_n}\left[ \log p(\mbx_n, z_n; \mbtheta) - \log q_n(z_n)\right] + c \\
+    &= \sum_{k=1}^K \omega_{nk} \left[ \log \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) + \log \pi_k - \log \omega_{nk} \right] + c
+\end{align*} where \(\mbpi = [\pi_1, \ldots, \pi_K]^\top\) is the vector
+of prior cluster probabilities.
+
+We also have two constraints: \(\omega_{nk} \geq 0\) and
+\(\sum_k \omega_{nk} = 1\). Let's ignore the non-negative constraint for
+now (it will automatically be satisfied anyway) and write the Lagrangian
+with the simplex constraint, \begin{align*}
+    \cJ(\mbomega_n, \lambda) &= \sum_{k=1}^K \omega_{nk} \left[ \log \mathrm{N}(\mbx_n \mid \theta_k, \mbI) + \log \pi_k - \log \omega_{nk} \right] - \lambda \left( 1 - \sum_{k=1}^K \omega_{nk} \right)
+\end{align*}
+
+Taking the partial derivative wrt \(\omega_{nk}\) and setting to zero
+yields, \begin{align*}
+    \frac{\partial}{\partial \omega_{nk}} \cJ(\mbomega_n, \lambda) 
+    &= \log \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) + \log \pi_k - \log \omega_{nk} - 1 + \lambda = 0 \\
+    \Rightarrow \log \omega_{nk}^\star &= \log \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) + \log \pi_k + \lambda - 1 \\
+    \Rightarrow \omega_{nk}^\star &\propto \pi_k \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI) 
+\end{align*} Enforcing the simplex constraint yields, \begin{align*}
+    \omega_{nk}^\star &= \frac{\pi_k \mathrm{N}(\mbx_n \mid \mbtheta_k, \mbI)}{\sum_{j=1}^K \pi_j \mathrm{N}(\mbx_n \mid \mbtheta_j, \mbI)},
+\end{align*} just like above.
+
+Note that \begin{align*}
+    \omega_{nk}^\star &\propto p(z_n=k) \, p(\mbx_n \mid z_n=k, \mbtheta) = p(z_n = k \mid \mbx_n, \mbtheta) .
+\end{align*} That is, the responsibilities equal the posterior
+probabilities!
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{The ELBO is tight after the
+E-step}\label{the-elbo-is-tight-after-the-e-step}
+
+Equivalently, \(q_n\) equals the posterior,
+\(p(z_n \mid \mbx_n, \mbtheta)\). At that point, the ELBO simplifies to,
+\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= \sum_{n=1}^N  \E_{q_n} \left[\log p(\mbx_n, z_n ; \mbtheta) - \log q_n(z_n) \right] \\
+    &= \sum_{n=1}^N  \E_{p(z_n \mid \mbx_n, \mbtheta)} \left[\log p(\mbx_n, z_n ; \mbtheta) - \log p(z_n \mid \mbx_n; \mbtheta) \right] \\
+    &= \sum_{n=1}^N  \E_{p(z_n \mid \mbx_n; \mbtheta)} \left[\log p(\mbx_n ; \mbtheta) \right] \\
+    &= \sum_{n=1}^N \log p(\mbx_n ; \mbtheta) \\
+    &= \log p(\{\mbx_n\}_{n=1}^N, \mbtheta)
+\end{align*}
+
+
+We can view the EM algorihtm as a \textbf{minorize-maximize (MM)}
+algorithm where we iteratively lower bound the ELBO and and then
+maximize the lower bound.
+\end{frame}
+
+
+\begin{frame}[t, allowframebreaks]{M-step: General Case}\label{m-step-general-case}
+
+Now let's consider the general Bayesian mixture with exponential family
+likelihoods.
+
+While we're at it, let's also add conjugate priors \(p(\mbtheta)\) with
+pseudo-counts \(\nu\) and pseudo-observations \(\mbchi\). As a function
+of \(\mbtheta\), \begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= \log p(\mbtheta) + 
+    \sum_{n=1}^N \E_{q_n} [\log p(\mbx_n, z_n \mid \mbtheta)] + \mathrm{c} \\
+    &= \log p(\mbtheta) + 
+    \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \log p(\mbx_n \mid \mbtheta_k) + \mathrm{c} \\
+    &= \sum_{k=1}^K \left[\mbchi^\top \mbtheta_k - \nu A(\mbtheta_k)\right] +
+    \sum_{n=1}^N \sum_{k=1}^K \omega_{nk} \left[ t(\mbx_n)^\top \mbtheta_k - A(\mbtheta_k) \right] + \mathrm{c} 
+\end{align*}
+
+Zooming in on just \(\mbtheta_k\), \begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= \mbchi_k'^\top \mbtheta_k - \nu_k' A(\mbtheta_k)
+\end{align*} where \begin{align*}
+    \mbchi_k' &= \mbchi + \sum_{n=1}^N \omega_{nk} t(\mbx_n)
+    \qquad
+    \nu_k' = \nu + \sum_{n=1}^N \omega_{nk}
+\end{align*} Taking derivatives and setting to zero yields,
+\begin{align*}
+    \label{eq:gen_mstep}
+    \mbtheta_k^* &= \left[\nabla A \right]^{-1} \left(\frac{\mbchi_k'}{\nu_k'}\right)
+\end{align*}
+
+Recall that \(\nabla A^{-1}: \cM \mapsto \Omega\) is a mapping from mean
+parameters to natural parameters (and the inverse exists for minimal
+exponential families). Thus, the generic M-step above amounts to finding
+the natural parameters \(\mbtheta_k^*\) that yield the expected
+sufficient statistics \(\mbchi_{k}' / \nu_k'\) by inverting the gradient
+mapping.
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{E-step: General Case}\label{e-step-general-case}
+
+In our first pass, we assumed \(q_n\) was a finite pmf. More generally,
+\(q_n\) will be a probability density function, and optimizing over
+functions usually requires the \emph{calculus of variations}. (Ugh!)
+
+However, note that we can write the ELBO in a slightly different form,
+\begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= \log p(\mbtheta) + \sum_{n=1}^N  \E_{q_n} \left[\log p(\mbx_n, z_n \mid \mbtheta) - \log q_n(z_n) \right] \\
+    &= \log p(\mbtheta) + \sum_{n=1}^N  \E_{q_n} \left[\log p(z_n \mid \mbx_n, \mbtheta) + \log p(\mbx_n \mid \mbtheta) - \log q_n(z_n) \right] \\
+    &= \log p(\mbtheta) + \sum_{n=1}^N  \left[\log p(\mbx_n \mid \mbtheta) -\KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)} \right] \\
+    &= \log p(\{\mbx_n\}_{n=1}^N, \mbtheta) - \sum_{n=1}^N  \KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)}
+\end{align*} where \(\KL{\cdot}{\cdot}\) denote the
+\textbf{Kullback-Leibler divergence}. (Note that we included the prior
+on \(\mbtheta\) since we are treating it as a random variable with a
+prior in this general case.)
+
+Recall, the KL divergence is defined as, \begin{align*}
+    \KL{q(z)}{p(z)} &= \int q(z) \log \frac{q(z)}{p(z)} \dif z.
+\end{align*}
+
+It gives a notion of how similar two distributions are, but it is
+\emph{not a metric!} (It is not symmetric.) Still, it has some intuitive
+properties: 1. It is non-negative, \(\KL{q(z)}{p(z)} \geq 0\). 2. It
+equals zero iff the distributions are the same,
+\(\KL{q(z)}{p(z)} = 0 \iff q(z) = p(z)\) almost everywhere.
+
+Maximizing the ELBO wrt \(q_n\) amounts to minimizing the KL divergence
+to the posterior \(p(z_n \mid \mbx_n, \mbtheta)\), \begin{align*}
+    \cL[\mbtheta, \mbq] 
+    &= \log p(\mbtheta) + \sum_{n=1}^N  \left[\log p(\mbx_n \mid \mbtheta) -\KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)} \right] \\
+    &= -\KL{q_n(z_n)}{p(z_n \mid \mbx_n, \mbtheta)} + c
+\end{align*} As we said, the KL is minimized when
+\(q_n(z_n) = p(z_n \mid \mbx_n, \mbtheta)\), so the optimal update is,
+\begin{align*}
+    q_n^\star(z_n) &= p(z_n \mid \mbx_n, \mbtheta),
+\end{align*} just like we found above.
+\end{frame}
+
+\begin{frame}[t, allowframebreaks]{Conclusion}\label{conclusion}
+
+Mixture models are basic building blocks of statistics, and our first
+encounter with \textbf{discrete latent variable models (LVMs)}. (Where
+have we seen continuous LVMs so far?) Mixture models have widespread
+uses in both density estimation (e.g., kernel density estimators) and
+data science (e.g., clustering). Next, we'll talk about how to extend
+mixture models to cases where the cluster assignments are correlated in
+time.
+\end{frame}
+
+    
+    
+\end{document}
