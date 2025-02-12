@@ -46,7 +46,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Mon, Feb  3, 2025 | [Variational Inference](lectures/09_vi.ipynb) | [download](slides/09_vi.pdf) | {cite:p}`blei2017variational` | 
 | Wed, Feb  5, 2025 | <span style="color:red">**Midterm Exam from 1:30-2:50pm in MCCULL 115.**</span> | [download](midterm/midterm_2024.pdf) <br> [download](midterm/midterm_2024_solns.pdf) | |
 | Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/10_mixtures.ipynb) | [download](slides/10_mixtures.pdf) | {cite:p}`bishop2006pattern` Ch. 9 |
-| Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 13 | 
+| Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/11_hmms.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | [download](slides/11_hmms.pdf) | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
 | Wed, Feb 19, 2025 | Linear Dynamical Systems | | |
 | Mon, Feb 24, 2025 | [Variational Autoencoders](lectures/11_vaes.md) <br> <span style="color:red">**HW3 Due**</span>; **HW4 Released**  | | {cite:p}`kingma2019introduction` Ch.1-2 |
