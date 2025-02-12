@@ -49,8 +49,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/10_hmms.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
 | Wed, Feb 19, 2025 | Linear Dynamical Systems | | |
-| Fri, Feb 21, 2025 | <span style="color:red">**HW3 Due**</span> | | |
-| Mon, Feb 24, 2025 | [Variational Autoencoders](lectures/11_vaes.md) <br> **HW4 Released**  | | {cite:p}`kingma2019introduction` Ch.1-2 |
+| Mon, Feb 24, 2025 | [Variational Autoencoders](lectures/11_vaes.md) <br> <span style="color:red">**HW3 Due**</span>; **HW4 Released**  | | {cite:p}`kingma2019introduction` Ch.1-2 |
 | Wed, Feb 26, 2025 | [Tranformers](lectures/13_transformers.md) | | {cite:p}`turner2023introduction` |
 | Mon, Mar  3, 2025 | [State Space Layers (S4, S5, Mamba)](lectures/14_ssm.pdf)  |  | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Wed, Mar  5, 2025 | [Denoising Diffusion Models](lectures/16_diffusion.md) | | {cite:p}`turner2024denoising` | 
