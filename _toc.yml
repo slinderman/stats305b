@@ -15,6 +15,7 @@ parts:
     - file: lectures/08_bayes_glms_soln.ipynb
     - file: lectures/09_vi.ipynb
     - file: lectures/10_mixtures.ipynb
+    - file: lectures/11_hmms.md
     
   - caption: Assignments
     chapters:
