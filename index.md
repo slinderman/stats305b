@@ -68,8 +68,12 @@ There will be 5 assignments due roughly every other Friday. They will not be equ
   - Due Fri, Jan 24, 2025 at 11:59pm
 
 - [**Homework 2: Bayesian GLMs**](assignments/hw2/hw2.ipynb)
-  - Released Wed, Jan 29, 2024
-  - Due Wed, Feb 12, 2024 at 11:59pm
+  - Released Wed, Jan 29, 2025
+  - Due Wed, Feb 12, 2025 at 11:59pm
+
+- [**Homework 3: Hidden Markov Models**](assignments/hw3/hw3.ipynb)
+  - Released Wed, Feb 12, 2025
+  - Due Mon, Feb 24, 2025 at 11:59pm
 
 <!--
 - [**Homework 3: Hidden Markov Models**](assignments/hw3/hw3.ipynb)
