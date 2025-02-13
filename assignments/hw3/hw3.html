@@ -1,0 +1,1310 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>HW3: Hidden Markov Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'assignments/hw3/hw3';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="References" href="../../lectures/99_references.html" />
+    <link rel="prev" title="HW2: Bayesian GLMs" href="../hw2/hw2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/07_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/08_mcmc.html">Markov Chain Monte Carlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/08_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/09_vi.html">Variational Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/10_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/11_hmms.html">Hidden Markov Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">HW3: Hidden Markov Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/assignments/hw3/hw3.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/assignments/hw3/hw3.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>HW3: Hidden Markov Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-data">Load the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-plotting">Helper function for plotting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-global-mean-temperature-over-time">Extract global mean temperature over time</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-establishing-a-baseline">Part 0: Establishing a Baseline</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0a-fit-a-linear-model">Problem 0a: Fit a linear model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0b-plot-the-predictions-and-residuals">Problem 0b: Plot the predictions and residuals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0c-discuss">Problem 0c: Discuss</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-state-inference-with-the-forward-backward-algorithm">Part 1: State Inference with the Forward-Backward Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a-forward-backward-algorithm">Problem 1a: Forward-Backward Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-case">Test Case</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b-compute-the-posterior-probability-of-the-latent-states">Problem 1b: Compute the posterior probability of the latent states</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c-sensitiity-analysis">Problem 1c: Sensitiity Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d-run-length-analysis">Problem 1d: Run Length Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-parameter-estimation-with-em">Part 2: Parameter Estimation with EM</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-derive-the-m-step">Problem 2a: Derive the M-step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-implement-a-gaussian-hmm">Problem 2b: Implement a Gaussian HMM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2c-analysis">Problem 2c: Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2d-model-selection">Part 2d: Model Selection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-model-criticism-and-revision">Part 3: Model Criticism and Revision</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3a-change-point-analysis">Problem 3a: Change Point Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3b-spatiotemporal-analysis">Problem 3b: Spatiotemporal Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw3-hidden-markov-models">
+<h1>HW3: Hidden Markov Models<a class="headerlink" href="#hw3-hidden-markov-models" title="Link to this heading">#</a></h1>
+<p>STATS305B, Stanford University, Winter 2025</p>
+<p><strong>Your name:</strong></p>
+<p><strong>Collaborators:</strong></p>
+<p><strong>Hours spent:</strong></p>
+<hr class="docutils" />
+<p>This assignment will focus on latent variable models for spatiotemporal data. Here, our focus is on climate data, analyzing long-term trends in global temperature.</p>
+<ul class="simple">
+<li><p><strong>Data</strong>: Mean temperature in the lower troposphere from <a class="reference external" href="https://www.ncei.noaa.gov/products/climate-data-records/mean-layer-temperature-noaa">NOAA</a>. The data is sampled monthly from 1981 to 2024, and it has global coverage on a 2.5° <span class="math notranslate nohighlight">\(\times\)</span> 2.5° grid.</p></li>
+<li><p><strong>Model</strong>: We will use <strong>Hidden Markov Models (HMMs)</strong> to look for anomalies in global temperature trends.</p></li>
+<li><p><strong>Algorithm</strong>: We’ll fit the model using <strong>Expectation-Maximization (EM)</strong> and the <strong>forward-backward algorithm</strong>.</p></li>
+</ul>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">jaxtyping</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.basemap</span><span class="w"> </span><span class="kn">import</span> <span class="n">Basemap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="load-the-data">
+<h3>Load the data<a class="headerlink" href="#load-the-data" title="Link to this heading">#</a></h3>
+<p>This dataset was downloaded from <a class="reference external" href="https://www.ncei.noaa.gov/products/climate-data-records/mean-layer-temperature-noaa">NOAA</a>. It consists of the following fields:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code>: a Tensor of shape <span class="math notranslate nohighlight">\(T \times D_{\mathsf{lat}} \times D_{\mathsf{lon}}\)</span> where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> denotes the number of timesteps,</p></li>
+<li><p><span class="math notranslate nohighlight">\(D_{\mathsf{lat}}\)</span> specifies the number of latitudes grid points, and</p></li>
+<li><p><span class="math notranslate nohighlight">\(D_{\mathsf{lon}}\)</span> specifies the number of longitude grid points.</p></li>
+</ul>
+<p>Note that the temperature is measured in <a class="reference external" href="https://en.wikipedia.org/wiki/Kelvin">degrees Kelvin</a> and it represents the average temperature in the <a class="reference external" href="https://www.noaa.gov/jetstream/atmosphere/layers-of-atmosphere">lower troposphere</a>, which extends up to 6-20km from the Earth’s surface. The reported temperature is the mean temperature for the corresponding month.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">latitude</span></code>: Tensor of shape <span class="math notranslate nohighlight">\((D_{\mathsf{lat}}+1) \times (D_{\mathsf{lon}}+1)\)</span> with a latitude for the edges of each bin in the grid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">longitude</span></code>: Tensor of shape <span class="math notranslate nohighlight">\((D_{\mathsf{lat}}+1) \times (D_{\mathsf{lon}}+1)\)</span> with a longitude for the edges of each bin in the grid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dates</span></code>: Numpy array of shape <span class="math notranslate nohighlight">\(T\)</span> and dtype <code class="docutils literal notranslate"><span class="pre">datetime64</span></code> containing the date of each measurement.</p></li>
+</ul>
+<p>We performed some light preprocessing to make the data easier to work with. Specifically, we:</p>
+<ul class="simple">
+<li><p>Extracted the data from the original netCDF4 format and converted it into PyTorch tensors.</p></li>
+<li><p>Dropped missing data for the poles (<span class="math notranslate nohighlight">\(|\mathrm{latitude}| &gt;82.5\)</span>).</p></li>
+<li><p>Created a meshgrid of latitude and longitude for plotting.</p></li>
+<li><p>Created a numpy array of dates for the time series.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the data</span>
+<span class="o">!</span>wget<span class="w"> </span>-nc<span class="w"> </span>https://github.com/slinderman/stats305b/raw/refs/heads/winter2025/assignments/hw3/hw3.pt<span class="w"> </span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File ‘hw3.pt’ already there; not retrieving.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hw3_dataset</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;hw3.pt&#39;</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="n">hw3_dataset</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span>
+<span class="n">latitude</span> <span class="o">=</span> <span class="n">hw3_dataset</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">]</span>
+<span class="n">longitude</span> <span class="o">=</span> <span class="n">hw3_dataset</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">]</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="n">hw3_dataset</span><span class="p">[</span><span class="s1">&#39;dates&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="helper-function-for-plotting">
+<h3>Helper function for plotting<a class="headerlink" href="#helper-function-for-plotting" title="Link to this heading">#</a></h3>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_temperature</span><span class="p">(</span><span class="n">data</span> <span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;n_latitude n_longitude&quot;</span><span class="p">],</span>
+                     <span class="n">lats</span> <span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;n_latitude n_longitude&quot;</span><span class="p">],</span>
+                     <span class="n">lons</span> <span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;n_latitude n_longitude&quot;</span><span class="p">],</span> 
+                     <span class="n">title</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                     <span class="n">cmap</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;icefire&quot;</span><span class="p">,</span> <span class="n">as_cmap</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                     <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot the temperature data using Basemap.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Float[Tensor, &quot;n_latitude n_longitude&quot;]</span>
+<span class="sd">        The temperature data to plot.</span>
+
+<span class="sd">    lats : Float[Tensor, &quot;n_latitude n_longitude&quot;]</span>
+<span class="sd">        A meshgrid of latitudes </span>
+
+<span class="sd">    lons : Float[Tensor, &quot;n_latitude n_longitude&quot;]</span>
+<span class="sd">        A meshgrid of longitudes</span>
+
+<span class="sd">    title : Optional[str]</span>
+<span class="sd">        The title of the plot</span>
+
+<span class="sd">    cmap : Optional[np.Array]</span>
+<span class="sd">        The colormap to use for the plot</span>
+
+<span class="sd">    ax : Optional[plt.Axes]</span>
+<span class="sd">        The axes to plot on</span>
+
+<span class="sd">    **kwargs:</span>
+<span class="sd">        Additional arguments to pass to the Basemap `pcolormesh` function.</span>
+<span class="sd">        For example, you may want to set the `vmin` and `vmax` values for the colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># create figure, axes instances.</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.9</span><span class="p">])</span>
+
+    <span class="c1"># create Basemap instance.</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Basemap</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mill&#39;</span><span class="p">,</span> 
+                <span class="n">llcrnrlon</span><span class="o">=-</span><span class="mi">180</span><span class="p">,</span> 
+                <span class="n">llcrnrlat</span><span class="o">=-</span><span class="mf">82.5</span><span class="p">,</span> 
+                <span class="n">urcrnrlon</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> 
+                <span class="n">urcrnrlat</span><span class="o">=</span><span class="mf">82.5</span><span class="p">,</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="c1"># draw boundarie and coasts</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">drawmapboundary</span><span class="p">(</span><span class="n">fill_color</span><span class="o">=</span><span class="s1">&#39;0.8&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">drawcoastlines</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># plot temperature as a colormap</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lons</span><span class="p">),</span> 
+                      <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span> 
+                      <span class="n">data</span><span class="p">,</span>
+                      <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span>
+                      <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                      <span class="n">latlon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># draw parallels and meridians, but don&#39;t bother labelling them.</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">drawparallels</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span><span class="mf">90.</span><span class="p">,</span><span class="mf">30.</span><span class="p">))</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">drawmeridians</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span><span class="mf">180.</span><span class="p">,</span><span class="mf">60.</span><span class="p">))</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;5%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="s2">&quot;2%&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;°K&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>You can use this function to visualize the global temperature as a heatmap.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">date_to_str</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">datetime</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%B, %Y&#39;</span><span class="p">)</span>
+<span class="n">plot_temperature</span><span class="p">(</span><span class="n">temperature</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> 
+                 <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean lower troposphere temperature in </span><span class="si">{</span><span class="n">date_to_str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">t</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ad2d6c90f439e8d25cd601cf844ec5d588ed627a083d080cb3da2121b653ee7d.png" src="../../_images/ad2d6c90f439e8d25cd601cf844ec5d588ed627a083d080cb3da2121b653ee7d.png" />
+</div>
+</div>
+</section>
+<section id="extract-global-mean-temperature-over-time">
+<h3>Extract global mean temperature over time<a class="headerlink" href="#extract-global-mean-temperature-over-time" title="Link to this heading">#</a></h3>
+<p>For the first part of this assignment, we will ignore the spatial component of the data and focus on the time series of global mean temperatures.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">global_temps</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">global_temps</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Global Mean Lower Troposphere Temperature (°K)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/17340493e5ad062ad366ea7e6a4b45dacae5d04f36ce6874cc8af5a832d8b5e2.png" src="../../_images/17340493e5ad062ad366ea7e6a4b45dacae5d04f36ce6874cc8af5a832d8b5e2.png" />
+</div>
+</div>
+<p>You can see the trend by eye: Over the past 45 years, the global mean temperature in the lower troposphere has been rising by about 0.14 °K each decade. (The Kelvin scale is a shifted version of the Celcius scale, so this is equivalent to 0.14 °C/decade.)</p>
+<p>In this assignment, we will model these trends and look for anomalies using hidden Markov models (HMM).</p>
+</section>
+</section>
+<section id="part-0-establishing-a-baseline">
+<h2>Part 0: Establishing a Baseline<a class="headerlink" href="#part-0-establishing-a-baseline" title="Link to this heading">#</a></h2>
+<p>Our first step is to establish a baseline using linear regression. Let,</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T=528\)</span> denote the number of months of measurements in the dataset.</p></li>
+<li><p><span class="math notranslate nohighlight">\(y_t \in \mathbb{R}\)</span> denote the global mean temperature in month <span class="math notranslate nohighlight">\(t=1,\ldots,T\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(d_t \in \{1,\ldots,12\}\)</span> denote which month the measurement was made in.</p></li>
+</ul>
+<section id="problem-0a-fit-a-linear-model">
+<h3>Problem 0a: Fit a linear model<a class="headerlink" href="#problem-0a-fit-a-linear-model" title="Link to this heading">#</a></h3>
+<p>Compute <span class="math notranslate nohighlight">\(\hat{\boldsymbol{\beta}}_{\mathsf{MLE}}\)</span>, the maximum likelihood estimate of the weights for a linear regression model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+y_t &amp;= \boldsymbol{\beta}^\top \mathbf{x}_t + \epsilon_t
+\end{align*}\]</div>
+<p>where are assumed to be <span class="math notranslate nohighlight">\(\epsilon_t\)</span> are independent, mean zero noise terms.</p>
+<p>Use the following covariates,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathbf{x}_t = (t, \mathbb{I}[d_t = 1], \ldots, \mathbb{I}[d_t=12]) \in \mathbb{R}^{13}.
+\end{align*}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;ll help you extract the months as integers</span>
+<span class="n">months</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">datetime</span><span class="p">)</span><span class="o">.</span><span class="n">month</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">])</span>
+
+<span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-0b-plot-the-predictions-and-residuals">
+<h3>Problem 0b: Plot the predictions and residuals<a class="headerlink" href="#problem-0b-plot-the-predictions-and-residuals" title="Link to this heading">#</a></h3>
+<p>Plot the measurements <span class="math notranslate nohighlight">\(y\)</span> predictions and <span class="math notranslate nohighlight">\(\hat{y}_t = \hat{\boldsymbol{\beta}}_{\mathsf{MLE}}^\top \mathbf{x}_t\)</span>.]</p>
+<p>In a separate panel, plot the residuals <span class="math notranslate nohighlight">\(r_t \triangleq y_t - \hat{y}_t\)</span>.</p>
+<p>Remember to label your axes!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-0c-discuss">
+<h3>Problem 0c: Discuss<a class="headerlink" href="#problem-0c-discuss" title="Link to this heading">#</a></h3>
+<p>How do you interpret the estimated coefficients of this model?</p>
+<p><em>Your response here</em></p>
+</section>
+</section>
+<section id="part-1-state-inference-with-the-forward-backward-algorithm">
+<h2>Part 1: State Inference with the Forward-Backward Algorithm<a class="headerlink" href="#part-1-state-inference-with-the-forward-backward-algorithm" title="Link to this heading">#</a></h2>
+<p>You should see that the residuals look autocorrelated: if <span class="math notranslate nohighlight">\(r_t\)</span> is positive, <span class="math notranslate nohighlight">\(r_{t+1}\)</span> is likely to be positive as well. There are several factors that could lead to such autocorrelation; one is the <a class="reference external" href="https://en.wikipedia.org/wiki/El_Ni%C3%B1o%E2%80%93Southern_Oscillation">El Niño Southern Oscillation (ENSO)</a>. These global variations lead to periods of warming (El Niño) and cooling (La Niña) that last around a year and occur every 2-7 years (according to Wikipedia). We will attempt to infer these events using a Hidden Markov Model (HMM).</p>
+<p>Let <span class="math notranslate nohighlight">\(z_t \in \{1,\ldots,K\}\)</span> denote a <strong>discrete latent state</strong> at time <span class="math notranslate nohighlight">\(t\)</span>. We will model the residuals as <em>conditionally independent</em> given the latent states,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+r_t \mid z_t = k &amp;\sim \mathrm{N}(\mu_k, \sigma_k^2), 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\((\mu_k, \sigma_k^2)\)</span> denote the mean and variance of the residuals in state <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>We model the latent states as a Markov process,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Pr(z_{t+1}=j \mid z_t =i) = p_{ij},
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_{ij}\)</span> are the elements of the transition matrix,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathbf{P} = 
+\begin{bmatrix} 
+p_{11} &amp; \ldots &amp; p_{1K} \\
+\vdots &amp; &amp; \vdots \\
+p_{K1} &amp; \ldots &amp; p_{KK} 
+\end{bmatrix}
+\end{align*}\]</div>
+<p>Finally, we assume</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+z_1 \sim \mathrm{Cat}(\boldsymbol{\pi}_0)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\pi}_0\)</span> is the initial distribution.</p>
+<p>The parameters of the model are <span class="math notranslate nohighlight">\(\theta = (\{\mu_k, \sigma_k^2\}_{k=1}^K, \mathbf{P}, \boldsymbol{\pi}_0)\)</span>. Our goal is to estimate the parameters and infer the posterior marginal distributions of the latent states.</p>
+<section id="problem-1a-forward-backward-algorithm">
+<h3>Problem 1a: Forward-Backward Algorithm<a class="headerlink" href="#problem-1a-forward-backward-algorithm" title="Link to this heading">#</a></h3>
+<p>Implement the forward-backward algorithm for computing posterior marginal probabilities,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\Pr(z_t = k \mid r_{1:T}; \theta) = \mathbb{E}[\mathbb{I}[z_t=k] \mid r_{1:T}; \theta].
+\end{align*}\]</div>
+<p>Also, compute the log marginal likelihood, <span class="math notranslate nohighlight">\(\log p(r_{1:T}; \theta)\)</span>, during the forward pass.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward_pass</span><span class="p">(</span><span class="n">initial_probs</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states&quot;</span><span class="p">],</span> 
+                 <span class="n">transition_matrix</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_states&quot;</span><span class="p">],</span> 
+                 <span class="n">log_likes</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">])</span> \
+                 <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the filtering probabilities, $p(z_t | r_{1:t-1})$ and the marginal </span>
+<span class="sd">    log likelihood, $\log p(r_{1:T})$, where $z_t$ is the hidden state at time $t$ </span>
+<span class="sd">    and $r_{1:t-1}$ is the observed data up to time $t-1$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    initial_probs : Float[Tensor, &quot;num_states&quot;]</span>
+<span class="sd">        The initial state probabilities, $p(z_1)$.</span>
+
+<span class="sd">    transition_matrix : Float[Tensor, &quot;num_states num_states&quot;]</span>
+<span class="sd">        The state transition probabilities, $p(z_t | z_{t-1})$.</span>
+
+<span class="sd">    log_likes : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">        The log likelihoods, $\log p(r_t | z_t)$.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    alphas : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">        The filtering probabilities, $p(z_t | r_{1:t-1})$.</span>
+
+<span class="sd">    marginal_loglike : Float</span>
+<span class="sd">        The marginal log likelihood, $\log p(r_{1:T})$.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">marginal_loglike</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="k">return</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">marginal_loglike</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">backward_pass</span><span class="p">(</span><span class="n">transition_matrix</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_states&quot;</span><span class="p">],</span> 
+                  <span class="n">log_likes</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">])</span> \
+                  <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Compute the backward probabilities, $\beta_t \propto p(z_t, r_{t+1:T})$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transition_matrix : Float[Tensor, &quot;num_states num_states&quot;]</span>
+<span class="sd">        The state transition probabilities, $p(z_t | z_{t-1})$.</span>
+
+<span class="sd">    log_likes : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">        The log likelihoods, $\log p(r_t | z_t)$.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    betas : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">        The backward probabilities, $\beta_t \propto p(z_t, r_{t+1:T})$.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="n">betas</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="k">return</span> <span class="n">betas</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">forward_backward</span><span class="p">(</span><span class="n">initial_probs</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states&quot;</span><span class="p">],</span> 
+                     <span class="n">transition_matrix</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_states&quot;</span><span class="p">],</span> 
+                     <span class="n">log_likes</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">])</span> \
+                     <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot; Run the forward backward algorithm to compute the posterior expected states,</span>
+<span class="sd">    $Pr(z_t=k | r_{1:T})$ for all $t$ and $k$, and the marginal log likelihood,</span>
+<span class="sd">    $\log p(r_{1:T})$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    initial_probs : Float[Tensor, &quot;num_states&quot;]</span>
+<span class="sd">        The initial state probabilities, $p(z_1)$.</span>
+
+<span class="sd">    transition_matrix : Float[Tensor, &quot;num_states num_states&quot;]</span>
+<span class="sd">        The state transition probabilities, $p(z_t | z_{t-1})$.</span>
+
+<span class="sd">    log_likes : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">        The log likelihoods, $\log p(r_t | z_t)$.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expected_states : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">        The expected states, $Pr(z_t=k | r_{1:t-1})$ for all $t$ and $k$.</span>
+
+<span class="sd">    marginal_loglike : Float</span>
+<span class="sd">        The marginal log likelihood, $\log p(r_{1:T})$.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="n">expected_states</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">marginal_loglike</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="k">return</span> <span class="n">expected_states</span><span class="p">,</span> <span class="n">marginal_loglike</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="test-case">
+<h4>Test Case<a class="headerlink" href="#test-case" title="Link to this heading">#</a></h4>
+<p>Compare to exact computations for a small model with <span class="math notranslate nohighlight">\(K=2\)</span> states and <span class="math notranslate nohighlight">\(T=3\)</span> timesteps.</p>
+<p><em>Note: This test is necessary but not sufficient to ensure that your code is correct and stable!</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_1a</span><span class="p">():</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">305</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">))</span>
+    <span class="n">initial_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.1</span>
+    <span class="n">log_likes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Run your code</span>
+    <span class="n">expected_states</span><span class="p">,</span> <span class="n">marginal_loglike</span> <span class="o">=</span> <span class="n">forward_backward</span><span class="p">(</span><span class="n">initial_probs</span><span class="p">,</span> <span class="n">transition_matrix</span><span class="p">,</span> <span class="n">log_likes</span><span class="p">)</span>
+
+    <span class="c1"># Compute the log joint probs explicitly</span>
+    <span class="n">log_joint_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">z1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">z2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">z3</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                <span class="n">log_joint_probs</span><span class="p">[</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="n">z3</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">initial_probs</span><span class="p">[</span><span class="n">z1</span><span class="p">])</span> <span class="o">+</span> \
+                    <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">transition_matrix</span><span class="p">[</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">])</span> <span class="o">+</span> \
+                    <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">transition_matrix</span><span class="p">[</span><span class="n">z2</span><span class="p">,</span> <span class="n">z3</span><span class="p">])</span> <span class="o">+</span> \
+                    <span class="n">log_likes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">z1</span><span class="p">]</span> <span class="o">+</span> \
+                    <span class="n">log_likes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">z2</span><span class="p">]</span> <span class="o">+</span> \
+                    <span class="n">log_likes</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">z3</span><span class="p">]</span>
+                
+    <span class="c1"># Compare the marginal log likelihood </span>
+    <span class="n">marginal_loglike_explicit</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">log_joint_probs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">marginal_loglike</span><span class="p">,</span> <span class="n">marginal_loglike_explicit</span><span class="p">)</span>
+
+    <span class="c1"># Compare the posterior marginal probabilities</span>
+    <span class="n">posterior_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_joint_probs</span> <span class="o">-</span> <span class="n">marginal_loglike_explicit</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">expected_states</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">posterior_probs</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">expected_states</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">posterior_probs</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">expected_states</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">posterior_probs</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
+
+
+<span class="n">test_1a</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="problem-1b-compute-the-posterior-probability-of-the-latent-states">
+<h3>Problem 1b: Compute the posterior probability of the latent states<a class="headerlink" href="#problem-1b-compute-the-posterior-probability-of-the-latent-states" title="Link to this heading">#</a></h3>
+<p>To start, let’s suppose we manually defined the following states:</p>
+<ol class="arabic simple">
+<li><p><strong>Neutral state</strong> in which <span class="math notranslate nohighlight">\(\mu_1 = 0\)</span>.</p></li>
+<li><p><strong>El Niño state</strong> in which <span class="math notranslate nohighlight">\(\mu_2 = 0.25\)</span>.</p></li>
+<li><p><strong>La Niña state</strong> in which <span class="math notranslate nohighlight">\(\mu_3 = -0.25\)</span>.</p></li>
+</ol>
+<p>In all three states, assume <span class="math notranslate nohighlight">\(\sigma_k^2 = 0.15^2\)</span>. These states correspond to the residuals being neutral, larger than average, or smaller than average, respectively.</p>
+<p>Moreover, assume the initial distribution is uniform and the transition probabilities are <span class="math notranslate nohighlight">\(p_{kk} = \alpha\)</span> for all <span class="math notranslate nohighlight">\(k=1,\ldots,K\)</span> and <span class="math notranslate nohighlight">\(p_{ij} = \frac{1-\alpha}{K-1}\)</span> for all <span class="math notranslate nohighlight">\(i\neq j\)</span>. Set <span class="math notranslate nohighlight">\(\alpha = \frac{11}{12}\)</span> for this analysis.</p>
+<p>You should:</p>
+<ol class="arabic simple">
+<li><p><strong>Compute:</strong> the expected states (i.e., posterior marginal probabilities) using your forward-backward implementation.</p></li>
+<li><p><strong>Print:</strong> the marginal log likelihood of the data under these parameters.</p></li>
+<li><p><strong>Plot:</strong> the posterior marginal probability of being in the El Niño state over time.</p></li>
+</ol>
+<p>For comparison, we have provided El Niño events as determined by NOAA based on sea surface temperatures. These won’t align perfectly your inferences based on global mean lower tropospheric temperature, but they are still a good sanity check. Show these times on your graph as well.</p>
+<p><em>Remember to label your plots!</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># El Nino periods from https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php</span>
+<span class="n">NOAA_EL_NINO_PERIODS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1982</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1983</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1986</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1988</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1991</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1992</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1994</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1995</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1997</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1998</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2002</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2004</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2005</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2006</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2014</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-1c-sensitiity-analysis">
+<h3>Problem 1c: Sensitiity Analysis<a class="headerlink" href="#problem-1c-sensitiity-analysis" title="Link to this heading">#</a></h3>
+<p>Describe how your results change as you increase or decrease the <em>stay probability</em>, <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-1d-run-length-analysis">
+<h3>Problem 1d: Run Length Analysis<a class="headerlink" href="#problem-1d-run-length-analysis" title="Link to this heading">#</a></h3>
+<p>The run length is the duration of a latent state; i.e., the number of time steps the latent state stays in state <span class="math notranslate nohighlight">\(k\)</span> before transitioning to a new state. Under the prior with stay probability <span class="math notranslate nohighlight">\(\alpha\)</span>, how is the run length distributed? What is its expected value? Explain your findings from Problem 1c in light of the prior distribution of run lengths.</p>
+<p><em>Your answer here</em></p>
+</section>
+</section>
+<section id="part-2-parameter-estimation-with-em">
+<h2>Part 2: Parameter Estimation with EM<a class="headerlink" href="#part-2-parameter-estimation-with-em" title="Link to this heading">#</a></h2>
+<p>In Part 1 we just the eyeballed the residuals to guess appropriate means and variances. Let’s be a bit more rigorous now. Here, we will fix the mean of the neutral state, <span class="math notranslate nohighlight">\(\mu_1 =0\)</span>, but we will infer the remaining means and variances <span class="math notranslate nohighlight">\(\sigma_1^2, \{\mu_k, \sigma_k^2\}_{k=2}^K\)</span>.</p>
+<p>We’ll still make a few simplifying assumptions: As before, we’ll stick with <span class="math notranslate nohighlight">\(K=3\)</span> states, a uniform initial distribution, and the same transition matrix as above with <span class="math notranslate nohighlight">\(\alpha=\frac{11}{12}\)</span>.</p>
+<section id="problem-2a-derive-the-m-step">
+<h3>Problem 2a: Derive the M-step<a class="headerlink" href="#problem-2a-derive-the-m-step" title="Link to this heading">#</a></h3>
+<p>Derive the M-step for the emission means and variances. Let <span class="math notranslate nohighlight">\(\omega_{tk} = \Pr(z_t=k \mid r_{1:T}; \theta')\)</span> denote the posterior marginal probabilities from the forward-backward algorithm.</p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-2b-implement-a-gaussian-hmm">
+<h3>Problem 2b: Implement a Gaussian HMM<a class="headerlink" href="#problem-2b-implement-a-gaussian-hmm" title="Link to this heading">#</a></h3>
+<p>Complete the code below to implement a Gaussian HMM.</p>
+<p>Note: This model allows for missing data to be specified by a <code class="docutils literal notranslate"><span class="pre">mask</span></code>. Mathematically, let <span class="math notranslate nohighlight">\(m_t \in \{0,1\}\)</span> denote a mask, with <span class="math notranslate nohighlight">\(m_t=1\)</span> indicating that <span class="math notranslate nohighlight">\(r_t\)</span> is observed and <span class="math notranslate nohighlight">\(m_t=0\)</span> that <span class="math notranslate nohighlight">\(r_t\)</span> is missing. We can incorporate the mask into the model by adapting the likelihood as follows,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(r_t \mid z_t = k, m_t; \theta) &amp;\propto \left[\mathrm{N}(r_t \mid \mu_k, \sigma_k^2)\right]^{\mathbb{I}[m_t=1]}.
+\end{align*}\]</div>
+<p>Then, when <span class="math notranslate nohighlight">\(m_t=0\)</span>, the likelihood is proportional to one. Equivalently, the log likelihood goes to zero for missing timesteps.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">GaussianHMM</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An implementation of a Gaussian Hidden Markov Model and the</span>
+<span class="sd">    Expectation-Maximization algorithm for fitting the model to data.</span>
+
+<span class="sd">    This model assumes that the initial distribution and transition matrix</span>
+<span class="sd">    are fixed. Moreover, we assume the mean of the first state is 0, as </span>
+<span class="sd">    described above. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">num_states</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">initial_probs</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states&quot;</span><span class="p">],</span>
+                 <span class="n">transition_matrix</span> <span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_states&quot;</span><span class="p">],</span>
+                 <span class="n">initial_means</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_variances</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_states</span> <span class="o">=</span> <span class="n">num_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_probs</span> <span class="o">=</span> <span class="n">initial_probs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">transition_matrix</span>
+        <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">transition_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_states</span><span class="p">))</span>
+
+        <span class="c1"># Initialize the means and variances</span>
+        <span class="k">if</span> <span class="n">initial_means</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">initial_means</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">num_states</span><span class="p">,)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">means</span> <span class="o">=</span> <span class="n">initial_means</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">means</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_states</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+        
+        <span class="k">if</span> <span class="n">initial_variances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">initial_variances</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">num_states</span><span class="p">,)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variances</span> <span class="o">=</span> <span class="n">initial_variances</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variances</span> <span class="o">=</span> <span class="mf">0.15</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_states</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">e_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+               <span class="n">data</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps&quot;</span><span class="p">],</span>
+               <span class="n">mask</span><span class="p">:</span> <span class="n">Bool</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps&quot;</span><span class="p">])</span> \
+        <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">]:</span> 
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Perform the E-step of EM using the forward-backward algorithm.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : Float[Tensor, &quot;num_timesteps&quot;]</span>
+<span class="sd">            The observed data.</span>
+
+<span class="sd">        mask : Optional[Bool[Tensor, &quot;num_timesteps&quot;]]</span>
+<span class="sd">            A boolean mask indicating which data points are observed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        expected_states : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">            The expected states, $Pr(z_t=k | r_{1:T})$ for all $t$ and $k$</span>
+
+<span class="sd">        marginal_loglike : Float</span>
+<span class="sd">            The marginal log likelihood, $\log p(r_{1:T})$.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># YOUR CODE HERE</span>
+        <span class="n">expected_states</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="n">marginal_loglike</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">expected_states</span><span class="p">,</span> <span class="n">marginal_loglike</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">m_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+               <span class="n">data</span> <span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps&quot;</span><span class="p">],</span>
+               <span class="n">mask</span> <span class="p">:</span> <span class="n">Bool</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps&quot;</span><span class="p">],</span>
+               <span class="n">expected_states</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps num_states&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Perform the M-step of EM to update the model parameters.</span>
+
+<span class="sd">        Note: this function should update the `means` and `variances` attributes in place,</span>
+<span class="sd">        but the first state mean should remain fixed at 0.</span>
+
+<span class="sd">        Note: Be careful to avoid division by zero if, e.g., expected states sums to 0.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : Float[Tensor, &quot;num_timesteps&quot;]</span>
+<span class="sd">            The observed data.</span>
+
+<span class="sd">        mask : Optional[Bool[Tensor, &quot;num_timesteps&quot;]]</span>
+<span class="sd">            A boolean mask indicating which data points are observed.</span>
+
+<span class="sd">        expected_states : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">            The expected states, $Pr(z_t=k | r_{1:T})$ for all $t$ and $k$.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># YOUR CODE HERE</span>
+        <span class="c1"># Note: Remember to fix the mean of the first state to 0</span>
+        <span class="k">pass</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps&quot;</span><span class="p">],</span>
+            <span class="n">mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Bool</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_timesteps&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">num_iters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit the HMM with EM.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : Float[Tensor, &quot;num_timesteps&quot;]</span>
+<span class="sd">            The observed data.</span>
+
+<span class="sd">        mask : Optional[Bool[Tensor, &quot;num_timesteps&quot;]]</span>
+<span class="sd">            A boolean mask indicating which data points are observed.</span>
+
+<span class="sd">        num_iters : int</span>
+<span class="sd">            The number of EM iterations to run.</span>
+
+<span class="sd">        verbose : bool</span>
+<span class="sd">            Whether to print progress during training.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        lls : Float[Tensor, &quot;num_iters&quot;]</span>
+<span class="sd">            The marginal log likelihood at each iteration.</span>
+<span class="sd">        </span>
+<span class="sd">        expected_states : Float[Tensor, &quot;num_timesteps num_states&quot;]</span>
+<span class="sd">            The expected states, $Pr(z_t=k | r_{1:T})$ for all $t$ and $k$.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+            
+        <span class="n">lls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">trange</span><span class="p">(</span><span class="n">num_iters</span><span class="p">)</span> <span class="k">if</span> <span class="n">verbose</span> <span class="k">else</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">expected_states</span><span class="p">,</span> <span class="n">marginal_loglike</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m_step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">expected_states</span><span class="p">)</span>
+            <span class="n">lls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">marginal_loglike</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">lls</span><span class="p">),</span> <span class="n">expected_states</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now fit your model!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-2c-analysis">
+<h3>Problem 2c: Analysis<a class="headerlink" href="#problem-2c-analysis" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Plot the marginal log likelihood over EM iterations. (It should strictly increase!)</p></li>
+<li><p>Print the estimate model means and variances.</p></li>
+<li><p>Plot the residuals and the posterior probabilities for each of the <span class="math notranslate nohighlight">\(K=3\)</span> states as a function of time.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="part-2d-model-selection">
+<h3>Part 2d: Model Selection<a class="headerlink" href="#part-2d-model-selection" title="Link to this heading">#</a></h3>
+<p>One of the key hyperparameters to specify when fitting an HMM is the number of states, <span class="math notranslate nohighlight">\(K\)</span>. There are several strategies for choosing <span class="math notranslate nohighlight">\(K\)</span>. Here we will use cross-validation.</p>
+<ol class="arabic">
+<li><p>Hold out the observations for years 1983, 1988, 1992, 1999, 2004, 2010, 2015, 2020, and 2022 using the mask vector provided below. The mask is a vector <span class="math notranslate nohighlight">\(m_{1:T}\)</span> that is zero for all time points in those years and one otherwise.</p></li>
+<li><p>Fit a Gaussian HMM with <span class="math notranslate nohighlight">\(K=1,2,\ldots, 10\)</span> states using your code above, but now provide the mask so that the model is fit based on only the training data. Remember the EM can get stuck in local optima, so fit the model several times from random initializations and keep the best model fit.</p></li>
+<li><p>For each value of <span class="math notranslate nohighlight">\(K\)</span>, evaluate the <strong>log predictive likelihood</strong> of the held-out data under the best fitting model. You can do this by computing</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\log p(\mathbf{r}_{\mathsf{test}} \mid \mathbf{r}_{\mathsf{train}}; \hat{\theta}) = 
+\log p(\mathbf{r}; \hat{\theta}) - \log p(\mathbf{r}_{\mathsf{train}}; \hat{\theta})
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{r}_{\mathsf{train}} = \{r_t: m_t=1\}\)</span> denotes the subset of training data, <span class="math notranslate nohighlight">\(\mathbf{r}_{\mathsf{test}} = \{r_t: m_t=0\}\)</span> denotes the held-out test data, and <span class="math notranslate nohighlight">\(\hat{\theta}\)</span> denotes the parameters estimated with EM from the best random initialization. You can compute these marginal likelihoods by calling the <code class="docutils literal notranslate"><span class="pre">e_step</span></code> function with the appropriate mask.</p>
+</li>
+<li><p>Discuss your findings. How many discrete states would your recommend? Visualize the states of the best-fitting model with the chosen value of <span class="math notranslate nohighlight">\(K\)</span>. Can you interpret the states?</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We provide the followign mask </span>
+<span class="n">heldout_years</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1983</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">1992</span><span class="p">,</span> <span class="mi">1999</span><span class="p">,</span> <span class="mi">2004</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">2020</span><span class="p">,</span> <span class="mi">2022</span><span class="p">])</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">datetime</span><span class="p">)</span><span class="o">.</span><span class="n">year</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">heldout_years</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-3-model-criticism-and-revision">
+<h2>Part 3: Model Criticism and Revision<a class="headerlink" href="#part-3-model-criticism-and-revision" title="Link to this heading">#</a></h2>
+<p>You’ve completed another lap of Box’s Loop! We worked with real climate data, developed an HMM to infer El Niño and La Niña periods, and implemented the forward-backward and EM algorithms for state inference and parameter estimation. We even used cross-validation to select the number of states for our model. Well done!</p>
+<p>Of course, Box’s Loop wouldn’t be a loop if we stopped there. In this part, let’s think about ways we could improve these analyses.</p>
+<section id="problem-3a-change-point-analysis">
+<h3>Problem 3a: Change Point Analysis<a class="headerlink" href="#problem-3a-change-point-analysis" title="Link to this heading">#</a></h3>
+<p>Our analyses were based on residuals from a baseline linear model that assumed a constant rate of warming over the past 40+ years. However, it’s possible that the rate has changed over time as greenhouse gas emissions have varied. There are many ways to estimate nonlinear trends — one way is to use an HMM.</p>
+<p>Recall that in our baseline model, the coefficients were <span class="math notranslate nohighlight">\(\boldsymbol{\beta} = (\beta_1, \ldots, \beta_p)\)</span> where <span class="math notranslate nohighlight">\(\beta_1\)</span> represented the rate of warming. Suppose the rate jumped from <span class="math notranslate nohighlight">\(\beta_1^{(1)}\)</span> to a new value, <span class="math notranslate nohighlight">\(\beta_1^{(2)}\)</span>, at some unknown time between 1981 and 2024. Describe how you could use an HMM to infer the time of the change point. Define the model mathematically and specify any relevant constraints on the parameters. You should also account for monthly effects, as in the baseline model.</p>
+<p><em>You do not have to fit the model, only specify it and justify your reasoning.</em></p>
+<p><em>Your answer here</em></p>
+</section>
+<section id="problem-3b-spatiotemporal-analysis">
+<h3>Problem 3b: Spatiotemporal Analysis<a class="headerlink" href="#problem-3b-spatiotemporal-analysis" title="Link to this heading">#</a></h3>
+<p>The NOAA data has rich spatiotemporal structure, but we ignored the spatial component and just modeled the global mean temperature! It’s possible that some parts of the globe are warming faster than others. Some parts might even be cooling over time. Likewise, anomalies like El Niño could affect the temperature in some regions more than others.</p>
+<p>Describe, mathematically, how you would model the full spatiotemporal dataset. What challenges can you anticipate, and how would you address them?</p>
+<p><em>You do not have to fit the model, only specify it and justify your reasoning.</em></p>
+<p><em>Your answer here</em></p>
+</section>
+</section>
+<section id="submission-instructions">
+<h2>Submission Instructions<a class="headerlink" href="#submission-instructions" title="Link to this heading">#</a></h2>
+<p><strong>Formatting:</strong> check that your code does not exceed 80 characters in line width. You can set <em>Tools → Settings → Editor → Vertical ruler column</em> to 80 to see when you’ve exceeded the limit.</p>
+<p><strong>Converting to PDF</strong> The simplest way to convert to PDF is to use the “Print to PDF” option in your browser. Just make sure that your code and plots aren’t cut off, as it may not wrap lines.</p>
+<p><strong>Alternatively</strong> You can download your notebook in .ipynb format and use the following commands to convert it to PDF.  Then run the following command to convert to a PDF:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">nbconvert</span> <span class="o">--</span><span class="n">to</span> <span class="n">pdf</span> <span class="o">&lt;</span><span class="n">yourlastname</span><span class="o">&gt;</span><span class="n">_hw</span><span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;.</span><span class="n">ipynb</span>
+</pre></div>
+</div>
+<p>(Note that for the above code to work, you need to rename your file <code class="docutils literal notranslate"><span class="pre">&lt;yourlastname&gt;_hw&lt;number&gt;.ipynb</span></code>)</p>
+<p><strong>Installing nbconvert:</strong></p>
+<p>If you’re using Anaconda for package management,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">anaconda</span> <span class="n">nbconvert</span>
+</pre></div>
+</div>
+<p><strong>Upload</strong> your .pdf file to Gradescope. Please tag your questions correctly! I.e., for each question, all of and only the relevant sections are tagged.</p>
+<p>Please post on Ed or come to OH if there are any other problems submitting the HW.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./assignments/hw3"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../hw2/hw2.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">HW2: Bayesian GLMs</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../lectures/99_references.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-data">Load the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-plotting">Helper function for plotting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-global-mean-temperature-over-time">Extract global mean temperature over time</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-establishing-a-baseline">Part 0: Establishing a Baseline</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0a-fit-a-linear-model">Problem 0a: Fit a linear model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0b-plot-the-predictions-and-residuals">Problem 0b: Plot the predictions and residuals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-0c-discuss">Problem 0c: Discuss</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-state-inference-with-the-forward-backward-algorithm">Part 1: State Inference with the Forward-Backward Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1a-forward-backward-algorithm">Problem 1a: Forward-Backward Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-case">Test Case</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1b-compute-the-posterior-probability-of-the-latent-states">Problem 1b: Compute the posterior probability of the latent states</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1c-sensitiity-analysis">Problem 1c: Sensitiity Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-1d-run-length-analysis">Problem 1d: Run Length Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-parameter-estimation-with-em">Part 2: Parameter Estimation with EM</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2a-derive-the-m-step">Problem 2a: Derive the M-step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-implement-a-gaussian-hmm">Problem 2b: Implement a Gaussian HMM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2c-analysis">Problem 2c: Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2d-model-selection">Part 2d: Model Selection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-model-criticism-and-revision">Part 3: Model Criticism and Revision</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3a-change-point-analysis">Problem 3a: Change Point Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-3b-spatiotemporal-analysis">Problem 3b: Spatiotemporal Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission-instructions">Submission Instructions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
