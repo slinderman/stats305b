@@ -1503,7 +1503,7 @@ e^{-\frac{1}{2} \omega c^2} \mathrm{PG}(\omega; b, 0) &amp;\propto \mathrm{PG}(\
                  <span class="n">N</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoitns&quot;</span><span class="p">],</span> 
                  <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span> 
                  <span class="n">beta</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">])</span> \
-                 <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+                 <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the log joint probability of the parameters and responses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1725,7 +1725,7 @@ y_i &amp;\sim \mathrm{Bin}(N_i, \sigma(x_i^\top \beta_{s_i}))
                  <span class="n">X</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_datapoints num_features&quot;</span><span class="p">],</span> 
                  <span class="n">local_betas</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_states num_features&quot;</span><span class="p">],</span>
                  <span class="n">global_beta</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;num_features&quot;</span><span class="p">])</span> \
-                 <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+                 <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the log joint probability of the parameters and responses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

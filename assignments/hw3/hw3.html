@@ -431,6 +431,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
 <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">jaxtyping</span>
+<span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">basemap</span>
 </pre></div>
 </div>
 </div>
@@ -443,7 +444,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.basemap</span><span class="w"> </span><span class="kn">import</span> <span class="n">Basemap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Bool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Normal</span>
@@ -544,6 +544,14 @@
 <span class="sd">        Additional arguments to pass to the Basemap `pcolormesh` function.</span>
 <span class="sd">        For example, you may want to set the `vmin` and `vmax` values for the colormap.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.basemap</span><span class="w"> </span><span class="kn">import</span> <span class="n">Basemap</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Basemap is not installed. Please install it using `conda install basemap` &quot;</span> \
+              <span class="s2">&quot; or `pip install basemap`. Note that basemap is not currently working in &quot;</span>\
+              <span class="s2">&quot;Python 3.13.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
     <span class="c1"># create figure, axes instances.</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
