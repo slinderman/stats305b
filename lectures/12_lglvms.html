@@ -639,7 +639,10 @@ Today, we will show how to derive these classic models and algorithms.</p>
 <p>Completing the square,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-    p(\mbz_n \mid \mbx_n, \mbW, \mbmu, \sigma^2) &amp;= \cN(\mbz_n \mid \mbJ_n^{-1} \mbh_n, \mbJ_n^{-1}).
+    p(\mbz_n \mid \mbx_n, \mbW, \mbmu, \sigma^2) 
+    &amp;= \cN(\mbz_n \mid \mbJ_n^{-1} \mbh_n, \mbJ_n^{-1}) \\
+    &amp;= \cN(\mbz_n \mid (\mbI + \frac{1}{\sigma^2} \mbW^\top \mbW)^{-1} (\frac{1}{\sigma^2} \mbW^\top (\mbx_n - \mbmu)), \, (\mbI + \frac{1}{\sigma^2} \mbW^\top \mbW)^{-1}) \\
+    &amp;= \cN(\mbz_n \mid (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} (\mbW^\top (\mbx_n - \mbmu)), \, (\mbI + \frac{1}{\sigma^2} \mbW^\top \mbW)^{-1}
 \end{align*}\]</div>
 </section>
 <section id="the-posterior-distribution-in-the-zero-noise-limit">
