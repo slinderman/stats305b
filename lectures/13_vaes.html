@@ -1,0 +1,1531 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Variational Autoencoders &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/13_vaes';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Linear Gaussian Models" href="12_lglvms.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_mcmc.html">Markov Chain Monte Carlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_vi.html">Variational Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_hmms.html">Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_lglvms.html">Linear Gaussian Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Variational Autoencoders</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/lectures/13_vaes.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/13_vaes.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Variational Autoencoders</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-as-a-linear-autoencoder">PCA as a Linear Autoencoder</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probabilistic-pca-as-a-stochastic-linear-autoencoder">Probabilistic PCA as a Stochastic Linear Autoencoder</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#revisiting-em-for-probabilistic-pca">Revisiting EM for Probabilistic PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Variational Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-and-inference">Learning and Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound-elbo">The Evidence Lower Bound (ELBO)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variational-inference">Variational Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variational-expectation-maximization-vem">Variational Expectation-Maximization (vEM)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-m-step-with-stochastic-gradient-ascent">Generic M-step with Stochastic Gradient Ascent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-variational-e-step">The Variational E-step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reparameterization-trick">Reparameterization Trick</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-mini-batches-of-data">Working with mini-batches of data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm">Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#amortized-inference">Amortized Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#putting-it-all-together">Putting it all together</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demo-neural-networks-and-vaes">Demo: Neural Networks and VAEs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-regression-with-deep-neural-networks">Part 1: Regression with Deep Neural Networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#simulate-data">Simulate data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#construct-a-feedforward-neural-network">Construct a feedforward neural network</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-predictions-of-the-randomly-initialized-model">Plot the predictions of the randomly initialized model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-the-model-parameters-to-maximize-the-likelihood">Optimize the model parameters to maximize the likelihood</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-trained-model-s-predictions">Plot the trained model’s predictions</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-variational-autoencoders">Part 2: Variational Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-simple-data-loader-for-this-dataset">Make a simple data loader for this dataset</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2a-decoder-network">Part 2a: Decoder Network</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-encoder-network">Problem 2b: Encoder Network</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2c-implement-the-elbo">Problem 2c: Implement the ELBO</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#implement-the-training-loop-given">Implement the Training Loop [given]</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2d-visualize-samples-from-the-trained-model">Problem 2d: Visualize samples from the trained model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="variational-autoencoders">
+<h1>Variational Autoencoders<a class="headerlink" href="#variational-autoencoders" title="Link to this heading">#</a></h1>
+<p>We extended mixture models and HMMs to have continuous latent variables, and we found that when we assumed linear relationships and Gaussian noise, a lot of the math simplified! However, these are pretty strict modeling assumptions: what if there are nonlinear relationships between latent variables and observations and/or non-Gaussian noise? Here, we will relax these constraints with a class of latent variable models called <strong>variational autoencoders (VAEs)</strong></p>
+<section id="pca-as-a-linear-autoencoder">
+<h2>PCA as a Linear Autoencoder<a class="headerlink" href="#pca-as-a-linear-autoencoder" title="Link to this heading">#</a></h2>
+<p>Last time we introduced PCA as a method for finding dimensions of maximal variance. However, we can arrive at the same model from another perspective: find the linear projection that minimizes the average projection cost, defined as the mean squared distance between the data points and their projections (Pearson, 1903).</p>
+<p>To formalize this, let</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbW = 
+    \begin{bmatrix}
+    | &amp; &amp; | \\
+    \mbw_1 &amp; \cdots &amp; \mbw_M \\
+    | &amp; &amp; |
+    \end{bmatrix} \in \reals^{D \times M} \quad \text{with} \quad \mbW^\top \mbW = \mbI
+\end{align*}\]</div>
+<p>be an orthogonal basis for the principal subspace.</p>
+<p>We will <strong>encode</strong> each data point by subtracting the mean and projecting onto the principal subspace to obtain <span class="math notranslate nohighlight">\(\mbz_n = \mbW^\top (\mbx_n - \bar{\mbx})\)</span>.</p>
+<p>Since <span class="math notranslate nohighlight">\(\mbW\)</span> is an orthogonal matrix, all we need to do to <strong>decode</strong> the encoded data point is multiply <span class="math notranslate nohighlight">\(\mbW \mbz_n\)</span> and add back the mean. That gives us,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \hat{\mbx}_n = \mbW \mbz_n + \bar{\mbx} = \mbW \mbW^\top (\mbx_n - \bar{\mbx}) + \bar{\mbx}.
+\end{align*}\]</div>
+<p><strong>Goal:</strong> Find an orthogonal matrix <span class="math notranslate nohighlight">\(\mbW\)</span> that <em>minimizes</em> the mean squared reconstruction error,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW) &amp;= \frac{1}{N} \sum_{n=1}^N \|\mbx_n - \hat{\mbx}_n\|_2^2
+\end{align*}\]</div>
+<p>We can write this in matrix notation instead. Let <span class="math notranslate nohighlight">\(\mbX \in \reals^{N \times D}\)</span> be the <em>centered data matrix</em> with rows <span class="math notranslate nohighlight">\((\mbx_n - \bar{\mbx})^\top\)</span>.
+Then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW) 
+    &amp;= \frac{1}{N} \Tr[(\mbX - \hat{\mbX})^\top (\mbX - \hat{\mbX})] \\
+    &amp;= \frac{1}{N} \Tr[(\mbX - \mbX \mbW \mbW^\top)^\top (\mbX - \mbX \mbW \mbW^\top)] \\
+    &amp;= \frac{1}{N} \Tr[(\mbX(\mbI - \mbW \mbW^\top))^\top (\mbX (\mbI - \mbW \mbW^\top))]\\
+    &amp;= \frac{1}{N} \Tr[(\mbI - \mbW \mbW^\top)^\top \mbX^\top \mbX (\mbI - \mbW \mbW^\top)] \\
+    &amp;= \Tr[(\mbI - \mbW \mbW^\top)^\top \mbS (\mbI - \mbW \mbW^\top)]
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbS = \frac{1}{N} \mbX^\top \mbX\)</span> is the sample covariance matrix.</p>
+<p>Now apply the circular trace property,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW) 
+    &amp;= \Tr[\mbS (\mbI - \mbW \mbW^\top) (\mbI - \mbW \mbW^\top)^\top]
+\end{align*}\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What does <span class="math notranslate nohighlight">\((\mbI - \mbW \mbW^\top) (\mbI - \mbW \mbW^\top)^\top\)</span> equal?
+Note that <span class="math notranslate nohighlight">\(\mbI - \mbW \mbW^\top\)</span> is a projection matrix — it projects a vector onto the <em>nullspace</em> of <span class="math notranslate nohighlight">\(\mbW\)</span>. Applying the projection operator twice doesn’t change the result. Mathematically,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    (\mbI - \mbW \mbW^\top) (\mbI - \mbW \mbW^\top)^\top 
+    = \mbI - 2 \mbW \mbW^\top + \mbW \mbW^\top \mbW \mbW^\top
+    = \mbI - \mbW \mbW^\top
+\end{align*}\]</div>
+<p>where we used the fact that <span class="math notranslate nohighlight">\(\mbW^\top \mbW = \mbI\)</span> since <span class="math notranslate nohighlight">\(\mbW\)</span> is an orthogonal matrix.</p>
+</div>
+<p>Thus, the objective simplifies to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW) 
+    = \Tr[\mbS(\mbI - \mbW \mbW^\top)]
+    = \Tr[\mbS] - \Tr[\mbS \mbW \mbW^\top]
+    = \mathrm{const} - \Tr[\mbW^\top \mbS \mbW].
+\end{align*}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\mbU \mbLambda \mbU^\top\)</span> be the eigendecomposition of <span class="math notranslate nohighlight">\(\mbS\)</span>. (Since it is a covariance matrix, the eigenvectors are orthogonal.)
+Plugging in,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW) 
+    &amp;= \mathrm{const} - \Tr[\mbW^\top \mbU \mbLambda \mbU^\top \mbW] \\
+    &amp;= \mathrm{const} - \Tr\left[\mbW^\top \left( \sum_{d=1}^D \lambda_d \mbu_d \mbu_d^\top \right) \mbW\right] \\
+    &amp;= \mathrm{const} - \sum_{m=1}^M \sum_{d=1}^D \lambda_d \mbw_m^\top \mbu_d \mbu_d^\top \mbw_m \\
+    &amp;= \mathrm{const} - \sum_{m=1}^M \sum_{d=1}^D \lambda_d (\mbw_m^\top \mbu_d)^2
+\end{align*}\]</div>
+<p>We want to minimize <span class="math notranslate nohighlight">\(\cL(\mbW)\)</span> subject to <span class="math notranslate nohighlight">\(\mbW\)</span> being orthogonal. What is the solution? <span class="math notranslate nohighlight">\(\mbW = \mbU_M\)</span>!</p>
+<section id="probabilistic-pca-as-a-stochastic-linear-autoencoder">
+<h3>Probabilistic PCA as a Stochastic Linear Autoencoder<a class="headerlink" href="#probabilistic-pca-as-a-stochastic-linear-autoencoder" title="Link to this heading">#</a></h3>
+<p>The jump from PCA to probabilistic PCA was to treat the scores, <span class="math notranslate nohighlight">\(\mbz_n\)</span>, as latent variables. We gave them a Gaussian prior and assumed a generative model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbz_n &amp;\iid{\sim} \mathrm{N}(\mbzero, \mbI) \\
+    \mbx_n \mid \mbz_n &amp;\sim \mathrm{N}(\mbW \mbz + \mbmu, \sigma^2 \mbI),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbz_n \in \reals^M\)</span> is a latent variable, <span class="math notranslate nohighlight">\(\mbW \in \reals^{D \times M}\)</span> are the weights, <span class="math notranslate nohighlight">\(\mbmu \in \reals^D\)</span> is the bias parameter, and <span class="math notranslate nohighlight">\(\sigma^2 \in \reals_+\)</span> is a variance.</p>
+<p>Given the parameters, we showed that the posterior distribution over latent variables is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbz_n \mid \mbx_n; \mbtheta)
+&amp;=
+\mathrm{N}(\mbz_n \mid (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} \mbW^\top (\mbx_n - \mbmu), \, \sigma^2 (\sigma^2 \mbI + \mbW^\top \mbW)^{-1}),
+\end{align*}\]</div>
+<p>and when <span class="math notranslate nohighlight">\(\sigma^2 \to 0\)</span> and <span class="math notranslate nohighlight">\(\mbW\)</span> are the PCs, this converges to a delta function on the PCA scores.</p>
+<p>To simplify notation, let’s rewrite the posterior as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbz_n \mid \mbx_n; \mbtheta)
+&amp;= \mathrm{N}(\mbz_n \mid \mbE \mbx_n + \mbd, \mbG)
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mbE &amp;= (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} \mbW^\top \\
+\mbd &amp;= - (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} \mbW^\top \mbmu \\
+\mbG &amp;= \sigma^2 (\sigma^2 \mbI + \mbW^\top \mbW)^{-1}.
+\end{align*}\]</div>
+<p>To “autoencode” the data using probabilistic PCA, we could sample <span class="math notranslate nohighlight">\(\mbz_n \sim p(\mbz_n \mid \mbx_n; \mbtheta)\)</span> by mapping <span class="math notranslate nohighlight">\(\mbx_n \mapsto \mbE \mbx_n + \mbd\)</span> and adding Gaussian noise with covariance <span class="math notranslate nohighlight">\(\mbG\)</span>. Then we can generate a new data point <span class="math notranslate nohighlight">\(\hat{\mbx}_n \sim p(\cdot \mid \mbW \mbz_n + \mbmu, \sigma^2 \mbI)\)</span>. Just as PCA could be motivated as finding weights that minimize the reconstruction error, probabilistic PCA can be seen as finding weights that minimize the <em>expected</em> reconstruction error (subject to a little regularization).</p>
+</section>
+<section id="revisiting-em-for-probabilistic-pca">
+<h3>Revisiting EM for Probabilistic PCA<a class="headerlink" href="#revisiting-em-for-probabilistic-pca" title="Link to this heading">#</a></h3>
+<p>Recall that we justified EM by connecting it to variational inference. We showed that EM maximizes the evidence lower bound (ELBO),</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(q, \mbtheta) 
+&amp;= \sum_n \mathbb{E}_{q(\mbz_n)}\left[\log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n) \right] \\
+&amp;= \sum_n \underbrace{\mathbb{E}_{q(\mbz_n)}\left[\log p(\mbx_n \mid \mbz_n; \mbtheta)\right]}_{\text{expected log likelihood}} - \underbrace{\KL{q(\mbz_n)}{p(\mbz_n)}}_{\text{KL to the prior}} \\
+&amp;\leq \sum_n \log p(\mbx_n; \mbtheta)
+\end{align*} \]</div>
+<p>EM can be seen as coordinate ascent on the ELBO:</p>
+<ol class="arabic simple">
+<li><p>The E-step sets <span class="math notranslate nohighlight">\(q\)</span> to the posterior over latent variables, <span class="math notranslate nohighlight">\(q(\mbz_n) = p(\mbz_n \mid \mbx_n; \mbtheta)\)</span> for the current parameters <span class="math notranslate nohighlight">\(\mbtheta\)</span>.</p></li>
+<li><p>The M-step updates the parameters to maximize the expected log joint probability.</p></li>
+</ol>
+<p>In probabilistic PCA, maximizing the expected log likelihood is the same as minimizing the expected reconstruction error. Plugging in the definition of the model and the posterior,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\mathbb{E}_{q(\mbz_n)}\left[\log p(\mbx_n \mid \mbz_n; \mbtheta)\right]
+&amp;= \E_{\mathrm{N}(\mbz_n \mid \mbE \mbx_n + \mbd, \mbG)}\left[\log \mathrm{N}(\mbx_n \mid \mbW \mbz_n + \mbmu, \sigma^2 \mbI) \right] \\
+&amp;= -\frac{1}{2\sigma^2 }\E_{\mathrm{N}(\mbz_n \mid \mbE \mbx_n + \mbd, \mbG)}\left[\|\mbx_n - \mbW \mbz_n - \mbmu \|_2^2 \right] + \log \sigma + c \\
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c\)</span> is an additive constant, and <span class="math notranslate nohighlight">\(\mbE\)</span>, <span class="math notranslate nohighlight">\(\mbd\)</span>, <span class="math notranslate nohighlight">\(\mbG\)</span> are functions of the parameters, as defined above,</p>
+<p>We can’t forget about the KL to the prior though! When we maximize the ELBO, we are essentially finding weights that minimize the expected reconstruction error, while also not deviating too far from the standard normal prior on the latent variables.</p>
+</section>
+</section>
+<section id="id1">
+<h2>Variational Autoencoders<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Variational Autoencodres (VAEs) are “deep” but conceptually simple generative models. Rather than assuming linear relationships, we will allow for <strong>nonlinear</strong> mappings between latent variables and observations.</p>
+<p>To sample a data point <span class="math notranslate nohighlight">\(\mbx_n\)</span>,</p>
+<ol class="arabic simple">
+<li><p>First, sample <strong>latent variables</strong> <span class="math notranslate nohighlight">\(\mbz_n\)</span>,
+\begin{align*}
+\mbz_n &amp;\sim \mathrm{N}(\mbzero, \mbI)
+\end{align*}</p></li>
+<li><p>Then sample the data point <span class="math notranslate nohighlight">\(\mbx_n\)</span> from a conditional distribution with mean,
+\begin{align*}
+\E[\mbx_n \mid \mbz_n] &amp;= g(\mbz_n; \mbtheta),
+\end{align*}
+where <span class="math notranslate nohighlight">\(g: \reals^H \to \reals^D\)</span> is a nonlinear mapping parameterized by <span class="math notranslate nohighlight">\(\mbtheta\)</span>.</p></li>
+</ol>
+<p>We will assume <span class="math notranslate nohighlight">\(g\)</span> is a simple <strong>feedforward neural network</strong> of the form,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    g(\mbz; \mbtheta) &amp;= g_L(g_{L-1}(\cdots g_1(\mbz) \cdots))
+\end{align*}\]</div>
+<p>where each <strong>layer</strong> is a cascade of a linear mapping followed by an element-wise nonlinearity (except for the last layer, perhaps). For example,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    g_\ell(\mbu_{\ell}) = \mathrm{relu}(\mbW_\ell \mbu_{\ell} + \mbb_\ell); \qquad \mathrm{relu}(a) = \max(0, a).
+\end{align*}\]</div>
+<p>The generative parameters consist of the weights and biases, <span class="math notranslate nohighlight">\(\mbtheta = \{\mbW_\ell, \mbb_\ell\}_{\ell=1}^L\)</span>.</p>
+<section id="learning-and-inference">
+<h3>Learning and Inference<a class="headerlink" href="#learning-and-inference" title="Link to this heading">#</a></h3>
+<p>We have two goals. The <strong>learning goal</strong> is to find the parameters that <strong>maximize the marginal likelihood of the data</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbtheta^\star 
+    &amp;= \arg \max_{\mbtheta} p(\mbX; \mbtheta)\\
+    &amp;= \arg \max_{\mbtheta} \prod_{n=1}^N \int p(\mbx_n \mid \mbz_n; \mbtheta) \, p(\mbz_n; \mbtheta) \dif \mbz_n
+\end{align*}\]</div>
+<p>The <strong>inference goal</strong> is to find the <strong>posterior distribution of latent variables</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_n \mid \mbx_n; \mbtheta) 
+    &amp;= \frac{p(\mbx_n \mid \mbz_n; \mbtheta) \, p(\mbz_n; \mbtheta)}{\int p(\mbx_n \mid \mbz_n'; \mbtheta) \, p(\mbz_n'; \mbtheta)\dif \mbz_n'}
+\end{align*}\]</div>
+<p>Both goals require an integral over <span class="math notranslate nohighlight">\(\mbz_n\)</span>, but that is intractable for deep generative models.</p>
+</section>
+<section id="the-evidence-lower-bound-elbo">
+<h3>The Evidence Lower Bound (ELBO)<a class="headerlink" href="#the-evidence-lower-bound-elbo" title="Link to this heading">#</a></h3>
+<p><strong>Idea:</strong> Use the ELBO to get a bound on the marginal probability and maximize that instead.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\log p(\mbX ; \mbtheta) 
+&amp;= \sum_{n=1}^N \log p(\mbx_n; \mbtheta) \\
+&amp;\geq \sum_{n=1}^N \log p(\mbx_n; \mbtheta) - \KL{q(\mbz_n; \mblambda_n)}{p(\mbz_n \mid \mbx_n; \mbtheta)} \\
+&amp;= \sum_{n=1}^N \underbrace{\E_{q(\mbz_n)}\left[ \log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n) \right]}_{\text{&quot;local ELBO&quot;}} \\
+&amp;\triangleq \sum_{n=1}^N \cL_n(\mblambda_n, \mbtheta) \\
+&amp;= \cL(\mblambda, \mbtheta)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mblambda = \{\mblambda_n\}_{n=1}^N\)</span>.</p>
+<p>Here, I’ve written the ELBO as a sum of <em>local ELBOs</em> <span class="math notranslate nohighlight">\(\cL_n\)</span>.</p>
+</section>
+<section id="variational-inference">
+<h3>Variational Inference<a class="headerlink" href="#variational-inference" title="Link to this heading">#</a></h3>
+<p>The ELBO is still maximized (and the bound is tight) when each <span class="math notranslate nohighlight">\(q\)</span> is equal to the true posterior,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    q(\mbz_n; \mblambda_n) &amp;= p(\mbz_n \mid \mbx_n, \mbtheta).
+\end{align*}\]</div>
+<p>Unfortunately, the posterior no longer has a simple, closed form.</p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Suppose <span class="math notranslate nohighlight">\(\mbx_n \sim \mathrm{N}(g(\mbz_n; \mbtheta), \mbI)\)</span>. This deep generative model has a Gaussian prior on <span class="math notranslate nohighlight">\(\mbz_n\)</span> and a Gaussian likelihood for <span class="math notranslate nohighlight">\(\mbx_n\)</span> given <span class="math notranslate nohighlight">\(\mbz_n\)</span>. Why isn’t the posterior Gaussian?</p>
+</div>
+<p>Nevertheless, we can still constrain <span class="math notranslate nohighlight">\(q\)</span> to belong to a simple family. For example, we could constrain it to be Gaussian and seek the best Gaussian approximation to the posterior. This is sometimes called <strong>fixed-form variational inference</strong>. Let,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cQ = \left\{q: q(\mbz; \mblambda) = \mathrm{N}\big(\mbz \mid \mbmu, \diag(\mbsigma^2)\big) \text{ for } \mblambda = (\mbmu, \log \mbsigma^2) \in \reals^{2H} \right\}
+\end{align*}\]</div>
+<p>Then, for fixed parameters <span class="math notranslate nohighlight">\(\mbtheta\)</span>, the best <span class="math notranslate nohighlight">\(q\)</span> in this <strong>variational family</strong> is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    q^\star 
+    &amp;= \arg \min_{q \in \cQ} \KL{q(\mbz_n; \mblambda_n)}{p(\mbz_n \mid \mbx_n; \mbtheta)} \\
+    &amp;= \arg \max_{\mblambda_n \in \reals^{2H}} \cL_n(\mblambda_n, \mbtheta).
+\end{align*}\]</div>
+</section>
+<section id="variational-expectation-maximization-vem">
+<h3>Variational Expectation-Maximization (vEM)<a class="headerlink" href="#variational-expectation-maximization-vem" title="Link to this heading">#</a></h3>
+<p>Now we can introduce a new algorithm.</p>
+<div class="proof algorithm admonition" id="algorithm-0">
+<p class="admonition-title"><span class="caption-number">Algorithm 6 </span> (Variational EM (vEM))</p>
+<section class="algorithm-content" id="proof-content">
+<p>Repeat until either the ELBO or the parameters converges:</p>
+<ol class="arabic simple">
+<li><p><strong>M-step:</strong> Set <span class="math notranslate nohighlight">\(\mbtheta \leftarrow \arg \max_{\mbtheta} \cL(\mblambda, \mbtheta)\)</span></p></li>
+<li><p><strong>E-step:</strong> Set <span class="math notranslate nohighlight">\(\mblambda_n \leftarrow \arg \max_{\mblambda_n \in \mbLambda} \cL_n(\mblambda_n, \mbtheta)\)</span> for <span class="math notranslate nohighlight">\(n=1,\ldots,N\)</span></p></li>
+<li><p>Compute (an estimate of) the ELBO <span class="math notranslate nohighlight">\(\cL(\mblambda, \mbtheta)\)</span>.</p></li>
+</ol>
+</section>
+</div><p>In general, none of these steps will have closed form solutions, so we’ll have to use approximations.</p>
+</section>
+<section id="generic-m-step-with-stochastic-gradient-ascent">
+<h3>Generic M-step with Stochastic Gradient Ascent<a class="headerlink" href="#generic-m-step-with-stochastic-gradient-ascent" title="Link to this heading">#</a></h3>
+<p>For exponential family mixture models, the M-step had a closed form solution. For deep generative models, we need a more general approach.</p>
+<p>If the parameters are unconstrained and the ELBO is differentiable wrt <span class="math notranslate nohighlight">\(\mbtheta\)</span>, we can use stochastic gradient ascent.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbtheta &amp;\leftarrow \mbtheta + \alpha \nabla_{\mbtheta} \cL(q, \mbtheta) \\
+    &amp;= \mbtheta + \alpha \sum_{n=1}^N \mathbb{E}_{q(\mbz_n; \mblambda_n)} \left[ \nabla_{\mbtheta} \log p(\mbx_n, \mbz_n; \mbtheta) \right]
+\end{align*}\]</div>
+<p>Note that the expected gradient wrt <span class="math notranslate nohighlight">\(\mbtheta\)</span> can be computed using ordinary Monte Carlo — nothing fancy needed!</p>
+</section>
+<section id="the-variational-e-step">
+<h3>The Variational E-step<a class="headerlink" href="#the-variational-e-step" title="Link to this heading">#</a></h3>
+<p>Assume <span class="math notranslate nohighlight">\(\cQ\)</span> is the family of Gaussian distributions with diagonal covariance:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cQ = \left\{q: q(\mbz; \mblambda) = \mathrm{N}\big(\mbz \mid \mbmu, \diag(\mbsigma^2)\big) \text{ for } \mblambda = (\mbmu, \log \mbsigma^2) \in \reals^{2H} \right\}
+\end{align*}\]</div>
+<p>This family is indexed by <strong>variational parameters</strong> <span class="math notranslate nohighlight">\(\mblambda_n = (\mbmu_n, \log \mbsigma_n^2) \in \reals^{2H}\)</span>.</p>
+<p>To perform SGD, we need an unbiased estimate of the gradient of the local ELBO, but</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\nabla_{\mblambda_n} \cL_n(\mblambda_n, \mbtheta) 
+&amp;= \nabla_{\mblambda_n} \E_{q(\mbz_n; \mblambda_n)} \left[ \log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n) \right] \\
+&amp;\textcolor{red}{\neq} \;  \E_{q(\mbz_n; \mblambda_n)} \left[ \nabla_{\mblambda_n} \left(\log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n)\right) \right].
+\end{align*}\]</div>
+</section>
+<section id="reparameterization-trick">
+<h3>Reparameterization Trick<a class="headerlink" href="#reparameterization-trick" title="Link to this heading">#</a></h3>
+<p>One way around this problem is to use the <strong>reparameterization trick</strong>, aka the <strong>pathwise gradient estimator</strong>. Note that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbz_n \sim q(\mbz_n; \mblambda_n) \quad \iff \quad
+    \mbz_n &amp;= r(\mblambda_n, \mbepsilon), \quad \mbepsilon \sim \mathrm{N}(\mbzero, \mbI) 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(r(\mblambda_n, \mbepsilon) = \mbmu_n + \mbsigma_n \mbepsilon\)</span> is a reparameterization of <span class="math notranslate nohighlight">\(\mbz_n\)</span> in terms of parameters <span class="math notranslate nohighlight">\(\mblambda_n\)</span> and noise <span class="math notranslate nohighlight">\(\mbepsilon\)</span>.</p>
+<p>We can use the <strong>law of the unconscious statistician</strong> to rewrite the expectations as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \E_{q(\mbz_n; \mblambda_n)} \left[h(\mbx_n, \mbz_n, \mbtheta, \mblambda_n) \right]
+    &amp;= \E_{\mbepsilon \sim \mathrm{N}(\mbzero, \mbI)} \left[h(\mbx_n, r(\mblambda_n, \mbepsilon), \mbtheta, \mblambda_n) \right]
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+h(\mbx_n, \mbz_n, \mbtheta, \mblambda_n) = \log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n).
+\end{align*} \]</div>
+<p>The distribution that the expectation is taken under no longer depends on the parameters <span class="math notranslate nohighlight">\(\mblambda_n\)</span>, so we can simply take the gradient inside the expectation,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \nabla_{\mblambda} \E_{q(\mbz_n; \mblambda_n)} \left[h(\mbx_n, \mbz_n, \mbtheta, \mblambda_n) \right]
+    &amp;=  \E_{\mbepsilon \sim \mathrm{N}(\mbzero, \mbI)} \left[\nabla_{\mblambda_n} h(\mbx_n, r(\mblambda_n, \mbepsilon), \mbtheta, \mblambda_n) \right]
+\end{align*}\]</div>
+<p>Now we can use Monte Carlo to obtain an unbiased estimate of the final expectation!</p>
+<!-- \begin{align*}
+    \widehat{\nabla}_{\mblambda} \E_{q(\mbtheta; \mblambda)} \left[h(\mbtheta, \mblambda) \right]
+    &= \frac{1}{M} \sum_{m=1}^M \nabla_{\mblambda} h(r(\mblambda, \mbepsilon_m), \mblambda); & \epsilon_m \iid{\sim} \mathrm{N}(\mbzero, \mbI)
+\end{align*} -->
+<!-- \item Last lecture we introduced the score-function and pathwise gradient estimators to tackle this problem. For example,
+\begin{align*}
+\nabla_{\mblambda_n} \cL_n(\mblambda_n, \mbtheta) 
+&= \nabla_{\mblambda_n} \E_{q(\mbz_n; \mblambda_n)} \left[ \log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n) \right] \\
+&= \E_{\mbepsilon_n \sim \mathrm{N}(\mbzero, \mbI)} \left[ \nabla_{\mblambda_n} \left(\log p(\mbx_n, r(\mblambda_n, \mbepsilon_n); \mbtheta) - \log q(r(\mblambda_n, \mbepsilon_n); \mblambda_n)\right) \right]
+\end{align*}
+where $r(\mblambda_n, \mbepsilon_n) = \mbmu_n + \mbsigma_n \mbepsilon_n$. -->
+</section>
+<section id="working-with-mini-batches-of-data">
+<h3>Working with mini-batches of data<a class="headerlink" href="#working-with-mini-batches-of-data" title="Link to this heading">#</a></h3>
+<p>We can view the ELBO as an expectation over data indices,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mblambda, \mbtheta) 
+    &amp;= \sum_{n=1}^N \cL_n(\mblambda_n, \mbtheta) \\
+    &amp;= N \, \E_{n \sim \mathrm{Unif}([N])}[\cL_n(\mblambda_n, \mbtheta)].
+\end{align*}\]</div>
+<p>We can use Monte Carlo to approximate the expectation (and its gradient) by drawing <strong>mini-batches</strong> of data points at random.</p>
+<p>In practice, we often cycle through mini-batches of data points deterministically. Each pass over the whole dataset is called an <strong>epoch.</strong></p>
+</section>
+<section id="algorithm">
+<h3>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading">#</a></h3>
+<p>Now we can add some detail to our variational expectation maximization algorithm.</p>
+<div class="proof algorithm admonition" id="algorithm-1">
+<p class="admonition-title"><span class="caption-number">Algorithm 7 </span> (Variational EM (with the reparameterization trick))</p>
+<section class="algorithm-content" id="proof-content">
+<p>For epoch <span class="math notranslate nohighlight">\(i=1,\ldots,\infty\)</span>:</p>
+<p>For <span class="math notranslate nohighlight">\(n=1,\ldots,N\)</span>:</p>
+<ol class="arabic">
+<li><p>Sample <span class="math notranslate nohighlight">\(\epsilon_n^{(m)} \iid{\sim} \mathrm{N}(\mbzero, \mbI)\)</span> for <span class="math notranslate nohighlight">\(m=1,\ldots,M\)</span>.</p></li>
+<li><p><strong>M-Step</strong>:</p>
+<p>a. Estimate</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\nabla}_{\mbtheta} \cL_n(\mblambda_n, \mbtheta)
+&amp;= 
+\frac{1}{M} \sum_{m=1}^M \left[ \nabla_{\mbtheta} \log p(\mbx_n, r(\mblambda_n, \mbepsilon_n^{(m)}); \mbtheta) \right]
+\end{align*}\]</div>
+<p>b. Set <span class="math notranslate nohighlight">\(\mbtheta \leftarrow \mbtheta + \alpha_i N \hat{\nabla}_{\mbtheta} \cL_n(\mblambda_n, \mbtheta)\)</span></p>
+</li>
+<li><p><strong>E-step:</strong></p>
+<p>a. Estimate</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\nabla}_{\mblambda} \cL_n(\mblambda_n, \mbtheta) 
+&amp;= \frac{1}{M} \sum_{m=1}^M \nabla_{\mblambda} \left[\log p(\mbx_n, r(\mblambda_n, \mbepsilon_n^{(m)}); \mbtheta) - \log q(r(\mblambda_n, \mbepsilon_n^{(m)}), \mblambda_n) \right]
+\end{align*} \]</div>
+<p>b. Set <span class="math notranslate nohighlight">\(\mblambda_n \leftarrow \mblambda_n + \alpha_i \hat{\nabla}_{\mblambda} \cL_n(\mblambda_n, \mbtheta)\)</span>.</p>
+</li>
+<li><p>Estimate the ELBO</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\hat{\cL}(\mblambda, \mbtheta) 
+&amp;= \frac{N}{M} \sum_{m=1}^M \log p(\mbx_n, r(\mblambda_n, \mbepsilon_n^{(m)}); \mbtheta) - \log q(r(\mblambda_n, \mbepsilon_n^{(m)}); \mblambda_n)
+\end{align*}\]</div>
+</li>
+<li><p>Decay step size <span class="math notranslate nohighlight">\(\alpha_i\)</span> according to schedule.</p></li>
+</ol>
+</section>
+</div></section>
+<section id="amortized-inference">
+<h3>Amortized Inference<a class="headerlink" href="#amortized-inference" title="Link to this heading">#</a></h3>
+<p>Note that vEM involves optimizing separate variational parameters <span class="math notranslate nohighlight">\(\mblambda_n\)</span> for each data point. For large datasets where we are optimizing using mini-batches of data points, this leads to a strange asymmetry: we update the generative model parameters <span class="math notranslate nohighlight">\(\mbtheta\)</span> every mini-batch, but we only update the variational parameters for the <span class="math notranslate nohighlight">\(n\)</span>-th data point once per epoch. Is there any way to share information across data points?</p>
+<p>Note that the optimal variational parameters are just a function of the data point and the model parameters,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mblambda_n^\star &amp;= \arg \min_{\mblambda_n} \KL{q(\mbz_n; \mblambda_n)}{p(\mbz_n \mid \mbx_n, \mbtheta)} 
+    \triangleq f^\star(\mbx_n, \mbtheta).
+\end{align*}\]</div>
+<p>for some implicit and generally nonlinear function <span class="math notranslate nohighlight">\(f^\star\)</span>.</p>
+<p>VAEs learn an approximation to <span class="math notranslate nohighlight">\(f^\star(\mbx_n, \mbtheta)\)</span> with an <strong>inference network</strong>, a.k.a. <strong>recognition network</strong> or <strong>encoder</strong>.</p>
+<p>The inference network is (yet another) neural network that takes in a data point <span class="math notranslate nohighlight">\(\mbx_n\)</span> and outputs variational parameters <span class="math notranslate nohighlight">\(\mblambda_n\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mblambda_n &amp; \approx f(\mbx_n, \mbphi),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbphi\)</span> are the weights of the network.</p>
+<p>The advantage is that the inference network shares information across data points — it <em>amortizes</em> the cost of inference, hence the name. The disadvantage is the output will not minimize the KL divergence. However, in practice we might tolerate a worse variational posterior and a weaker lower bound if it leads to faster optimization of the ELBO overall.</p>
+</section>
+<section id="putting-it-all-together">
+<h3>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Link to this heading">#</a></h3>
+<p>Logically, I find it helpful to distinguish between the E and M steps, but with recognition networks and stochastic gradient ascent, the line is blurred.</p>
+<p>The final algorithm looks like this.</p>
+<div class="proof algorithm admonition" id="algorithm-2">
+<p class="admonition-title"><span class="caption-number">Algorithm 8 </span> (Variational EM (with amortized inference))</p>
+<section class="algorithm-content" id="proof-content">
+<p>Repeat until either the ELBO or the parameters converges:</p>
+<ol class="arabic simple">
+<li><p>Sample data point <span class="math notranslate nohighlight">\(n \sim \mathrm{Unif}(1, \ldots, N)\)</span>. [Or a minibatch of data points.]</p></li>
+<li><p>Estimate the local ELBO <span class="math notranslate nohighlight">\(\cL_n(\mbphi, \mbtheta)\)</span> with Monte Carlo. [Note: it is a function of <span class="math notranslate nohighlight">\(\mbphi\)</span> instead of <span class="math notranslate nohighlight">\(\mblambda_n\)</span>.]</p></li>
+<li><p>Compute unbiased Monte Carlo estimates of the gradients <span class="math notranslate nohighlight">\(\widehat{\nabla}_{\mbtheta} \cL_n(\mbphi, \mbtheta)\)</span> and <span class="math notranslate nohighlight">\(\widehat{\nabla}_{\mbphi} \cL_n(\mbphi, \mbtheta)\)</span>.
+[The latter requires the reparameterization trick.]</p></li>
+<li><p>Set
+\begin{align*}
+\mbtheta &amp;\leftarrow \mbtheta + \alpha_i \widehat{\nabla}<em>{\mbtheta} \cL_n(\mbphi, \mbtheta) \
+\mbphi &amp;\leftarrow \mbphi + \alpha_i \widehat{\nabla}</em>{\mbphi} \cL_n(\mbphi, \mbtheta)
+\end{align*}
+with step size <span class="math notranslate nohighlight">\(\alpha_i\)</span> decreasing over iterations <span class="math notranslate nohighlight">\(i\)</span> according to a valid schedule.</p></li>
+</ol>
+</section>
+</div></section>
+</section>
+<section id="demo-neural-networks-and-vaes">
+<h2>Demo: Neural Networks and VAEs<a class="headerlink" href="#demo-neural-networks-and-vaes" title="Link to this heading">#</a></h2>
+<p>In this demo, we will explore automatic differentiation, neural networks, and amortized variational inference. PyTorch makes it easy to construct such networks and train them with backpropagation. We’ll give you a few examples to help get you started.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions.kl</span><span class="w"> </span><span class="kn">import</span> <span class="n">kl_divergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">305</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s2">&quot;notebook&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="part-1-regression-with-deep-neural-networks">
+<h3>Part 1: Regression with Deep Neural Networks<a class="headerlink" href="#part-1-regression-with-deep-neural-networks" title="Link to this heading">#</a></h3>
+<p>We’ll start off with a simple regressoin problem: train a neural network to approximate the function <span class="math notranslate nohighlight">\(g(z) = \sin(z)\)</span>. We’ll give the network lots of noisy observations <span class="math notranslate nohighlight">\((z_n, x_n)\)</span> where <span class="math notranslate nohighlight">\(x_n \sim \mathcal{N}(g(z_n), \sigma^2)\)</span>. We’ll use a simple feedforward network and train it with SGD.</p>
+<section id="simulate-data">
+<h4>Simulate data<a class="headerlink" href="#simulate-data" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct the dataset</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">zs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+<span class="n">z_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="s1">&#39;k.&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">z_grid</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x16c25ac50&gt;]
+</pre></div>
+</div>
+<img alt="../_images/95843a0e49708a9a58147c4a1266805d0c3e79ce81f9e4d2de32655a7e0a8c63.png" src="../_images/95843a0e49708a9a58147c4a1266805d0c3e79ce81f9e4d2de32655a7e0a8c63.png" />
+</div>
+</div>
+</section>
+<section id="construct-a-feedforward-neural-network">
+<h4>Construct a feedforward neural network<a class="headerlink" href="#construct-a-feedforward-neural-network" title="Link to this heading">#</a></h4>
+<p>This code implements a simple feedforward neural network class that inherits from <code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>. Modules implement a <code class="docutils literal notranslate"><span class="pre">forward</span></code> function that maps inputs to outputs. The class variables (<code class="docutils literal notranslate"><span class="pre">self.fc1</span></code> and <code class="docutils literal notranslate"><span class="pre">self.fc2</span></code> are Modules themselves, each with their own parameters. When it comes to training the network, we can use the <code class="docutils literal notranslate"><span class="pre">parameters()</span></code> function to get the list of trainable parameters - this function introspects on each of the class variables and extracts the parameters associated with each layer.</p>
+<p><em>Note:</em> for simple networks like this one, PyTorch offers a <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html"><code class="docutils literal notranslate"><span class="pre">nn.Sequential</span></code></a> object that saves you a few lines of code. Here we’ve built the module from scratch to show the more general approach. We’ll extend this module in Part 2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A simple feedforward neural network</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_size</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        
+        <span class="c1"># Construct linear &quot;fully connected&quot; (fc) layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">layer_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">layer_size</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Implements the forward pass of the network.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            z: torch.tensor of shape (N,)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            preds: torch.tensor of shape (N,) containing the predictions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Note we have to unsqueeze the inputs to make them explicitly 1D</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="c1"># Note we have to squeeze the outputs to make them explicitly 0D</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preds</span>
+
+<span class="c1"># Construct an instance of the model. It will be given with random weights </span>
+<span class="c1"># per PyTorch&#39;s default initialization strategy.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SimpleNet</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-the-predictions-of-the-randomly-initialized-model">
+<h4>Plot the predictions of the randomly initialized model<a class="headerlink" href="#plot-the-predictions-of-the-randomly-initialized-model" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">z_grid</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;true $g(z)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">z_grid</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;model $\hat</span><span class="si">{g}</span><span class="s2">(z)$&quot;</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$z$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$g(z)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b252eb7848dc13d4b8007e5b257863931e70217c29f784767964b73ad3dc0632.png" src="../_images/b252eb7848dc13d4b8007e5b257863931e70217c29f784767964b73ad3dc0632.png" />
+</div>
+</div>
+</section>
+<section id="optimize-the-model-parameters-to-maximize-the-likelihood">
+<h4>Optimize the model parameters to maximize the likelihood<a class="headerlink" href="#optimize-the-model-parameters-to-maximize-the-likelihood" title="Link to this heading">#</a></h4>
+<p>The log likelihood in this model is,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\log p(\mathbf{x} \mid \mathbf{z}, \theta, \sigma^2) 
+&amp;= \sum_{n=1}^N \log \mathcal{N}(x_n \mid g(z_n; \theta), \sigma^2) \\
+&amp;= -\frac{1}{2\sigma^2} \sum_{n=1}^N \| x_n - g(z_n; \theta) \|_2^2 + c
+\end{align*}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(g: \mathbb{R} \mapsto \mathbb{R}\)</span> is a neural network with parameters <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<p>Maximizing the log likelihood is equivalent to <strong>minimizing the mean squared error</strong>,</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align*}
+\mathcal{L}(\theta) &amp;= \frac{1}{N} \sum_{n=1}^N \| x_n - g(z_n; \theta) \|_2^2 
+\end{align*}
+\]</div>
+<p>The code below minimizes this objective using Adam, a stochastic optimization algorithm.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Next we define a loss function to minimize. In our case, we want this </span>
+<span class="c1"># to be related to the log likelihood of ys given xs, which is proportional</span>
+<span class="c1"># to the mean squared error of the predictions.</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+
+<span class="c1"># Use the optim package to define an Optimizer that will update the weights of</span>
+<span class="c1"># the model for us. Here we will use Adam; the optim package contains many other</span>
+<span class="c1"># optimization algorithms. The first argument to the Adam constructor tells the</span>
+<span class="c1"># optimizer which Tensors it should update.</span>
+<span class="n">num_iters</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iters</span><span class="p">):</span>
+    <span class="c1"># Forward pass: compute predicted y by passing x to the model.</span>
+    <span class="n">x_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+
+    <span class="c1"># Compute and print loss.</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">x_pred</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">99</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iter&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+    <span class="c1"># Before the backward pass, use the optimizer object to zero all of the</span>
+    <span class="c1"># gradients for the variables it will update (which are the learnable</span>
+    <span class="c1"># weights of the model). This is because by default, gradients are</span>
+    <span class="c1"># accumulated in buffers( i.e, not overwritten) whenever .backward()</span>
+    <span class="c1"># is called. Checkout docs of torch.autograd.backward for more details.</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+    <span class="c1"># Backward pass: compute gradient of the loss with respect to model parameters</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+    <span class="c1"># Calling the step function on an Optimizer makes an update to its parameters</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iter 99 :  0.11238071322441101
+Iter 199 :  0.03940815478563309
+Iter 299 :  0.024931667372584343
+Iter 399 :  0.019917594268918037
+Iter 499 :  0.016875959932804108
+Iter 599 :  0.014812312088906765
+Iter 699 :  0.013398522511124611
+Iter 799 :  0.012412039563059807
+Iter 899 :  0.011727896519005299
+Iter 999 :  0.011278469115495682
+Iter 1099 :  0.010972524993121624
+Iter 1199 :  0.010763496160507202
+Iter 1299 :  0.01062475610524416
+Iter 1399 :  0.010529364459216595
+Iter 1499 :  0.010458740405738354
+Iter 1599 :  0.010412151925265789
+Iter 1699 :  0.010380692780017853
+Iter 1799 :  0.010358535684645176
+Iter 1899 :  0.010342140682041645
+Iter 1999 :  0.01033094059675932
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-the-trained-model-s-predictions">
+<h4>Plot the trained model’s predictions<a class="headerlink" href="#plot-the-trained-model-s-predictions" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">x_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">z_grid</span><span class="p">)</span>
+
+<span class="c1"># We have to &quot;detach&quot; the predictions from the computation graph</span>
+<span class="c1"># before we can plot them.</span>
+<span class="n">x_pred</span> <span class="o">=</span> <span class="n">x_pred</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">z_grid</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;true $g(z)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="n">x_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;model $\hat</span><span class="si">{g}</span><span class="s2">(z)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$z$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$g(z)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/afab527d8cb23fc3ebc8905345d366f522e8099e631ff6199092cab5066d0ccb.png" src="../_images/afab527d8cb23fc3ebc8905345d366f522e8099e631ff6199092cab5066d0ccb.png" />
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Exercises</p>
+<ol class="arabic simple">
+<li><p>Add another layer to the SimpleNet</p></li>
+<li><p>Try predicting beyond the range of the training data. What do the predictions look like?</p></li>
+<li><p>Swap out the rectified linear (relu) activation with another nonlinearity, like the sigmoid or the GELU activation.</p></li>
+<li><p>Try different optimizers (SGD with and without momentum, RMSProp)</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="part-2-variational-autoencoders">
+<h3>Part 2: Variational Autoencoders<a class="headerlink" href="#part-2-variational-autoencoders" title="Link to this heading">#</a></h3>
+<p>In this section, we will train a variational autoencoder for a simple synthetic data. This is essentially a generalization of the sinusoidal regression problem from above. Here, the data is generated from,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+z_n &amp;\sim \mathcal{N}(0, 1) \\
+x_n &amp;\sim \mathcal{N}(g(z_n), \sigma^2 I) 
+\end{align*}
+\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+g(z) = \begin{bmatrix} \cos(z) \\ \sin(z) \end{bmatrix}
+\end{align*}
+\end{split}\]</div>
+<p>Thus, the data is essentially lives near a 1D nonlinear manifold (here, a circle).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct the dataset</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">20000</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">zs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">zs</span><span class="p">),</span> 
+                         <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">zs</span><span class="p">)])</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">z_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;autumn&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$z$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x32de47280&gt;
+</pre></div>
+</div>
+<img alt="../_images/b453b4ad21305493bc920132acb0363c328aa87599c87fd39f92b5ad5478f43e.png" src="../_images/b453b4ad21305493bc920132acb0363c328aa87599c87fd39f92b5ad5478f43e.png" />
+</div>
+</div>
+<section id="make-a-simple-data-loader-for-this-dataset">
+<h4>Make a simple data loader for this dataset<a class="headerlink" href="#make-a-simple-data-loader-for-this-dataset" title="Link to this heading">#</a></h4>
+<p>Data loaders are convenience wrappers for iterating over minibatches of data points.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">xs</span><span class="p">[:(</span><span class="mi">3</span><span class="o">*</span><span class="n">N</span><span class="o">//</span><span class="mi">4</span><span class="p">)],</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">xs</span><span class="p">[(</span><span class="mi">3</span><span class="o">*</span><span class="n">N</span><span class="o">//</span><span class="mi">4</span><span class="p">):],</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="part-2a-decoder-network">
+<h4>Part 2a: Decoder Network<a class="headerlink" href="#part-2a-decoder-network" title="Link to this heading">#</a></h4>
+<p>Implement a decoder that maps <span class="math notranslate nohighlight">\(\mathbb{R} ↦ \mathbb{R}^2\)</span> with a 2 layer decoder.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define decoder architecture</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Decoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Neural network defining p(x | z) &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">hidden_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">noise_scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_dim</span> <span class="o">=</span> <span class="n">data_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_scale</span> <span class="o">=</span> <span class="n">noise_scale</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">hidden_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hidden_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data_dim</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Computes means of p(x | z).</span>
+<span class="sd">        Args:</span>
+<span class="sd">            z: (N, latent_dim) torch.tensor</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Normal distribution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+        <span class="n">h2</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">h1</span><span class="p">))</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Normal</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_scale</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-2b-encoder-network">
+<h4>Problem 2b: Encoder Network<a class="headerlink" href="#problem-2b-encoder-network" title="Link to this heading">#</a></h4>
+<p>We will estimate the parameters of the generative model by maximizing the Evidence Lower Bound (ELBO). As the exact posterior <span class="math notranslate nohighlight">\(p(\mathbf{z} \mid \mathbf{x})\)</span> is unknown, we will use an approximate, amortized posterior <span class="math notranslate nohighlight">\(q_{\boldsymbol{\phi}}(\mathbf{z} \mid \mathbf{x}) = \mathcal{N}(\mathbf{z} \mid \mu_{\boldsymbol{\phi}}(\mathbf{x}), \text{diag}(\sigma^2_{\boldsymbol{\phi}}(\mathbf{x})))\)</span>. We let <span class="math notranslate nohighlight">\(\left(\mu_{\boldsymbol{\phi}}(\mathbf{x}), \log \sigma^2_{\boldsymbol{\phi}}(\mathbf{x}) \right) = E_{\boldsymbol{\phi}}(\mathbf{x})\)</span> where <span class="math notranslate nohighlight">\(E_{\boldsymbol{\phi}}: \mathbb{R}^{2} \to \mathbb{R}^1 \times \mathbb{R}^1\)</span> is a neural network with parameters <span class="math notranslate nohighlight">\(\boldsymbol{\phi}\)</span>.</p>
+<p>As above, we parametrize <span class="math notranslate nohighlight">\(E_{\boldsymbol{\phi}}\)</span> as a neural network with two layers of hidden units and ReLU activations. We use 20 hidden units in the first layer and 20 in the second. Then we let <span class="math notranslate nohighlight">\(\mu_{\boldsymbol{\phi}}\)</span> and <span class="math notranslate nohighlight">\(\log \sigma^2_{\boldsymbol{\phi}}\)</span> be affine functions of the hidden layer activations. Implement the encoder <span class="math notranslate nohighlight">\(E_{\boldsymbol{\phi}}\)</span> in the code below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define encoder architecture</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Encoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Neural network defining q(z | x). &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">hidden_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latent_dim</span> <span class="o">=</span> <span class="n">latent_dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">data_dim</span><span class="p">,</span> <span class="n">hidden_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hidden_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc31</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">latent_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc32</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">latent_dim</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Computes normal distribution q(z | x)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: (N, data_dim) torch.tensor</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Normal distribution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">h2</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">h1</span><span class="p">))</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc31</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span>
+        <span class="n">log_sigmasqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc32</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span>
+        <span class="n">sigmas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">log_sigmasqs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Normal</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">sigmas</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="problem-2c-implement-the-elbo">
+<h4>Problem 2c: Implement the ELBO<a class="headerlink" href="#problem-2c-implement-the-elbo" title="Link to this heading">#</a></h4>
+<p>In class we derived the local ELBO and showed that it can be written as the <strong>expected log likelihood</strong> minus the <strong>KL divergence to the prior</strong>. With the reparameterization trick for a Gaussian variational posterior, this is:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\mathcal{L}_n(\boldsymbol{\theta}, \boldsymbol{\phi}) 
+&amp;= \mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{z}_n \mid \mathbf{x}_n)} \left[ \log p_{\boldsymbol{\theta}}(\mathbf{x}_n \mid \mathbf{z}_n) \right] - \text{KL}\left( q_{\boldsymbol{\phi}}(\mathbf{z}_n \mid \mathbf{x}_n) \mid\mid p(\mathbf{z}_n)\right) \\
+&amp;= \mathbb{E}_{\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})} \left[ \log p_{\boldsymbol{\theta}}(\mathbf{x}_n \mid \mu_{\boldsymbol{\phi}}(\mathbf{x}_n) + \boldsymbol{\epsilon} \odot \sigma_{\boldsymbol{\phi}}(\mathbf{x}_n)) \right] - \text{KL}\left( q_{\boldsymbol{\phi}}(\mathbf{z}_n \mid \mathbf{x}_n) \mid\mid p(\mathbf{z}_n)\right)
+\end{align*}
+\end{split}\]</div>
+<p>(Though we have written the local ELBO as a function of <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{\phi}\)</span> only, note that it is of course also a function of the data point <span class="math notranslate nohighlight">\(\mathbf{x}_n\)</span>.</p>
+<p>Implement the estimator of the ELBO <span class="math notranslate nohighlight">\(\hat{\mathcal{L}}(\boldsymbol{\theta}, \boldsymbol{\phi})\)</span>. We assume sampling of the data point (or minibatch of data points) <code class="docutils literal notranslate"><span class="pre">x</span></code> is done outside of the function, but you must sample the noise variables <span class="math notranslate nohighlight">\(\boldsymbol{\epsilon}\)</span> within the <code class="docutils literal notranslate"><span class="pre">elbo</span></code> function. You should use the <code class="docutils literal notranslate"><span class="pre">kl_divergence</span></code> function imported above to analytically compute the KL divergence between the Gaussian distributions <span class="math notranslate nohighlight">\(q_{\boldsymbol{\phi}}(\mathbf{z} \mid \mathbf{x})\)</span> and <span class="math notranslate nohighlight">\(p(\mathbf{z})\)</span>. Make sure you use <code class="docutils literal notranslate"><span class="pre">rsample</span></code> on a <code class="docutils literal notranslate"><span class="pre">Distribution</span></code> object to use the reparametrization trick and not <code class="docutils literal notranslate"><span class="pre">sample</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">elbo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes a stochastic estimate of the rescaled evidence lower bound</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: (N, data_dim) torch.tensor</span>
+<span class="sd">        encoder: an Encoder</span>
+<span class="sd">        decoder: a Decoder</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        elbo: a (,) torch.tensor containing the estimate of the ELBO</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_z</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">q_z</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+    <span class="c1"># eps = Normal(0, 1).sample()</span>
+    <span class="c1"># z = q_z.mean + q_z.scale * eps</span>
+    
+    <span class="n">z</span> <span class="o">=</span> <span class="n">q_z</span><span class="o">.</span><span class="n">rsample</span><span class="p">()</span>
+    <span class="n">elbo</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">elbo</span> <span class="o">-=</span> <span class="n">kl_divergence</span><span class="p">(</span><span class="n">q_z</span><span class="p">,</span> <span class="n">p_z</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">elbo</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="implement-the-training-loop-given">
+<h4>Implement the Training Loop [given]<a class="headerlink" href="#implement-the-training-loop-given" title="Link to this heading">#</a></h4>
+<p>Using our <code class="docutils literal notranslate"><span class="pre">Encoder</span></code> and <code class="docutils literal notranslate"><span class="pre">Decoder</span></code> definitions, as well as the <code class="docutils literal notranslate"><span class="pre">elbo</span></code> function, we have provided training code below. This code uses the <a class="reference external" href="https://arxiv.org/abs/1412.6980">Adam</a> optimizer, an optimization algorithm which uses the history of past gradients to rescale gradients before applying an update.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encoder</span> <span class="o">=</span> <span class="n">Encoder</span><span class="p">(</span><span class="n">data_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">latent_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">Decoder</span><span class="p">(</span><span class="n">data_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">latent_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">decoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">()),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">)</span>
+
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">train_elbos</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">test_elbos</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">decoder</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">train_elbo</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">):</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">elbo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span><span class="p">)</span>  
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">train_elbo</span> <span class="o">-=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            
+    <span class="n">encoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">decoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">test_elbo</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">test_dataloader</span><span class="p">:</span>
+            <span class="n">test_elbo</span> <span class="o">+=</span> <span class="n">elbo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            
+    <span class="n">train_elbo</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_dataloader</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">test_elbo</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_dataloader</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">train_elbos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_elbo</span><span class="p">)</span>
+    <span class="n">test_elbos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test_elbo</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;====&gt; Epoch: </span><span class="si">{}</span><span class="s1"> Average ELBO: </span><span class="si">{:.4f}</span><span class="s1"> Test ELBO: </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">epoch</span><span class="p">,</span> <span class="n">train_elbo</span><span class="p">,</span> <span class="n">test_elbo</span><span class="p">))</span>
+
+<span class="n">train_elbos</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">train_elbos</span><span class="p">)</span>
+<span class="n">test_elbos</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">test_elbos</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>====&gt; Epoch: 0 Average ELBO: -42.8449 Test ELBO: -41.2845
+====&gt; Epoch: 10 Average ELBO: -30.4301 Test ELBO: -29.8750
+====&gt; Epoch: 20 Average ELBO: -26.8994 Test ELBO: -25.7263
+====&gt; Epoch: 30 Average ELBO: -11.3469 Test ELBO: -11.1683
+====&gt; Epoch: 40 Average ELBO: -6.6239 Test ELBO: -6.5473
+====&gt; Epoch: 50 Average ELBO: -3.6565 Test ELBO: -3.7647
+====&gt; Epoch: 60 Average ELBO: -2.6703 Test ELBO: -2.9213
+====&gt; Epoch: 70 Average ELBO: -2.2387 Test ELBO: -2.5268
+====&gt; Epoch: 80 Average ELBO: -1.9867 Test ELBO: -2.2507
+====&gt; Epoch: 90 Average ELBO: -1.8371 Test ELBO: -2.0181
+====&gt; Epoch: 100 Average ELBO: -1.7141 Test ELBO: -1.9378
+====&gt; Epoch: 110 Average ELBO: -1.5808 Test ELBO: -1.7112
+====&gt; Epoch: 120 Average ELBO: -1.5208 Test ELBO: -1.7370
+====&gt; Epoch: 130 Average ELBO: -1.4237 Test ELBO: -1.6050
+====&gt; Epoch: 140 Average ELBO: -1.3649 Test ELBO: -1.5087
+====&gt; Epoch: 150 Average ELBO: -1.3454 Test ELBO: -1.5176
+====&gt; Epoch: 160 Average ELBO: -1.2842 Test ELBO: -1.4928
+====&gt; Epoch: 170 Average ELBO: -1.2382 Test ELBO: -1.4160
+====&gt; Epoch: 180 Average ELBO: -1.2116 Test ELBO: -1.4074
+====&gt; Epoch: 190 Average ELBO: -1.1810 Test ELBO: -1.3420
+====&gt; Epoch: 200 Average ELBO: -1.1268 Test ELBO: -1.3289
+====&gt; Epoch: 210 Average ELBO: -1.1199 Test ELBO: -1.3182
+====&gt; Epoch: 220 Average ELBO: -1.0747 Test ELBO: -1.2763
+====&gt; Epoch: 230 Average ELBO: -1.0782 Test ELBO: -1.2347
+====&gt; Epoch: 240 Average ELBO: -1.0527 Test ELBO: -1.2655
+====&gt; Epoch: 250 Average ELBO: -1.0462 Test ELBO: -1.1974
+====&gt; Epoch: 260 Average ELBO: -1.0356 Test ELBO: -1.2041
+====&gt; Epoch: 270 Average ELBO: -1.0172 Test ELBO: -1.1689
+====&gt; Epoch: 280 Average ELBO: -1.0107 Test ELBO: -1.1224
+====&gt; Epoch: 290 Average ELBO: -0.9585 Test ELBO: -1.1103
+====&gt; Epoch: 300 Average ELBO: -0.9469 Test ELBO: -1.1519
+====&gt; Epoch: 310 Average ELBO: -0.9297 Test ELBO: -1.1296
+====&gt; Epoch: 320 Average ELBO: -0.9183 Test ELBO: -1.0787
+====&gt; Epoch: 330 Average ELBO: -0.9006 Test ELBO: -1.1016
+====&gt; Epoch: 340 Average ELBO: -0.8985 Test ELBO: -1.0498
+====&gt; Epoch: 350 Average ELBO: -0.8776 Test ELBO: -1.0404
+====&gt; Epoch: 360 Average ELBO: -0.8778 Test ELBO: -1.0657
+====&gt; Epoch: 370 Average ELBO: -0.8442 Test ELBO: -1.0083
+====&gt; Epoch: 380 Average ELBO: -0.8602 Test ELBO: -0.9922
+====&gt; Epoch: 390 Average ELBO: -0.8452 Test ELBO: -0.9862
+====&gt; Epoch: 400 Average ELBO: -0.8352 Test ELBO: -1.0131
+====&gt; Epoch: 410 Average ELBO: -0.8262 Test ELBO: -0.9623
+====&gt; Epoch: 420 Average ELBO: -0.8342 Test ELBO: -0.9456
+====&gt; Epoch: 430 Average ELBO: -0.8123 Test ELBO: -0.9428
+====&gt; Epoch: 440 Average ELBO: -0.8005 Test ELBO: -0.9661
+====&gt; Epoch: 450 Average ELBO: -0.7921 Test ELBO: -0.9328
+====&gt; Epoch: 460 Average ELBO: -0.7798 Test ELBO: -0.9543
+====&gt; Epoch: 470 Average ELBO: -0.7845 Test ELBO: -0.9535
+====&gt; Epoch: 480 Average ELBO: -0.7737 Test ELBO: -0.9078
+====&gt; Epoch: 490 Average ELBO: -0.7751 Test ELBO: -0.9331
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_elbos</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test_elbos</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;ELBO&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/21451aeeb000d0918e8e151f1ce14e77ba6debba5f3895fd69b0994b6f12c4b0.png" src="../_images/21451aeeb000d0918e8e151f1ce14e77ba6debba5f3895fd69b0994b6f12c4b0.png" />
+</div>
+</div>
+</section>
+<section id="problem-2d-visualize-samples-from-the-trained-model">
+<h4>Problem 2d: Visualize samples from the trained model<a class="headerlink" href="#problem-2d-visualize-samples-from-the-trained-model" title="Link to this heading">#</a></h4>
+<p>In addition to the ELBO, we can sample from the trained model to assess its performance. Use the code below to generate an <span class="math notranslate nohighlight">\(8 \times 8\)</span> grid of sampled digits from the model. Note that we follow the common practice of using the mean of <span class="math notranslate nohighlight">\(p_{\boldsymbol{\theta}}(\mathbf{x} \mid \mathbf{z})\)</span> rather than resampling from this distribution when visualizing samples. Critique these samples. What aspects of the data distribution does the model seem to have trouble learning?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize sampled digits from our model</span>
+<span class="n">decoder</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;autumn&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$z$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x32f660e20&gt;
+</pre></div>
+</div>
+<img alt="../_images/aa956fdcbacf2f25884c6780084f4e6fdd170f1dfb729fa32ff2508b6898ac4a.png" src="../_images/aa956fdcbacf2f25884c6780084f4e6fdd170f1dfb729fa32ff2508b6898ac4a.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>We showed how (probabilistic) PCA can be viewed as a (stochastic) linear autoencoder, and then we generalized to nonlinear/non-Gaussian models with variational autoencoders. VAEs are workhorses of modern machine learning, and once you know a bit about variational inference, they’re really not that complicated!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="12_lglvms.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Linear Gaussian Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-as-a-linear-autoencoder">PCA as a Linear Autoencoder</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probabilistic-pca-as-a-stochastic-linear-autoencoder">Probabilistic PCA as a Stochastic Linear Autoencoder</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#revisiting-em-for-probabilistic-pca">Revisiting EM for Probabilistic PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Variational Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-and-inference">Learning and Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound-elbo">The Evidence Lower Bound (ELBO)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variational-inference">Variational Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variational-expectation-maximization-vem">Variational Expectation-Maximization (vEM)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-m-step-with-stochastic-gradient-ascent">Generic M-step with Stochastic Gradient Ascent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-variational-e-step">The Variational E-step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reparameterization-trick">Reparameterization Trick</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-mini-batches-of-data">Working with mini-batches of data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm">Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#amortized-inference">Amortized Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#putting-it-all-together">Putting it all together</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demo-neural-networks-and-vaes">Demo: Neural Networks and VAEs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-regression-with-deep-neural-networks">Part 1: Regression with Deep Neural Networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#simulate-data">Simulate data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#construct-a-feedforward-neural-network">Construct a feedforward neural network</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-predictions-of-the-randomly-initialized-model">Plot the predictions of the randomly initialized model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-the-model-parameters-to-maximize-the-likelihood">Optimize the model parameters to maximize the likelihood</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-trained-model-s-predictions">Plot the trained model’s predictions</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-variational-autoencoders">Part 2: Variational Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-simple-data-loader-for-this-dataset">Make a simple data loader for this dataset</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2a-decoder-network">Part 2a: Decoder Network</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2b-encoder-network">Problem 2b: Encoder Network</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2c-implement-the-elbo">Problem 2c: Implement the ELBO</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#implement-the-training-loop-given">Implement the Training Loop [given]</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-2d-visualize-samples-from-the-trained-model">Problem 2d: Visualize samples from the trained model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

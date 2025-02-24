@@ -191,6 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="10_mixtures.html">Mixture Models and EM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11_hmms.html">Hidden Markov Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="12_lglvms.html">Linear Gaussian Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_vaes.html">Variational Autoencoders</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -1047,8 +1048,8 @@ The idea is to stick as close to vanilla gradient descent as possible, while cor
 <section id="proximal-mapping">
 <h3>Proximal Mapping<a class="headerlink" href="#proximal-mapping" title="Link to this heading">#</a></h3>
 <p>We call the function,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-c4b927fb-972e-477e-b107-10dd0169da71">
-<span class="eqno">(3)<a class="headerlink" href="#equation-c4b927fb-972e-477e-b107-10dd0169da71" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-fe53d6ae-8e57-4cf2-9946-084b97f174f9">
+<span class="eqno">(3)<a class="headerlink" href="#equation-fe53d6ae-8e57-4cf2-9946-084b97f174f9" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{prox}(\mbu; \alpha_t) 
 &amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \cL_{\mathsf{nd}}(\mbz)
 \end{align}\]</div>
