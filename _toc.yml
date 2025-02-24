@@ -16,6 +16,7 @@ parts:
     - file: lectures/09_vi.ipynb
     - file: lectures/10_mixtures.ipynb
     - file: lectures/11_hmms.md
+    - file: lectures/12_lglvms.ipynb
     
   - caption: Assignments
     chapters:
