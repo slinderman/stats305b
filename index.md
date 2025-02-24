@@ -48,8 +48,8 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Mon, Feb 10, 2025 | [Mixture Models and EM](lectures/10_mixtures.ipynb) | [download](slides/10_mixtures.pdf) | {cite:p}`bishop2006pattern` Ch. 9 |
 | Wed, Feb 12, 2025 | [Hidden Markov Models](lectures/11_hmms.md) <br> <span style="color:red">**HW2 Due**</span>; **HW3 Released** | [download](slides/11_hmms.pdf) | {cite:p}`bishop2006pattern` Ch. 13 | 
 | Mon, Feb 17, 2025 | _Presidents' Day. No class_            |     |    |
-| Wed, Feb 19, 2025 | Linear Gaussian Latent Variable Models | [download](slides/12_lglvms.pdf) | |
-| Mon, Feb 24, 2025 | [Variational Autoencoders](lectures/11_vaes.md) <br> <span style="color:red">**HW3 Due**</span>; **HW4 Released**  | | {cite:p}`kingma2019introduction` Ch.1-2 |
+| Wed, Feb 19, 2025 | [Linear Gaussian Latent Variable Models](lectures/12_lglvms.ipynb) | [download](slides/12_lglvms.pdf) | |
+| Mon, Feb 24, 2025 | [Variational Autoencoders](lectures/13_vaes.ipynb) <br> <span style="color:red">**HW3 Due**</span>; **HW4 Released**  | [download](slides/13_vaes.pdf) | {cite:p}`kingma2019introduction` Ch.1-2 |
 | Wed, Feb 26, 2025 | [Tranformers](lectures/13_transformers.md) | | {cite:p}`turner2023introduction` |
 | Mon, Mar  3, 2025 | [State Space Layers (S4, S5, Mamba)](lectures/14_ssm.pdf)  |  | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Wed, Mar  5, 2025 | [Denoising Diffusion Models](lectures/16_diffusion.md) | | {cite:p}`turner2024denoising` | 

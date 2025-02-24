@@ -1,0 +1,531 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{simple}
+
+\input{preamble/preamble.tex}
+\input{preamble/preamble_math.tex}
+% \input{preamble/preamble_acronyms.tex}
+
+\title{Variational Autoencoders}
+\subtitle{STATS305B: Applied  Statistics II}
+\author{Scott Linderman}
+\date{\today}
+
+
+\begin{document}
+
+
+\maketitle
+
+\begin{frame}{Last Time...}
+    \textbf{Outline:}
+    \begin{itemize}
+        \item Principal Components Analysis (PCA)
+        \item PCA as a linear Gaussian latent variable model
+        \item Factor analysis
+        \item Linear Dynamical Systems \& the Kalman Filter/Smoother
+    \end{itemize}
+    \vspace{1em}
+\end{frame}
+
+\begin{frame}{Today...}
+    \textbf{Outline:}
+    \begin{itemize}
+        \item (Probabilistic) PCA as a (stochastic) linear autoencoder
+        \item Variational Autoencoders (VAEs)
+        \item Review of Gradient-based Variational Inference
+        \item Demo
+    \end{itemize}
+    \vspace{1em}
+\end{frame}
+
+   
+\begin{frame}[t,allowframebreaks]{PCA as a Linear
+Autoencoder}\label{pca-as-a-linear-autoencoder}
+
+Last time we introduced PCA as a method for finding dimensions of
+maximal variance. However, we can arrive at the same model from another
+perspective: find the linear projection that minimizes the average
+projection cost.
+
+To formalize this, let \begin{align*}
+    \mbW = 
+    \begin{bmatrix}
+    | & & | \\
+    \mbw_1 & \cdots & \mbw_M \\
+    | & & |
+    \end{bmatrix} \in \reals^{D \times M} \quad \text{with} \quad \mbW^\top \mbW = \mbI
+\end{align*} be an orthogonal basis for the principal subspace.
+
+We will \textbf{encode} each data point by subtracting the mean and
+projecting onto the principal subspace to obtain
+\(\mbz_n = \mbW^\top (\mbx_n - \bar{\mbx})\).
+
+Since \(\mbW\) is an orthogonal matrix, all we need to do to
+\textbf{decode} the encoded data point is multiply \(\mbW \mbz_n\) and
+add back the mean. That gives us, \begin{align*}
+    \hat{\mbx}_n = \mbW \mbz_n + \bar{\mbx} = \mbW \mbW^\top (\mbx_n - \bar{\mbx}) + \bar{\mbx}.
+\end{align*}
+
+\textbf{Goal:} Find an orthogonal matrix \(\mbW\) that \emph{minimizes}
+the mean squared reconstruction error, \begin{align*}
+    \cL(\mbW) &= \frac{1}{N} \sum_{n=1}^N \|\mbx_n - \hat{\mbx}_n\|_2^2
+\end{align*} We can write this in matrix notation instead. Let
+\(\mbX \in \reals^{N \times D}\) be the \emph{centered data matrix} with
+rows \((\mbx_n - \bar{\mbx})^\top\). Then, \begin{align*}
+    \cL(\mbW) 
+    &= \frac{1}{N} \Tr[(\mbX - \hat{\mbX})^\top (\mbX - \hat{\mbX})] \\
+    &= \frac{1}{N} \Tr[(\mbX - \mbX \mbW \mbW^\top)^\top (\mbX - \mbX \mbW \mbW^\top)] \\
+    &= \frac{1}{N} \Tr[(\mbX(\mbI - \mbW \mbW^\top))^\top (\mbX (\mbI - \mbW \mbW^\top))]\\
+    &= \frac{1}{N} \Tr[(\mbI - \mbW \mbW^\top)^\top \mbX^\top \mbX (\mbI - \mbW \mbW^\top)] \\
+    &= \Tr[(\mbI - \mbW \mbW^\top)^\top \mbS (\mbI - \mbW \mbW^\top)]
+\end{align*} where \(\mbS = \frac{1}{N} \mbX^\top \mbX\) is the sample
+covariance matrix.
+
+Now apply the circular trace property, 
+\begin{align*}
+    \cL(\mbW) 
+    &= \Tr[\mbS (\mbI - \mbW \mbW^\top) (\mbI - \mbW \mbW^\top)^\top]
+\end{align*}
+
+\textbf{Question:} What does
+\((\mbI - \mbW \mbW^\top) (\mbI - \mbW \mbW^\top)^\top\) equal? 
+
+Note
+that \(\mbI - \mbW \mbW^\top\) is a projection matrix --- it projects a
+vector onto the \emph{nullspace} of \(\mbW\). Applying the projection
+operator twice doesn't change the result. Mathematically, 
+\begin{align*}
+    (\mbI - \mbW \mbW^\top) (\mbI - \mbW \mbW^\top)^\top 
+    = \mbI - 2 \mbW \mbW^\top + \mbW \mbW^\top \mbW \mbW^\top
+    = \mbI - \mbW \mbW^\top
+\end{align*} 
+where we used the fact that \(\mbW^\top \mbW = \mbI\) since
+\(\mbW\) is an orthogonal matrix. 
+
+Thus, the objective simplifies to, \begin{align*}
+    \cL(\mbW) 
+    = \Tr[\mbS(\mbI - \mbW \mbW^\top)]
+    = \Tr[\mbS] - \Tr[\mbS \mbW \mbW^\top]
+    = \mathrm{const} - \Tr[\mbW^\top \mbS \mbW].
+\end{align*} Let \(\mbU \mbLambda \mbU^\top\) be the eigendecomposition
+of \(\mbS\). (Since it is a covariance matrix, the eigenvectors are
+orthogonal.) Plugging in, \begin{align*}
+    \cL(\mbW) 
+    &= \mathrm{const} - \Tr[\mbW^\top \mbU \mbLambda \mbU^\top \mbW] \\
+    &= \mathrm{const} - \Tr\left[\mbW^\top \left( \sum_{d=1}^D \lambda_d \mbu_d \mbu_d^\top \right) \mbW\right] \\
+    &= \mathrm{const} - \sum_{m=1}^M \sum_{d=1}^D \lambda_d \mbw_m^\top \mbu_d \mbu_d^\top \mbw_m \\
+    &= \mathrm{const} - \sum_{m=1}^M \sum_{d=1}^D \lambda_d (\mbw_m^\top \mbu_d)^2
+\end{align*} We want to minimize \(\cL(\mbW)\) subject to \(\mbW\) being
+orthogonal. What is the solution? \(\mbW = \mbU_M\)!
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Probabilistic PCA as a Stochastic Linear
+Autoencoder}\label{probabilistic-pca-as-a-stochastic-linear-autoencoder}
+
+The jump from PCA to probabilistic PCA was to treat the scores,
+\(\mbz_n\), as latent variables. We gave them a Gaussian prior and
+assumed a generative model, 
+\begin{align*}
+    \mbz_n &\iid{\sim} \mathrm{N}(\mbzero, \mbI) \\
+    \mbx_n \mid \mbz_n &\sim \mathrm{N}(\mbW \mbz + \mbmu, \sigma^2 \mbI),
+\end{align*} 
+where \(\mbz_n \in \reals^M\) is a latent variable,
+\(\mbW \in \reals^{D \times M}\) are the weights, \(\mbmu \in \reals^D\)
+is the bias parameter, and \(\sigma^2 \in \reals_+\) is a variance.
+
+Given the parameters, we showed that the posterior distribution over
+latent variables is, 
+\begin{align*}
+p(\mbz_n \mid \mbx_n; \mbtheta)
+&=
+\mathrm{N}(\mbz_n \mid (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} \mbW^\top (\mbx_n - \mbmu), \, \sigma^2 (\sigma^2 \mbI + \mbW^\top \mbW)^{-1}),
+\end{align*} 
+and when \(\sigma^2 \to 0\) and \(\mbW\) are the PCs, this
+converges to a delta function on the PCA scores.
+
+To simplify notation, let's rewrite the posterior as, 
+\begin{align*}
+p(\mbz_n \mid \mbx_n; \mbtheta)
+&= \mathrm{N}(\mbz_n \mid \mbE \mbx_n + \mbd, \mbG)
+\end{align*} 
+where 
+\begin{align*}
+\mbE &= (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} \mbW^\top \\
+\mbd &= - (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} \mbW^\top \mbmu \\
+\mbG &= \sigma^2 (\sigma^2 \mbI + \mbW^\top \mbW)^{-1}.
+\end{align*}
+
+To ``autoencode'' the data using probabilistic PCA, we could sample
+\(\mbz_n \sim p(\mbz_n \mid \mbx_n; \mbtheta)\) by mapping
+\(\mbx_n \mapsto \mbE \mbx_n + \mbd\) and adding Gaussian noise with
+covariance \(\mbG\). Then we can generate a new data point
+\(\hat{\mbx}_n \sim \mathrm{N}(\mbW \mbz_n + \mbmu, \sigma^2 \mbI)\).
+
+Just as PCA could be motivated as finding weights that minimize the
+reconstruction error, probabilistic PCA can be seen as finding weights
+that minimize the \emph{expected} reconstruction error (subject to a
+little regularization).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Revisiting EM for Probabilistic
+PCA}\label{revisiting-em-for-probabilistic-pca}
+
+Recall that we justified EM by connecting it to variational inference.
+We showed that EM maximizes the evidence lower bound (ELBO),
+\begin{align*}
+\cL(q, \mbtheta) 
+&= \sum_n \mathbb{E}_{q(\mbz_n)}\left[\log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n) \right] \\
+&= \sum_n \underbrace{\mathbb{E}_{q(\mbz_n)}\left[\log p(\mbx_n \mid \mbz_n; \mbtheta)\right]}_{\text{expected log likelihood}} - \underbrace{\KL{q(\mbz_n)}{p(\mbz_n)}}_{\text{KL to the prior}} \\
+&\leq \sum_n \log p(\mbx_n; \mbtheta)
+\end{align*} 
+EM can be seen as coordinate ascent on the ELBO: 
+\begin{enumerate}
+    \item The E-step sets \(q\) to the posterior over latent variables, \(q(\mbz_n) = p(\mbz_n \mid \mbx_n; \mbtheta)\) for the current parameters \(\mbtheta\). 
+    \item 2. The M-step updates the parameters to maximize the expected log joint probability.
+\end{enumerate}
+
+In probabilistic PCA, maximizing the expected log likelihood is the same
+as minimizing the expected reconstruction error. Plugging in the
+definition of the model and the posterior, 
+\begin{align*}
+\mathbb{E}_{q(\mbz_n)}\left[\log p(\mbx_n \mid \mbz_n; \mbtheta)\right]
+&= \E_{\mathrm{N}(\mbz_n \mid \mbE \mbx_n + \mbd, \mbG)}\left[\log \mathrm{N}(\mbx_n \mid \mbW \mbz_n + \mbmu, \sigma^2 \mbI) \right] \\
+&= -\frac{1}{2\sigma^2 }\E_{\mathrm{N}(\mbz_n \mid \mbE \mbx_n + \mbd, \mbG)}\left[\|\mbx_n - \mbW \mbz_n - \mbmu \|_2^2 \right] + \log \sigma + c \\
+\end{align*} 
+where \(c\) is an additive constant, and \(\mbE\),
+\(\mbd\), \(\mbG\) are functions of the parameters, as defined above,
+
+We can't forget about the KL to the prior though! When we maximize the
+ELBO, we are essentially finding weights that minimize the expected
+reconstruction error, while also not deviating too far from the standard
+normal prior on the latent variables.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Variational Autoencoders}\label{variational-autoencoders}
+
+Variational Autoencodres (VAEs) are ``deep'' but conceptually simple
+generative models. The generative model is the same as probabilistic PCA, but allowing for \textbf{nonlinear} mappings between latent variables and
+observations.
+
+To sample a data point \(\mbx_n\), 
+\begin{enumerate}
+    \item First, sample \textbf{latent variables} \(\mbz_n\), 
+    \begin{align*}
+    \mbz_n &\sim \mathrm{N}(\mbzero, \mbI) 
+    \end{align*}
+
+    \item Then sample the data point \(\mbx_n\) from a conditional distribution with mean, 
+    \begin{align*}
+    \E[\mbx_n \mid \mbz_n] &= g(\mbz_n; \mbtheta),
+    \end{align*} 
+    where \(g: \reals^H \to \reals^D\) is a nonlinear mapping parameterized by \(\mbtheta\).
+\end{enumerate}
+
+We will assume \(g\) is a simple \textbf{feedforward neural network} of
+the form, 
+\begin{align*}
+    g(\mbz; \mbtheta) &= g_L(g_{L-1}(\cdots g_1(\mbz) \cdots))
+\end{align*} 
+where each \textbf{layer} is a cascade of a linear mapping
+followed by an element-wise nonlinearity (except for the last layer,
+perhaps). For example, 
+\begin{align*}
+    g_\ell(\mbu_{\ell}) = \mathrm{relu}(\mbW_\ell \mbu_{\ell} + \mbb_\ell); \qquad \mathrm{relu}(a) = \max(0, a).
+\end{align*} 
+The generative parameters consist of the weights and
+biases, \(\mbtheta = \{\mbW_\ell, \mbb_\ell\}_{\ell=1}^L\).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Learning and Inference}\label{learning-and-inference}
+
+We have two goals. The \textbf{learning goal} is to find the parameters
+that \textbf{maximize the marginal likelihood of the data},
+\begin{align*}
+    \mbtheta^\star 
+    &= \arg \max_{\mbtheta} p(\mbX; \mbtheta)\\
+    &= \arg \max_{\mbtheta} \prod_{n=1}^N \int p(\mbx_n \mid \mbz_n; \mbtheta) \, p(\mbz_n; \mbtheta) \dif \mbz_n
+\end{align*}
+
+The \textbf{inference goal} is to find the \textbf{posterior
+distribution of latent variables}, \begin{align*}
+    p(\mbz_n \mid \mbx_n; \mbtheta) 
+    &= \frac{p(\mbx_n \mid \mbz_n; \mbtheta) \, p(\mbz_n; \mbtheta)}{\int p(\mbx_n \mid \mbz_n'; \mbtheta) \, p(\mbz_n'; \mbtheta)\dif \mbz_n'}
+\end{align*}
+
+Both goals require an integral over \(\mbz_n\), but that is intractable
+for deep generative models.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{The Evidence Lower Bound
+(ELBO)}\label{the-evidence-lower-bound-elbo}
+
+\textbf{Idea:} Use the ELBO to get a bound on the marginal probability
+and maximize that instead. \begin{align*}
+\log p(\mbX ; \mbtheta) 
+&= \sum_{n=1}^N \log p(\mbx_n; \mbtheta) \\
+&\geq \sum_{n=1}^N \log p(\mbx_n; \mbtheta) - \KL{q(\mbz_n; \mblambda_n)}{p(\mbz_n \mid \mbx_n; \mbtheta)} \\
+&= \sum_{n=1}^N \underbrace{\E_{q(\mbz_n)}\left[ \log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n) \right]}_{\text{"local ELBO"}} \\
+&\triangleq \sum_{n=1}^N \cL_n(\mblambda_n, \mbtheta) 
+= \cL(\mblambda, \mbtheta)
+\end{align*} where \(\mblambda = \{\mblambda_n\}_{n=1}^N\).
+Here, I've written the ELBO as a sum of \emph{local ELBOs} \(\cL_n\).
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Variational Inference}\label{variational-inference}
+
+The ELBO is still maximized (and the bound is tight) when each \(q\) is
+equal to the true posterior, \begin{align*}
+    q(\mbz_n; \mblambda_n) &= p(\mbz_n \mid \mbx_n, \mbtheta).
+\end{align*} Unfortunately, the posterior no longer has a simple, closed
+form.
+
+\textbf{Question:} Suppose
+\(\mbx_n \sim \mathrm{N}(g(\mbz_n; \mbtheta), \mbI)\). This deep
+generative model has a Gaussian prior on \(\mbz_n\) and a Gaussian
+likelihood for \(\mbx_n\) given \(\mbz_n\). Why isn't the posterior
+Gaussian? 
+
+Nevertheless, we can still constrain \(q\) to belong to a simple family.
+For example, we could constrain it to be Gaussian and seek the best
+Gaussian approximation to the posterior. This is sometimes called
+\textbf{fixed-form variational inference}. Let, \begin{align*}
+    \cQ = \left\{q: q(\mbz; \mblambda) = \mathrm{N}\big(\mbz \mid \mbmu, \diag(\mbsigma^2)\big) \text{ for } \mblambda = (\mbmu, \log \mbsigma^2) \in \reals^{2H} \right\}
+\end{align*}
+
+Then, for fixed parameters \(\mbtheta\), the best \(q\) in this
+\textbf{variational family} is, \begin{align*}
+    q^\star 
+    &= \arg \min_{q \in \cQ} \KL{q(\mbz_n; \mblambda_n)}{p(\mbz_n \mid \mbx_n; \mbtheta)} \\
+    &= \arg \max_{\mblambda_n \in \reals^{2H}} \cL_n(\mblambda_n, \mbtheta).
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Variational Expectation-Maximization
+(vEM)}\label{variational-expectation-maximization-vem}
+
+Now we can introduce a new algorithm.
+
+\textbf{Algorithm"} Variational EM (vEM) Repeat until either the ELBO
+or the parameters converges: 
+\begin{enumerate}
+    \item \textbf{M-step:} Set 
+    \(\mbtheta \leftarrow \arg \max_{\mbtheta} \cL(\mblambda, \mbtheta)\) 
+    \item \textbf{E-step:} Set 
+    \(\mblambda_n \leftarrow \arg \max_{\mblambda_n \in \mbLambda} \cL_n(\mblambda_n, \mbtheta)\)
+    for \(n=1,\ldots,N\) 
+    \item Compute (an estimate of) the ELBO \(\cL(\mblambda, \mbtheta)\).
+\end{enumerate}
+
+In general, none of these steps will have closed form solutions, so
+we'll have to use approximations.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Generic M-step with Stochastic Gradient
+Ascent}\label{generic-m-step-with-stochastic-gradient-ascent}
+
+For exponential family mixture models, the M-step had a closed form
+solution. For deep generative models, we need a more general approach.
+
+If the parameters are unconstrained and the ELBO is differentiable wrt
+\(\mbtheta\), we can use stochastic gradient ascent. \begin{align*}
+    \mbtheta &\leftarrow \mbtheta + \alpha \nabla_{\mbtheta} \cL(q, \mbtheta) \\
+    &= \mbtheta + \alpha \sum_{n=1}^N \mathbb{E}_{q(\mbz_n; \mblambda_n)} \left[ \nabla_{\mbtheta} \log p(\mbx_n, \mbz_n; \mbtheta) \right]
+\end{align*}
+
+Note that the expected gradient wrt \(\mbtheta\) can be computed using
+ordinary Monte Carlo --- nothing fancy needed!
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{The Variational E-step}\label{the-variational-e-step}
+
+Assume \(\cQ\) is the family of Gaussian distributions with diagonal
+covariance: 
+\begin{align*}
+    \cQ = \left\{q: q(\mbz; \mblambda) = \mathrm{N}\big(\mbz \mid \mbmu, \diag(\mbsigma^2)\big) \text{ for } \mblambda = (\mbmu, \log \mbsigma^2) \in \reals^{2H} \right\}
+\end{align*} 
+This family is indexed by \textbf{variational parameters}
+\(\mblambda_n = (\mbmu_n, \log \mbsigma_n^2) \in \reals^{2H}\).
+
+To perform SGD, we need an unbiased estimate of the gradient of the
+local ELBO, but \begin{align*}
+\nabla_{\mblambda_n} \cL_n(\mblambda_n, \mbtheta) 
+&= \nabla_{\mblambda_n} \E_{q(\mbz_n; \mblambda_n)} \left[ \log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n) \right] \\
+&\textcolor{red}{\neq} \;  \E_{q(\mbz_n; \mblambda_n)} \left[ \nabla_{\mblambda_n} \left(\log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n)\right) \right].
+\end{align*}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Reparameterization Trick}\label{reparameterization-trick}
+
+One way around this problem is to use the \textbf{reparameterization
+trick}, aka the \textbf{pathwise gradient estimator}. Note that,
+\begin{align*}
+    \mbz_n \sim q(\mbz_n; \mblambda_n) \quad \iff \quad
+    \mbz_n &= r(\mblambda_n, \mbepsilon), \quad \mbepsilon \sim \mathrm{N}(\mbzero, \mbI) 
+\end{align*} where
+\(r(\mblambda_n, \mbepsilon) = \mbmu_n + \mbsigma_n \mbepsilon\) is a
+reparameterization of \(\mbz_n\) in terms of parameters \(\mblambda_n\)
+and noise \(\mbepsilon\).
+
+We can use the \textbf{law of the unconscious statistician} to rewrite
+the expectations as, 
+\begin{align*}
+    \E_{q(\mbz_n; \mblambda_n)} \left[h(\mbx_n, \mbz_n, \mbtheta, \mblambda_n) \right]
+    &= \E_{\mbepsilon \sim \mathrm{N}(\mbzero, \mbI)} \left[h(\mbx_n, r(\mblambda_n, \mbepsilon), \mbtheta, \mblambda_n) \right]
+\end{align*} 
+where 
+\begin{align*}
+h(\mbx_n, \mbz_n, \mbtheta, \mblambda_n) = \log p(\mbx_n, \mbz_n; \mbtheta) - \log q(\mbz_n; \mblambda_n).
+\end{align*} 
+The distribution that the expectation is taken under no
+longer depends on the parameters \(\mblambda_n\), so we can simply take
+the gradient inside the expectation, \begin{align*}
+    \nabla_{\mblambda} \E_{q(\mbz_n; \mblambda_n)} \left[h(\mbx_n, \mbz_n, \mbtheta, \mblambda_n) \right]
+    &=  \E_{\mbepsilon \sim \mathrm{N}(\mbzero, \mbI)} \left[\nabla_{\mblambda_n} h(\mbx_n, r(\mblambda_n, \mbepsilon), \mbtheta, \mblambda_n) \right]
+\end{align*} 
+Now we can use Monte Carlo to obtain an unbiased estimate
+of the final expectation!
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Working with mini-batches of
+data}\label{working-with-mini-batches-of-data}
+
+We can view the ELBO as an expectation over data indices, 
+\begin{align*}
+    \cL(\mblambda, \mbtheta) 
+    &= \sum_{n=1}^N \cL_n(\mblambda_n, \mbtheta) \\
+    &= N \, \E_{n \sim \mathrm{Unif}([N])}[\cL_n(\mblambda_n, \mbtheta)].
+\end{align*} 
+We can use Monte Carlo to approximate the expectation (and
+its gradient) by drawing \textbf{mini-batches} of data points at random.
+
+In practice, we often cycle through mini-batches of data points
+deterministically. Each pass over the whole dataset is called an
+\textbf{epoch.}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Algorithm}\label{algorithm}
+
+Now we can add some detail to our variational expectation maximization
+algorithm.
+
+For epoch \(i=1,\ldots,\infty\):
+
+For \(n=1,\ldots,N\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Sample \(\epsilon_n^{(m)} \iid{\sim} \mathrm{N}(\mbzero, \mbI)\) for
+  \(m=1,\ldots,M\).
+\item
+  \textbf{M-Step}:
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \item
+    Estimate \begin{align*}
+     \hat{\nabla}_{\mbtheta} \cL_n(\mblambda_n, \mbtheta)
+     &= 
+     \frac{1}{M} \sum_{m=1}^M \left[ \nabla_{\mbtheta} \log p(\mbx_n, r(\mblambda_n, \mbepsilon_n^{(m)}); \mbtheta) \right]
+     \end{align*}
+  \item
+    Set
+    \(\mbtheta \leftarrow \mbtheta + \alpha_i N \hat{\nabla}_{\mbtheta} \cL_n(\mblambda_n, \mbtheta)\)
+  \end{enumerate}
+\item
+  \textbf{E-step:}
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \item
+    Estimate \begin{align*}
+     \hat{\nabla}_{\mblambda} \cL_n(\mblambda_n, \mbtheta) 
+     &= \frac{1}{M} \sum_{m=1}^M \nabla_{\mblambda} \left[\log p(\mbx_n, r(\mblambda_n, \mbepsilon_n^{(m)}); \mbtheta) - \log q(r(\mblambda_n, \mbepsilon_n^{(m)}), \mblambda_n) \right]
+     \end{align*}
+  \item
+    Set
+    \(\mblambda_n \leftarrow \mblambda_n + \alpha_i \hat{\nabla}_{\mblambda} \cL_n(\mblambda_n, \mbtheta)\).
+  \end{enumerate}
+\item
+  Estimate the ELBO \begin{align*}
+   \hat{\cL}(\mblambda, \mbtheta) 
+   &= \frac{N}{M} \sum_{m=1}^M \log p(\mbx_n, r(\mblambda_n, \mbepsilon_n^{(m)}); \mbtheta) - \log q(r(\mblambda_n, \mbepsilon_n^{(m)}); \mblambda_n)
+   \end{align*}
+\item
+  Decay step size \(\alpha_i\) according to schedule. 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Amortized Inference}\label{amortized-inference}
+
+Note that vEM involves optimizing separate variational parameters
+\(\mblambda_n\) for each data point. For large datasets where we are
+optimizing using mini-batches of data points, this leads to a strange
+asymmetry: we update the generative model parameters \(\mbtheta\) every
+mini-batch, but we only update the variational parameters for the
+\(n\)-th data point once per epoch. Is there any way to share
+information across data points?
+
+Note that the optimal variational parameters are just a function of the
+data point and the model parameters, 
+\begin{align*}
+    \mblambda_n^\star &= \arg \min_{\mblambda_n} \KL{q(\mbz_n; \mblambda_n)}{p(\mbz_n \mid \mbx_n, \mbtheta)} 
+    \triangleq f^\star(\mbx_n, \mbtheta).
+\end{align*} 
+for some implicit and generally nonlinear function
+\(f^\star\).
+
+VAEs learn an approximation to \(f^\star(\mbx_n, \mbtheta)\) with an
+\textbf{inference network}, a.k.a. \textbf{recognition network} or
+\textbf{encoder}.
+
+The inference network is (yet another) neural network that takes in a
+data point \(\mbx_n\) and outputs variational parameters
+\(\mblambda_n\), \begin{align*}
+    \mblambda_n & \approx f(\mbx_n, \mbphi),
+\end{align*} where \(\mbphi\) are the weights of the network.
+
+The advantage is that the inference network shares information across
+data points --- it \emph{amortizes} the cost of inference, hence the
+name. The disadvantage is the output will not minimize the KL
+divergence. However, in practice we might tolerate a worse variational
+posterior and a weaker lower bound if it leads to faster optimization of
+the ELBO overall.
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Putting it all together}\label{putting-it-all-together}
+
+Logically, I find it helpful to distinguish between the E and M steps,
+but with recognition networks and stochastic gradient ascent, the line
+is blurred.
+
+The final algorithm looks like this.
+
+\textbf{Variational EM (with amortized inference)}
+
+Repeat until either the ELBO or the parameters converges:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Sample data point \(n \sim \mathrm{Unif}(1, \ldots, N)\). {[}Or a
+  minibatch of data points.{]}
+\item
+  Estimate the local ELBO \(\cL_n(\mbphi, \mbtheta)\) with Monte Carlo.
+  {[}Note: it is a function of \(\mbphi\) instead of \(\mblambda_n\).{]}
+\item
+  Compute unbiased Monte Carlo estimates of the gradients
+  \(\widehat{\nabla}_{\mbtheta} \cL_n(\mbphi, \mbtheta)\) and
+  \(\widehat{\nabla}_{\mbphi} \cL_n(\mbphi, \mbtheta)\). {[}The latter
+  requires the reparameterization trick.{]}
+\item
+  Set \begin{align*}
+   \mbtheta &\leftarrow \mbtheta + \alpha_i \widehat{\nabla}_{\mbtheta} \cL_n(\mbphi, \mbtheta) \\
+   \mbphi &\leftarrow \mbphi + \alpha_i \widehat{\nabla}_{\mbphi} \cL_n(\mbphi, \mbtheta)
+  \end{align*} with step size \(\alpha_i\) decreasing over iterations
+  \(i\) according to a valid schedule.
+\end{enumerate}
+\end{frame}
+
+   
+\end{document}

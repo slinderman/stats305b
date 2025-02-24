@@ -20,6 +20,7 @@ execute:
     - '09_vi.ipynb'
     - '10_mixtures.ipynb'
     - '12_lglvms.ipynb'
+    - '13_vaes.ipynb'
     - 'hw0.ipynb'
     - 'hw1.ipynb'
     - 'hw2.ipynb'
