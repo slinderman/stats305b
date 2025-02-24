@@ -1,0 +1,1117 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Linear Gaussian Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/12_lglvms';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Hidden Markov Models" href="11_hmms.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_mcmc.html">Markov Chain Monte Carlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_vi.html">Variational Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_hmms.html">Hidden Markov Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Linear Gaussian Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/lectures/12_lglvms.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/12_lglvms.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Linear Gaussian Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivating-example">Motivating Example</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-components-of-global-temperature">Principal Components of Global Temperature</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-components-analysis-pca">Principal Components Analysis (PCA)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-maximum-variance-formulation">PCA: Maximum Variance Formulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-and-the-singular-value-decomposition">PCA and the Singular Value Decomposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-explained-variance">PCA Explained Variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scree-plots">Scree Plots</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probabilistic-pca-a-continuous-latent-variable-model">Probabilistic PCA: A Continuous Latent Variable Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages">Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation-of-the-parameters">Maximum likelihood estimation of the parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-posterior-distribution-on-the-latent-variables">The Posterior Distribution on the Latent Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-posterior-distribution-in-the-zero-noise-limit">The Posterior Distribution in the Zero Noise Limit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#em-for-probabilistic-pca">EM for Probabilistic PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#factor-analysis">Factor Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-dynamical-systems">Linear Dynamical Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#state-space-models-ssms">State space models (SSMs)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#message-passing-in-hmms">Message passing in HMMs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-do-the-forward-messages-tell-us">What do the forward messages tell us?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#message-passing-in-state-space-models">Message passing in state space models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-pass-in-a-linear-dynamical-system">Forward pass in a linear dynamical system</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-update-step">The update step</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-predict-step">The predict step</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#completing-the-recursions">Completing the recursions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-marginal-likelihood">Computing the marginal likelihood</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backward-pass-in-a-linear-dynamical-system">Backward pass in a linear dynamical system</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-smoothing">Bayesian Smoothing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rauch-tung-striebel-rts-smoother-aka-kalman-smoother">The Rauch-Tung-Striebel (RTS) Smoother, aka Kalman Smoother</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-gaussian-models">
+<h1>Linear Gaussian Models<a class="headerlink" href="#linear-gaussian-models" title="Link to this heading">#</a></h1>
+<p>Mixture models and HMMs were <em>discrete</em> latent variable models (LVMs). Data points were attributed to one of <span class="math notranslate nohighlight">\(K\)</span> clusters or latent states.
+These models naturally extend to <em>continuous</em> latent variables as well, and these extensions are especially nice when we assume linear Gaussian structure.
+In fact, linear Gaussian LVMs are so common that you have probably heard them under different names, like (probabilistic) PCA, factor analysis, and Kalman filters.
+Today, we will show how to derive these classic models and algorithms.</p>
+<section id="motivating-example">
+<h2>Motivating Example<a class="headerlink" href="#motivating-example" title="Link to this heading">#</a></h2>
+<p>Take HW3 as an example: for each month, you have temperature measurements at 9504 locations across the globe. Are the measurements really 9504 dimensional?</p>
+<p><img alt="Global Temperatures" src="../_images/hw3.png" /></p>
+<p>With high-dimensional measurements like these, we might have a few objectives in mind:</p>
+<ul class="simple">
+<li><p><strong>Dimensionality reduction:</strong> are there a few dimensions along which the temperatures primarily vary? Maybe northern and southern hemisphere, or land and sea?</p></li>
+<li><p><strong>Visualization:</strong> Sometimes, we want to embed high-dimensional points in 2 or 3 dimensions for visualization. (Not applicable here since the data is already spatial, but this is a general concern with high-dimensional data.)</p></li>
+<li><p><strong>Compression:</strong> How can I best summarize the data if I am willing to sacrifice some reconstruction accuracy?</p></li>
+</ul>
+<section id="principal-components-of-global-temperature">
+<h3>Principal Components of Global Temperature<a class="headerlink" href="#principal-components-of-global-temperature" title="Link to this heading">#</a></h3>
+<p>One way you could look for lower dimensional structure is using principal components analysis (PCA). The first three principal components (PCs) of the temperature data look like this.
+<img alt="PC1" src="slides/12_lglvms/pc1.png" /></p>
+<p><img alt="PC2" src="slides/12_lglvms/pc2.png" /></p>
+<p><img alt="PC3" src="slides/12_lglvms/pc3.png" /></p>
+<p>These PCs capture dimensions of maximal variance in the data. For example, the first PC captures whether a point is in the northern or southern hemisphere, which unsurprisingly accounts for a lot of the variance in temperature fluctuations over time. The second PC captures whether or not a point is over Antarctica, which must be another big determinant of temperature fluctuations.</p>
+</section>
+</section>
+<section id="principal-components-analysis-pca">
+<h2>Principal Components Analysis (PCA)<a class="headerlink" href="#principal-components-analysis-pca" title="Link to this heading">#</a></h2>
+<p>There are two classical definitions of PCA (Quoted from Bishop, Ch 12):</p>
+<ol class="arabic simple">
+<li><p>An orthogonal projection of the data onto a lower dimensional linear space, known as the <em>principal subspace</em>, such that the variance of the projected data is maximized (Hotelling, 1933).</p></li>
+<li><p>The linear projection that minimizes the average projection cost, defined as the mean squared distance between the data points and their projections (Pearson, 1901).</p></li>
+</ol>
+<p>We will focus on the first definition today and consider the second next time.</p>
+<section id="pca-maximum-variance-formulation">
+<h3>PCA: Maximum Variance Formulation<a class="headerlink" href="#pca-maximum-variance-formulation" title="Link to this heading">#</a></h3>
+<p><strong>Goal:</strong> Project data <span class="math notranslate nohighlight">\(\{\mbx_n\}_{n=1}^N\)</span> onto a lower dimensional space of dimension <span class="math notranslate nohighlight">\(M &lt; D\)</span> while maximizing the variance of the projected data.</p>
+<p>To start, assume <span class="math notranslate nohighlight">\(M = 1\)</span>. The principal subspace is defined by a unit vector <span class="math notranslate nohighlight">\(\mbu_1 \in \reals^D\)</span>. This is called the first <strong>principal component</strong>.</p>
+<p>Projecting a data point <span class="math notranslate nohighlight">\(\mbx_n\)</span> onto this subspace amounts to taking an inner product, <span class="math notranslate nohighlight">\(\mbu_1^\top \mbx_n\)</span>. These is variously called the <strong>scores</strong>, <strong>embeddings</strong>, or <strong>signals</strong>.</p>
+<p>The mean of the projected data is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \frac{1}{N} \sum_{n=1}^N \mbu_1^\top \mbx_n = \mbu_1^\top \left( \frac{1}{N} \sum_{n=1}^N \mbx_n \right) = \mbu_1^\top \bar{\mbx},
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\bar{\mbx}\)</span> is the sample mean.</p>
+<p>The variance is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \frac{1}{N} \sum_{n=1}^N \left[ \mbu_1^\top \mbx_n - \mbu_1^\top \bar{\mbx} \right]^2 
+    &amp;= \frac{1}{N} \sum_{n=1}^N \left[ \mbu_1^\top (\mbx_n - \bar{\mbx}) \right]^2 \\
+    &amp;=\frac{1}{N} \sum_{n=1}^N \mbu_1^\top (\mbx_n - \bar{\mbx}) (\mbx_n - \bar{\mbx})^\top \mbu_1 \\
+    % &amp;=\mbu_1^\top \left(\frac{1}{N} \sum_{n=1}^N (\mbx_n - \bar{\mbx}) (\mbx_n - \bar{\mbx})^\top \right) \mbu_1 \\
+    &amp;=\mbu_1^\top \mbS \mbu_1
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbS = \frac{1}{N} \sum_{n=1}^N (\mbx_n - \bar{\mbx}) (\mbx_n - \bar{\mbx})^\top \in \reals^{D \times D}\)</span> is the sample covariance matrix.
+\end{frame}</p>
+<p>Now maximize the projected variance wrt <span class="math notranslate nohighlight">\(\mbu_1\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbu_1 &amp;= \arg \max_{\mbu \in \bbS_{D}} \mbu^\top \mbS \mbu.
+\end{align*}\]</div>
+<p>This is the variational definition of the eigenvector with maximal eigenvalue!</p>
+<p>I.e., <span class="math notranslate nohighlight">\(\mbu_1\)</span> is the eigenvector of <span class="math notranslate nohighlight">\(\mbS\)</span> with the largest eigenvalue, <span class="math notranslate nohighlight">\(\lambda_1\)</span>.</p>
+<p>More generally, to find an <span class="math notranslate nohighlight">\(M\)</span> dimensional principal subspace, take the <span class="math notranslate nohighlight">\(M\)</span> eigenvectors <span class="math notranslate nohighlight">\(\mbu_1, \ldots, \mbu_M\)</span> with the largest eigenvalues <span class="math notranslate nohighlight">\(\lambda_1, \ldots, \lambda_M\)</span>.</p>
+<p>Since <span class="math notranslate nohighlight">\(\mbS\)</span> is real and symmetric positive definite, the eigenvectors are orthogonal.</p>
+</section>
+<section id="pca-and-the-singular-value-decomposition">
+<h3>PCA and the Singular Value Decomposition<a class="headerlink" href="#pca-and-the-singular-value-decomposition" title="Link to this heading">#</a></h3>
+<p>The first <span class="math notranslate nohighlight">\(M\)</span> principal components are the leading <span class="math notranslate nohighlight">\(M\)</span> <strong>eigenvectors of the covariance matrix</strong>. Equivalently, they are the first <span class="math notranslate nohighlight">\(M\)</span> <strong>right singular vectors of the data matrix</strong>.</p>
+<p>Let</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbY = \frac{1}{\sqrt{N}} \mbX = \frac{1}{\sqrt{N}} \begin{bmatrix}
+    - &amp; (\mbx_1 - \bar{\mbx})^\top &amp; - \\
+    &amp; \vdots &amp; \\
+    - &amp; (\mbx_N^\top  - \bar{\mbx})^\top &amp; -
+    \end{bmatrix}
+\end{align*}\]</div>
+<p>be the <em>centered and scaled</em> data matrix. Then <span class="math notranslate nohighlight">\(\mbY^\top \mbY = \frac{1}{N} \mbX^\top \mbX = \mbS\)</span> is the covariance matrix.</p>
+<p>The <strong>singular value decomposition (SVD)</strong> of <span class="math notranslate nohighlight">\(\mbY\)</span> is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbY = \mbV \mbLambda^{\frac{1}{2}} \mbU^\top 
+    \Rightarrow \mbY^\top \mbY = \frac{1}{N} \mbU \mbLambda^{\frac{1}{2}} \mbV^\top \mbV \mbLambda^{\frac{1}{2}} \mbU^\top 
+    = \frac{1}{N} \mbU \mbLambda \mbU^\top
+\end{align*}\]</div>
+<p>I.e. the <strong>right singular vectors</strong> of <span class="math notranslate nohighlight">\(\mbY\)</span> are the same (up to sign flips) as the eigenvectors of <span class="math notranslate nohighlight">\(\mbS\)</span>, and <strong>singular values</strong> of <span class="math notranslate nohighlight">\(\mbY\)</span> are the square root of the eigenvalues of <span class="math notranslate nohighlight">\(\mbS\)</span>.</p>
+</section>
+<section id="pca-explained-variance">
+<h3>PCA Explained Variance<a class="headerlink" href="#pca-explained-variance" title="Link to this heading">#</a></h3>
+<p>How well do the <span class="math notranslate nohighlight">\(M\)</span> principal components explain the data?</p>
+<p>Let <span class="math notranslate nohighlight">\(\mbz_n = \mbU_M^\top (\mbx_n - \bar{\mbx}) \in \reals^M\)</span>. Its covariance is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mathrm{Cov}[\mbz] = \mathrm{Cov}[\mbU_M^\top (\mbx - \bar{\mbx})] = \mbU_M^\top \mathrm{Cov}[\mbx] \mbU_M = \diag([\lambda_1, \ldots, \lambda_M]).
+\end{align*}\]</div>
+<p>Of course, if we let <span class="math notranslate nohighlight">\(M = D\)</span>, then we have <span class="math notranslate nohighlight">\(\mathrm{Cov}(\mbz) = \diag([\lambda_1, \ldots, \lambda_D])\)</span>.</p>
+<p>One way of assessing how well <span class="math notranslate nohighlight">\(M\)</span> components fits the data is via the <strong>fraction of variance explained</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \text{variance explained} = \frac{\Tr(\mathrm{Cov}[z; M \text{ components}])}{\Tr(\mathrm{Cov}[z; D \text{ components}])} = \frac{\sum_{m=1}^M \lambda_m}{\sum_{m=1}^D \lambda_m} \in [0, 1].
+\end{align*}\]</div>
+</section>
+<section id="scree-plots">
+<h3>Scree Plots<a class="headerlink" href="#scree-plots" title="Link to this heading">#</a></h3>
+<p><img alt="Scree Plots" src="../_images/scree.png" /></p>
+<p>A <strong>scree plot</strong> showing percent variance explained per component and cumulatively.</p>
+</section>
+</section>
+<section id="probabilistic-pca-a-continuous-latent-variable-model">
+<h2>Probabilistic PCA: A Continuous Latent Variable Model<a class="headerlink" href="#probabilistic-pca-a-continuous-latent-variable-model" title="Link to this heading">#</a></h2>
+<p>We cast the principal components as the solutions to an optimization problem: maximize the projected variance.</p>
+<p>A more modern view of PCA is as the <em>maximum likelihood estimate of a latent variable model</em>.</p>
+<section id="advantages">
+<h3>Advantages<a class="headerlink" href="#advantages" title="Link to this heading">#</a></h3>
+<p><strong>Probabilistic PCA (PPCA)</strong> has many advantages:</p>
+<ol class="arabic simple">
+<li><p>It’s a multivariate normal model with <strong>low-rank plus diagonal covariance</strong>, which takes only <span class="math notranslate nohighlight">\(O(MD)\)</span> parameters.</p></li>
+<li><p>We can fit the model using a <strong>host of inference algorithms</strong>, including EM.</p></li>
+<li><p>It can handle <strong>missing data</strong>.</p></li>
+<li><p>We can obtain posterior distributions of the principal components and scores.</p></li>
+<li><p>It can be embedded in larger probabilistic models.</p></li>
+</ol>
+</section>
+<section id="model">
+<h3>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h3>
+<p>The PPCA model is quite simple,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbz_n &amp;\iid{\sim} \cN(\mbzero, \mbI) \\
+    \mbx_n \mid \mbz_n &amp;\sim \cN(\mbW \mbz + \mbmu, \sigma^2 \mbI),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbz_n \in \reals^M\)</span> is a latent variable, <span class="math notranslate nohighlight">\(\mbW \in \reals^{D \times M}\)</span> are the weights, <span class="math notranslate nohighlight">\(\mbmu \in \reals^D\)</span> is the bias parameter, and <span class="math notranslate nohighlight">\(\sigma^2 \in \reals_+\)</span> is a variance.</p>
+<p>Equivalently, we can think of <span class="math notranslate nohighlight">\(\mbx_n\)</span> as a linear function of <span class="math notranslate nohighlight">\(\mbz_n\)</span> with additive noise,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbx_n &amp;= \mbW \mbz_n + \mbmu + \mbepsilon_n,
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbepsilon_n \sim \cN(\mbzero, \sigma^2 \mbI) \in \reals^D\)</span>.</p>
+</section>
+<section id="maximum-likelihood-estimation-of-the-parameters">
+<h3>Maximum likelihood estimation of the parameters<a class="headerlink" href="#maximum-likelihood-estimation-of-the-parameters" title="Link to this heading">#</a></h3>
+<p>Suppose we only need a point estimate of the parameters <span class="math notranslate nohighlight">\(\mbW\)</span>, <span class="math notranslate nohighlight">\(\mbmu\)</span>, and <span class="math notranslate nohighlight">\(\sigma^2\)</span>.</p>
+<p>A natural approach is the maximum likelihood estimate (MLE),</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbW_{\mathsf{ML}}, \mbmu_{\mathsf{ML}}, \sigma^2_{\mathsf{ML}} = \arg \max \cL(\mbW, \mbmu, \sigma^2),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\cL\)</span> is the marginal likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW, \mbmu, \sigma^2) &amp;= \log p(\mbX \mid \mbW, \mbmu, \sigma^2) \\
+    &amp;= \log \int \prod_{n=1}^N p(\mbx_n \mid \mbz_n, \mbW, \mbmu, \sigma^2) \, p(\mbz_n) \dif \mbz_n \\
+    &amp;= \log \int \prod_{n=1}^N \cN(\mbx_n \mid \mbW \mbz_n + \mbmu, \sigma^2 \mbI) \, \cN(\mbz_n \mid \mbzero, \mbI) \dif \mbz_n 
+\end{align*}\]</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Simplify this expression to show,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\mbW, \mbmu, \sigma^2) &amp;=
+\sum_{n=1}^N \log \cN(\mbx_n \mid \mbmu, \mbW \mbW^\top + \sigma^2 \mbI) 
+\end{align*}\]</div>
+</div>
+<p>Then the log likelihood simplifies to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW, \mbmu, \sigma^2) 
+    -\frac{ND}{2} \log 2 \pi - \frac{N}{2} \log |\mbC| -\frac{1}{2} \sum_{n=1}^N (\mbx_n - \mbmu)^\top \mbC^{-1} (\mbx - \mbmu) 
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbC = \mbW \mbW^\top + \sigma^2 \mbI\)</span>.</p>
+<p>Setting the derivative wrt <span class="math notranslate nohighlight">\(\mbmu\)</span> to zero and solving yields <span class="math notranslate nohighlight">\(\mbmu_{\mathsf{ML}} = \bar{\mbx}\)</span>, the sample mean.</p>
+<p>Maximizing wrt <span class="math notranslate nohighlight">\(\mbW\)</span> and <span class="math notranslate nohighlight">\(\sigma^2\)</span> is more complex but still has a closed form solution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbW_{\mathsf{ML}} = \mbU_M (\mbLambda_M - \sigma^2 \mbI)^{\frac{1}{2}} \mbR,
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbU_M \in \reals^{D \times M}\)</span> has columns given by the leading eigenvectors of the sample covariance matrix <span class="math notranslate nohighlight">\(\mbS\)</span>, where <span class="math notranslate nohighlight">\(\mbLambda_M = \diag([\lambda_1, \ldots, \lambda_M])\)</span>, and where <span class="math notranslate nohighlight">\(\mbR \in \reals^{M \times M}\)</span> is an arbitrary <em>orthogonal</em> matrix.</p>
+<p>Put differently, the MLE weights are only identifiable up to orthogonal transformation. Or, only the subspace spanned by <span class="math notranslate nohighlight">\(\mbU_M\)</span> is identifiable.</p>
+<p>Finally, the MLE of the variance is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \sigma^2_{\mathsf{ML}} &amp;= \frac{1}{D - M} \sum_{m=M+1}^D \lambda_m, 
+\end{align*}\]</div>
+<p>the average variance in the remaining dimensions.</p>
+<div class="admonition-questions admonition">
+<p class="admonition-title">Questions</p>
+<ol class="arabic simple">
+<li><p>What is the marginal covariance <span class="math notranslate nohighlight">\(\mbC\)</span> using the MLE <span class="math notranslate nohighlight">\(\mbW_{\mathsf{ML}}\)</span> and <span class="math notranslate nohighlight">\(\sigma^2_{\mathsf{ML}}\)</span>?</p></li>
+<li><p>Intuitively, why is the marginal covariance invariant to rotations of the weights?</p></li>
+</ol>
+</div>
+</section>
+<section id="the-posterior-distribution-on-the-latent-variables">
+<h3>The Posterior Distribution on the Latent Variables<a class="headerlink" href="#the-posterior-distribution-on-the-latent-variables" title="Link to this heading">#</a></h3>
+<p>Now fix <span class="math notranslate nohighlight">\(\mbW\)</span>, <span class="math notranslate nohighlight">\(\mbmu\)</span>, and <span class="math notranslate nohighlight">\(\sigma^2\)</span> (e.g. to their maximum likelihood values). What is the posterior of<span class="math notranslate nohighlight">\(\mbz_n\)</span>?</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_n \mid \mbx_n, \mbW, \mbmu, \sigma^2) 
+    &amp;\propto \cN(\mbz_n \mid \mbzero, \mbI) \, \cN(\mbx_n \mid \mbW \mbz_n + \mbmu, \sigma^2 \mbI) \\
+    &amp;\propto \exp \left\{ -\frac{1}{2} \mbz_n^\top \mbz_n -\frac{1}{2} (\mbx_n - \mbW \mbz_n - \mbmu)^\top (\sigma^2 \mbI)^{-1} (\mbx_n - \mbW \mbz_n - \mbmu) \right\} \\
+    &amp;\propto \exp \left\{ -\frac{1}{2} \mbz_n^\top \mbJ_n \mbz_n + \mbh_n^\top\mbz_n \right\} \\
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbJ_n = \mbI + \frac{1}{\sigma^2} \mbW^\top \mbW\)</span> and <span class="math notranslate nohighlight">\( \mbh_n = \frac{1}{\sigma^2} \mbW^\top (\mbx_n - \mbmu)\)</span></p>
+<p>Completing the square,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_n \mid \mbx_n, \mbW, \mbmu, \sigma^2) &amp;= \cN(\mbz_n \mid \mbJ_n^{-1} \mbh_n, \mbJ_n^{-1}).
+\end{align*}\]</div>
+</section>
+<section id="the-posterior-distribution-in-the-zero-noise-limit">
+<h3>The Posterior Distribution in the Zero Noise Limit<a class="headerlink" href="#the-posterior-distribution-in-the-zero-noise-limit" title="Link to this heading">#</a></h3>
+<p>In the limit where <span class="math notranslate nohighlight">\(\sigma^2 \to 0\)</span>, the posterior mean of <span class="math notranslate nohighlight">\(\mbz_n\)</span> is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lim_{\sigma^2 \to 0} \E[\mbz_n \mid \mbx_n, \mbW, \mbmu, \sigma^2] 
+    &amp;= \lim_{\sigma^2 \to 0} (\mbI + \frac{1}{\sigma^2} \mbW^\top \mbW)^{-1} [\frac{1}{\sigma^2} \mbW^\top (\mbx_n - \mbmu)] \\
+    &amp;= \lim_{\sigma^2 \to 0} (\sigma^2 \mbI + \mbW^\top \mbW)^{-1} \mbW^\top (\mbx_n - \mbmu) \\
+    &amp;= (\mbW^\top \mbW)^{-1} \mbW^\top (\mbx_n - \mbmu)
+\end{align*}\]</div>
+<p>Now suppose <span class="math notranslate nohighlight">\(\mbW = \mbW_{\mathsf{ML}} = \mbU_M (\mbLambda_M - \sigma^2 \mbI)^{\frac{1}{2}} \mbR\)</span> and set <span class="math notranslate nohighlight">\(\mbR = \mbI\)</span>. This goes to <span class="math notranslate nohighlight">\(\mbW = \mbU_M \mbLambda_M^{\frac{1}{2}}\)</span>. Then,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lim_{\sigma^2 \to 0} \E[\mbz_n \mid \mbx_n, \mbW, \mbmu, \sigma^2] 
+    &amp;= (\mbW^\top \mbW)^{-1} \mbW^\top (\mbx_n - \mbmu) \\
+    &amp;= \mbLambda_M^{-\frac{1}{2}} \mbU_M^\top (\mbx_n - \mbmu)
+\end{align*}\]</div>
+<p>How does this relate to the scores in PCA? In PCA, the scores are simply <span class="math notranslate nohighlight">\(\mbU_M^\top (\mbx_n - \mbmu)\)</span>. The difference is that here we have an extra scaling by <span class="math notranslate nohighlight">\(\mbLambda_M^{-\frac{1}{2}}\)</span>. The difference is because in PCA, the weights are assumed to be orthonormal, and the scale is accounted for in the scores. In probabilistic PCA, the latent variables are assumed to be standard normal under the prior, and the scaling is accounted for in the weights.</p>
+</section>
+<section id="em-for-probabilistic-pca">
+<h3>EM for Probabilistic PCA<a class="headerlink" href="#em-for-probabilistic-pca" title="Link to this heading">#</a></h3>
+<p>The <strong>E-step</strong> is to compute the posterior <span class="math notranslate nohighlight">\(q(\mbz_n) = p(\mbz_n \mid \mbx_n; \mbtheta)\)</span>, where <span class="math notranslate nohighlight">\(\mbtheta = (\mbW, \mbmu, \sigma^2)\)</span> are the current parameters. For simplicity, assume the data is centered so that <span class="math notranslate nohighlight">\(\mbmu^\star = 0\)</span>.</p>
+<p>The <strong>M-step</strong> is to maximize the expected complete data log likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbtheta) 
+    &amp;= \sum_{n=1}^N \E_{q(\mbz_n)} \left[ \log p(\mbx_n \mid \mbz_n; \mbtheta)\right] \\
+    &amp;= \sum_{n=1}^N \E_{q(\mbz_n)} \left[ \log \cN(\mbx_n \mid \mbW \mbz_n, \sigma^2 \mbI) \right] \\
+    &amp;= \sum_{n=1}^N \E_{q(\mbz_n)} \left[ -\frac{D}{2} \log \sigma^2 -\frac{1}{2\sigma^2} (\mbx_n - \mbW \mbz_n)^\top (\mbx_n - \mbW \mbz_n)\right].
+\end{align*}\]</div>
+<p>As a function of <span class="math notranslate nohighlight">\(\mbW\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cL(\mbW) 
+    &amp;= \sum_{n=1}^N \E_{q(\mbz_n)} \left[ -\frac{1}{2\sigma^2} \left \langle \mbW^\top \mbW, \mbz_n \mbz_n^\top \right \rangle + \frac{1}{\sigma^2} \left \langle \mbW, \mbx_n \mbz_n^\top \right \rangle \right] \\
+    &amp;= -\frac{1}{2\sigma^2} \left \langle \mbW^\top \mbW, \sum_{n=1}^N \E_{q(\mbz_n)} \left[ \mbz_n \mbz_n^\top \right] \right \rangle + \frac{1}{\sigma^2} \left \langle \mbW, \sum_{n=1}^N \E_{q(\mbz_n)} \left[ \mbx_n \mbz_n^\top \right] \right \rangle.
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\langle \mbA, \mbB \rangle = \Tr(\mbA^\top \mbB)\)</span> is the Frobenius inner product for matrices <span class="math notranslate nohighlight">\(\mbA\)</span> and <span class="math notranslate nohighlight">\(\mbB\)</span>.</p>
+<p>Taking derivatives wrt <span class="math notranslate nohighlight">\(\mbW\)</span> and setting to zero yields,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbW^\star &amp;= \left( \sum_{n=1}^N \E_{q(\mbz_n)} \left[ \mbx_n \mbz_n^\top \right] \right) \left( \sum_{n=1}^N \E_{q(\mbz_n)} \left[ \mbz_n \mbz_n^\top \right] \right)^{-1}.
+\end{align*}\]</div>
+<p>It depends on sums of expected sufficient statistics!</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise:</p>
+<p>Derive the expected sufficient statistics and the M-step update for <span class="math notranslate nohighlight">\(\sigma^2\)</span>.</p>
+</div>
+</section>
+</section>
+<section id="factor-analysis">
+<h2>Factor Analysis<a class="headerlink" href="#factor-analysis" title="Link to this heading">#</a></h2>
+<p>Factor analysis is another continuous latent variable model. In fact, it’s almost the same as probabilistic PCA!</p>
+<p>The difference is that FA allows <span class="math notranslate nohighlight">\(\sigma^2\)</span> to vary across output dimensions. The generative model is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbz_n &amp;\iid{\sim} \cN(\mbzero, \mbI) \\
+    \mbx_n &amp;\sim \cN(\mbW \mbz_n + \mbmu, \diag(\mbsigma^2))
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbsigma^2 = [\sigma_1^2, \ldots, \sigma_D^2]^\top\)</span>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Without doing any math, derive EM for this factor analysis model.</p>
+</div>
+</section>
+<section id="linear-dynamical-systems">
+<h2>Linear Dynamical Systems<a class="headerlink" href="#linear-dynamical-systems" title="Link to this heading">#</a></h2>
+<p>We generalized from mixture models to HMMs by assuming that the latent states were dependent.</p>
+<p>HMMs assume a particular factorization of the joint distribution on latent states (<span class="math notranslate nohighlight">\(z_t\)</span>) and observations <span class="math notranslate nohighlight">\((\mbx_t)\)</span>. The graphical model looks like this:</p>
+<p><img alt="HMM graphical model" src="../_images/hmm.png" /></p>
+<p>This graphical model says that the joint distribution factors as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(z_{1:T}, \mbx_{1:T}) &amp;= p(z_1) \prod_{t=2}^T p(z_t \mid z_{t-1}) \prod_{t=1}^T p(\mbx_t \mid z_t).
+\end{align*}\]</div>
+<p>We call this an HMM because <span class="math notranslate nohighlight">\(p(z_1) \prod_{t=2}^T p(z_t \mid z_{t-1})\)</span> is a Markov chain.</p>
+<section id="state-space-models-ssms">
+<h3>State space models (SSMs)<a class="headerlink" href="#state-space-models-ssms" title="Link to this heading">#</a></h3>
+<p>Note that nothing above assumes that <span class="math notranslate nohighlight">\(z_t\)</span> is a discrete random variable!</p>
+<p>HMM’s are a special case of more general <strong>state space models</strong> with discrete states.</p>
+<p>State space models assume the same graphical model but allow for arbitrary types of latent states.</p>
+<p>For example, suppose that <span class="math notranslate nohighlight">\(\mbz_t \in \mathbb{R}^D\)</span> are continuous valued latent states and that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_{1:T}) &amp;= p(\mbz_1) \prod_{t=2}^T p(\mbz_t \mid \mbz_{t-1}) \\
+    &amp;= \cN(\mbz_1 \mid \mbb_1, \mbQ_1) \prod_{t=2}^T \cN(\mbz_t \mid \mbA \mbz_{t-1} + \mbb, \mbQ) 
+\end{align*}\]</div>
+<p>This is called a Gaussian <strong>linear dynamical system (LDS)</strong>.</p>
+</section>
+<section id="message-passing-in-hmms">
+<h3>Message passing in HMMs<a class="headerlink" href="#message-passing-in-hmms" title="Link to this heading">#</a></h3>
+<p>In the HMM with discrete states, we showed how to compute posterior marginal distributions using message passing,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(z_t \mid \mbx_{1:T}) &amp;\propto \sum_{z_1} \cdots \sum_{z_{t-1}} \sum_{z_{t+1}} \cdots \sum_{z_T} p(z_{1:T}, \mbx_{1:T}) \\
+    &amp;= \alpha_t(z_t) \, p(\mbx_t \mid z_t) \, \beta_t(z_t) 
+\end{align*}\]</div>
+<p>where the <em>forward and backward messages</em> are defined recursively</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \alpha_t(z_t) &amp;= \sum_{z_{t-1}} p(z_t \mid z_{t-1}) \, p(\mbx_{t-1} \mid z_{t-1}) \, \alpha_{t-1}(z_{t-1}) \\
+    \beta_t(z_t) &amp;= \sum_{z_{t+1}} \, p(z_{t+1} \mid z_t) \, p(\mbx_{t+1} \mid z_{t+1}) \, \beta_{t+1}(z_{t+1})
+\end{align*}\]</div>
+<p>The initial conditions are <span class="math notranslate nohighlight">\(\alpha_1(z_1) = p(z_1)\)</span> and <span class="math notranslate nohighlight">\(\beta_{T}(z_T) = 1\)</span>.</p>
+</section>
+<section id="what-do-the-forward-messages-tell-us">
+<h3>What do the forward messages tell us?<a class="headerlink" href="#what-do-the-forward-messages-tell-us" title="Link to this heading">#</a></h3>
+<p>The forward messages are equivalent to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \alpha_t(z_t) &amp;= \sum_{z_1} \cdots \sum_{z_{t-1}} p(z_{1:t}, \mbx_{1:t-1}) \\
+    &amp;p(z_t, \mbx_{1:t-1}).
+\end{align*}\]</div>
+<p>The normalized message is the <em>predictive distribution</em>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \frac{\alpha_t(z_t)}{\sum_{z_t'} \alpha_t(z_t')} &amp;= 
+    \frac{p(z_t, \mbx_{1:t-1})}{\sum_{z_t'} p(z_t', \mbx_{1:t-1})} = \frac{p(z_t, \mbx_{1:t-1})}{p(\mbx_{1:t-1})} = p(z_t \mid \mbx_{1:t-1}),
+\end{align*}\]</div>
+<p>The final normalizing constant yields the marginal likelihood, <span class="math notranslate nohighlight">\(\sum_{z_T} \alpha_T(z_T) = p(\mbx_{1:T})\)</span>.</p>
+</section>
+<section id="message-passing-in-state-space-models">
+<h3>Message passing in state space models<a class="headerlink" href="#message-passing-in-state-space-models" title="Link to this heading">#</a></h3>
+<p>The same recursive algorithm applies (in theory) to any state space model with the same factorization, but the sums are replaced with integrals,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_t \mid \mbx_{1:T}) &amp;\propto \int \dif \mbz_1 \cdots \int \dif {\mbz_{t-1}} \int \dif{\mbz_{t+1}} \cdots \int \dif {\mbz_T} \,  p(\mbz_{1:T}, \mbx_{1:T}) \\
+    &amp;= \alpha_t(\mbz_t) \, p(\mbx_t \mid \mbz_t) \, \beta_t(\mbz_t) 
+\end{align*}\]</div>
+<p>where the <em>forward and backward messages</em> are defined recursively</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \alpha_t(\mbz_t) &amp;= \int p(\mbz_t \mid \mbz_{t-1}) \, p(\mbx_{t-1} \mid \mbz_{t-1}) \, \alpha_{t-1}(\mbz_{t-1}) \dif {\mbz_{t-1}} \\
+    \beta_t(\mbz_t) &amp;= \int p(\mbz_{t+1} \mid \mbz_t) \, p(\mbx_{t+1} \mid \mbz_{t+1}) \, \beta_{t+1}(\mbz_{t+1}) \dif {\mbz_{t+1}} 
+\end{align*}\]</div>
+<p>The initial conditions are <span class="math notranslate nohighlight">\(\alpha_1(\mbz_1) = p(\mbz_1)\)</span> and <span class="math notranslate nohighlight">\(\beta_{T}(\mbz_T) \propto 1\)</span>.</p>
+</section>
+<section id="forward-pass-in-a-linear-dynamical-system">
+<h3>Forward pass in a linear dynamical system<a class="headerlink" href="#forward-pass-in-a-linear-dynamical-system" title="Link to this heading">#</a></h3>
+<p>Consider an linear dynamical system (LDS) with Gaussian emissions,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbx_{1:T}, \mbz_{1:T}) &amp;= p(\mbz_1) \prod_{t=2}^T p(\mbz_t \mid \mbz_{t-1}) \\
+    &amp;= \cN(\mbz_1 \mid \mbb_1, \mbQ_1) \prod_{t=2}^T \cN(\mbz_t \mid \mbA \mbz_{t-1} + \mbb, \mbQ) \prod_{t=1}^ \cN(\mbx_t \mid \mbC \mbz_t + \mbd, \mbR)
+\end{align*}\]</div>
+<p>Let’s derive the forward message <span class="math notranslate nohighlight">\(\alpha_{t+1}(\mbz_{t+1})\)</span>. Assume <span class="math notranslate nohighlight">\(\alpha_{t}(\mbz_{t}) \propto \cN(\mbz_{t} \mid \mbmu_{t|t-1}, \mbSigma_{t|t-1})\)</span>.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \alpha_{t+1}(\mbz_{t+1}) 
+    &amp;= \int p(\mbz_{t+1} \mid \mbz_{t}) \, p(\mbx_{t} \mid \mbz_{t}) \, \alpha_{t}(\mbz_{t}) \dif {\mbz_{t}} \\
+    &amp;= \int \cN(\mbz_{t+1} \mid \mbA \mbz_{t} + \mbb, \mbQ) \, \cN(\mbx_{t} \mid \mbC \mbz_{t} + \mbd, \mbR) \, \cN(\mbz_{t} \mid \mbmu_{t|t-1}, \mbSigma_{t|t-1}) \dif \mbz_{t}
+\end{align*}\]</div>
+<section id="the-update-step">
+<h4>The update step<a class="headerlink" href="#the-update-step" title="Link to this heading">#</a></h4>
+<p>The first step is the <strong>update step</strong>, where we <strong>condition on</strong> the emission <span class="math notranslate nohighlight">\(\mbx_t\)</span>,</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Expand the densities, collect terms, and complete the square to compute the mean <span class="math notranslate nohighlight">\(\mbmu_{t|t}\)</span> and covariance <span class="math notranslate nohighlight">\(\mbSigma_{t|t}\)</span> after the update step,
+:class: tip</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cN(\mbx_{t} \mid \mbC \mbz_{t} + \mbd, \mbR) \, \cN(\mbz_{t} \mid \mbmu_{t|t-1}, \mbSigma_{t|t-1}) 
+    &amp;\propto \cN(\mbz_t \mid \mbmu_{t|t}, \mbSigma_{t|t}).
+\end{align*}\]</div>
+</div>
+<p>Write the joint distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_t, \mbx_t \mid \mbx_{1:t-1}) 
+    &amp;= 
+    \cN(\mbx_{t} \mid \mbC \mbz_{t} + \mbd, \mbR) \, \cN(\mbz_{t} \mid \mbmu_{t|t-1}, \mbSigma_{t|t-1}) \\
+    &amp;= 
+    \cN \left(
+    \begin{bmatrix}
+    \mbz_t \\
+    \mbx_t 
+    \end{bmatrix}
+    \, \bigg| \, 
+    \begin{bmatrix}
+    \mbmu_{t|t-1} \\
+    \mbC \mbmu_{t|t-1} + \mbd
+    \end{bmatrix},
+    \begin{bmatrix}
+    \mbSigma_{t|t-1} &amp; \mbSigma_{t|t-1} \mbC^\top \\
+    \mbC \mbSigma_{t|t-1} &amp; \mbC \mbSigma_{t|t-1} \mbC^\top + \mbR
+    \end{bmatrix}
+    \right)
+\end{align*}\]</div>
+<p>Since <span class="math notranslate nohighlight">\((\mbz_t, \mbx_t)\)</span> are jointly Gaussian, <span class="math notranslate nohighlight">\(\mbz_t\)</span> must be conditionally Gaussian as well,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_t \mid \mbx_{1:t}) &amp;= \cN(\mbmu_{t|t}, \mbSigma_{t|t}).
+\end{align*}\]</div>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Now use the <strong>Schur complement</strong>  to solve for <span class="math notranslate nohighlight">\(\mbmu_{t|t}\)</span> and <span class="math notranslate nohighlight">\(\mbSigma_{t|t}\)</span></p>
+<div class="admonition-kalman-gain admonition">
+<p class="admonition-title">Kalman gain</p>
+<p>Write <span class="math notranslate nohighlight">\(\mbmu_{t|t}\)</span> and <span class="math notranslate nohighlight">\(\mbSigma_{t|t}\)</span> in terms of the <strong>Kalman gain</strong></p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbK_t &amp;= \mbSigma_{t|t-1} \mbC^\top (\mbC \mbSigma_{t|t-1} \mbC^\top + \mbR)^{-1}           
+\end{align*}\]</div>
+<p>What is the Kalman gain doing?</p>
+</div>
+</div>
+</section>
+<section id="the-predict-step">
+<h4>The predict step<a class="headerlink" href="#the-predict-step" title="Link to this heading">#</a></h4>
+<p>The predict step yields <span class="math notranslate nohighlight">\(p(\mbz_t \mid \mbx_{1:t}) = \cN(\mbz_t \mid \mbmu_{t|t}, \mbSigma_{t|t})\)</span>. To complete the forward pass, we need the <strong>predict step</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \alpha_{t+1}(\mbz_{t+1}) 
+    &amp;= \int p(\mbz_{t+1} \mid \mbz_{t}) \, p(\mbx_{t} \mid \mbz_{t}) \, \alpha_{t}(\mbz_{t}) \dif {\mbz_{t}} \\
+    &amp;= \int \cN(\mbz_{t+1} \mid \mbA \mbz_{t} + \mbb, \mbQ) \, \cN(\mbz_{t} \mid \mbmu_{t|t}, \mbSigma_{t|t}) \dif \mbz_{t} \\
+    &amp;= \cN(\mbz_{t+1} \mid \mbmu_{t+1|t}, \mbSigma_{t+1|t})
+\end{align*}\]</div>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Solve for the mean <span class="math notranslate nohighlight">\(\mbmu_{t+1|t}\)</span> and covariance <span class="math notranslate nohighlight">\(\mbSigma_{t+1|t}\)</span> after the predict step.</p>
+</div>
+</section>
+<section id="completing-the-recursions">
+<h4>Completing the recursions<a class="headerlink" href="#completing-the-recursions" title="Link to this heading">#</a></h4>
+<p>That wraps up the recursions! All that’s left is the base case, which comes from the initial state distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbmu_{1|0} = \mbb_1 \qquad \text{and} \quad \mbSigma_{1|0} = \mbQ_1.
+\end{align*}\]</div>
+</section>
+<section id="computing-the-marginal-likelihood">
+<h4>Computing the marginal likelihood<a class="headerlink" href="#computing-the-marginal-likelihood" title="Link to this heading">#</a></h4>
+<p>Like in the discrete HMM, we can compute the marginal likelihood along the forward pass.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\mbx_{1:T}) 
+&amp;= \prod_{t=1}^T p(\mbx_t \mid \mbx_{1:t-1}) \\
+&amp;= \prod_{t=1}^T \int p(\mbx_t \mid \mbz_t) \, p(\mbz_t \mid \mbx_{1:t-1}) \dif \mbz_t \\
+&amp;= \prod_{t=1}^T \int \cN(\mbx_t \mid \mbC \mbz_t + \mbd, \mbR) \, \cN(\mbz_t \mid \mbmu_{t|t-1}, \mbSigma_{t|t-1}) \dif \mbz_t 
+\end{align*}\]</div>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Obtain a closed form expression for the integrals.</p>
+</div>
+</section>
+</section>
+<section id="backward-pass-in-a-linear-dynamical-system">
+<h3>Backward pass in a linear dynamical system<a class="headerlink" href="#backward-pass-in-a-linear-dynamical-system" title="Link to this heading">#</a></h3>
+<p>The backward pass in the LDS computes the smoothing distributions</p>
+<ul class="simple">
+<li><p>The forward pass gives us the filtering distributions <span class="math notranslate nohighlight">\(p(\mbz_t \mid \mbx_{1:t})\)</span>. How can we compute the smoothing distributions, <span class="math notranslate nohighlight">\(p(\mbz_t \mid \mbx_{1:\textcolor{red}{T}})\)</span>?</p></li>
+<li><p>In the discrete HMM we essentially ran the <em>same algorithm in reverse</em> to get the backward messages, starting from <span class="math notranslate nohighlight">\(\beta_{T}(\mbz_T) \propto 1\)</span>.</p></li>
+<li><p>We can do the same sort of thing here, but it’s a bit funky because we need to start with an improper Gaussian distribution <span class="math notranslate nohighlight">\(\beta_T(\mbz_T) \propto \cN(\mbzero, \infty \mbI)\)</span>.</p></li>
+<li><p>Instead, we’ll derive an alternative way of computing the smoothing distributions.</p></li>
+</ul>
+<section id="bayesian-smoothing">
+<h4>Bayesian Smoothing<a class="headerlink" href="#bayesian-smoothing" title="Link to this heading">#</a></h4>
+<p><strong>Note:</strong> <span class="math notranslate nohighlight">\(\mbz_t\)</span> is conditionally independent of <span class="math notranslate nohighlight">\(\mbx_{t+1:T}\)</span> given <span class="math notranslate nohighlight">\(\mbz_{t+1}\)</span>, so</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_t \mid \mbz_{t+1}, \mbx_{1:T}) 
+    &amp;= p(\mbz_t \mid \mbz_{t+1}, \mbx_{1:t}) \\
+    &amp;= \frac{p(\mbz_t, \mbz_{t+1} \mid \mbx_{1:t})}{p(\mbz_{t+1} \mid \mbx_{1:t})} \\
+    &amp;= \frac{p(\mbz_t \mid \mbx_{1:t}) \, p(\mbz_{t+1} \mid \mbz_t)}{p(\mbz_{t+1} \mid \mbx_{1:t})} 
+\end{align*}\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What rules of probability did we apply in each of these steps?</p>
+</div>
+<p>Now we can write the joint distribution as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_t, \mbz_{t+1} \mid \mbx_{1:T}) 
+    &amp;= p(\mbz_t \mid \mbz_{t+1} \mid \mbx_{1:T}) p(\mbz_{t+1} \mid \mbx_{1:T}) \\
+    &amp;= \frac{p(\mbz_t \mid \mbx_{1:t}) \, p(\mbz_{t+1} \mid \mbz_t) \,  p(\mbz_{t+1} \mid \mbx_{1:T})}{p(\mbz_{t+1} \mid \mbx_{1:t})}.
+\end{align*}\]</div>
+<p>Marginalizing over <span class="math notranslate nohighlight">\(\mbz_{t+1}\)</span> gives us,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_t \mid \mbx_{1:T}) 
+    &amp;= p(\mbz_t \mid \mbx_{1:t}) \int \frac{p(\mbz_{t+1} \mid \mbz_t) \,  p(\mbz_{t+1} \mid \mbx_{1:T})}{p(\mbz_{t+1} \mid \mbx_{1:t})} \dif \mbz_{t+1}
+\end{align*}\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Can we compute each of these terms?</p>
+</div>
+</section>
+<section id="the-rauch-tung-striebel-rts-smoother-aka-kalman-smoother">
+<h4>The Rauch-Tung-Striebel (RTS) Smoother, aka Kalman Smoother<a class="headerlink" href="#the-rauch-tung-striebel-rts-smoother-aka-kalman-smoother" title="Link to this heading">#</a></h4>
+<p>These recursions apply to any Markovian state space model. For the special case of a Gaussian linear dynamical system, the smoothing distributions are again Gaussians,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(\mbz_t \mid \mbx_{1:T}) 
+    &amp;= \cN(\mbz_t \mid \mbmu_{t|T}, \mbSigma_{t|T}) 
+\end{align*}\]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbmu_{t|T} &amp;= \mbmu_{t|t} + \mbG_t (\mbmu_{t+1|T} - \mbmu_{t+1|t}) \\
+    \mbSigma_{t|T} &amp;= \mbSigma_{t|t} + \mbG_t (\mbSigma_{t+1|T} - \mbSigma_{t+1|t}) \mbG_t^\top \\
+    \mbG_t &amp;\triangleq \mbSigma_{t|t} \mbA^\top \mbSigma_{t+1|t}^{-1}.
+\end{align*}\]</div>
+<p>This is called the <strong>Rauch-Tung-Striebel (RTS) smoother</strong> or the <strong>Kalman smoother</strong>.</p>
+</section>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>Linear Gaussian latent variable models are ubiquitous in machine learning and statistics. They are even hiding in familiar places: whenever we apply PCA, we’re essentially using an LG-LVM. There are several more variants of these models, including canonical correlation analysis (CCA), independent component analysis (ICA), and many more.</p>
+<p>State space models are near and dear to my heart, and I wish we had more time to cover them in this course. In particular, my lab has worked on switching linear dynamical systems, which are a mash-up of HMMs and LDSs. We also work on better algorithms for inference in SSMs, and deep SSMs that we’ll discuss in a later chapter.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="11_hmms.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Hidden Markov Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivating-example">Motivating Example</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-components-of-global-temperature">Principal Components of Global Temperature</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-components-analysis-pca">Principal Components Analysis (PCA)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-maximum-variance-formulation">PCA: Maximum Variance Formulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-and-the-singular-value-decomposition">PCA and the Singular Value Decomposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-explained-variance">PCA Explained Variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scree-plots">Scree Plots</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probabilistic-pca-a-continuous-latent-variable-model">Probabilistic PCA: A Continuous Latent Variable Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages">Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation-of-the-parameters">Maximum likelihood estimation of the parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-posterior-distribution-on-the-latent-variables">The Posterior Distribution on the Latent Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-posterior-distribution-in-the-zero-noise-limit">The Posterior Distribution in the Zero Noise Limit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#em-for-probabilistic-pca">EM for Probabilistic PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#factor-analysis">Factor Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-dynamical-systems">Linear Dynamical Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#state-space-models-ssms">State space models (SSMs)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#message-passing-in-hmms">Message passing in HMMs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-do-the-forward-messages-tell-us">What do the forward messages tell us?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#message-passing-in-state-space-models">Message passing in state space models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-pass-in-a-linear-dynamical-system">Forward pass in a linear dynamical system</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-update-step">The update step</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-predict-step">The predict step</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#completing-the-recursions">Completing the recursions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-marginal-likelihood">Computing the marginal likelihood</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backward-pass-in-a-linear-dynamical-system">Backward pass in a linear dynamical system</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-smoothing">Bayesian Smoothing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rauch-tung-striebel-rts-smoother-aka-kalman-smoother">The Rauch-Tung-Striebel (RTS) Smoother, aka Kalman Smoother</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
