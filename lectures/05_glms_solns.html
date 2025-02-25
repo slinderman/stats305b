@@ -199,6 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw4/hw4.html">HW4: Large Language Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -983,8 +984,8 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
 <p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
 <p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-3bc0a100-af2d-4eca-b5de-cb7e89a2526e">
-<span class="eqno">(2)<a class="headerlink" href="#equation-3bc0a100-af2d-4eca-b5de-cb7e89a2526e" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-abec369b-221b-47a2-9a64-cea18f4102f7">
+<span class="eqno">(2)<a class="headerlink" href="#equation-abec369b-221b-47a2-9a64-cea18f4102f7" title="Permalink to this equation">#</a></span>\[\begin{align}
     \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
     \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
 \end{align}\]</div>
