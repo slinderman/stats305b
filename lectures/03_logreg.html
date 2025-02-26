@@ -1128,8 +1128,8 @@ The marginal likelihood is a natural measure of model complexity, and it is ofte
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) + t \log\left(1 - \frac{\mu}{L}\right) \leq \log \epsilon.
 \end{align*}\]</div>
 <p>We can further upper bound the LHS by using the inequality <span class="math notranslate nohighlight">\(\log ( 1 - x) \leq -x\)</span> to get</p>
-<div class="amsmath math notranslate nohighlight" id="equation-384db97a-2be8-42c3-82a9-7f161be6b8e8">
-<span class="eqno">(1)<a class="headerlink" href="#equation-384db97a-2be8-42c3-82a9-7f161be6b8e8" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-ce307f7e-74d3-403f-9d83-30da4fee0d38">
+<span class="eqno">(1)<a class="headerlink" href="#equation-ce307f7e-74d3-403f-9d83-30da4fee0d38" title="Permalink to this equation">#</a></span>\[\begin{align}
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*))  - \frac{\mu t}{L}\leq \log \epsilon.
 \end{align}\]</div>
 <p>So, we need to run <span class="math notranslate nohighlight">\(t \geq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}\)</span> iterations of gradient descent. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 100\)</span> times as many iterations. This is called <strong>linear convergence</strong>.</p>
