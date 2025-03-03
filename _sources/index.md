@@ -51,7 +51,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Wed, Feb 19, 2025 | [Linear Gaussian Latent Variable Models](lectures/12_lglvms.ipynb) | [download](slides/12_lglvms.pdf) | |
 | Mon, Feb 24, 2025 | [Variational Autoencoders](lectures/13_vaes.ipynb) <br> <span style="color:red">**HW3 Due**</span>; **HW4 Released**  | [download](slides/13_vaes.pdf) | {cite:p}`kingma2019introduction` Ch.1-2 |
 | Wed, Feb 26, 2025 | [Transformers](lectures/14_transformers.md) | [download](slides/14_transformers.pdf) | {cite:p}`turner2023introduction` |
-| Mon, Mar  3, 2025 | [State Space Layers (S4, S5, Mamba)](lectures/14_ssm.pdf)  |  | {cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
+| Mon, Mar  3, 2025 | [Recurrent Neural Networks](lectures/15_rnns.md)  | [download](slides/15_rnns.pdf) | {cite:p}`goodfellow2016deep` Ch 9 <br>{cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Wed, Mar  5, 2025 | [Denoising Diffusion Models](lectures/16_diffusion.md) | | {cite:p}`turner2024denoising` | 
 | Mon, Mar 10, 2025 | Point Processes | | |
 | Wed, Mar 12, 2025 | Wrap Up | | |

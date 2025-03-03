@@ -193,6 +193,7 @@
 <li class="toctree-l1"><a class="reference internal" href="12_lglvms.html">Linear Gaussian Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="13_vaes.html">Variational Autoencoders</a></li>
 <li class="toctree-l1"><a class="reference internal" href="14_transformers.html">Transformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_rnns.html">Recurrent Neural Networks</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -985,8 +986,8 @@ D(\mby; \hat{\mbmu}_0) - D(\mby; \hat{\mbmu}_1)
 <p>Finally, another common approach to model selection and comparison is to use cross-validation. The idea is to approximate out-of-sample predictive accuracy by randomly splitting the training data.</p>
 <p><strong>Leave-one-out cross validation (LOOCV)</strong> withholds one datapoint out at a time, estimates parameters using the other <span class="math notranslate nohighlight">\(n-1\)</span>, and then evaluates predictive likelihood on the held out datapoint.</p>
 <p>This approximates,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-b2d8f4fc-c5bb-4298-b2ff-a9312c002479">
-<span class="eqno">(2)<a class="headerlink" href="#equation-b2d8f4fc-c5bb-4298-b2ff-a9312c002479" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-de08decf-5402-459a-b41d-3576a74b1fe5">
+<span class="eqno">(2)<a class="headerlink" href="#equation-de08decf-5402-459a-b41d-3576a74b1fe5" title="Permalink to this equation">#</a></span>\[\begin{align}
     \E_{p^\star(x, y)}[\log p(y \mid x, \{x_i, y_i\}_{i=1}^n)] &amp;\approx
     \frac{1}{n} \sum_{i=1}^n \log p(y_i \mid x_i, \{x_j, y_j\}_{j \neq i}).
 \end{align}\]</div>
