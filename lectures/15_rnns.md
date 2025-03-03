@@ -295,8 +295,107 @@ The gradients are essentially the posterior marginals and pairwise marginals we 
 
 In the M-step of EM, we solve for the parameters that satisfy the constrained optimality conditions, whereas in SGD we just take a step in the direction of the gradient. EM tends to converge must faster in practice for this reason. 
 
-## Computational Cost
+<!-- ## Computational Cost
 
 What is the cost of evaluating an RNN and computing its gradients? Both the forward computation of the states and the backward computation of the gradients are $\cO(T)$ time complexity. For a vanilla RNN, the cost of the matrix-vector multiplications in the forward and backward passes are likewise $\cO(K^2)$. In terms of memory, we also need to store the states for the backward pass, which takes $\cO(TK)$ memory. 
 
-These costs are comparble to those of inference in an HMM, as we expect from the discussion above. However, $\cO(T)$ time for evaluation and gradient calculations are still quite costly in modern machine learning pipelines, and the networks that are used most in practice mitigate these costs with clever architectural changes, as we'll discuss next.
+These costs are comparble to those of inference in an HMM, as we expect from the discussion above. However, $\cO(T)$ time for evaluation and gradient calculations are still quite costly in modern machine learning pipelines, and the networks that are used most in practice mitigate these costs with clever architectural changes, as we'll discuss next. -->
+
+## Linear RNNs
+
+Consider the special case of _linear_ RNNs,
+
+\begin{align*}
+f(\mbh_{t-1}) &= \mbA \mbh_{t-1} + \mbB \mbx_t.
+\end{align*}
+
+with read-out $\mby_t = \mbC \mbh_t + \mbd$.
+
+Since a linear operators compose, we can write the entire input-output map as a linear function,
+
+\begin{align*}
+\mby_t 
+&= \mbC \mbh_t + \mbd \\
+&= \mbC (\mbA \mbh_{t-1} + \mbB \mbx_t) + \mbd \\
+&= \mbC (\mbA (\mbA \mbh_{t-2} + \mbB x_{t-1}) + \mbB \mbx_t) + \mbd \\
+&= \ldots \\
+&= \mbC \left(\sum_{s=0}^{t-1} \mbA^s \mbB \mbx_{t-s} \right) + \mbd 
+\end{align*}
+with the convention that $\mbh_0 = 0$.
+
+We recognize this as a **convolution**,
+
+\begin{align*}
+\mby_t &= \left[ \mbK \circledast \mbx \right]_t 
+\end{align*}
+
+with **kernel**,
+
+\begin{align*}
+\mbK &= \begin{bmatrix}\mbC \mbB  & \mbC \mbA \mbB & \mbC \mbA^2 \mbB \cdots & \mbC \mbA^{T-1} \mbB \end{bmatrix}.
+\end{align*}
+
+Computationally, representing the RNN as a convolution leads to efficient implementations, since modern deep learning libraries like PyTorch and JAX have highly optimized convolution routines. Likewise, sampling the model is straightforward and efficient using the RNN formulation.
+
+While these simple linear RNNs may seem too simple to capture complex sequential dependencies, it turns out that stacks of linear layers with simple nonlinearities in between &mdash; a _deep_ linear state space model {cite:p}`gu2021efficiently` &mdash; can be highly expressive! 
+
+:::{admonition} Note 
+Note that the kernel involves **matrix powers** $\mbA^t$, which typically are cubic in the hidden state dimension. {cite:t}`gu2021efficiently` derived clever algorithms for efficiently computing the kernel and evaluating the convolution for certain structured classes of dynamics matrices. 
+:::
+
+### Input-dependent dynamics with parallel scan
+
+One limitation of the convolutional formulation above is that it requires the dynamics matrix $\mbA$ to be the same at all time-steps. {cite:t}`smith2023simplified` showed an alternative way to evaluate the linear RNN that relaxes this constraint. 
+
+Consider two consecutive state updates, now with time-dependent dynamics matrices $\mbA_t$ and affine terms $\mbb_t = \mbB_t \mbx_t$,
+
+\begin{align*}
+h_t
+&= \mbA_t \mbh_{t-1} + \mbb_t \\
+&= \mbA_t (\mbA_{t-1} \mbh_{t-2} + \mbb_{t-1}) + \mbb_t \\
+&= \mbA_{t-2:t} \mbh_{t-2} + \mbb_{t-2:t}
+\end{align*}
+
+where $\mbA_{t-2:t} \triangleq \mbA_t \mbA_{t-1}$ and $\mbb_{t-2:t} \triangleq \mbA_t \mbb_{t-1} + \mbb_t$. 
+
+This is just another affine map, but now it takes $\mbh_{t-2}$ to $\mbh_t$. In parallel, we can compute the maps from time $t$ to $t+2$, from $t+2$ to $t+4$, and so on.
+
+In the next iteration, we can combine these linear maps to obtain $(\mbA_{t-4:t}, \mbb_{t-4:t})$, and so on. 
+
+After $\log_2 T$ iterations, we obtain a map from $\mbh_0$ to $\mbh_T$. With $\cO(\log T)$ more work, we can obtain maps from $\mbh_0$ to all intermediate times $t$ as well. 
+
+This algorithm is called a **parallel scan** or **binary associative scan**, since it is based on a binary associative operator, $\circ$, of the form,
+\begin{align*}
+(\mbA_{i,j}, \mbb_{i,j}) \circ (\mbA_{j,k}, \mbb_{j,k}) = (\mbA_{i,k}, \mbb_{i,k})
+\end{align*}
+
+With $T$ parallel processors, it requires only $\cO(\log T)$ time and $\cO(T)$ memory.
+
+:::{admonition} Note
+
+Again, notice that each update requires matrix multiplication, which is typically cubic in the state dimension. {cite:t}`smith2023simplified` proposed to work with _complex diagonal_ matrices instead, which keeps the time and memory costs in check.
+:::
+
+## Parallelizing Nonlinear RNNs
+
+The parallel scan relied on the linearity of the RNN dynamics. Can the same be applied to nonlinear RNNs?
+
+It turns out that yes, in many cases we can speed up the evaluation of nonlinear RNNs using a similar trick!
+
+Consider an RNN with nonlinear dynamics function $f(\mbh_t)$. Form a first-order Taylor approximation arond an initial guess, $\mbh_t^{(0)}$,
+\begin{align*}
+\widetilde{f}(\mbh_t) &= f(\mbh_t^{(0)}) + J_f(\mbh_t^{(0)}) \left[ \mbh_t - \mbh_t^{(0)} \right]. 
+\end{align*}
+where $J_f(\mbh_t^{(0)}) = \frac{\partial f}{\partial \mbh_t}\bigg|_{\mbh_t = \mbh_t^{(0)}}$ is the Jacobian of $f$ evaluated at $\mbh_t^{(0)}$. 
+
+The Taylor approximations yield a _linear_ RNN with time-varying dynamics, which can be evaluated with a parallel scan to obtain a new sequence of latent states, $(\mbh_1^{(1)}, \ldots, \mbh_T^{(1)})$, which can be used as the guess for the next iteration.
+
+Repeating this process until convergence is equivalent to the **Gauss-Newton method** for minimizing the sum of squares loss function,
+\begin{align*}
+\cL(\mbh_{1:T}) &= \sum_{t=1}^T \|\mbh_t - f(\mbh_{t-1})\|_2^2.
+\end{align*}
+This idea was proposed by Lim et al (2023) and called DEER. Gonzalez et al (2024) explained the connection to the Gauss-Newton method and proposed an extension called ELK.
+
+## Conclusion
+
+Recurrent neural networks are foundational models for sequential data. They're useful machine learning models, and they're standard models in theoretical neuroscience. While Transformers are the star of modern large language models, RNNs are making a comeback as efficient techniques for capturing long range dependences in sequential data.

@@ -19,6 +19,7 @@ parts:
     - file: lectures/12_lglvms.ipynb
     - file: lectures/13_vaes.ipynb
     - file: lectures/14_transformers.md
+    - file: lectures/15_rnns.md
     
   - caption: Assignments
     chapters:
