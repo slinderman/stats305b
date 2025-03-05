@@ -20,6 +20,7 @@ parts:
     - file: lectures/13_vaes.ipynb
     - file: lectures/14_transformers.md
     - file: lectures/15_rnns.md
+    - file: lectures/16_diffusion.md
     
   - caption: Assignments
     chapters:
