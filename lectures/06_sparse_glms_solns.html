@@ -194,6 +194,7 @@
 <li class="toctree-l1"><a class="reference internal" href="13_vaes.html">Variational Autoencoders</a></li>
 <li class="toctree-l1"><a class="reference internal" href="14_transformers.html">Transformers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="15_rnns.html">Recurrent Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_diffusion.html">Denoising Diffusion Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -1051,8 +1052,8 @@ The idea is to stick as close to vanilla gradient descent as possible, while cor
 <section id="proximal-mapping">
 <h3>Proximal Mapping<a class="headerlink" href="#proximal-mapping" title="Link to this heading">#</a></h3>
 <p>We call the function,</p>
-<div class="amsmath math notranslate nohighlight" id="equation-7fb7b1f6-61f8-4513-bb31-0831c8bb8a0e">
-<span class="eqno">(3)<a class="headerlink" href="#equation-7fb7b1f6-61f8-4513-bb31-0831c8bb8a0e" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-b5bd39da-71ef-4c96-8861-84bdbee76cd8">
+<span class="eqno">(3)<a class="headerlink" href="#equation-b5bd39da-71ef-4c96-8861-84bdbee76cd8" title="Permalink to this equation">#</a></span>\[\begin{align}
 \mathrm{prox}(\mbu; \alpha_t) 
 &amp;= \arg \min_{\mbz} \frac{1}{2 \alpha_t} \| \mbz - \mbu \|_2^2 + \cL_{\mathsf{nd}}(\mbz)
 \end{align}\]</div>
