@@ -195,6 +195,7 @@
 <li class="toctree-l1"><a class="reference internal" href="14_transformers.html">Transformers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="15_rnns.html">Recurrent Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="16_diffusion.html">Denoising Diffusion Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17_poisson_processes.html">Poisson processes</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -1131,8 +1132,8 @@ The marginal likelihood is a natural measure of model complexity, and it is ofte
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*)) + t \log\left(1 - \frac{\mu}{L}\right) \leq \log \epsilon.
 \end{align*}\]</div>
 <p>We can further upper bound the LHS by using the inequality <span class="math notranslate nohighlight">\(\log ( 1 - x) \leq -x\)</span> to get</p>
-<div class="amsmath math notranslate nohighlight" id="equation-62922a95-fdb5-4d87-ae5e-d9defa3fe020">
-<span class="eqno">(1)<a class="headerlink" href="#equation-62922a95-fdb5-4d87-ae5e-d9defa3fe020" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-ab2b412a-342a-4a17-9423-49bcff317511">
+<span class="eqno">(1)<a class="headerlink" href="#equation-ab2b412a-342a-4a17-9423-49bcff317511" title="Permalink to this equation">#</a></span>\[\begin{align}
 	\log ( \mathcal L(\beta_0) - \mathcal L(\beta^*))  - \frac{\mu t}{L}\leq \log \epsilon.
 \end{align}\]</div>
 <p>So, we need to run <span class="math notranslate nohighlight">\(t \geq \frac{L}{\mu} \log \frac{\cL(\mbbeta_0) - \cL(\mbbeta^\star)}{\epsilon} \sim \log \frac{1}{\epsilon}\)</span> iterations of gradient descent. If we want to reduce <span class="math notranslate nohighlight">\(\epsilon\)</span> by a factor of 100, we only need to run around <span class="math notranslate nohighlight">\(\log 100\)</span> times as many iterations. This is called <strong>linear convergence</strong>.</p>

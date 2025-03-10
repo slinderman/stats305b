@@ -1,0 +1,995 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Poisson processes &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/17_poisson_processes';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Denoising Diffusion Models" href="16_diffusion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">STATS 305B: Models and Algorithms for Discrete Data</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_distributions.html">Basics of Probability and Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_contingency_tables_v2.html">Contingency Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_logreg.html">Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_expfam.html">Exponential Families</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_glms_solns.html">Generalized Linear Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_sparse_glms_solns.html">Sparse GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_bayes.html">Bayesian Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_mcmc.html">Markov Chain Monte Carlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_bayes_glms_soln.html">Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_vi.html">Variational Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_mixtures.html">Mixture Models and EM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_hmms.html">Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_lglvms.html">Linear Gaussian Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_vaes.html">Variational Autoencoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_transformers.html">Transformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_rnns.html">Recurrent Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_diffusion.html">Denoising Diffusion Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Poisson processes</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw0/hw0.html">HW0: PyTorch Primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw1/hw1.html">HW1: Logistic Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw2/hw2.html">HW2: Bayesian GLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw3/hw3.html">HW3: Hidden Markov Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignments/hw4/hw4.html">HW4: Large Language Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="99_references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/lectures/17_poisson_processes.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/17_poisson_processes.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Poisson processes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">Definition</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-applications-of-poisson-processes">Example applications of Poisson processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#four-ways-to-sample-a-poisson-process">Four ways to sample a Poisson process</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#top-down-sampling-of-a-poisson-process">Top-down sampling of a Poisson process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-the-poisson-process-likelihood">Deriving the Poisson process likelihood</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intervals-of-a-homogeneous-poisson-process">Intervals of a homogeneous Poisson process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-a-homogeneous-poisson-process-by-simulating-intervals">Sampling a homogeneous Poisson process by simulating intervals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-the-likelihood-of-a-homogeneous-poisson-process">Deriving the likelihood of a homogeneous Poisson process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-an-inhomogeneous-poisson-process-by-time-rescaling">Sampling an inhomogeneous Poisson process by time-rescaling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-goodness-of-fit-test-for-inhomogeneous-poisson-processes">A Goodness of fit test for inhomogeneous Poisson processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-poisson-superposition-principle">The Poisson Superposition Principle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-thinning">Poisson thinning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-a-poisson-process-by-thinning">Sampling a Poisson process by thinning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-poisson-processes">Beyond Poisson Processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-intensity-functions">Conditional intensity functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hawkes-processes">Hawkes processes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation-for-hawkes-processes">Maximum likelihood estimation for Hawkes processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nonlinear-hawkes-processes">Nonlinear Hawkes processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#marked-point-processes">Marked point processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-hawkes-processes">Multivariate Hawkes processes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discovering-latent-network-structure-in-point-process-data">Discovering latent network structure in point process data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-hawkes-processes-as-poisson-clustering-processes">Multivariate Hawkes processes as Poisson clustering processes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-bayesian-inference-for-multivariate-hawkes-processes">Conjugate Bayesian inference for multivariate Hawkes processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doubly-stochastic-processes">Doubly stochastic processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="poisson-processes">
+<h1>Poisson processes<a class="headerlink" href="#poisson-processes" title="Link to this heading">#</a></h1>
+<section id="definition">
+<h2>Definition<a class="headerlink" href="#definition" title="Link to this heading">#</a></h2>
+<p>Poisson processes are <strong>stochastic processes</strong> that generate <strong>random sets of points</strong> <span class="math notranslate nohighlight">\(\{\mbx_n\}_{n=1}^N \subset \cX\)</span>.</p>
+<p>Poisson processes are governed by an <strong>intensity function</strong>, <span class="math notranslate nohighlight">\(\lambda(\mbx): \cX \to \reals_+\)</span>.</p>
+<p><strong>Property #1:</strong> The number of points in any interval is a Poisson random variable,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    N(\cA) &amp;\sim \mathrm{Po}\left(\int_{\cA} \lambda(\mbx) \dif \mbx \right) 
+\end{align*}\]</div>
+<p><strong>Property #2:</strong> Disjoint intervals are independent,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    N(\cA) \perp N(\cB) \iff \cA \cap \cB = \varnothing
+\end{align*}\]</div>
+<section id="example-applications-of-poisson-processes">
+<h3>Example applications of Poisson processes<a class="headerlink" href="#example-applications-of-poisson-processes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Modeling neural firing rates</p></li>
+<li><p>Locations of trees in a forest</p></li>
+<li><p>Locations of stars in astronomical surveys</p></li>
+<li><p>Arrival times of customers in a queue (or HTTP requests to a server)</p></li>
+<li><p>Locations of bombs in London during World War II</p></li>
+<li><p>Times of photon detections on a light sensor</p></li>
+<li><p>Others?</p></li>
+</ul>
+</section>
+</section>
+<section id="four-ways-to-sample-a-poisson-process">
+<h2>Four ways to sample a Poisson process<a class="headerlink" href="#four-ways-to-sample-a-poisson-process" title="Link to this heading">#</a></h2>
+<p>We will derive four ways of sampling a Poisson process, each of which provides different insight into the generative model and alternative pathways for inference:</p>
+<ol class="arabic simple">
+<li><p>The top-down approach</p></li>
+<li><p>The interval approach</p></li>
+<li><p>The time-rescaling approach</p></li>
+<li><p>The thinning approach</p></li>
+</ol>
+<section id="top-down-sampling-of-a-poisson-process">
+<h3>Top-down sampling of a Poisson process<a class="headerlink" href="#top-down-sampling-of-a-poisson-process" title="Link to this heading">#</a></h3>
+<p>Given <span class="math notranslate nohighlight">\(\lambda(\mbx)\)</span> (and a domain <span class="math notranslate nohighlight">\(\cX\)</span>):</p>
+<ol class="arabic">
+<li><p>Sample the <strong>total number of points</strong></p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    N &amp;\sim \mathrm{Po} \left( \int_{\cX} \lambda(\mbx) \dif \mbx \right)
+\end{align*}\]</div>
+</li>
+<li><p>Sample the <strong>locations</strong> of the points</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbx_n &amp;\iid{\sim} \frac{\lambda(\mbx)}{\int_{\cX} \lambda(\mbx') \dif \mbx'}
+\end{align*}\]</div>
+<p>for <span class="math notranslate nohighlight">\(n=1,\ldots,N\)</span>.</p>
+</li>
+</ol>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What assumptions are necessary for this procedure to be tractable?</p>
+</div>
+</section>
+</section>
+<section id="deriving-the-poisson-process-likelihood">
+<h2>Deriving the Poisson process likelihood<a class="headerlink" href="#deriving-the-poisson-process-likelihood" title="Link to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>From the top-down sampling process, derive the Poisson process likelihood,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p\left(\{\mbx_n\}_{n=1}^N \mid \lambda(\mbx) \right)
+\end{align*}\]</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p\left(\{\mbx_n\}_{n=1}^N \mid \lambda(\mbx) \right)
+&amp;= \mathrm{Po}\left(N \,\bigg|\, \int_{\cX} \lambda(\mbx) \dif \mbx \right) \, 
+\prod_{n=1}^N \frac{\lambda(\mbx_n)}{\int_{\cX} \lambda(\mbx) \dif \mbx} 
+\cdot N! \\&amp;= \left[\frac{1}{N!} \left(\int_{\cX} \lambda(\mbx) \dif \mbx \right)^N \exp\left\{ - \int_{\cX} \lambda(\mbx) \dif \mbx \right\} \right] \, 
+\prod_{n=1}^N \frac{\lambda(\mbx_n)}{\int_{\cX} \lambda(\mbx) \dif \mbx} 
+\cdot N! \\
+&amp;= \exp\left\{ - \int_{\cX} \lambda(\mbx) \dif \mbx \right\} \prod_{n=1}^N \lambda(\mbx_n)
+\end{align*}\]</div>
+<p>Note that we multiply by <span class="math notranslate nohighlight">\(N!\)</span> because the <span class="math notranslate nohighlight">\(\{\mbx_n\}_{n=1}^N\)</span> is assumed to be an <em>unordered</em> set.</p>
+</div>
+</div>
+</section>
+<section id="intervals-of-a-homogeneous-poisson-process">
+<h2>Intervals of a homogeneous Poisson process<a class="headerlink" href="#intervals-of-a-homogeneous-poisson-process" title="Link to this heading">#</a></h2>
+<p>A Poisson process is <strong>homogeneous</strong> if its intensity is constant, <span class="math notranslate nohighlight">\(\lambda(\mbx) \equiv \lambda\)</span>.</p>
+<p><strong>Property #3:</strong> A homogeneous Poisson process on <span class="math notranslate nohighlight">\([0, T] \subset \reals\)</span> (e.g. where points correspond to arrival times) has <strong>independent, exponentially distributed intervals</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \Delta_n = x_n - x_{n-1} &amp;\iid{\sim} \mathrm{Exp}(\lambda)
+\end{align*}\]</div>
+<p><strong>Property #4:</strong> A homogeneous Poisson process is <strong>memoryless</strong> — the amount of time until the next point arrives is independent of the time elapsed since the previous point arrived.</p>
+</section>
+<section id="sampling-a-homogeneous-poisson-process-by-simulating-intervals">
+<h2>Sampling a homogeneous Poisson process by simulating intervals<a class="headerlink" href="#sampling-a-homogeneous-poisson-process-by-simulating-intervals" title="Link to this heading">#</a></h2>
+<p>We can sample a homogeneous Poisson process on <span class="math notranslate nohighlight">\([0, T]\)</span> by simulating intervals as follows:</p>
+<ol class="arabic simple">
+<li><p>Initialize <span class="math notranslate nohighlight">\(\mbX = \varnothing\)</span> and <span class="math notranslate nohighlight">\(x_0 = 0\)</span></p></li>
+<li><p>For <span class="math notranslate nohighlight">\(n=1, 2, \ldots\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Sample <span class="math notranslate nohighlight">\(\Delta_n \sim \mathrm{Exp}(\lambda)\)</span>.</p></li>
+<li><p>Set <span class="math notranslate nohighlight">\(x_n = x_{n-1} + \Delta_n\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(x_n &gt; T\)</span>, break and return <span class="math notranslate nohighlight">\(\mbX\)</span>,</p></li>
+<li><p>Else, set <span class="math notranslate nohighlight">\(\mbX \leftarrow \mbX \cup \{x_n\}\)</span>.</p></li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="deriving-the-likelihood-of-a-homogeneous-poisson-process">
+<h2>Deriving the likelihood of a homogeneous Poisson process<a class="headerlink" href="#deriving-the-likelihood-of-a-homogeneous-poisson-process" title="Link to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>From the interval sampling process, derive the likelihood of a homogeneous Poisson process. Show that it is the same as what you derived from the top-down sampling process.</p>
+</div>
+</section>
+<section id="sampling-an-inhomogeneous-poisson-process-by-time-rescaling">
+<h2>Sampling an inhomogeneous Poisson process by time-rescaling<a class="headerlink" href="#sampling-an-inhomogeneous-poisson-process-by-time-rescaling" title="Link to this heading">#</a></h2>
+<p>Now consider an <strong>inhomogeneous</strong> Poisson process on <span class="math notranslate nohighlight">\([0, T]\)</span>; i.e. one with a non-constant intensity.</p>
+<p>Apply the change of variables,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    x &amp;\mapsto \int_0^x \lambda(t) \dif t \triangleq \Lambda(x)
+\end{align*}\]</div>
+<p>Note that this is an <strong>invertible transformation</strong> when <span class="math notranslate nohighlight">\(\lambda(x) &gt; 0\)</span>.</p>
+<p>Sample a homogeneous Poisson process with unit rate on <span class="math notranslate nohighlight">\([0, \Lambda(T)]\)</span> to get points <span class="math notranslate nohighlight">\(\mbU = \{u_n\}_{n=1}^N\)</span>. Then set,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbX &amp;= \{\Lambda^{-1}(u_n): u_n \in \mbU\}.
+\end{align*}\]</div>
+<p><strong>Sanity check:</strong> what is the expected value of <span class="math notranslate nohighlight">\(N\)</span>?</p>
+</section>
+<section id="a-goodness-of-fit-test-for-inhomogeneous-poisson-processes">
+<h2>A Goodness of fit test for inhomogeneous Poisson processes<a class="headerlink" href="#a-goodness-of-fit-test-for-inhomogeneous-poisson-processes" title="Link to this heading">#</a></h2>
+<p><span id="id1">Brown <em>et al.</em> [<a class="reference internal" href="99_references.html#id43" title="Emery N Brown, Riccardo Barbieri, Valérie Ventura, Robert E Kass, and Loren M Frank. The time-rescaling theorem and its application to neural spike train data analysis. Neural computation, 14(2):325–346, 2002.">BBV+02</a>]</span> used the time-rescaling sampling procedure to develop a goodness-of-fit test for inhomogeneous Poisson processes.</p>
+<p>Suppose you observe a set of points <span class="math notranslate nohighlight">\(\{x_n\}_{n=1}^N \subset [0,T]\)</span> and you want to test whether they are well-modeled by an inhomogeneous Poisson process with rate <span class="math notranslate nohighlight">\(\lambda(x)\)</span>. Let <span class="math notranslate nohighlight">\(\Delta_n = \Lambda(x_n) - \Lambda(x_{n-1}\)</span>) with <span class="math notranslate nohighlight">\(\Lambda(x_0) =0\)</span>. If the model is a good fit, then <span class="math notranslate nohighlight">\(\Delta_n \iid{\sim} \mathrm{Exp}(1)\)</span>. Perform a further transformation <span class="math notranslate nohighlight">\(z_n = 1 - e^{-\Delta_n}\)</span>. Then <span class="math notranslate nohighlight">\(z_n \iid{\sim} \mathrm{Unif}([0, 1])\)</span>.</p>
+<p>Now sort the <span class="math notranslate nohighlight">\(z_n\)</span>’s in increasing order into <span class="math notranslate nohighlight">\((z_{(1)}, \ldots, z_{(N)})\)</span>, so <span class="math notranslate nohighlight">\(z_{(1)}\)</span> is the smallest value. Intuitively, the points <span class="math notranslate nohighlight">\(\big(\tfrac{n-1/2}{N}, z_{(n)}\big)\)</span> should like along a 45<span class="math notranslate nohighlight">\(^\circ\)</span> line. We can check for significant departures from the 45<span class="math notranslate nohighlight">\(^\circ\)</span> line using a simple visual test.</p>
+<p>For a more rigorous test, note that the order statistics <span class="math notranslate nohighlight">\(z_{(n)}\)</span> are marginally beta distributed,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    z_{(n)} &amp;\sim \mathrm{Beta}(n, N-n+1)
+\end{align*}\]</div>
+<p>The mean is <span class="math notranslate nohighlight">\(\tfrac{n}{N+1}\)</span> and its mode is <span class="math notranslate nohighlight">\(\tfrac{n-1}{N-1}\)</span>. Then, use the 2.5% and 97.5% quantiles of the beta distribution to obtain confidence intervals around the 45<span class="math notranslate nohighlight">\(^\circ\)</span> line.</p>
+</section>
+<section id="the-poisson-superposition-principle">
+<h2>The Poisson Superposition Principle<a class="headerlink" href="#the-poisson-superposition-principle" title="Link to this heading">#</a></h2>
+<p><strong>Property #5:</strong>  The union (a.k.a. superposition) of independent Poisson processes is also a Poisson process.</p>
+<p>Suppose we have two independent Poisson processes on the same domain <span class="math notranslate nohighlight">\(\cX\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \{\mbx_n\}_{n=1}^N &amp;\sim \mathrm{PP}(\lambda_1(\mbx)) \\
+    \{\mbx'_m\}_{m=1}^M &amp;\sim \mathrm{PP}(\lambda_2(\mbx))
+\end{align*}\]</div>
+<p>Then</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \{\mbx_n\}_{n=1}^N \cup \{\mbx'_m\}_{m=1}^M &amp;\sim \mathrm{PP}(\lambda_1(\mbx) + \lambda_2(\mbx))
+\end{align*}\]</div>
+<p>This is the analog of the fact that the sum of independent Poisson random variables is Poisson.</p>
+</section>
+<section id="poisson-thinning">
+<h2>Poisson thinning<a class="headerlink" href="#poisson-thinning" title="Link to this heading">#</a></h2>
+<p>The opposite of Poisson superposition is Poisson thinning.</p>
+<p>Suppose we have points <span class="math notranslate nohighlight">\(\{\mbx_n\}_{n=1}^N \sim \mathrm{PP}(\lambda(\mbx))\)</span> where <span class="math notranslate nohighlight">\(\lambda(\mbx) = \lambda_1(\mbx) + \lambda_2(\mbx)\)</span>.</p>
+<p>Sample independent binary variables</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    z_n \sim \mathrm{Bern}\left(\frac{\lambda_1(\mbx_n)}{\lambda_1(\mbx_n) + \lambda_2(\mbx_n)} \right).
+\end{align*}\]</div>
+<p>Then <span class="math notranslate nohighlight">\(\{\mbx_n: z_n = 1\} \sim \mathrm{PP}(\lambda_1(\mbx))\)</span> and <span class="math notranslate nohighlight">\(\{\mbx_n: z_n = 0\} \sim \mathrm{PP}(\lambda_2(\mbx))\)</span>.</p>
+</section>
+<section id="sampling-a-poisson-process-by-thinning">
+<h2>Sampling a Poisson process by thinning<a class="headerlink" href="#sampling-a-poisson-process-by-thinning" title="Link to this heading">#</a></h2>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Use Poisson thinning to sample an inhomogeneous Poisson process with a bounded intensity,~<span class="math notranslate nohighlight">\(\lambda(\mbx) \leq \lambda_{\mathsf{max}}\)</span>.</p>
+<p><strong>Question:</strong> What Monte Carlo sampling method is this akin to?</p>
+</div>
+</section>
+<section id="beyond-poisson-processes">
+<h2>Beyond Poisson Processes<a class="headerlink" href="#beyond-poisson-processes" title="Link to this heading">#</a></h2>
+<p>What’s not to love about Poisson processes?  Well, the independence assumptions that lead to such nice properties are also fundamentally limiting from a modeling perspective. What if the points are not independent?</p>
+</section>
+<section id="conditional-intensity-functions">
+<h2>Conditional intensity functions<a class="headerlink" href="#conditional-intensity-functions" title="Link to this heading">#</a></h2>
+<p>One way of introducing dependence is via an <strong>autoregressive model</strong>. Consider a point process on a time interval <span class="math notranslate nohighlight">\([0, T]\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(\lambda(t \mid \cH_t)\)</span> denote a <strong>conditional intensity function</strong> where <span class="math notranslate nohighlight">\(\cH_t\)</span> is the <strong>history</strong> of points before time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>Technically, <span class="math notranslate nohighlight">\(\cH_t\)</span> is a <strong>filtration</strong> in the language of stochastic processes.</p>
+<p>Allowing past points to influence the intensity function enables more complex, non-Poisson models.</p>
+</section>
+<section id="hawkes-processes">
+<h2>Hawkes processes<a class="headerlink" href="#hawkes-processes" title="Link to this heading">#</a></h2>
+<p>Hawkes processes <span id="id2">[<a class="reference internal" href="99_references.html#id44" title="Alan G Hawkes. Spectra of some self-exciting and mutually exciting point processes. Biometrika, 58(1):83–90, 1971.">Haw71</a>]</span> are <strong>self-exciting point processes</strong>.</p>
+<p>Their conditional intensity function is modeled as,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lambda(t \mid \cH_t) &amp;= \lambda_0 + \sum_{t_n \in \cH_t} h(t - t_n),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(h: \reals_+ \mapsto \reals_+\)</span> is a positive <strong>impulse response</strong> or <strong>influence function</strong>.</p>
+<p>For example, the impulse responses could be modeled as exponential functions,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    h(\Delta t) &amp;= \tfrac{w}{\tau} e^{-\tfrac{\Delta t}{\tau}} = w \cdot g(\Delta t),
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w \in \reals_+\)</span> is a weight and <span class="math notranslate nohighlight">\(g\)</span> is a normalized probability density on <span class="math notranslate nohighlight">\(\Delta t \in \reals_+\)</span>. For example, we could choose an exponential density,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+g(\Delta t) &amp;= \mathrm{Exp}(\Delta t; \tau)
+\end{align*} \]</div>
+<p>with time-constant <span class="math notranslate nohighlight">\(\tau \in \reals_+\)</span> governing the rate of decay.</p>
+<p>If <span class="math notranslate nohighlight">\(g\)</span> is a normalized density, then <span class="math notranslate nohighlight">\(\int_0^\infty h(\Delta t) \dif \Delta t = w\)</span>.</p>
+<section id="maximum-likelihood-estimation-for-hawkes-processes">
+<h3>Maximum likelihood estimation for Hawkes processes<a class="headerlink" href="#maximum-likelihood-estimation-for-hawkes-processes" title="Link to this heading">#</a></h3>
+<p>Suppose we observe a collection of time points <span class="math notranslate nohighlight">\(\{t_n\}_{n=1}^N \subset [0, T]\)</span> and want to estimate the parameters <span class="math notranslate nohighlight">\(\mbtheta = (\lambda_0, w)\)</span> of a Hawkes process with an exponential impulse response function. (Consider <span class="math notranslate nohighlight">\(\tau\)</span> to be fixed.)</p>
+<p>The Hawkes process log likelihood is just like that of a Poisson process,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \log p(\{t_n\}_{n=1}^N \mid \mbtheta) &amp;= -\int_0^T \lambda_{\mbtheta}(t \mid \cH_t) \dif t + \sum_{n=1}^N \log \lambda_{\mbtheta}(t_n \mid \cH_t)
+\end{align*}\]</div>
+<p>Substituting in the form of the conditional intensity, we can simplify the log likelihood to,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \nonumber
+    \log p(\{t_n\}_{n=1}^N \mid \mbtheta) &amp;=
+    -\int_0^T \Big[\lambda_0 + w\sum_{t_n \in \cH_t} g(t-t_n) \dif t \Big] \\
+    &amp;\hspace{8em}+ \sum_{n=1}^N \log \Big(\lambda_0 + w \sum_{t_m \in \cH_{t_n}} g(t_n - t_m) \Big) \\
+    &amp;\approx 
+    -\mbtheta^\top \mbphi_0 + \sum_{n=1}^N \log \Big(\mbtheta^\top \mbphi_n \Big)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mbphi_0 = (T, N)^\top\)</span> and  <span class="math notranslate nohighlight">\(\mbphi_n = \Big(1, \, \sum_{t_m \in \cH_{t_n}} g(t_n - t_m) \Big)^\top\)</span>.</p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What approximation did we make? How would you maximize the log likelihood as a function of <span class="math notranslate nohighlight">\(\mbtheta\)</span>?</p>
+</div>
+</section>
+</section>
+<section id="nonlinear-hawkes-processes">
+<h2>Nonlinear Hawkes processes<a class="headerlink" href="#nonlinear-hawkes-processes" title="Link to this heading">#</a></h2>
+<p>Hawkes processes only allow for excitatory impulse responses (<span class="math notranslate nohighlight">\(w \in \reals_+\)</span>). What if we want to model <strong>self-inhibitory</strong> influences as well? A natural generalization of the Hawkes process is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\lambda(t \mid \cH_t) &amp;= f(\beta_0 + \beta \sum_{t_n \in \cH_t} g(t - t_n))
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f: \reals \mapsto \reals_+\)</span> is a rectifying nonlinear function and <span class="math notranslate nohighlight">\(\beta_0, \beta \in \reals\)</span> can be positive or negative.</p>
+<p>These models are a bit more challenging because exact computation of the Poisson process likelihood requires the integrated intesity function, which is generally intractable.</p>
+<p>Instead, we can approximate the integral with a Riemann sum,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\int \lambda(t \mid \cH_t) \dif t &amp;\approx \sum_{i=0}^{\lfloor {T}/{\Delta}\rfloor - 1} \lambda(i \Delta \mid \cH_{i \Delta}) \Delta
+\end{align*}\]</div>
+<p>which essentially treats the intensity as piecewise constant within each interval of length <span class="math notranslate nohighlight">\(\Delta\)</span>.</p>
+<p>In that approximation, the Poisson process likelihood is equivalent, up to a scale factor, to a product of Poisson likelihoods,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(\{t_n\}_{n=1}^N) &amp;\approx
+\prod_{i=0}^{\lfloor {T}/{\Delta}\rfloor - 1} \mathrm{Po}(N_i \mid \lambda(i \Delta \mid \cH_{i\Delta}) \Delta) \\
+&amp;= \prod_{i=0}^{\lfloor {T}/{\Delta}\rfloor - 1} \mathrm{Po}\left(N_i \mid f\left(\beta_0 + \beta \sum_{t_n \in \cH_{i\Delta}} g(t - t_n) \right) \Delta \right)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(N_i\)</span> is the number of events in the <span class="math notranslate nohighlight">\(i\)</span>-th interval, <span class="math notranslate nohighlight">\([iD, (i+1)D)\)</span>.</p>
+<p><strong>This is a Poisson GLM with weights</strong> <span class="math notranslate nohighlight">\(\mbbeta = (\beta_0, \beta)\)</span>! We can fit it using all the techniques we developed earlier in the course.</p>
+</section>
+<section id="marked-point-processes">
+<h2>Marked point processes<a class="headerlink" href="#marked-point-processes" title="Link to this heading">#</a></h2>
+<p>Now suppose we observed points from <span class="math notranslate nohighlight">\(S\)</span> difference <strong>sources</strong>.</p>
+<p>We can represent the points as a set of tuples, <span class="math notranslate nohighlight">\(\{(t_n, s_n)\}_{n=1}^N\)</span> where <span class="math notranslate nohighlight">\(t_n \in [0,T]\)</span> denotes the time and <span class="math notranslate nohighlight">\(s_n \in \{1,\ldots,S\}\)</span> denotes the source of the <span class="math notranslate nohighlight">\(n\)</span>-th point.</p>
+<p>We will model them as a <strong>marked point process</strong>.</p>
+<p>Like before, we have a (conditional) intensity function, but this time is defined over time and marks,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lambda(t, s \mid \cH_t): \; [0, T] \times \{1, \ldots, S\} \mapsto \reals_+
+\end{align*}\]</div>
+<p>When <span class="math notranslate nohighlight">\(s\)</span> takes on a discrete set of values, we often use the shorthand,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lambda_s(t \mid \cH_t) &amp;\triangleq \lambda(t, s \mid \cH_t)
+\end{align*}\]</div>
+<p>to denote the intensity for the <span class="math notranslate nohighlight">\(s\)</span>-th source.</p>
+</section>
+<section id="multivariate-hawkes-processes">
+<h2>Multivariate Hawkes processes<a class="headerlink" href="#multivariate-hawkes-processes" title="Link to this heading">#</a></h2>
+<p>A <strong>multivariate</strong> Hawkes process is a marked point process with <strong>mutually excitatory</strong> interactions.</p>
+<p>It is defined by the conditional intensity functions,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \label{eq:mvhawkes}
+    \lambda_s(t \mid \cH_t) &amp;= \lambda_{s,0} + \!\!\!\!\sum_{(t_n, s_n) \in \cH_t}\!\!\!\! h_{s_n, s}(t - t_n).
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(h_{s, s'}(\Delta t)\)</span> is a <strong>directed impulse response</strong> from points on source <span class="math notranslate nohighlight">\(s\)</span> to the intensity of~<span class="math notranslate nohighlight">\(s'\)</span>.</p>
+<p>Again, it is common to model the impulse responses as weighted probability densities; e.g.,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    h_{s, s'}(\Delta t) &amp;= w_{s,s'} \cdot \mathrm{Exp}(\Delta t; \tau_{s,s'})
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_{s,s'}\)</span> is the weight.</p>
+<p>Like before, the weights can be estimated using maximum likelihood estimation.</p>
+<section id="discovering-latent-network-structure-in-point-process-data">
+<h3>Discovering latent network structure in point process data<a class="headerlink" href="#discovering-latent-network-structure-in-point-process-data" title="Link to this heading">#</a></h3>
+<p>We can think of the weights as defining a <strong>directed network</strong>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \mbW &amp;= 
+    \begin{bmatrix}
+    w_{1,1} &amp; \ldots &amp; w_{1,S} \\
+    \vdots  &amp;        &amp; \vdots \\
+    w_{S,1} &amp; \ldots &amp; w_{S,S}
+    \end{bmatrix}
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_{s,s'} \in \reals_+\)</span> is the strength of influence that events (points) on source <span class="math notranslate nohighlight">\(s\)</span> induce on the intensity of source <span class="math notranslate nohighlight">\(s'\)</span>.</p>
+<p>However, we don’t directly observe the network. We only observed it indirectly through the point process.</p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>When is a multivariate Hawkes process stable, in that the intensity tends to a finite value in the infinite time limit?</p>
+</div>
+</section>
+<section id="multivariate-hawkes-processes-as-poisson-clustering-processes">
+<h3>Multivariate Hawkes processes as Poisson clustering processes<a class="headerlink" href="#multivariate-hawkes-processes-as-poisson-clustering-processes" title="Link to this heading">#</a></h3>
+<p>Note that the conditional intensity above is a sum of a background intensity and a bunch of non-negative impulse responses.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lambda_s(t \mid \cH_t) &amp;= \lambda_{0,s} + \!\!\!\!\sum_{(t_n, s_n) \in \cH_t}\!\!\!\! h_{s_n, s}(t - t_n).
+\end{align*}\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Which property of Poisson processes applied to such intensities?</p>
+</div>
+<p>Using the <strong>Poisson superposition principle</strong>, we can partition the points <span class="math notranslate nohighlight">\(\cT_s = \{t_n: s_n=s\}\)</span> from source <span class="math notranslate nohighlight">\(s\)</span> into <strong>clusters</strong> attributed to either the background or to one of the impulse responses.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cT_s = \bigcup_{n=0}^N \cT_{s,n}
+\end{align*} \]</div>
+<p>where</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cT_{s,0} &amp;\sim \mathrm{PP}(\lambda_{s,0}) &amp; &amp; \text{[background points]}\\ 
+    \cT_{s,n} &amp;\sim \mathrm{PP}(h_{s_n,s}(t - t_n)) &amp; &amp; \text{[points induced by $(t_n, s_n)$]}
+\end{align*}\]</div>
+<p>Now the weights have an intuitive interpretation. Plugging in the definition of the impulse response,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cT_{s,n} &amp;\sim \mathrm{PP}\Big(w_{s_n,s} \cdot \mathrm{Exp}(t - t_n; \tau_{s_n,s}) \Big).
+\end{align*}\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What is the expected number of points induced by this impulse response, i.e. <span class="math notranslate nohighlight">\(\mathbb{E}[|\cT_{s,n}|]\)</span>?</p>
+</div>
+</section>
+<section id="conjugate-bayesian-inference-for-multivariate-hawkes-processes">
+<h3>Conjugate Bayesian inference for multivariate Hawkes processes<a class="headerlink" href="#conjugate-bayesian-inference-for-multivariate-hawkes-processes" title="Link to this heading">#</a></h3>
+<p>Let’s put a gamma prior on the weights,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    w_{s,s'} &amp;\sim \mathrm{Ga}(\alpha, \beta).
+\end{align*}\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Suppose we know the partition of points; i.e. we knew the clusters~<span class="math notranslate nohighlight">\(\cT_{s,n}\)</span>. What is the conditional distribution,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p\left(w_{s,s'} \mid \{\{\cT_{s,n}\}_{n=0}^N\}_{s=1}^S \right)
+\end{align*}\]</div>
+</div>
+<p>We don’t know the partition of spikes in general, but we do know its conditional distribution!</p>
+<p>Let <span class="math notranslate nohighlight">\(z_n \in \{0, \ldots, n-1\}\)</span> denote the cluster to which the <span class="math notranslate nohighlight">\(n\)</span>-th spike is assigned, with <span class="math notranslate nohighlight">\(z_n=0\)</span> denoting the background cluster. With this notation,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \cT_{s,n} &amp;= \{(t_{n'}, s_{n'}): s_{n'}=s \wedge z_{n'}=n\}.
+\end{align*}\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What is the conditional distribution of the cluster assignment,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    p(z_n \mid \{(t_n, s_n)\}_{n=1}^N; \mbtheta)
+\end{align*}\]</div>
+</div>
+<p>Using these two conditional distributions, we can derive a simple Gibbs sampling algorithm that alternates between sampling the weights given the clusters and the clusters given the weights.</p>
+</section>
+</section>
+<section id="doubly-stochastic-processes">
+<h2>Doubly stochastic processes<a class="headerlink" href="#doubly-stochastic-processes" title="Link to this heading">#</a></h2>
+<p>Hawkes processes are only one way of going beyond Poisson processes.</p>
+<p>Whereas Hawkes processes take an autoregressive approach, doubly stochastic point processes (a.k.a. <strong>Cox processes</strong>) take a latent variable approach.</p>
+<p>In these models, the intensity itself is modeled as a stochastic process,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lambda(\mbx) &amp;\sim p(\lambda).
+\end{align*}\]</div>
+<p>For example, consider the model,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    \lambda(\mbx) &amp;= g(f(\mbx)) \quad \text{where} \quad
+    f \sim \mathrm{GP}(\mu(\cdot), \, K(\cdot, \cdot)).
+\end{align*}\]</div>
+<p>When <span class="math notranslate nohighlight">\(g\)</span> is the exponential function, this is called a <strong>log Gaussian Cox process</strong>. When <span class="math notranslate nohighlight">\(g\)</span> is the sigmoid function, this is called a <strong>sigmoidal Gaussian Cox process</strong> <span id="id3">[<a class="reference internal" href="99_references.html#id46" title="Ryan Prescott Adams, Iain Murray, and David JC MacKay. Tractable nonparametric Bayesian inference in poisson processes with Gaussian process intensities. In Proceedings of the 26th Annual International Conference on Machine Learning, 9–16. 2009.">AMM09</a>]</span>.</p>
+<p>Aternatively, take <span class="math notranslate nohighlight">\(\lambda\)</span> to be a convolution of a Poisson process with a non-negative kernel; this is called a Neyman-Scott process <span id="id4">[<a class="reference internal" href="99_references.html#id47" title="Yixin Wang, Anthony Degleris, Alex H Williams, and Scott W Linderman. Spatiotemporal clustering with Neyman-Scott processes via connections to Bayesian nonparametric mixture models. arXiv preprint arXiv:2201.05044, 2022.">WDWL22</a>]</span>.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>Poisson processes are stochastic processes that generate discrete sets of points.</p>
+<p>They are defined by an intensity function <span class="math notranslate nohighlight">\(\lambda(\mbx)\)</span>, which specifies the expected number of points in each interval of time or space.</p>
+<p>We can build in dependencies by conditioning on past points or introducing latent variables.</p>
+<p>Poisson process modeling boils down to inferring the intensity. We can take various parametric and nonparametric approaches.</p>
+<p>The hardness comes about when the integral in the Poisson process likelihood is intractable.</p>
+<p>As we will see next time, Poisson processes are also mathematical building blocks for Bayesian nonparametric models with random measures.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="16_diffusion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Denoising Diffusion Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../assignments/hw0/hw0.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">Definition</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-applications-of-poisson-processes">Example applications of Poisson processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#four-ways-to-sample-a-poisson-process">Four ways to sample a Poisson process</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#top-down-sampling-of-a-poisson-process">Top-down sampling of a Poisson process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-the-poisson-process-likelihood">Deriving the Poisson process likelihood</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intervals-of-a-homogeneous-poisson-process">Intervals of a homogeneous Poisson process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-a-homogeneous-poisson-process-by-simulating-intervals">Sampling a homogeneous Poisson process by simulating intervals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-the-likelihood-of-a-homogeneous-poisson-process">Deriving the likelihood of a homogeneous Poisson process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-an-inhomogeneous-poisson-process-by-time-rescaling">Sampling an inhomogeneous Poisson process by time-rescaling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-goodness-of-fit-test-for-inhomogeneous-poisson-processes">A Goodness of fit test for inhomogeneous Poisson processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-poisson-superposition-principle">The Poisson Superposition Principle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-thinning">Poisson thinning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-a-poisson-process-by-thinning">Sampling a Poisson process by thinning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-poisson-processes">Beyond Poisson Processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-intensity-functions">Conditional intensity functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hawkes-processes">Hawkes processes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation-for-hawkes-processes">Maximum likelihood estimation for Hawkes processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nonlinear-hawkes-processes">Nonlinear Hawkes processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#marked-point-processes">Marked point processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-hawkes-processes">Multivariate Hawkes processes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discovering-latent-network-structure-in-point-process-data">Discovering latent network structure in point process data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-hawkes-processes-as-poisson-clustering-processes">Multivariate Hawkes processes as Poisson clustering processes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-bayesian-inference-for-multivariate-hawkes-processes">Conjugate Bayesian inference for multivariate Hawkes processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doubly-stochastic-processes">Doubly stochastic processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Scott Linderman
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
