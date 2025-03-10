@@ -53,7 +53,7 @@ _Please note that this is a **tentative** schedule. It may change slightly depen
 | Wed, Feb 26, 2025 | [Transformers](lectures/14_transformers.md) | [download](slides/14_transformers.pdf) | {cite:p}`turner2023introduction` |
 | Mon, Mar  3, 2025 | [Recurrent Neural Networks](lectures/15_rnns.md)  | [download](slides/15_rnns.pdf) | {cite:p}`goodfellow2016deep` Ch 9 <br>{cite:p}`smith2023simplified` and {cite:p}`gu2023mamba` |
 | Wed, Mar  5, 2025 | [Denoising Diffusion Models](lectures/16_diffusion.md) | [download](slides/16_diffusion.pdf) | {cite:p}`turner2024denoising` | 
-| Mon, Mar 10, 2025 | Point Processes | | |
+| Mon, Mar 10, 2025 | [Poisson Processes](lectures/17_poisson_processes.ipynb) | [download](slides/17_poisson_processes.pdf) | |
 | Wed, Mar 12, 2025 | Wrap Up | | |
 | Fri, Mar 14, 2025 | <span style="color:red">**HW4 Due**</span> | |  |
 
