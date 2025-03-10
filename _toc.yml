@@ -21,6 +21,7 @@ parts:
     - file: lectures/14_transformers.md
     - file: lectures/15_rnns.md
     - file: lectures/16_diffusion.md
+    - file: lectures/17_poisson_processes.ipynb
     
   - caption: Assignments
     chapters:
