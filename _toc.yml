@@ -22,6 +22,7 @@ parts:
     - file: lectures/15_rnns.md
     - file: lectures/16_diffusion.md
     - file: lectures/17_poisson_processes.ipynb
+    - file: lectures/18_discrete_diffusion.ipynb
     
   - caption: Assignments
     chapters:
