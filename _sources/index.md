@@ -89,8 +89,7 @@ We will allow 5 late days to be used as needed throughout the quarter.
   - Practice Exam Solutions: [download](midterm/midterm_2024_solns.pdf)
   - We will provide a reference of common distributions: [download](midterm/distributions.pdf)
 
-- **Final Exam**: Wed, Mar 19 from 3:30-6:30pm in Room TBD
-  <!-- - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf) (solutions are [here](final/practice_solutions.pdf)). -->
+- **Final Exam**: Wed, Mar 19 from 3:30-6:30pm in Building 370, Room 370
   - You may bring a cheat sheet covering _both sides_ of an 8.5x11" piece of paper
   - Practice Exam: [download](final/final_2024.pdf)
   - Practice Exam Solutions: [download](final/final_2024_solns.pdf)
