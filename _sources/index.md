@@ -92,7 +92,9 @@ We will allow 5 late days to be used as needed throughout the quarter.
 - **Final Exam**: Wed, Mar 19 from 3:30-6:30pm in Room TBD
   <!-- - In addition to reviewing the midterm and the lecture notes, you may want to try these [practice problems](final/practice.pdf) (solutions are [here](final/practice_solutions.pdf)). -->
   - You may bring a cheat sheet covering _both sides_ of an 8.5x11" piece of paper
-
+  - Practice Exam: [download](final/final_2024.pdf)
+  - Practice Exam Solutions: [download](final/final_2024_solns.pdf)
+  
 
 ## Grading
 
