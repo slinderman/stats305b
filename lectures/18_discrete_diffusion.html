@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Transformers &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
+    <title>Discrete Denoising Diffusion Models &#8212; STATS 305B: Models and Algorithms for Discrete Data</title>
   
   
   
@@ -60,11 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"tex": {"macros": {"mba": "\\boldsymbol{a}", "mbb": "\\boldsymbol{b}", "mbc": "\\boldsymbol{c}", "mbd": "\\boldsymbol{d}", "mbe": "\\boldsymbol{e}", "mbf": "\\boldsymbol{f}", "mbg": "\\boldsymbol{g}", "mbh": "\\boldsymbol{h}", "mbi": "\\boldsymbol{i}", "mbj": "\\boldsymbol{j}", "mbk": "\\boldsymbol{k}", "mbl": "\\boldsymbol{l}", "mbm": "\\boldsymbol{m}", "mbn": "\\boldsymbol{n}", "mbo": "\\boldsymbol{o}", "mbp": "\\boldsymbol{p}", "mbq": "\\boldsymbol{q}", "mbr": "\\boldsymbol{r}", "mbs": "\\boldsymbol{s}", "mbt": "\\boldsymbol{t}", "mbu": "\\boldsymbol{u}", "mbv": "\\boldsymbol{v}", "mbw": "\\boldsymbol{w}", "mbx": "\\boldsymbol{x}", "mby": "\\boldsymbol{y}", "mbz": "\\boldsymbol{z}", "mbA": "\\boldsymbol{A}", "mbB": "\\boldsymbol{B}", "mbC": "\\boldsymbol{C}", "mbD": "\\boldsymbol{D}", "mbE": "\\boldsymbol{E}", "mbF": "\\boldsymbol{F}", "mbG": "\\boldsymbol{G}", "mbH": "\\boldsymbol{H}", "mbI": "\\boldsymbol{I}", "mbJ": "\\boldsymbol{J}", "mbK": "\\boldsymbol{K}", "mbL": "\\boldsymbol{L}", "mbM": "\\boldsymbol{M}", "mbN": "\\boldsymbol{N}", "mbO": "\\boldsymbol{O}", "mbP": "\\boldsymbol{P}", "mbQ": "\\boldsymbol{Q}", "mbR": "\\boldsymbol{R}", "mbS": "\\boldsymbol{S}", "mbT": "\\boldsymbol{T}", "mbU": "\\boldsymbol{U}", "mbV": "\\boldsymbol{V}", "mbW": "\\boldsymbol{W}", "mbX": "\\boldsymbol{X}", "mbY": "\\boldsymbol{Y}", "mbZ": "\\boldsymbol{Z}", "bbA": "\\mathbb{A}", "bbB": "\\mathbb{B}", "bbC": "\\mathbb{C}", "bbD": "\\mathbb{D}", "bbE": "\\mathbb{E}", "bbG": "\\mathbb{G}", "bbH": "\\mathbb{H}", "bbI": "\\mathbb{I}", "bbJ": "\\mathbb{J}", "bbK": "\\mathbb{K}", "bbL": "\\mathbb{L}", "bbM": "\\mathbb{M}", "bbN": "\\mathbb{N}", "bbO": "\\mathbb{O}", "bbP": "\\mathbb{P}", "bbQ": "\\mathbb{Q}", "bbR": "\\mathbb{R}", "bbS": "\\mathbb{S}", "bbT": "\\mathbb{T}", "bbU": "\\mathbb{U}", "bbV": "\\mathbb{V}", "bbW": "\\mathbb{W}", "bbX": "\\mathbb{X}", "bbY": "\\mathbb{Y}", "bbZ": "\\mathbb{Z}", "cA": "\\mathcal{A}", "cB": "\\mathcal{B}", "cC": "\\mathcal{C}", "cD": "\\mathcal{D}", "cE": "\\mathcal{E}", "cG": "\\mathcal{G}", "cH": "\\mathcal{H}", "cI": "\\mathcal{I}", "cJ": "\\mathcal{J}", "cK": "\\mathcal{K}", "cL": "\\mathcal{L}", "cM": "\\mathcal{M}", "cN": "\\mathcal{N}", "cO": "\\mathcal{O}", "cP": "\\mathcal{P}", "cQ": "\\mathcal{Q}", "cR": "\\mathcal{R}", "cS": "\\mathcal{S}", "cT": "\\mathcal{T}", "cU": "\\mathcal{U}", "cV": "\\mathcal{V}", "cW": "\\mathcal{W}", "cX": "\\mathcal{X}", "cY": "\\mathcal{Y}", "cZ": "\\mathcal{Z}", "mbalpha": "\\boldsymbol{\\alpha}", "mbbeta": "\\boldsymbol{\\beta}", "mbgamma": "\\boldsymbol{\\gamma}", "mbdelta": "\\boldsymbol{\\delta}", "mbepsilon": "\\boldsymbol{\\epsilon}", "mbchi": "\\boldsymbol{\\chi}", "mbeta": "\\boldsymbol{\\eta}", "mbiota": "\\boldsymbol{\\iota}", "mbkappa": "\\boldsymbol{\\kappa}", "mblambda": "\\boldsymbol{\\lambda}", "mbmu": "\\boldsymbol{\\mu}", "mbnu": "\\boldsymbol{\\nu}", "mbomega": "\\boldsymbol{\\omega}", "mbtheta": "\\boldsymbol{\\theta}", "mbphi": "\\boldsymbol{\\phi}", "mbpi": "\\boldsymbol{\\pi}", "mbpsi": "\\boldsymbol{\\psi}", "mbrho": "\\boldsymbol{\\rho}", "mbsigma": "\\boldsymbol{\\sigma}", "mbtau": "\\boldsymbol{\\tau}", "mbupsilon": "\\boldsymbol{\\upsilon}", "mbxi": "\\boldsymbol{\\xi}", "mbzeta": "\\boldsymbol{\\zeta}", "mbvarepsilon": "\\boldsymbol{\\varepsilon}", "mbvarphi": "\\boldsymbol{\\varphi}", "mbvartheta": "\\boldsymbol{\\vartheta}", "mbvarrho": "\\boldsymbol{\\varrho}", "mbDelta": "\\boldsymbol{\\Delta}", "mbGamma": "\\boldsymbol{\\Gamma}", "mbLambda": "\\boldsymbol{\\Lambda}", "mbOmega": "\\boldsymbol{\\Omega}", "mbPhi": "\\boldsymbol{\\Phi}", "mbPsi": "\\boldsymbol{\\Psi}", "mbPi": "\\boldsymbol{\\Pi}", "mbSigma": "\\boldsymbol{\\Sigma}", "mbTheta": "\\boldsymbol{\\Theta}", "mbUpsilon": "\\boldsymbol{\\Upsilon}", "mbXi": "\\boldsymbol{\\Xi}", "mbzero": "\\boldsymbol{0}", "mbone": "\\boldsymbol{1}", "iid": ["\\stackrel{\\text{iid}}{#1}", 1], "ind": ["\\stackrel{\\text{ind}}{#1}", 1], "dif": "\\mathop{}\\!\\mathrm{d}", "diag": "\\textrm{diag}", "supp": "\\textrm{supp}", "Tr": "\\textrm{Tr}", "E": "\\mathbb{E}", "Var": "\\textrm{Var}", "Cov": "\\textrm{Cov}", "reals": "\\mathbb{R}", "naturals": "\\mathbb{N}", "KL": ["D_{\\textrm{KL}}\\left(#1\\;\\|\\;#2\\right)", 2]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/14_transformers';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/18_discrete_diffusion';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Recurrent Neural Networks" href="15_rnns.html" />
-    <link rel="prev" title="Variational Autoencoders" href="13_vaes.html" />
+    <link rel="next" title="HW0: PyTorch Primer" href="../assignments/hw0/hw0.html" />
+    <link rel="prev" title="Poisson processes" href="17_poisson_processes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -192,11 +192,11 @@
 <li class="toctree-l1"><a class="reference internal" href="11_hmms.html">Hidden Markov Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="12_lglvms.html">Linear Gaussian Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="13_vaes.html">Variational Autoencoders</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Transformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_transformers.html">Transformers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="15_rnns.html">Recurrent Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="16_diffusion.html">Denoising Diffusion Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="17_poisson_processes.html">Poisson processes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="18_discrete_diffusion.html">Discrete Denoising Diffusion Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Discrete Denoising Diffusion Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
@@ -255,6 +255,37 @@
 
 
 
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/slinderman/stats305b/blob/winter2025/lectures/18_discrete_diffusion.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
 <div class="dropdown dropdown-download-buttons">
   <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
     <i class="fas fa-download"></i>
@@ -263,7 +294,7 @@
       
       
       
-      <li><a href="../_sources/lectures/14_transformers.md" target="_blank"
+      <li><a href="../_sources/lectures/18_discrete_diffusion.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -273,7 +304,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
 </li>
       
@@ -347,7 +378,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Transformers</h1>
+    <h1>Discrete Denoising Diffusion Models</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -357,18 +388,24 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminaries">Preliminaries</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attention">Attention</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention">Self-Attention</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-self-attention">Multi-Headed Self-Attention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-discrete-state-ddms">Discrete-Time, Discrete-State DDMs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#noising-process">Noising process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#masking-diffusion">Masking diffusion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-process">Reverse process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-the-reverse-process">Approximating the Reverse Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound">The Evidence Lower Bound</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#token-wise-nonlinearity">Token-wise Nonlinearity</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-connections">Residual Connections</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-norm">Layer Norm</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#positional-encodings">Positional Encodings</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-modeling">Autoregressive Modeling</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-markov-chains">Continuous-Time Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-ctmcs">Properties of CTMCs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transition-probabilities">Transition Probabilities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rate-matrices">Rate matrices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gillespie-s-algorithm">Gillespie’s Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-poisson-processes">Connection to Poisson processes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ctmcs-in-continuous-time-discrete-ddms">CTMCs in Continuous-Time Discrete DDMs</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
             </nav>
@@ -381,196 +418,204 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="transformers">
-<h1>Transformers<a class="headerlink" href="#transformers" title="Link to this heading">#</a></h1>
-<p>RNNs are natural models for sequential data, but the <span class="math notranslate nohighlight">\(\cO(T)\)</span> time complexity of evaluation and backpropagating gradients is a severe limitation. In modern machine learning, one of the deciding factors is how many training epochs you can perform for a fixed computational budget. To that end, architectures that can process an entire sequence in parallel are advantageous. Transformers are one such architecture.</p>
-<p>Transformers underlie large language models (LLMs) like Open AI’s ChatGPT and Google’s Gemini. They are also widely used in computer vision and other domains of machine learning. This lecture will walk through the basic building blocks of a transformer: self-attention, token-wise nonlinear transformations, layer norm, and positional encodings. We will focus on modeling sequential data. We will follow the presentation of <span id="id1">Turner [<a class="reference internal" href="99_references.html#id18" title="Richard E Turner. An introduction to transformers. arXiv preprint arXiv:2304.10557, 2023.">Tur23</a>]</span>, but we will make some slight modifications to the notation to be consistent with our previous notes and Homework 4.</p>
-<section id="preliminaries">
-<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Link to this heading">#</a></h2>
-<p>Let <span class="math notranslate nohighlight">\(\mbX^{(0)} \in \reals^{T \times D}\)</span> denote our data matrix with row <span class="math notranslate nohighlight">\(\mbx_t^{(0)} \in \reals^D\)</span> representing the <span class="math notranslate nohighlight">\(t\)</span>-th <strong>token</strong> in the sequence. For example, the tokens could be a vector embedding of a word, sub-word, or character. The embeddings may be fixed or learned as part of the model.</p>
-<p>The output of the transformer will be another matrix of the same shape, <span class="math notranslate nohighlight">\(\mbX^{(M)} \in \reals^{T \times D}\)</span>. These output features can be used for downstream tasks like sentiment classification, machine translation, or autoregressive modeling.</p>
-<p>The output results from a stack of transformer blocks,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\mbX^{(m)} &amp;= \texttt{transformer-block}(\mbX^{(m-1)})
-\end{align*}\]</div>
-<p>Each block consists of two stages: one that operates vertically, combining information across the sequence length; another that operates horizontally, combining information across feature dimensions.</p>
-<p><img alt="Transformer Block" src="../_images/transformer-block.png" /></p>
+  <section class="tex2jax_ignore mathjax_ignore" id="discrete-denoising-diffusion-models">
+<h1>Discrete Denoising Diffusion Models<a class="headerlink" href="#discrete-denoising-diffusion-models" title="Link to this heading">#</a></h1>
+<p>Denoising diffusion models (DDMs) are currently the state-of-the-art approach for image generation, but can they be used for generating discrete data like language and protein sequences? We derived the basic principles for DDMs with continuous-valued data last week. Here, we will show how these concepts extend to discrete data, and how concepts like continuous-time diffusion and the score function in the reverse diffusion SDE extend to the discrete setting.</p>
+<section id="discrete-time-discrete-state-ddms">
+<h2>Discrete-Time, Discrete-State DDMs<a class="headerlink" href="#discrete-time-discrete-state-ddms" title="Link to this heading">#</a></h2>
+<p>We will start in discrete time and develop a DDM for discrete-valued data</p>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\(x_0 \in \cX\)</span> denote a data point.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(|\cX| = S &lt; \infty\)</span> is the vocabulary size.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(q_0(x_0)\)</span> denote the data distribution</p></li>
+</ul>
 </section>
-<section id="attention">
-<h2>Attention<a class="headerlink" href="#attention" title="Link to this heading">#</a></h2>
-<p>The first stage combines information across sequence length using a mechanism called <strong>attention</strong>. Mathematically, attention is just a weighted average,</p>
+<section id="noising-process">
+<h3>Noising process<a class="headerlink" href="#noising-process" title="Link to this heading">#</a></h3>
+<p>Use a Markov chain that gradually converts <span class="math notranslate nohighlight">\(x_0\)</span> to <span class="math notranslate nohighlight">\(x_T \sim q_T(x_T)\)</span>, which is pure “noise,”</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\mbY^{(m)} &amp;= \mbA^{(m)} \mbX^{(m-1)},
+q(x_{0:T}) &amp;= q_0(x_0) \prod_{t=1}^T q_{t|t-1}(x_t \mid x_{t-1})
 \end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbA^{(m)} \in \reals_+^{T \times T}\)</span> is a row-stochastic attention matrix. That is, <span class="math notranslate nohighlight">\(\sum_{s} A_{ts}^{(m)} = 1\)</span> for all <span class="math notranslate nohighlight">\(t\)</span>. Intuitively, <span class="math notranslate nohighlight">\(A_{t,s}^{(m)}\)</span> indicates how much output location <span class="math notranslate nohighlight">\(t\)</span> attends to input location <span class="math notranslate nohighlight">\(s\)</span>.</p>
-<p>When we are using transformers for autoregressive sequence modeling, we constrain the attention matrix to be <strong>causal</strong> by requiring <span class="math notranslate nohighlight">\(A_{t,s}^{(m)} = 0\)</span> for all <span class="math notranslate nohighlight">\(t &lt; s\)</span>. In other words, the matrix is <strong>lower triangular</strong>.</p>
-<p><img alt="Self Attention" src="../_images/self-attention-1.png" /></p>
-<section id="self-attention">
-<h3>Self-Attention<a class="headerlink" href="#self-attention" title="Link to this heading">#</a></h3>
-<p>Where does the attention matrix come from? In a transformer, the attention weights are determined by the pairwise similarity of tokens in the sequence. The simplest instantiation of this idea would be something like,</p>
+<p>For example, <span class="math notranslate nohighlight">\(q_T(x_T) = \mathrm{Unif}_{\cX}(x_T)\)</span> could be achieved by,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-A_{t,s} &amp;\propto \exp \left\{ \mbx_t^\top \mbx_s \right\}
+q_{t|t-1}(x_t \mid x_{t-1})
+&amp;= (1 - \lambda_t) \bbI[x_t = x_{t-1}] + \frac{\lambda_t}{S-1} \bbI[x_t \neq x_{t-1}]
 \end{align*}\]</div>
-<p>Once normalized,</p>
+</section>
+<section id="masking-diffusion">
+<h3>Masking diffusion<a class="headerlink" href="#masking-diffusion" title="Link to this heading">#</a></h3>
+<p>One of the most effective noising processes is the <em>masking</em> diffusion which introduces a <span class="math notranslate nohighlight">\(\mathsf{MASK}\)</span> token that is an absorbing state of the Markov process,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-A_{t,s} &amp;= \frac{\exp \{ \mbx_t^\top \mbx_s\}}{\sum_{s'=1}^T \exp\{\mbx_t^\top \mbx_{s'}\}}.
+q_{t|t-1}(x_t \mid x_{t-1}) 
+&amp;= (1 - \lambda_t) \bbI[x_t = x_{t-1}] + \lambda_t \bbI[x_t = \mathsf{MASK}]
 \end{align*}\]</div>
-<p>(Note: we have dropped the superscript <span class="math notranslate nohighlight">\({}^{(m)}\)</span> for clarity in this section.)</p>
-<p>This approach implies that attention depends equally on all <span class="math notranslate nohighlight">\(D\)</span> dimensions of the embedding. In practice, some of those dimensions may convey different kinds of information that may be of greater or lesser relevance for the attention mechanism. One way to allow for this is to project the tokens into a feature space before computing the attention weights,</p>
+</section>
+<section id="reverse-process">
+<h3>Reverse process<a class="headerlink" href="#reverse-process" title="Link to this heading">#</a></h3>
+<p>The reverse of the noising process is also a Markov chain! (We can derive this from the graphical model.) It factors as,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-A_{t,s} &amp;= \frac{\exp \{ (\mbU \mbx_t)^\top (\mbU \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU \mbx_t)^\top (\mbU \mbx_{s'}) \}}
+q(x_{0:T}) &amp;= q_T(x_T) \prod_{t=T-1}^0 q_{t|t+1}(x_t \mid x_{t+1})
 \end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbU \in \reals^{K \times D}\)</span> with <span class="math notranslate nohighlight">\(K &lt; D\)</span>.</p>
-<p>Still, the numerator in this attention weight is symmetric. If we think of the attention weight as specifying how relevant token <span class="math notranslate nohighlight">\(\mbx_s\)</span> is to updating the feature representation for token <span class="math notranslate nohighlight">\(\mbx_t\)</span>, then directionality may matter. Personifying the tokens a bit, <span class="math notranslate nohighlight">\(\mbx_t\)</span> may need to know a certain kind of information to update its representation, and <span class="math notranslate nohighlight">\(\mbx_s\)</span> may be able to provide that information, but the converse need not be true.</p>
-<p>Transformers use a more general form of attention to address this asymmetry,</p>
+<p>The reverse transition probabilities can be obtained via Bayes’ rule,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-A_{t,s} &amp;= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\sum_{s'=1}^T \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_{s'}) \}},
+q_{t|t+1}(x_t \mid x_{t+1}) 
+&amp;= \frac{q_t(x_t) \, q_{t+1|t}(x_{t+1} \mid x_t)}{q_{t+1}(x_{t+1})}
 \end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbU_q \mbx_t \in \reals^{K}\)</span> are the <strong>queries</strong> and <span class="math notranslate nohighlight">\(\mbU_k \mbx_s \in \reals^{K}\)</span> are the <strong>keys</strong>.</p>
-<p>The parameters <span class="math notranslate nohighlight">\(\mbU_q \in \reals^{K \times D}\)</span> and <span class="math notranslate nohighlight">\(\mbU_k \in \reals^{K \times D}\)</span> are the two parameters defining the self-attention mechanism.</p>
-<p><img alt="Self Attention with Queries and Keys" src="../_images/self-attention-2.png" /></p>
-<div class="admonition-causal-attention admonition">
-<p class="admonition-title">Causal attention</p>
-<p>To enforce causality in the attention layer, we simply zero out the upper triangular part of the attention matrix and normalize the rows appropriately,</p>
+<p>Alternatively, we can express the reverse transition probabilities in terms of the <em>denoising distributions</em> <span class="math notranslate nohighlight">\(q_{0|t+1}(x_0 \mid x_{t+1})\)</span> as follows,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-A_{t,s} &amp;= \frac{\exp \{ (\mbU_q \mbx_t)^\top (\mbU_k \mbx_s)\}}{\textcolor{red}{\sum_{s'=1}^{t}} \exp\{(\mbU_q \mbx_t)^\top (\mbU_k \mbx_{s'})\}} \cdot \bbI[t \geq s].
+q_{t|t+1}(x_t \mid x_{t+1}) 
+&amp;= q_{t+1|t}(x_{t+1} \mid x_t) \frac{\sum_{x_0} q_{t|0}(x_t \mid x_0) \, q_0(x_0)}{q_{t+1}(x_{t+1})} \\
+&amp;= q_{t+1|t}(x_{t+1} \mid x_t) \sum_{x_0} \frac{q_{t|0}(x_t \mid x_0)}{q_{t+1|0}(x_{t+1} \mid x_0)} q_{0|t+1}(x_0 \mid x_{t+1})
 \end{align*}\]</div>
-</div>
-<div class="admonition-comparison-to-rnns admonition">
-<p class="admonition-title">Comparison to RNNs</p>
-<p>Compare the self-attention mechanism to the information processing in an RNN. Rather than propagating information about past tokens via a hidden state, a transformer with causal attention can directly attend to any one of the past tokens.</p>
-</div>
-<div class="admonition-connection-to-convolutional-neural-networks-cnns admonition">
-<p class="admonition-title">Connection to Convolutional Neural Networks (CNNs)</p>
-<p>If the attention weights were only a function of the distance between tokens, <span class="math notranslate nohighlight">\(A_{t,s} = a_{t-s}\)</span>, then the matrix <span class="math notranslate nohighlight">\(\mbA\)</span> would be a <strong>Toeplitz matrix</strong>. Multiplication by a Toeplitz matrix corresponds to a discrete convolution. From this perspective, we can think of the attention mechanism in a transformer as a generalization of convolution that allows for input-dependent and time-varying filters.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Explanation</p>
+<p>In the last line we used the fact that,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\frac{q_0(x_0)}{q_{t+1}(x_{t+1})} 
+&amp;= 
+\frac{q_{0|t+1}(x_0 \mid x_{t+1})}{q_{t+1|0}(x_{t+1} \mid x_0)},
+\end{align*}\]</div>
+<p>which follows from the chain rule.</p>
 </div>
 </section>
-<section id="multi-headed-self-attention">
-<h3>Multi-Headed Self-Attention<a class="headerlink" href="#multi-headed-self-attention" title="Link to this heading">#</a></h3>
-<p>Just as in a CNN each layer performs convolutions with a bank of filters in parallel, in a transformer each block uses a bank of <span class="math notranslate nohighlight">\(H\)</span> <strong>attention heads</strong> in parallel.  Let,</p>
+<section id="approximating-the-reverse-process">
+<h3>Approximating the Reverse Process<a class="headerlink" href="#approximating-the-reverse-process" title="Link to this heading">#</a></h3>
+<p><strong>Problem:</strong> We know everything in the reverse transition probability but the denoising distribution <span class="math notranslate nohighlight">\(q_{0|t_1}(x_0 \mid x_{t+1})\)</span>.</p>
+<p><strong>Solution:</strong> Learn it! Parameterize the reverse transition probability as,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\mbY^{(m,h)} &amp;= \mbA^{(m,h)} \mbX^{(m-1)} \in \reals^{T \times D}
-\end{align*} \]</div>
+p_{t|t+1}(x_t \mid x_{t+1}; \theta) &amp;= 
+q_{t+1|t}(x_{t+1} \mid x_t) \sum_{x_0} \frac{q_{t|0}(x_t \mid x_0)}{q_{t+1|0}(x_{t+1} \mid x_0)} p_{0|t+1}(x_0 \mid x_{t+1}; \theta)
+\end{align*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_{0|t+1}(x_0 \mid x_{t+1}; \theta)\)</span> is a <strong>learned, approximate denoising distribution</strong></p>
+<p>We can then sample from the approximate reverse process one step at a time from <span class="math notranslate nohighlight">\(T\)</span> down to <span class="math notranslate nohighlight">\(0\)</span>,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+p(x_{0:T}; \theta) &amp;= q_T(x_T) \prod_{t=T-1}^0 p_{t|t+1}(x_t \mid x_{t+1}; \theta).
+\end{align*}\]</div>
+</section>
+<section id="the-evidence-lower-bound">
+<h3>The Evidence Lower Bound<a class="headerlink" href="#the-evidence-lower-bound" title="Link to this heading">#</a></h3>
+<p>We will estimate the model parameters <span class="math notranslate nohighlight">\(\theta\)</span> by maximizing the ELBO, which is a sum over data points of,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cL(\theta, x_0) 
+&amp;= \E_{q(x_{1:T} \mid x_0)}\left[\log p(x_{0:T}; \theta) - \log q(x_{1:T} \mid x_0) \right] \\
+&amp;= \E_{q(x_{1:T} \mid x_0)} \left[ \sum_{t=0}^{T-1} \log p_{t|t+1}(x_t \mid x_{t+1}; \theta) - \sum_{t=1}^{T-1} \log q(x_t \mid x_{t+1}, x_0) \right] \\
+&amp;= \sum_{t=1}^{T-1}  \E_{q(x_t, x_{t+1} \mid x_0)} \left[\log p_{t|t+1}(x_t \mid x_{t+1}; \theta) - \log q(x_t \mid x_{t+1}, x_0) \right] + \cL_0(\theta, x_0) \\
+&amp;= \sum_{t=1}^{T-1}  \E_{q(x_{t+1} \mid x_0)} \left[-\KL{q(x_t \mid x_{t+1}, x_0)}{p_{t|t+1}(x_t \mid x_{t+1}; \theta)} \right] + \cL_0(\theta, x_0) 
+\end{align*}\]</div>
 <p>where</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-A_{t,s}^{(m,h)} &amp;= 
-\frac{\exp \{ (\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_s^{(m-1)})\}}{\sum_{s'=1}^T \exp\{(\mbU_q^{(m,h)} \mbx_t^{(m-1)})^\top (\mbU_k^{(m,h)} \mbx_{s'}^{(m-1)}) \}},
+\cL_0(\theta, x_0) &amp;= \E_{q(x_1 | x_0)}\left[\log p(x_0 \mid x_1; \theta) \right]
++ \E_{q(x_1 | x_0)}\left[\log p(x_0 \mid x_1; \theta) \right]
 \end{align*}\]</div>
-<p>is an attention weight at layer <span class="math notranslate nohighlight">\(m\)</span> and head <span class="math notranslate nohighlight">\(h\)</span> for <span class="math notranslate nohighlight">\(h=1,\ldots,H\)</span>. (Now you see why we dropped superscripts above — the notation is a handful!)</p>
-<p><img alt="Multi-Headed Self Attention" src="../_images/mhsa-1.png" /></p>
-<p>The outputs of the attention heads are either concatenated or linearly combined,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\mbY^{(m)} &amp;= \sum_{h=1}^H \mbY^{(m,h)} (\mbV^{(m,h)})^\top \\
-&amp;\triangleq \texttt{mhsa}(\mbX^{(m-1)}).
-\end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbV^{(m,h)} \in \reals^{D \times D}\)</span> is a read-out matrix for layer <span class="math notranslate nohighlight">\(m\)</span>, head <span class="math notranslate nohighlight">\(h\)</span>.
-We denote the multi-headed self-attention (MHSA) mapping by <span class="math notranslate nohighlight">\(\texttt{mhsa}(\cdot)\)</span>.</p>
-<p><img alt="Multi-Headed Self Attention" src="../_images/mhsa-2.png" /></p>
-<div class="admonition-queries-keys-and-values admonition">
-<p class="admonition-title">Queries, Keys, and Values</p>
-<p>The original transformer paper presents the output of a single head as a set of values,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\mbY^{(m,h)} &amp;= \mbA^{(m,h)} (\mbX^{(m-1)} (\mbU_v^{(m,h)})^\top) \in \reals^{T \times K}
-\end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbU_v^{(m,h)} \in \reals^{K \times D}\)</span> is a <strong>value matrix</strong>. Then the attention mechanism can be though of as taking a weighted average of <strong>values</strong> <span class="math notranslate nohighlight">\(\mbU_v \mbx_t\)</span> where the weights are determined by an inner product between the queries and keys.</p>
-<p>The final output is projected back into the original token dimension and linearly combined,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\mbY^{(m)} &amp;= \sum_{h=1}^H \mbY^{(m,h)} (\mbU_o^{(m,h)})^\top 
-\end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbU_o^{(m,h)} \in \reals^{D \times K}\)</span> is an <strong>output matrix</strong> that maps from values to new tokens.</p>
-<p>This formulation corresponds to a low-rank read-out matrix <span class="math notranslate nohighlight">\(\mbV = \mbU_o \mbU_v^\top\)</span>, where we have again dropped the superscripts for clarity.</p>
-</div>
-</section>
-</section>
-<section id="token-wise-nonlinearity">
-<h2>Token-wise Nonlinearity<a class="headerlink" href="#token-wise-nonlinearity" title="Link to this heading">#</a></h2>
-<p>After applying the multi-headed self-attention to obtain <span class="math notranslate nohighlight">\(\mbY^{(m)}\)</span>, the transformer applies a token-wise nonlinear transformation to nonlinearly mix the feature dimensions. This is done with a simple feedforward neural network, also known as a <strong>multilayer perceptron (MLP)</strong>,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\mbx_t^{(m)} &amp;= \texttt{mlp}(\mby_t^{(m)})
-\end{align*}\]</div>
-<p>Note that the same function is applied to all positions <span class="math notranslate nohighlight">\(t\)</span>.</p>
-<p><img alt="MLP" src="../_images/mlp.png" /></p>
+<p>is the ELBO for the last term in the sum.</p>
+<p>Note that we are again using Rao-Blackwellization to write the ELBO in terms of expectations over fewer random variables for each term in the sum.</p>
 <div class="warning admonition">
-<p class="admonition-title">Computational Complexity</p>
-<p>The MLP typically has hidden dimensions of at least <span class="math notranslate nohighlight">\(D\)</span>, so the computational complexity of this step is <span class="math notranslate nohighlight">\(\cO(TD^2)\)</span>. For transformers with very large featured dimensions, this can be the dominant cost.</p>
+<p class="admonition-title">Important</p>
+<p>We choose <span class="math notranslate nohighlight">\(q\)</span> such that the marginal distribution <span class="math notranslate nohighlight">\(q_{t|0}(x_t)\)</span> and interpolating distribution <span class="math notranslate nohighlight">\(q(x_t \mid x_{t+1}, x_0)\)</span> are available in closed form!</p>
 </div>
 </section>
-<section id="residual-connections">
-<h2>Residual Connections<a class="headerlink" href="#residual-connections" title="Link to this heading">#</a></h2>
-<p>Rather than parameterizing <span class="math notranslate nohighlight">\(\mbX^{(m)}\)</span> as the output of the MLP, a common trick in deep learning is to use residual connections. The idea is simple: when the input and output are of the same dimensionality, we can let the network learn the <strong>residual</strong>, which is typically smaller in magnitude than the overall funciton.</p>
-<p>Transformers use residual connections for both the multi-headed self-attention step and the MLP. So,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\mbY^{(m)} &amp;= \mbX^{(m-1)} + \texttt{mhsa}(\mbX^{(m-1)}) \\
-\mbX^{(m)} &amp;= \mbY^{(m)} + \texttt{mlp}(\mbY^{(m)})
-\end{align*}\]</div>
-<p><img alt="Residual Connections" src="../_images/residual-conn.png" /></p>
 </section>
-<section id="layer-norm">
-<h2>Layer Norm<a class="headerlink" href="#layer-norm" title="Link to this heading">#</a></h2>
-<p>Finally, it is important to use other deep learning “tricks” like LayerNorm to stabilize training. In a transformer, LayerNorm amounts to z-scoring each token <span class="math notranslate nohighlight">\(\mbx_t\)</span> and then applying a learned shift and scale to each feature dimension,</p>
+<section id="continuous-time-markov-chains">
+<h2>Continuous-Time Markov Chains<a class="headerlink" href="#continuous-time-markov-chains" title="Link to this heading">#</a></h2>
+<p>We ended our discussion of continuous-state DDMs by noting that in the continuous-time limit the noising and reverse processes are SDEs. For discrete-state DDMs, the continuous-time limit involves <strong>Continuous-Time Markov Chains (CTMCs)</strong>, which are closely related to Poisson processes!</p>
+<section id="properties-of-ctmcs">
+<h3>Properties of CTMCs<a class="headerlink" href="#properties-of-ctmcs" title="Link to this heading">#</a></h3>
+<p>A CTMC is a stochastic process <span class="math notranslate nohighlight">\(\{x_t : t\in[0,T]\}\)</span> taking values on a finte state space <span class="math notranslate nohighlight">\(\cX\)</span> such that:</p>
+<ol class="arabic">
+<li><p>Sample paths <span class="math notranslate nohighlight">\(t \mapsto x_t\)</span> are right-continuous and have finitely many jumps</p></li>
+<li><p>The <strong>Markov propert</strong> holds:</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\texttt{layer-norm}(\mbx_t) 
-&amp;= \mbbeta + \mbgamma \odot \left( \frac{\mbx_t - \texttt{mean}(\mbx_t)}{\texttt{std}(\mbx_t)} \right)
+\Pr(x_{t+\Delta t} = j \mid \{x_s: s\leq t\}) &amp;= \Pr(x_{t+\Delta t}=j \mid x_t)
 \end{align*}\]</div>
-<p>where</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\texttt{mean}(\mbx_t) &amp;= \frac{1}{D} \sum_{d=1}^D x_{t,d} \\
-\texttt{std}(\mbx_t) &amp;= \Big(\frac{1}{D} \sum_{d=1}^D (x_{t,d} - \texttt{mean}(\mbx_t))^2 \Big)^{\frac{1}{2}}
-\end{align*}\]</div>
-<p>and <span class="math notranslate nohighlight">\(\mbbeta, \mbgamma \in \reals^D\)</span> are learned parameters.</p>
-<p>LayerNorm is typically applied before the multi-headed self-attention and MLP steps,</p>
-<div class="amsmath math notranslate nohighlight">
-\[\begin{align*}
-\overline{\mbX}^{(m-1)} &amp;= \texttt{layer-norm}(\mbX^{(m-1)}) \\
-\mbY^{(m)} &amp;= \overline{\mbX}^{(m-1)} + \texttt{mhsa}(\overline{\mbX}^{(m-1)}) \\
-\overline{\mbY}^{(m)} &amp;= \texttt{layer-norm}(\mbY^{(m)}) \\
-\mbX^{(m)} &amp;= \overline{\mbY}^{(m)} + \texttt{mlp}(\overline{\mbY}^{(m)})
-\end{align*}\]</div>
-<p>This defines one <span class="math notranslate nohighlight">\(\texttt{transformer-block}\)</span>.</p>
-<p>A transformer stacks <span class="math notranslate nohighlight">\(M\)</span> <span class="math notranslate nohighlight">\(\texttt{transformer-blocks}\)</span> on top of one another to produce a deep sequence-to-sequence model.</p>
+</li>
+</ol>
 </section>
-<section id="positional-encodings">
-<h2>Positional Encodings<a class="headerlink" href="#positional-encodings" title="Link to this heading">#</a></h2>
-<p>Except for the lower triangular constraint on the attention matrices, the transformer architecture knows nothing about the relative positions of the tokens. Absent this constraint, the transformer essentially treats the data as an <strong>unordered set</strong> of tokens. This can actually be a feature! It allows the transformer to act on a wide range of datasets aside from just sequences. For example, transformers are often applied to images by chunking the image up into patches and embedding each one.</p>
-<p>However, when the data posses some spatial or temporal structure, it is helpful to include that information in the embedding. A simple way to do so is to add position and content in the token,</p>
+<section id="transition-probabilities">
+<h3>Transition Probabilities<a class="headerlink" href="#transition-probabilities" title="Link to this heading">#</a></h3>
+<p>CTMCs are uniquely characterized by the transition distributions <span class="math notranslate nohighlight">\(q_{t|s}(x_t=j \mid x_s=i) q_{t|s}(x_t=j \mid x_s=i)\)</span> for <span class="math notranslate nohighlight">\(t \geq s\)</span>.</p>
+<p>These must satisfy the <strong>Chapman-Kolmogorov Equations</strong></p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\mbx_t^{(0)} &amp;= \mbc_t + \mbp_t,
+q_{t|s}(x_t=j \mid x_s=i) 
+&amp;= \sum_{k \in \cX} q_{u|s}(x_u=k \mid x_s=i) q_{t|u}(x_t=j \mid x_u=k)
 \end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbc_t \in \reals^D\)</span> is an embedding of the content and <span class="math notranslate nohighlight">\(\mbp_t \in \reals^D\)</span> encodes the position (e.g., with a set of sinusoidal basis functions).</p>
+<p>for <span class="math notranslate nohighlight">\(s \leq u \leq t\)</span>.</p>
 </section>
-<section id="autoregressive-modeling">
-<h2>Autoregressive Modeling<a class="headerlink" href="#autoregressive-modeling" title="Link to this heading">#</a></h2>
-<p>To use a transformer for autoregressive modeling, we need to make predictions from the final layer’s representations. If the goal is to predict the next word label <span class="math notranslate nohighlight">\(\ell_{t+1} \in \{1,\ldots,V\}\)</span> based on encodings of past words <span class="math notranslate nohighlight">\(\mbx_{1:t}^{(0)}\)</span>, where <span class="math notranslate nohighlight">\(V\)</span> is the vocabulary size, then we could use a categorical distribution,</p>
+<section id="rate-matrices">
+<h3>Rate matrices<a class="headerlink" href="#rate-matrices" title="Link to this heading">#</a></h3>
+<p>Equivalently, we can identify a CTMC by its <strong>rate matrices</strong></p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-\ell_{t+1} &amp;\sim \mathrm{Cat}(\mathrm{softmax}(\mbW \mbx_t^{(M)}))
-\end{align*}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mbW \in \reals^{V \times D}\)</span>. Like the hidden states in an RNN, the final layer’s representations <span class="math notranslate nohighlight">\(\mbx_t^{(M)}\)</span> combine information from all tokens up to and including index <span class="math notranslate nohighlight">\(t\)</span>.</p>
+R_s(i \to j) &amp;= \frac{\partial}{\partial t} q_{t|s}(x_t=j \mid x_s=i) \bigg|_{t=s}
+\end{align*} \]</div>
+<p>Intuitively, <span class="math notranslate nohighlight">\(R_s(i \to j)\)</span> is the amount of probability flow from <span class="math notranslate nohighlight">\(i\)</span> to <span class="math notranslate nohighlight">\(j\)</span> at time <span class="math notranslate nohighlight">\(s\)</span>.</p>
+<p>Properties of rate matrices:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(R_s(i \to j) \geq 0\)</span> for <span class="math notranslate nohighlight">\(i \neq j\)</span>. (<em>Probability flow must be outward.</em>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sum_j R_s(i \to j) = 0\)</span> (<em>Probability is conserved.</em>)</p></li>
+</ol>
+<p><strong>Define</strong> <span class="math notranslate nohighlight">\(R_s(i) = \sum_{j\neq i} R_s(i \to j)\)</span> to be the total outward probability flow.</p>
+<p>A <strong>homogenous</strong> CTMC has a fixed rate matrix <span class="math notranslate nohighlight">\(R_s \equiv R\)</span> for all times <span class="math notranslate nohighlight">\(s \in [0,T]\)</span>.</p>
 </section>
-<section id="training">
-<h2>Training<a class="headerlink" href="#training" title="Link to this heading">#</a></h2>
-<p>Training deep neural networks is somewhat of a dark art. Standard practice is to use the Adam optimizer with a bag of tricks including gradient clipping, learning rate annealing schedules, increasing minibatch sizes, dropout, etc. Generally, treat these algorithmic decisions as hyperparameters to be tuned. We won’t try to put any details in writing lest you overfit to them.</p>
+<section id="gillespie-s-algorithm">
+<h3>Gillespie’s Algorithm<a class="headerlink" href="#gillespie-s-algorithm" title="Link to this heading">#</a></h3>
+<p>Consider a homogenous CTMC with rate matrix <span class="math notranslate nohighlight">\(R\)</span>. We can simulate a draw from the CTMC using Gillespie’s Algorithm</p>
+<p><strong>Initialize</strong> <span class="math notranslate nohighlight">\(x_0 \sim \pi_0\)</span> and set <span class="math notranslate nohighlight">\(t_0 = 0\)</span>, <span class="math notranslate nohighlight">\(i=0\)</span>.</p>
+<p>While <span class="math notranslate nohighlight">\(t_i &lt; T\)</span></p>
+<ul>
+<li><p>Draw the <em>waiting time</em> <span class="math notranslate nohighlight">\(\Delta_i \sim \mathrm{Exp}(R(x_i))\)</span></p></li>
+<li><p>If <span class="math notranslate nohighlight">\(t_i + \Delta_i &gt; T\)</span>, return <span class="math notranslate nohighlight">\(\{(t_j, x_j)\}_{j=0}^i\)</span></p></li>
+<li><p>Else, set <span class="math notranslate nohighlight">\(t_{i+1} \leftarrow t_i + \Delta_i\)</span> and draw the next state</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+x_{i+1} \sim \mathrm{Cat}\left(\left[\frac{R(x_i \to x_j)}{R(x_i)} \right]_{j \neq i} \right)
+\end{align*}\]</div>
+</li>
+</ul>
+<p>Does this look familiar?</p>
+</section>
+<section id="connection-to-poisson-processes">
+<h3>Connection to Poisson processes<a class="headerlink" href="#connection-to-poisson-processes" title="Link to this heading">#</a></h3>
+<p>We can cast a CTMC as a <em>marked</em> Poisson process with times <span class="math notranslate nohighlight">\(t_i\)</span> and marks <span class="math notranslate nohighlight">\(x_i \in \cX\)</span>.</p>
+<p>The process follows a <em>conditional</em> intensity function that depends on the history <span class="math notranslate nohighlight">\(\cH_t\)</span>. In particular, the history contains the current state <span class="math notranslate nohighlight">\(x_t\)</span> (since the state path is right continuous),</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\lambda(t, x \mid \cH_t) 
+&amp;= R_t(x_t \to x) \cdot \bbI[x \neq x_t]
+\end{align*}\]</div>
+<p>Gillespie’s algorithm is using the Poisson superposition and Poisson thinning properties we discussed last time! To sample the waiting time, we are using the fact that <span class="math notranslate nohighlight">\(\lambda(t \mid \cH_t) = \sum_x \lambda(t, x \mid \cH_t)\)</span> is a Poisson process on the time of the next event. Once we sample the time, we use Poisson thinning to sample the next state (i.e. mark).</p>
+<p>Rao and Teh (2010) used this construction to develop a very clever Gibbs sampling algorithm for CTMCs!</p>
+</section>
+<section id="ctmcs-in-continuous-time-discrete-ddms">
+<h3>CTMCs in Continuous-Time Discrete DDMs<a class="headerlink" href="#ctmcs-in-continuous-time-discrete-ddms" title="Link to this heading">#</a></h3>
+<p>The reversal of a CTMC is another CTMC, and Campbell et al. (2022) showed how to parameterize the reverse process of a discrete-state, continuous-time DDM in terms of the backward rates.</p>
+<p>It turns out the backward rate is,</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\tilde{R}_{T-t}(i \to j) &amp;= R_t(j \to i) \frac{q_t(x_t=j)}{q_t(x_t=i)}
+\end{align*}\]</div>
+<p>where the density ratio <span class="math notranslate nohighlight">\(\frac{q_t(x_t=j)}{q_t(x_t=i)}\)</span> can be seen as the analog of the <em>score function</em> for a discrete distribution.</p>
+<p>Sampling the backward process tricky because the reverse rate is <strong>inhomogeneous</strong>, and Gillespies algorithm for inhomogeneous processes requires integrating rate matrices. Instead, Campbell et al. (2022) propose to use a technique called <strong>tau-leaping</strong> to approximately sample the backward process. Then they use <strong>corrector steps</strong> to try to correct for the errors in the approximation. In recent work, we show how to develop more informative correctors for discrete diffusion with masking processes (Zhao et al., 2024).</p>
+</section>
 </section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
-<p>Transformers are a workhorse of modern machine learning and key to many of the impressive advances over recent years. However, there are still areas for improvement. For example, the computational cost of attention is <span class="math notranslate nohighlight">\(\cO(T^2)\)</span>, and a lot of work has gone into cutting that down. Likewise, while the transformer allows for predictions to be made in parallel across an entire sequence, sampling from the learned autoregressive model is still takes linear time. In the lectures ahead, we’ll discuss other recent architectures that address some of these concerns.</p>
+<p>Discrete DDMs are a nice way to wrap up this course! They combine old and new: Poisson processes and CTMCs, as well as modern deep generative models.</p>
+<p>These models have recently been used for langugage modeling, and sampling from them can be much more faster than from an autoregressive model like a Transformer since many words can be generated in parallel. See Inception AI!</p>
 </section>
 </section>
 
@@ -605,20 +650,20 @@ We denote the multi-headed self-attention (MHSA) mapping by <span class="math no
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="13_vaes.html"
+       href="17_poisson_processes.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Variational Autoencoders</p>
+        <p class="prev-next-title">Poisson processes</p>
       </div>
     </a>
     <a class="right-next"
-       href="15_rnns.html"
+       href="../assignments/hw0/hw0.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Recurrent Neural Networks</p>
+        <p class="prev-next-title">HW0: PyTorch Primer</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -638,18 +683,24 @@ We denote the multi-headed self-attention (MHSA) mapping by <span class="math no
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminaries">Preliminaries</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attention">Attention</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention">Self-Attention</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-headed-self-attention">Multi-Headed Self-Attention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-discrete-state-ddms">Discrete-Time, Discrete-State DDMs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#noising-process">Noising process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#masking-diffusion">Masking diffusion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-process">Reverse process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approximating-the-reverse-process">Approximating the Reverse Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-evidence-lower-bound">The Evidence Lower Bound</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#token-wise-nonlinearity">Token-wise Nonlinearity</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-connections">Residual Connections</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-norm">Layer Norm</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#positional-encodings">Positional Encodings</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-modeling">Autoregressive Modeling</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-markov-chains">Continuous-Time Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-ctmcs">Properties of CTMCs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transition-probabilities">Transition Probabilities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rate-matrices">Rate matrices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gillespie-s-algorithm">Gillespie’s Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-poisson-processes">Connection to Poisson processes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ctmcs-in-continuous-time-discrete-ddms">CTMCs in Continuous-Time Discrete DDMs</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
   </nav></div>
