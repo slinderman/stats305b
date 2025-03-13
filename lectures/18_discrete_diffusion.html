@@ -546,7 +546,7 @@ p(x_{0:T}; \theta) &amp;= q_T(x_T) \prod_{t=T-1}^0 p_{t|t+1}(x_t \mid x_{t+1}; \
 </section>
 <section id="transition-probabilities">
 <h3>Transition Probabilities<a class="headerlink" href="#transition-probabilities" title="Link to this heading">#</a></h3>
-<p>CTMCs are uniquely characterized by the transition distributions <span class="math notranslate nohighlight">\(q_{t|s}(x_t=j \mid x_s=i) q_{t|s}(x_t=j \mid x_s=i)\)</span> for <span class="math notranslate nohighlight">\(t \geq s\)</span>.</p>
+<p>CTMCs are uniquely characterized by the transition distributions <span class="math notranslate nohighlight">\(q_{t|s}(x_t=j \mid x_s=i)\)</span> for <span class="math notranslate nohighlight">\(t \geq s\)</span>.</p>
 <p>These must satisfy the <strong>Chapman-Kolmogorov Equations</strong></p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
@@ -598,18 +598,18 @@ x_{i+1} \sim \mathrm{Cat}\left(\left[\frac{R(x_i \to x_j)}{R(x_i)} \right]_{j \n
 &amp;= R_t(x_t \to x) \cdot \bbI[x \neq x_t]
 \end{align*}\]</div>
 <p>Gillespie’s algorithm is using the Poisson superposition and Poisson thinning properties we discussed last time! To sample the waiting time, we are using the fact that <span class="math notranslate nohighlight">\(\lambda(t \mid \cH_t) = \sum_x \lambda(t, x \mid \cH_t)\)</span> is a Poisson process on the time of the next event. Once we sample the time, we use Poisson thinning to sample the next state (i.e. mark).</p>
-<p>Rao and Teh (2010) used this construction to develop a very clever Gibbs sampling algorithm for CTMCs!</p>
+<p><span id="id1">Rao and Teh [<a class="reference internal" href="99_references.html#id49" title="Vinayak Rao and Yee Whye Teh. Fast MCMC sampling for Markov jump processes and extensions. The Journal of Machine Learning Research, 14(1):3295–3320, 2013.">RT13</a>]</span> used this construction to develop a very clever Gibbs sampling algorithm for CTMCs!</p>
 </section>
 <section id="ctmcs-in-continuous-time-discrete-ddms">
 <h3>CTMCs in Continuous-Time Discrete DDMs<a class="headerlink" href="#ctmcs-in-continuous-time-discrete-ddms" title="Link to this heading">#</a></h3>
-<p>The reversal of a CTMC is another CTMC, and Campbell et al. (2022) showed how to parameterize the reverse process of a discrete-state, continuous-time DDM in terms of the backward rates.</p>
+<p>The reversal of a CTMC is another CTMC, and <span id="id2">[<a class="reference internal" href="99_references.html#id47" title="Andrew Campbell, Joe Benton, Valentin De Bortoli, Thomas Rainforth, George Deligiannidis, and Arnaud Doucet. A continuous time framework for discrete denoising models. Advances in Neural Information Processing Systems, 35:28266–28279, 2022.">CBDB+22</a>]</span> showed how to parameterize the reverse process of a discrete-state, continuous-time DDM in terms of the backward rates.</p>
 <p>It turns out the backward rate is,</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 \tilde{R}_{T-t}(i \to j) &amp;= R_t(j \to i) \frac{q_t(x_t=j)}{q_t(x_t=i)}
 \end{align*}\]</div>
 <p>where the density ratio <span class="math notranslate nohighlight">\(\frac{q_t(x_t=j)}{q_t(x_t=i)}\)</span> can be seen as the analog of the <em>score function</em> for a discrete distribution.</p>
-<p>Sampling the backward process tricky because the reverse rate is <strong>inhomogeneous</strong>, and Gillespies algorithm for inhomogeneous processes requires integrating rate matrices. Instead, Campbell et al. (2022) propose to use a technique called <strong>tau-leaping</strong> to approximately sample the backward process. Then they use <strong>corrector steps</strong> to try to correct for the errors in the approximation. In recent work, we show how to develop more informative correctors for discrete diffusion with masking processes (Zhao et al., 2024).</p>
+<p>Sampling the backward process tricky because the reverse rate is <strong>inhomogeneous</strong>, and Gillespies algorithm for inhomogeneous processes requires integrating rate matrices. Instead, <span id="id3">[<a class="reference internal" href="99_references.html#id47" title="Andrew Campbell, Joe Benton, Valentin De Bortoli, Thomas Rainforth, George Deligiannidis, and Arnaud Doucet. A continuous time framework for discrete denoising models. Advances in Neural Information Processing Systems, 35:28266–28279, 2022.">CBDB+22</a>]</span> propose to use a technique called <strong>tau-leaping</strong> to approximately sample the backward process. Then they use <strong>corrector steps</strong> to try to correct for the errors in the approximation. In recent work, we show how to develop more informative correctors for discrete diffusion with masking processes <span id="id4">[<a class="reference internal" href="99_references.html#id48" title="Yixiu Zhao, Jiaxin Shi, Lester Mackey, and Scott Linderman. Informed correctors for discrete diffusion models. arXiv preprint arXiv:2407.21243, 2024.">ZSML24</a>]</span>.</p>
 </section>
 </section>
 <section id="conclusion">

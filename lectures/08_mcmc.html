@@ -612,7 +612,7 @@ a(\theta' \to \theta) = \min \left\{1, \, \frac{p(\theta, x)}{p(\theta', x)} \ri
 <h2>Smarter Proposals with Gradients<a class="headerlink" href="#smarter-proposals-with-gradients" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Metropolis-Hastings with a symmetric Gaussian proposal behaves (kind of) like a random walk.</p></li>
-<li><p><span id="id1">Neal [<a class="reference internal" href="99_references.html#id42" title="Radford M Neal. MCMC using Hamiltonian dynamics. In Steve Brooks, Andrew Gelman, Galin Jones, and Xiao-Li Meng, editors, Handbook of Markov Chain Monte Carlo, chapter 5. Chapman and Hall/CRC, 2011.">Nea11</a>]</span> argues that in <span class="math notranslate nohighlight">\(D\)</span> dimensions, random walk MH needs <span class="math notranslate nohighlight">\(O(D^2)\)</span> iterations to get an independent sample.</p></li>
+<li><p><span id="id1">Neal [<a class="reference internal" href="99_references.html#id41" title="Radford M Neal. MCMC using Hamiltonian dynamics. In Steve Brooks, Andrew Gelman, Galin Jones, and Xiao-Li Meng, editors, Handbook of Markov Chain Monte Carlo, chapter 5. Chapman and Hall/CRC, 2011.">Nea11</a>]</span> argues that in <span class="math notranslate nohighlight">\(D\)</span> dimensions, random walk MH needs <span class="math notranslate nohighlight">\(O(D^2)\)</span> iterations to get an independent sample.</p></li>
 <li><p>Can we develop more efficient transition distributions? <strong>Yes!</strong> If we have more information about the log probability.</p></li>
 <li><p>For example, suppose that the log probability <span class="math notranslate nohighlight">\(\log p(\theta)\)</span> is differentiable. We can use the gradient to make proposals that move farther and are more likely to be accepted.</p></li>
 </ul>
@@ -633,7 +633,7 @@ a(\theta' \to \theta) = \min \left\{1, \, \frac{p(\theta, x)}{p(\theta', x)} \ri
 <p><strong>Idea:</strong> Think of negative log probability as an <em>energy landscape</em>. Now imagine a puck sliding around on this bumpy surface. Give it random kicks; it will tend to slide downhill toward points of low potential energy (high probability). Each kick can displace the puck by a large amount. Done properly, the puck will visit points with probability proportional to the posterior probability.</p>
 <section id="notation">
 <h4>Notation<a class="headerlink" href="#notation" title="Link to this heading">#</a></h4>
-<p>Following <span id="id2">Neal [<a class="reference internal" href="99_references.html#id42" title="Radford M Neal. MCMC using Hamiltonian dynamics. In Steve Brooks, Andrew Gelman, Galin Jones, and Xiao-Li Meng, editors, Handbook of Markov Chain Monte Carlo, chapter 5. Chapman and Hall/CRC, 2011.">Nea11</a>]</span>, let</p>
+<p>Following <span id="id2">Neal [<a class="reference internal" href="99_references.html#id41" title="Radford M Neal. MCMC using Hamiltonian dynamics. In Steve Brooks, Andrew Gelman, Galin Jones, and Xiao-Li Meng, editors, Handbook of Markov Chain Monte Carlo, chapter 5. Chapman and Hall/CRC, 2011.">Nea11</a>]</span>, let</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\mbq \in \reals^D\)</span> denote the <em>position</em>; i.e. the current parameters (previously <span class="math notranslate nohighlight">\(\theta\)</span>)</p></li>
 <li><p><span class="math notranslate nohighlight">\(\mbp \in \reals^D\)</span> denote the <em>momentum</em>; auxiliary variables that we don’t care about, but which are necessary for HMC.</p></li>
