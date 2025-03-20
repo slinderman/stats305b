@@ -518,7 +518,6 @@ p(x_{0:T}; \theta) &amp;= q_T(x_T) \prod_{t=T-1}^0 p_{t|t+1}(x_t \mid x_{t+1}; \
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
 \cL_0(\theta, x_0) &amp;= \E_{q(x_1 | x_0)}\left[\log p(x_0 \mid x_1; \theta) \right]
-+ \E_{q(x_1 | x_0)}\left[\log p(x_0 \mid x_1; \theta) \right]
 \end{align*}\]</div>
 <p>is the ELBO for the last term in the sum.</p>
 <p>Note that we are again using Rao-Blackwellization to write the ELBO in terms of expectations over fewer random variables for each term in the sum.</p>
